@@ -6,7 +6,8 @@
 	import { vec2 } from 'three/examples/jsm/nodes/Nodes.js';
   const SPHERE_RADIUS = 1;
   const NUM_LATITUDES = 7;
-
+  const NUM_LONGITUDES = 5;
+  const LAT_LONG_THICKNESS = 0.005;
 </script>
 
 
@@ -38,14 +39,30 @@
       position.y={Utils.latitudeOffset(SPHERE_RADIUS, iter, NUM_LATITUDES)}
     >
       <T.TorusGeometry
-      args={[Utils.latitudeRadius(SPHERE_RADIUS, iter, NUM_LATITUDES),0.005]}
+      args={[Utils.latitudeRadius(SPHERE_RADIUS, iter, NUM_LATITUDES),LAT_LONG_THICKNESS]}
       />
 
       <T.MeshLambertMaterial
-        color = "green"
+        color = "#F8EBCE"
       />
     </T.Mesh>
 
+  {/each}
+
+  <!-- Longitudes -->
+   {#each Array(NUM_LATITUDES) as _, iter }
+  
+    <T.Mesh
+      rotation.y = {MathUtils.degToRad(360/NUM_LONGITUDES*iter)}
+    >
+      <T.TorusGeometry
+      args={[SPHERE_RADIUS,LAT_LONG_THICKNESS]}
+      />
+
+      <T.MeshLambertMaterial
+        color = "#F8EBCE"
+      />
+    </T.Mesh>
   {/each}
 
   <!-- Transparent mesh -->
