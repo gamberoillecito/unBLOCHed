@@ -1,7 +1,6 @@
 <script lang="ts">
     import { T } from '@threlte/core'
-    import * as Utils from './Utils'
-    import { MathUtils  } from 'three';
+    import { MathUtils, Spherical, Vector3 } from 'three';
     // import {CSS2DRenderer} from 'three/addons/renderers/CSS2DRenderer.js'
 
     const VEC_LEN = 1;
@@ -10,10 +9,14 @@
 
     const HEAD_RAD = 0.05;
     export let scaleFactor;
+    export let refVec;
+    
   </script>
 
 <T.Group
-  rotation.x={3}
+  rotation.x = {refVec.angleTo(new Vector3(1,0,0))}
+  rotation.y = {refVec.angleTo(new Vector3(0,1,0))}
+  rotation.z = {refVec.angleTo(new Vector3(0,0,1))}
 >
   {#if scaleFactor > 0.05}
     <!-- Body -->
