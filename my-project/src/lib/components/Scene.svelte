@@ -4,12 +4,30 @@
   import { ContactShadows, Float, Grid, OrbitControls } from '@threlte/extras'
 	import { ArrowHelper, Vector3, MathUtils} from 'three';
 	import { vec2 } from 'three/examples/jsm/nodes/Nodes.js';
-  const SPHERE_RADIUS = 1;
-  const NUM_LATITUDES = 7;
-  const NUM_LONGITUDES = 5;
-  const LAT_LONG_THICKNESS = 0.005;
+  import { Pane, Button, Slider, Color } from 'svelte-tweakpane-ui'
+  import BlochSphere from './BlochSphere.svelte';
+  import BlochVector from './BlochVector.svelte';
+  let SPHERE_COLOR = "#898de8";
+  let BLOCH_VECTOR_SCALE_FACTOR = 1;
 </script>
 
+
+
+<Pane
+  title="Testing"
+  position="fixed"
+>
+  <Color
+    label={"Sphere Color"}
+    bind:value={SPHERE_COLOR}
+  />
+  <Slider
+    label={"Vector Scale Factor"}
+    bind:value={BLOCH_VECTOR_SCALE_FACTOR}
+    min={0}
+    max={1}
+  />
+</Pane>
 
 <T.DirectionalLight
   intensity={3}
@@ -31,52 +49,8 @@
 />
 
 <!-- Bloch Sphere -->
-<T.Group>
-   <!-- Latitudes -->
-   {#each Array(NUM_LATITUDES) as _, iter }
-    <T.Mesh
-      rotation.x = {MathUtils.degToRad(90)}
-      position.y={Utils.latitudeOffset(SPHERE_RADIUS, iter, NUM_LATITUDES)}
-    >
-      <T.TorusGeometry
-      args={[Utils.latitudeRadius(SPHERE_RADIUS, iter, NUM_LATITUDES),LAT_LONG_THICKNESS]}
-      />
-
-      <T.MeshLambertMaterial
-        color = "#F8EBCE"
-      />
-    </T.Mesh>
-
-  {/each}
-
-  <!-- Longitudes -->
-   {#each Array(NUM_LATITUDES) as _, iter }
-  
-    <T.Mesh
-      rotation.y = {MathUtils.degToRad(360/NUM_LONGITUDES*iter)}
-    >
-      <T.TorusGeometry
-      args={[SPHERE_RADIUS,LAT_LONG_THICKNESS]}
-      />
-
-      <T.MeshLambertMaterial
-        color = "#F8EBCE"
-      />
-    </T.Mesh>
-  {/each}
-
-  <!-- Transparent mesh -->
-  <T.Mesh>
-    <T.SphereGeometry/>
-    <T.MeshStandardMaterial
-      color="#F8EBCE"
-      transparent
-      castShadow
-
-      opacity=0.4
-    />
-  </T.Mesh>
-</T.Group>  
+<BlochSphere SPHERE_COLOR={SPHERE_COLOR}></BlochSphere>
+<BlochVector scaleFactor={BLOCH_VECTOR_SCALE_FACTOR}></BlochVector>
 
 <T.PerspectiveCamera
   makeDefault
