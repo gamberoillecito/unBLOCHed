@@ -1,6 +1,5 @@
 <script lang="ts">
     import { T } from '@threlte/core'
-    import * as Utils from './Utils'
     import { MathUtils  } from 'three';
     // import {CSS2DRenderer} from 'three/addons/renderers/CSS2DRenderer.js'
 
@@ -9,6 +8,24 @@
     const NUM_LONGITUDES = 5;
     const LAT_LONG_THICKNESS = 0.005;
     export let SPHERE_COLOR;
+
+    function latitudeSpacing(sphereRad:number, numLatitudes:number) {
+    let spacing = (sphereRad * 2) / (numLatitudes + 1);
+    return spacing;
+    }
+
+    function latitudeOffset(sphereRad:number, prog:number, numLatitudes:number) {
+    let spacing = latitudeSpacing(sphereRad, numLatitudes);
+    let offset = -(sphereRad - spacing) + spacing*prog;
+    return offset;
+    }
+
+    function latitudeRadius(sphereRad:number, prog:number, numLatitudes:number) {
+    let spacing = latitudeSpacing(sphereRad, numLatitudes);
+    let rad = Math.sqrt(sphereRad**2 - ((prog - Math.floor(numLatitudes/2)) * spacing )**2);
+    console.log(spacing);
+    return rad;
+    }
 </script>
 
 <T.Group>
@@ -16,10 +33,10 @@
    {#each Array(NUM_LATITUDES) as _, iter }
     <T.Mesh
       rotation.x = {MathUtils.degToRad(90)}
-      position.y={Utils.latitudeOffset(SPHERE_RADIUS, iter, NUM_LATITUDES)}
+      position.y={latitudeOffset(SPHERE_RADIUS, iter, NUM_LATITUDES)}
     >
       <T.TorusGeometry
-      args={[Utils.latitudeRadius(SPHERE_RADIUS, iter, NUM_LATITUDES),LAT_LONG_THICKNESS]}
+      args={[latitudeRadius(SPHERE_RADIUS, iter, NUM_LATITUDES),LAT_LONG_THICKNESS]}
       />
 
       <T.MeshLambertMaterial
