@@ -1,6 +1,8 @@
 <script lang="ts">
     import { T } from '@threlte/core'
-    import { MathUtils, Spherical, Vector3 } from 'three';
+	import type { List } from 'svelte-tweakpane-ui';
+    import { MathUtils, Spherical, Vector3, ArrowHelper, Quaternion } from 'three';
+    import {Group} from 'three'
     // import {CSS2DRenderer} from 'three/addons/renderers/CSS2DRenderer.js'
 
     const VEC_LEN = 1;
@@ -8,15 +10,32 @@
     const VEC_COLOR = "red";
 
     const HEAD_RAD = 0.05;
-    export let scaleFactor;
-    export let refVec;
+    export let scaleFactor:number;
+    export let refVec:Vector3;
+    export let rotations:number[];
+    let group: Group | undefined = undefined
+    // $: console.log(getTetha(refVec))
+    $: console.log(refVec)
+    // $: group?.rotateOnWorldAxis(new Vector3(0,0,1), rotations[2])
+    $: group?.lookAt(refVec)
     
+    function getTetha(vec:Vector3) {
+      let sph = new Spherical().setFromVector3(vec)
+      return sph.theta
+    }
+
+    function getPhi(vec:Vector3) {
+      let sph = new Spherical().setFromVector3(vec)
+      return sph.phi
+    }
   </script>
 
+<T.ArrowHelper
+  args={[refVec, new Vector3(0,0,0)]}
+/>
 <T.Group
-  rotation.x = {refVec.angleTo(new Vector3(1,0,0))}
-  rotation.y = {refVec.angleTo(new Vector3(0,1,0))}
-  rotation.z = {refVec.angleTo(new Vector3(0,0,1))}
+  rotation.y={Math.PI/2}
+  bind:ref={group}
 >
   {#if scaleFactor > 0.05}
     <!-- Body -->
