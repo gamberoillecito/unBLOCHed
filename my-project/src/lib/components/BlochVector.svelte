@@ -13,25 +13,25 @@
     export let scaleFactor:number;
     export let refVec:Vector3;
     export let rotations:number[];
-    let group: Group | undefined = undefined
-    // $: console.log(getTetha(refVec))
-    $: console.log(refVec)
-    // $: group?.rotateOnWorldAxis(new Vector3(0,0,1), rotations[2])
-    $: group?.lookAt(refVec)
+    let group: Group | undefined = undefined;
+    // $: console.log(getTetha(refVec));
+    $: console.log(refVec);
+    // $: group?.rotateOnWorldAxis(new Vector3(0,0,1), rotations[2]);
+    $: group?.lookAt(refVec);
     
     function getTetha(vec:Vector3) {
-      let sph = new Spherical().setFromVector3(vec)
-      return sph.theta
+      let sph = new Spherical().setFromVector3(vec);
+      return sph.theta;
     }
 
     function getPhi(vec:Vector3) {
-      let sph = new Spherical().setFromVector3(vec)
-      return sph.phi
+      let sph = new Spherical().setFromVector3(vec);
+      return sph.phi;
     }
   </script>
 
 <T.ArrowHelper
-  args={[refVec, new Vector3(0,0,0)]}
+  args={[new Vector3(Math.sin(rotations[0])*Math.cos(rotations[1]), Math.sin(rotations[0])*Math.sin(rotations[1]), Math.cos(rotations[0])), new Vector3(0,0,0)]}
 />
 <T.Group
   rotation.y={Math.PI/2}
