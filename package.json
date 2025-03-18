@@ -2,6 +2,7 @@
 	"dependencies": {
 		"@threlte/core": "^8.0.1",
 		"@threlte/extras": "^9.1.0",
+		"@types/javascript-color-gradient": "^2.4.2",
 		"@types/three": "^0.174.0",
 		"three": "^0.174.0"
 	}
