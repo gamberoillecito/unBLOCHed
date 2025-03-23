@@ -1,14 +1,22 @@
-import {complex, type Complex} from 'mathjs'
+import {complex, type Complex, multiply as matmul} from 'mathjs'
+import { js } from 'three/tsl';
+
+type ComplexMat2x2 = [[Complex, Complex], [Complex, Complex]];
+
+
+export function print_mat(mat: ComplexMat2x2) {
+    console.log(`[${mat[0][0]}, ${mat[0][1]},\n${mat[1][0]}, ${mat[1][1]}]`)
+}
 
 export class DensityMatrix {
-    #mat: [[Complex, Complex], [Complex, Complex]] = $state([
+    mat: ComplexMat2x2 = $state([
         [complex(1), complex(0)], 
         [complex(0), complex(0)]
     ]);
-    #a = $derived(this.#mat[0][0]);
-    #b = $derived(this.#mat[0][1]);
-    #c = $derived(this.#mat[1][0]);
-    #d = $derived(this.#mat[1][1]);
+    #a = $derived(this.mat[0][0]);
+    #b = $derived(this.mat[0][1]);
+    #c = $derived(this.mat[1][0]);
+    #d = $derived(this.mat[1][1]);
 
     // Note that the values of y and z are swapped to account
     // for the fact that threejs uses a different notation
@@ -20,10 +28,35 @@ export class DensityMatrix {
         2*this.#b.im
     ])
 
-
-    get mat(){
-        return this.#mat;
+    constructor(){
+        return
+        // console.log("inizio")
+        // print_mat(this.mat)
+        // this.apply_gate()
+        // console.log("dopo apply")
+        // print_mat(this.mat)
+        // this.apply_gate()
     }
+
+    // apply_gate(gate_mat: ComplexMat2x2 ) {
+    apply_gate() {
+        let gate_mat:ComplexMat2x2 =  [
+        [complex(0), complex(1)], 
+        [complex(1), complex(0)]]
+
+        console.log("apply gate")
+        console.log("this.mat")
+        print_mat(this.mat);
+        console.log("gate_mat")
+        print_mat(gate_mat);
+        this.mat = matmul(gate_mat, this.mat) as ComplexMat2x2;
+    }
+
+
+
+    // get mat(){
+    //     return this.#mat;
+    // }
 
     get blochV(){
         return this.#blochV  as [number, number, number];
@@ -34,16 +67,16 @@ export class DensityMatrix {
     }
 
     set a(value: Complex){
-        this.#mat[0][0] = value;
+        this.mat[0][0] = value;
     }
     set b(value: Complex){
-        this.#mat[0][1] = value;
+        this.mat[0][1] = value;
     }
     set c(value: Complex){
-        this.#mat[1][0] = value;
+        this.mat[1][0] = value;
     }
     set d(value: Complex){
-        this.#mat[1][1] = value;
+        this.mat[1][1] = value;
     }
 
     get a(){

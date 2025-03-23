@@ -2,12 +2,16 @@
   import { Canvas } from '@threlte/core'
   import Scene from './Scene.svelte'
 
-  import {DensityMatrix } from '$lib/components/Model.svelte'
+  import {DensityMatrix , print_mat} from '$lib/components/Model.svelte'
   let DM = new DensityMatrix();
   
-  $inspect(DM)
+  $effect(()=>{console.log("inspect DM:"); print_mat(DM.mat)})
   
 </script>
+
+<button onclick={()=>{DM.apply_gate()}}>
+  app
+</button>
 
 <Canvas>
   <Scene {DM}/>
