@@ -10,10 +10,14 @@ export class DensityMatrix {
     #c = $derived(this.#mat[1][0]);
     #d = $derived(this.#mat[1][1]);
 
+    // Note that the values of y and z are swapped to account
+    // for the fact that threejs uses a different notation
+    // This *should* allow us to forget about the different
+    // notation in the rest of the code
     #blochV: [number, number, number] = $derived([
-        2*complex(this.#b).re,
-        2*complex(this.#b).im,
-        2*complex(this.#a).re - 1
+        2*this.#b.re,
+        2*this.#a.re - 1,
+        2*this.#b.im
     ])
 
 
@@ -23,10 +27,6 @@ export class DensityMatrix {
 
     get blochV(){
         return this.#blochV  as [number, number, number];
-    }
-
-    get bvLen(){
-        return Math.sqrt(this.blochV[0]**2 + this.blochV[1]**2 + this.blochV[2]**2);
     }
 
     get phase(){
