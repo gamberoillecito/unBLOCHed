@@ -43,7 +43,7 @@
   position.z = {DM.blochV[2]}
 >
   <T.SphereGeometry
-    args={[0.01]}
+    args={[0.1]}
   />
   <T.MeshStandardMaterial
       color= {"red"}
