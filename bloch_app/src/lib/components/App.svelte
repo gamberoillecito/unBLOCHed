@@ -2,21 +2,51 @@
   import { Canvas } from '@threlte/core'
   import Scene from './Scene.svelte'
   import {complex, type Complex, multiply as matmul} from 'mathjs'
-
+  
+  import {onMount} from 'svelte'
   import {DensityMatrix , print_mat} from '$lib/components/Model.svelte'
   import type { ComplexMat2x2 } from '$lib/components/Model.svelte';
+
+  	import MathField from './MathField.svelte'
+  let latex = $state('1');
+	let latex2 = $state('2');
+
   let DM = new DensityMatrix();
   let mi = $state(0);
+  // let minput = $state();
+  // $inspect(minput);
   let matrix_gate: ComplexMat2x2 = $state([
         [complex(1), complex(0)], 
         [complex(0), complex(0)]
     ]);
   $effect(()=>{console.log("inspect DM:"); print_mat(DM.mat)})
+
+  //   let mf:HTMLElement;
+  // $inspect(mf.value)
+  //  onMount(() => {
+  //   if (mf) {
+  //     mf.focus()
+  //   }
+  // })
 </script>
+
+<MathField bind:latex={latex}></MathField>
+
+<MathField bind:latex={latex2}></MathField>
+
+
+<p>Current LaTeX: {latex}</p>
+
+<p>Current LaTeX: {latex2}</p>
+
+<button onclick={()=>{latex = "x1"}}> Set input 1 to "x1"</button>
+
+<button onclick={()=>{latex2 = "x2"}}> Set input 2 to "x2"</button>
 
 <button onclick={()=>{DM.apply_gate(matmul(mi, matrix_gate) as ComplexMat2x2)}}>
   app
 </button>
+
 
 <Canvas>
   <Scene {DM}/>
