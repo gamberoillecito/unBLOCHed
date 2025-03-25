@@ -1,8 +1,9 @@
-<script>
+<script lang="ts">
 	import 'mathlive'
+  import  type {MathfieldElement} from 'mathlive'
 	import { onMount } from 'svelte';
   let {latex = $bindable()} = $props();
-  let mathfieldElement;
+  let mathfieldElement: MathfieldElement;
 	$effect(() => {
 		mathfieldElement.value = latex;
 	});
