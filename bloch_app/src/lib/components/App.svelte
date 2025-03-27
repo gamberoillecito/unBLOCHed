@@ -29,6 +29,8 @@
   //   }
   // })
 </script>
+<div id="main_content">
+
 
 <MathField bind:latex={latex}></MathField>
 
@@ -47,10 +49,11 @@
   app
 </button>
 
-
-<Canvas>
+<div id="canvas_wrapper">
+<Canvas >
   <Scene {DM}/>
 </Canvas>
+</div>
 
   <div id="matrix" style="padding-top: 9em; ">
     <div class="row">
@@ -75,11 +78,19 @@
     </div>
   </div>
 
+</div>
 
 
-  <!-- <style>
-    #matrix {
+  <style> 
+    #main_content {
       display: flex;
       flex-direction: row;
+      
     }
-  </style> -->
+
+    #canvas_wrapper {
+      width: 50%;
+      height: 80%;
+      background-color: antiquewhite;
+    }
+  </style>
