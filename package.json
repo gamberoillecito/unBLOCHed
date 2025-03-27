@@ -4,6 +4,7 @@
 		"@threlte/extras": "^9.1.0",
 		"@types/three": "^0.174.0",
 		"mathjs": "^14.3.1",
+		"mathlive": "^0.104.2",
 		"three": "^0.174.0",
 		"typescript-color-gradient": "^4.0.1"
 	}
