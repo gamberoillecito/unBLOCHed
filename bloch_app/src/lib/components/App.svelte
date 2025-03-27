@@ -7,34 +7,26 @@
   import {DensityMatrix , print_mat} from '$lib/components/Model.svelte'
   import type { ComplexMat2x2 } from '$lib/components/Model.svelte';
 
-  	import MathField from './MathField.svelte'
+  import MathField from "$lib/MathLive.svelte";
+
   let latex = $state('1');
 	let latex2 = $state('2');
 
   let DM = new DensityMatrix();
   let mi = $state(0);
-  // let minput = $state();
-  // $inspect(minput);
   let matrix_gate: ComplexMat2x2 = $state([
         [complex(1), complex(0)], 
         [complex(0), complex(0)]
     ]);
   $effect(()=>{console.log("inspect DM:"); print_mat(DM.mat)})
 
-  //   let mf:HTMLElement;
-  // $inspect(mf.value)
-  //  onMount(() => {
-  //   if (mf) {
-  //     mf.focus()
-  //   }
-  // })
 </script>
 <div id="main_content">
 
 
-<MathField bind:latex={latex}></MathField>
+<MathField bind:value={latex}></MathField>
 
-<MathField bind:latex={latex2}></MathField>
+<MathField bind:value={latex2}></MathField>
 
 
 <p>Current LaTeX: {latex}</p>
