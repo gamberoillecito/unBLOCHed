@@ -5,7 +5,7 @@
 
   type Props = { value?: string } & Partial<MathfieldElementAttributes>;
 
-  let { value = $bindable(), ...rest }: Props = $props();
+  let { value = $bindable(), node = $bindable(), ...rest }: Props = $props();
 
   const init = (node: MathfieldElement) => {
     $effect(() => {
@@ -19,4 +19,5 @@
   };
 </script>
 
-<math-field use:init {...rest}></math-field>
+<math-field use:init {...rest} bind:this={node}></math-field>
+
