@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Canvas } from '@threlte/core'
   import Scene from './Scene.svelte'
-  import {complex, type Complex, exp, multiply as matmul} from 'mathjs'
+  import {complex, type Complex, exp, multiply as matmul, range} from 'mathjs'
   
   import {DensityMatrix , print_mat} from '$lib/components/Model.svelte'
   import type { ComplexMat2x2 } from '$lib/components/Model.svelte';
@@ -19,17 +19,23 @@
   //   ]);
 
   let ce = new ComputeEngine();
+  $inspect(DM.mat);
 
   $effect(() => {
-    if (DM_prompts['m00']){
+  for (let i =0; i < 2; i++) {
+    for (let j =0; j < 2; j++) {
+      let idx = `m${i}${j}`
+      if (DM_prompts[idx]){
 
-      let expr = ce.parse(DM_prompts['m00']).N();
-      if (expr){
-        console.log("expr")
-        console.log(expr.re)
-        DM.a = complex(expr.re, expr.im);
+        let expr = ce.parse(DM_prompts[idx]).N();
+        if (expr){
+          console.log("expr")
+          console.log(expr.re)
+          DM.mat[i][j] = complex(expr.re, expr.im);
+        }
       }
     }
+  }
   })
 
   // $effect(()=>{console.log("inspect DM:"); print_mat(DM.mat)})
@@ -38,7 +44,8 @@
     "smart-mode": 'true',
     "keypressSound": null,
     "defaultMode": "math",
-    "menuItems": []
+    "menuItems": [],
+    "math-virtual-keyboard-policy": "manual"
   }
 </script>
 
@@ -54,7 +61,7 @@
 <div>
 <div>
 Matrix:
-<MathField bind:value={DM_latex}  bind:prompts={DM_prompts} read-only math-virtual-keyboard-policy="manual" menuItems={[]}></MathField>
+<MathField bind:value={DM_latex}  bind:prompts={DM_prompts} read-only mathlLiveConfig ></MathField>
 <p>Current LaTeX: {DM_latex}</p>
 
 <p>Prompts:  {DM_prompts}</p>
