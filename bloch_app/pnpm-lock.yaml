@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      mathlive:
+        specifier: ^0.105.0
+        version: 0.105.0
     devDependencies:
       '@eslint/compat':
         specifier: ^1.2.5
@@ -62,6 +66,10 @@ packages:
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
+
+  '@cortex-js/compute-engine@0.28.0':
+    resolution: {integrity: sha512-kGs74P4KVNLSqu+iVhLSAvodScZdVGoZI2kOsUjnBEFCFjlPJ1Nj5TpBz/4nwPT+viguB+g7VseXsmcxWRx23Q==}
+    engines: {node: '>=21.7.3', npm: '>=10.5.0'}
 
   '@esbuild/aix-ppc64@0.25.1':
     resolution: {integrity: sha512-kfYGy8IdzTGy+z0vFGvExZtxkFlA4zAxgKEahG9KE1ScBjpQnFsNOX8KTU5ojNru5ed5CVoJYXFtoxaq5nFbjQ==}
@@ -562,6 +570,10 @@ packages:
   color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
 
+  complex-esm@2.1.1-esm1:
+    resolution: {integrity: sha512-IShBEWHILB9s7MnfyevqNGxV0A1cfcSnewL/4uPFiSxkcQL4Mm3FxJ0pXMtCXuWLjYz3lRRyk6OfkeDZcjD6nw==}
+    engines: {node: '>=16.14.2', npm: '>=8.5.0'}
+
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
@@ -586,6 +598,9 @@ packages:
     peerDependenciesMeta:
       supports-color:
         optional: true
+
+  decimal.js@10.5.0:
+    resolution: {integrity: sha512-8vDa8Qxvr/+d94hSh5P3IJwI5t8/c0KsMp+g8bNw9cY2icONa5aPfvKeieW1WlG0WQYwwhJ7mjui2xtiePQSXw==}
 
   deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
@@ -823,6 +838,10 @@ packages:
 
   magic-string@0.30.17:
     resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
+
+  mathlive@0.105.0:
+    resolution: {integrity: sha512-P0/mruXNLhiSIiELgZ6Xu9Pqte2bNZb+bXyfWs7q4yr3h3q+SrDaXGT53+EVorf7Wvm/kotEq4qOA1qquG3wTg==}
+    engines: {node: '>=21.0.0', npm: '>=10.5.0'}
 
   merge2@1.4.1:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
@@ -1130,6 +1149,11 @@ snapshots:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
+
+  '@cortex-js/compute-engine@0.28.0':
+    dependencies:
+      complex-esm: 2.1.1-esm1
+      decimal.js: 10.5.0
 
   '@esbuild/aix-ppc64@0.25.1':
     optional: true
@@ -1543,6 +1567,8 @@ snapshots:
 
   color-name@1.1.4: {}
 
+  complex-esm@2.1.1-esm1: {}
+
   concat-map@0.0.1: {}
 
   cookie@0.6.0: {}
@@ -1558,6 +1584,8 @@ snapshots:
   debug@4.4.0:
     dependencies:
       ms: 2.1.3
+
+  decimal.js@10.5.0: {}
 
   deep-is@0.1.4: {}
 
@@ -1815,6 +1843,10 @@ snapshots:
   magic-string@0.30.17:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  mathlive@0.105.0:
+    dependencies:
+      '@cortex-js/compute-engine': 0.28.0
 
   merge2@1.4.1: {}
 

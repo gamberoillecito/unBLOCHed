@@ -35,5 +35,8 @@
 		"onlyBuiltDependencies": [
 			"esbuild"
 		]
+	},
+	"dependencies": {
+		"mathlive": "^0.105.0"
 	}
 }
