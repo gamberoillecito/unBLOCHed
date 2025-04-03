@@ -1,77 +1,75 @@
 <script lang="ts">
   import { Canvas } from '@threlte/core'
   import Scene from './Scene.svelte'
-  import {complex, type Complex, multiply as matmul} from 'mathjs'
+  import {complex, type Complex, exp, multiply as matmul} from 'mathjs'
   
-  import {onMount} from 'svelte'
   import {DensityMatrix , print_mat} from '$lib/components/Model.svelte'
   import type { ComplexMat2x2 } from '$lib/components/Model.svelte';
+  import MathField from "$lib/components/MathField.svelte"
+  import type {promptsDict} from "$lib/components/MathField.svelte"
+  import {ComputeEngine} from  "@cortex-js/compute-engine"
 
-  import MathField from "$lib/MathLive.svelte";
-
-  let latex = $state('1');
-	let latex2 = $state('2');
+  let DM_latex =  $state('\\placeholder[mult]{1}\\cdot\\begin{bmatrix}\\placeholder[m00]{1} & \\placeholder[m01]{0}\\\\ \\placeholder[m10]{0} & \\placeholder[m11]{1}\\end{bmatrix}');
 
   let DM = new DensityMatrix();
-  let mi = $state(0);
-  let matrix_gate: ComplexMat2x2 = $state([
-        [complex(1), complex(0)], 
-        [complex(0), complex(0)]
-    ]);
-  $effect(()=>{console.log("inspect DM:"); print_mat(DM.mat)})
+  let DM_prompts: promptsDict = $state({});
+  // let matrix_gate: ComplexMat2x2 = $state([
+  //       [complex(1), complex(0)], 
+  //       [complex(0), complex(0)]
+  //   ]);
 
+  let ce = new ComputeEngine();
+
+  $effect(() => {
+    if (DM_prompts['m00']){
+
+      let expr = ce.parse(DM_prompts['m00']).N();
+      if (expr){
+        console.log("expr")
+        console.log(expr.re)
+        DM.a = complex(expr.re, expr.im);
+      }
+    }
+  })
+
+  // $effect(()=>{console.log("inspect DM:"); print_mat(DM.mat)})
+
+  const mathLiveConfig = {
+    "smart-mode": 'true',
+    "keypressSound": null,
+    "defaultMode": "math",
+    "menuItems": []
+  }
 </script>
+
+
 <div id="main_content">
 
-
-<MathField bind:value={latex}></MathField>
-
-<MathField bind:value={latex2}></MathField>
-
-
-<p>Current LaTeX: {latex}</p>
-
-<p>Current LaTeX: {latex2}</p>
-
-<button onclick={()=>{latex = "x1"}}> Set input 1 to "x1"</button>
-
-<button onclick={()=>{latex2 = "x2"}}> Set input 2 to "x2"</button>
-
-<button onclick={()=>{DM.apply_gate(matmul(mi, matrix_gate) as ComplexMat2x2)}}>
-  app
-</button>
-
-<div id="canvas_wrapper">
-<Canvas >
-  <Scene {DM}/>
-</Canvas>
+<div id="canvasContainer">
+  <Canvas >
+    <Scene {DM}/>
+  </Canvas>
 </div>
 
-  <div id="matrix" style="padding-top: 9em; ">
-    <div class="row">
-      <input type="text" bind:value={DM.a}>
-      <input type="text" bind:value={DM.b}>
-    </div>
-    <div class="row">
-      <input type="text" bind:value={DM.c}>
-      <input type="text" bind:value={DM.d}>
-    </div>
-  </div>
+<div>
+<div>
+Matrix:
+<MathField bind:value={DM_latex}  bind:prompts={DM_prompts} read-only math-virtual-keyboard-policy="manual" menuItems={[]}></MathField>
+<p>Current LaTeX: {DM_latex}</p>
 
-  <div id="matrix2" style="padding-top: 9em; ">
-      <input type="text" bind:value={mi}>
-    <div class="row">
-      <input type="text" bind:value={matrix_gate[0][0]}>
-      <input type="text" bind:value={matrix_gate[0][1]}>
-    </div>
-    <div class="row">
-      <input type="text" bind:value={matrix_gate[1][0]}>
-      <input type="text" bind:value={matrix_gate[1][1]}>
-    </div>
-  </div>
-
+<p>Prompts:  {DM_prompts}</p>
+<p>matrix[0][0]:  {DM_prompts["m00"]}</p>
+<p>matrix[0][1]:  {DM_prompts["m01"]}</p>
+<button onclick={()=>{
+    DM_prompts["m00"] = "x+1";
+    }}>Set value [0][0] to "x+1"</button>
+</div>
+  <!-- <button onclick={()=>{DM.apply_gate(matmul(mi, matrix_gate) as ComplexMat2x2)}}>
+    app
+  </button> -->
 </div>
 
+</div>
 
   <style> 
     #main_content {
@@ -80,7 +78,7 @@
       
     }
 
-    #canvas_wrapper {
+    #canvasContainer {
       width: 50%;
       height: 80%;
       background-color: antiquewhite;
