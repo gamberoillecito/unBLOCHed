@@ -19,24 +19,25 @@
   //   ]);
 
   let ce = new ComputeEngine();
-  $inspect(DM.mat);
+  // $inspect(DM.mat);
+  $inspect(DM_prompts);
 
-  $effect(() => {
-  for (let i =0; i < 2; i++) {
-    for (let j =0; j < 2; j++) {
-      let idx = `m${i}${j}`
-      if (DM_prompts[idx]){
+  // $effect(() => {
+  // for (let i =0; i < 2; i++) {
+  //   for (let j =0; j < 2; j++) {
+  //     let idx = `m${i}${j}`
+  //     if (DM_prompts[idx]){
 
-        let expr = ce.parse(DM_prompts[idx]).N();
-        if (expr){
-          console.log("expr")
-          console.log(expr.re)
-          DM.mat[i][j] = complex(expr.re, expr.im);
-        }
-      }
-    }
-  }
-  })
+  //       let expr = ce.parse(DM_prompts[idx]).N();
+  //       if (expr){
+  //         console.log("expr")
+  //         console.log(expr.re)
+  //         DM.mat[i][j] = complex(expr.re, expr.im);
+  //       }
+  //     }
+  //   }
+  // }
+  // })
 
   // $effect(()=>{console.log("inspect DM:"); print_mat(DM.mat)})
 
