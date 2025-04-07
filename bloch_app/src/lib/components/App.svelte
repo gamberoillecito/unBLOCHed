@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Canvas } from '@threlte/core'
   import Scene from './Scene.svelte'
-  import {complex, type Complex, exp, multiply as matmul, range} from 'mathjs'
+  import {complex, type Complex, exp, multiply, range} from 'mathjs'
   
   import {DensityMatrix , print_mat} from '$lib/components/Model.svelte'
   import type { ComplexMat2x2 } from '$lib/components/Model.svelte';
@@ -19,25 +19,28 @@
   //   ]);
 
   let ce = new ComputeEngine();
-  // $inspect(DM.mat);
+  $inspect(DM.mat);
   $inspect(DM_prompts);
 
-  // $effect(() => {
-  // for (let i =0; i < 2; i++) {
-  //   for (let j =0; j < 2; j++) {
-  //     let idx = `m${i}${j}`
-  //     if (DM_prompts[idx]){
+  $effect(() => {
+    
+    for (let i =0; i < 2; i++) {
+      for (let j =0; j < 2; j++) {
+        let idx = `m${i}${j}`
+        if (DM_prompts[idx]){
 
-  //       let expr = ce.parse(DM_prompts[idx]).N();
-  //       if (expr){
-  //         console.log("expr")
-  //         console.log(expr.re)
-  //         DM.mat[i][j] = complex(expr.re, expr.im);
-  //       }
-  //     }
-  //   }
-  // }
-  // })
+          let expr = ce.parse(DM_prompts[idx]).N();
+          if (expr){
+            let mult = ce.parse(DM_prompts['mult']).N();
+            console.log(`mult: ${mult}`);
+            console.log("expr")
+            console.log(expr.re)
+            DM.mat[i][j] = multiply(complex(expr.re, expr.im), complex(mult.re, mult.im)) as Complex;
+          }
+        }
+      }
+    }
+  })
 
   // $effect(()=>{console.log("inspect DM:"); print_mat(DM.mat)})
 
