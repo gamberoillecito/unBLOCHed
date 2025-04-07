@@ -64,6 +64,7 @@
 Matrix:
 <MathField bind:value={DM_latex}  bind:prompts={DM_prompts} read-only mathlLiveConfig ></MathField>
 <p>Current LaTeX: {DM_latex}</p>
+<input type="text" bind:value={DM_latex}>
 
 <p>Prompts:  {DM_prompts}</p>
 <p>matrix[0][0]:  {DM_prompts["m00"]}</p>
@@ -71,6 +72,10 @@ Matrix:
 <button onclick={()=>{
     DM_prompts["m00"] = "x+1";
     }}>Set value [0][0] to "x+1"</button>
+
+<button onclick={()=>{
+    DM_prompts["m00"] = "x";
+    }}>dmprompts change</button>
 </div>
   <!-- <button onclick={()=>{DM.apply_gate(matmul(mi, matrix_gate) as ComplexMat2x2)}}>
     app

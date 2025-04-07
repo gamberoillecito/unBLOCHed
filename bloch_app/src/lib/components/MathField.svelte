@@ -20,7 +20,6 @@
         let firstTime = true; // Hack to allow updating prompts the first time the element is loaded
 
         function onchange(){
-            console.log("change")
             value = node.value
 
             for (let p of node.getPrompts()){
@@ -47,8 +46,11 @@
 
         // Every time the parent changes the prompts, reflect these changes in the node
         $effect(()=>{
+            console.log("changed prompts")
             if (prompts){
-
+                for (let p in prompts){
+                    node.setPromptValue(p, prompts[p], {})
+                }
             }
         })
     };
