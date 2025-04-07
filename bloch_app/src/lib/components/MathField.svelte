@@ -15,14 +15,16 @@
 
   prompts = {};
   const init = (node: MathfieldElement) => {
+
+    console.log("init mathfield")
+    console.log(node.getPrompts())
     for (let p of node.getPrompts()){
         console.log(p);
         prompts[p] = node.getPromptValue(p)
     }
-    node.macros =  {
-        minutes: "\\,{}^\\prime\\;",
-        seconds: "\\,\\doubleprime\\;",
-    };
+
+    node.macros =  {};
+
     $effect(() => {
         if (value) node.value = value;
         
@@ -36,8 +38,10 @@
         }
 
     });
+
     $effect(() => {
       return on(node, "change", () => {
+        console.log("change")
         value = node.value;
         for (let p of node.getPrompts()) {
             prompts[p] = node.getPromptValue(p);

@@ -38,7 +38,6 @@
   function latitudeRadius(sphereRad:number, prog:number, numLatitudes:number) {
     let spacing = latitudeSpacing(sphereRad, numLatitudes);
     let rad = Math.sqrt(sphereRad**2 - ((prog - Math.floor(numLatitudes/2)) * spacing )**2);
-    console.log(spacing);
     return rad;
   }
 </script>
