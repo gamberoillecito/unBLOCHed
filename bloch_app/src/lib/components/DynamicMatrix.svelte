@@ -20,8 +20,7 @@ import { onMount } from 'svelte';
         $effect(()=>{
             for (let i = 0; i < 2; i++){
                 for (let j = 0; j < 2; j++){
-                    let newValue: string = DM.latexMat[i][j] ?? DM.mat[i][j].toString();
-
+                    let newValue: string = DM.latexMat[i][j];
                     mf.setPromptValue(`m${i}${j}`, newValue, {})
                 }
             }
