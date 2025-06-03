@@ -21,7 +21,7 @@ function dagger(mat:ComplexMat2x2) {
 
 export class DensityMatrix {
     #mat: ComplexMat2x2;
-    latexMat: (string | null)[][];
+    latexMat: (string)[][];
     #a: Complex; 
     #b: Complex; 
     #c: Complex; 
@@ -40,12 +40,13 @@ export class DensityMatrix {
             [complex(1), complex(0)], 
             [complex(0), complex(0)]
         ]);
-        this.latexMat = [[null, null], [null, null]];
         this.#a = $derived(this.#mat[0][0]);
         this.#b = $derived(this.#mat[0][1]);
         this.#c = $derived(this.#mat[1][0]);
         this.#d = $derived(this.#mat[1][1]);
 
+        this.latexMat = $state(this.#mat.map(row => row.map(el => el.toString())));
+        
         this.#blochV= $derived([
         2*this.#b.re,
         2*this.#a.re - 1,
@@ -55,12 +56,12 @@ export class DensityMatrix {
 
     setValue(value: Complex, i: number, j:number) {
         this.#mat[i][j] = value;
-        this.latexMat[i][j] = null;
+        this.latexMat[i][j] = value.toString();
+        console.log(this.latexMat[i][j]);
     }
     setLatex(latex:string, i: number, j:number) {
         let converted = this.ce.parse(latex).N();
         this.#mat[i][j] = complex(converted.re, converted.im);
-        console.log(this.#mat[i][j]);
         this.latexMat[i][j] = latex;
     }
 
