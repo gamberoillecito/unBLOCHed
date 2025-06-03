@@ -1,3 +1,4 @@
+import { ComputeEngine } from '@cortex-js/compute-engine';
 import {
     complex,
     type Complex, 
@@ -23,10 +24,12 @@ export class DensityMatrix {
         [complex(1), complex(0)], 
         [complex(0), complex(0)]
     ]);
+    latexMat: string|null[][];
     #a = $derived(this.mat[0][0]);
     #b = $derived(this.mat[0][1]);
     #c = $derived(this.mat[1][0]);
     #d = $derived(this.mat[1][1]);
+
 
     // Note that the values of y and z are swapped to account
     // for the fact that threejs uses a different notation
@@ -38,14 +41,16 @@ export class DensityMatrix {
         2*this.#b.im
     ])
 
+    ce: ComputeEngine;
+
     constructor(){
-        return
-        // console.log("inizio")
-        // print_mat(this.mat)
-        // this.apply_gate()
-        // console.log("dopo apply")
-        // print_mat(this.mat)
-        // this.apply_gate()
+        this.ce = new ComputeEngine();
+        this.latexMat = [[null, null], [null, null]];
+    }
+
+    setLatex(latex:string, DM: DensityMatrix, i: number, j:number) {
+        let converted = this.ce.parse(latex).N();
+        DM.mat[i][j] = complex(converted.re, converted.im)
     }
 
     // apply_gate(gate_mat: ComplexMat2x2 ) {
