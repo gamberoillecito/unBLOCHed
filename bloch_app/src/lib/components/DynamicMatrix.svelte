@@ -14,7 +14,7 @@ import { onMount } from 'svelte';
     // dynMat.setLatexElements([['a', 'b'],['c', 'd']])
 	const myAttachment: Attachment = (element) => {
 		let mf = element as MathfieldElement;
-        mf.value = '\\placeholder[mult]{1}\\cdot\\begin{bmatrix}\\placeholder[m00]{1} & \\placeholder[m01]{0}\\\\ \\placeholder[m10]{0} & \\placeholder[m11]{1}\\end{bmatrix}';
+        mf.value = '\\placeholder[mult]{1}\\begin{bmatrix}\\placeholder[m00]{1} & \\placeholder[m01]{0}\\\\ \\placeholder[m10]{0} & \\placeholder[m11]{1}\\end{bmatrix}';
         $inspect(DM)
 
         $effect(()=>{
@@ -24,19 +24,35 @@ import { onMount } from 'svelte';
                     mf.setPromptValue(`m${i}${j}`, newValue, {})
                 }
             }
+            mf.setPromptValue(`mult`, DM.latexMult, {})
         })
 
         mf.addEventListener('change', ()=>{
-            // let tempMat: ComplexMat2x2 = [[complex(), complex()],[complex(), complex()]];
 
             for (let i = 0; i < 2; i++){
                 for (let j = 0; j < 2; j++){
-                    // tempMat[i][j] = complex(mf.getPromptValue(`m${i}${j}`))
                     let promptValue = mf.getPromptValue(`m${i}${j}`);
                     DM.setLatex(promptValue, i, j)
                 }
             }
-            // DM.mat = tempMat;
+            DM.setMultLatex(mf.getPromptValue('mult'));
+            let ce = new ComputeEngine();
+            ce.latexDictionary = [
+                ...ce.latexDictionary,
+                {
+                    latexTrigger: '\\placeholder',
+                    // @ts-ignore
+                    parse: (parser) => {
+                    parser.parseOptionalGroup();
+                    return parser.parseGroup() ?? ['Error', "'missing'"];
+                    },
+                },
+                ];
+            let converted = ce.parse(mf.value).N();
+            // console.info(converted)
+            converted.evaluate().print();
+            let matrix = ce.parse(mf.value).evaluate().json;
+            console.info(matrix);
         })
 		return () => {
 			console.log('cleaning up');

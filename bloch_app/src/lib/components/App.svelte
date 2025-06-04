@@ -26,7 +26,7 @@
   <DynamicMatrix ></DynamicMatrix>
   <button onclick={()=>{
     DM.setValue( complex("1+i"), 0, 0);
-    }}>Change DM</button>
+    }}>Change DM value</button>
   <textarea>{`[[${DM.mat[0][0]}], [${DM.mat[0][1]}] \n [${DM.mat[1][0]}], [${DM.mat[1][1]}]]`}</textarea>
 </div>
 

@@ -20,6 +20,7 @@ function dagger(mat:ComplexMat2x2) {
 }
 
 export class DensityMatrix {
+    #latexMult: string;
     #mat: ComplexMat2x2;
     latexMat: (string)[][];
     #a: Complex; 
@@ -40,6 +41,7 @@ export class DensityMatrix {
             [complex(1), complex(0)], 
             [complex(0), complex(0)]
         ]);
+        this.#latexMult = '1';
         this.#a = $derived(this.#mat[0][0]);
         this.#b = $derived(this.#mat[0][1]);
         this.#c = $derived(this.#mat[1][0]);
@@ -57,9 +59,32 @@ export class DensityMatrix {
     setValue(value: Complex, i: number, j:number) {
         this.#mat[i][j] = value;
         this.latexMat[i][j] = value.toString();
-        console.log(this.latexMat[i][j]);
+        this.#latexMult = '1';
+        // If the value of a matrix element I have to invalidate the
+        // multiplier and apply it to each element
+        for (let i = 0; i < 2; i++){
+            for (let j = 0; j < 2; j++){
+                this.latexMat[i][j] = this.#mat[i][j].toString();
+            }
+        }
+    }
+
+    setMultLatex(latex: string){
+        this.#latexMult = latex;
+        let eval_mult = this.ce.parse(latex).N();
+        let mult = complex(eval_mult.re, eval_mult.im);
+        for (let i = 0; i < 2; i++){
+            for (let j = 0; j < 2; j++){
+                this.#mat[i][j]= matmul(this.#mat[i][j], mult) as Complex;
+            }
+        }
     }
     setLatex(latex:string, i: number, j:number) {
+        // If a multiplier is present in the matrix, use it to calculate
+        // the real value of the matrix element
+        // The element of the latex matrix ignores the presence of the multiplier
+        // let complete_expr = `(${mult}) * (${latex})`; 
+        // console.info(complete_expr);
         let converted = this.ce.parse(latex).N();
         this.#mat[i][j] = complex(converted.re, converted.im);
         this.latexMat[i][j] = latex;
@@ -88,6 +113,10 @@ export class DensityMatrix {
     // set mat(){
     //     return this.#mat;
     // }
+
+    get latexMult(){
+        return this.#latexMult;
+    }
 
     get blochV(){
         return this.#blochV  as [number, number, number];
