@@ -3,12 +3,31 @@ import {
     complex,
     type Complex, 
     multiply as matmul,
+    matrix,
+    clone,
+    equal,
     transpose,
     conj    
 } from 'mathjs'
 
 export type ComplexMat2x2 = [[Complex, Complex], [Complex, Complex]];
 
+export class MatrixError extends(Error) {
+    constructor(msg: string) {
+        super(msg);
+        Object.setPrototypeOf(this, MatrixError.prototype);
+    }
+}
+
+class MatrixValidity {
+    isValid: boolean;
+    message: string;
+
+    constructor(valid: boolean, message: string=''){
+        this.isValid = valid;
+        this.message = message
+    }
+}
 
 export function print_mat(mat: ComplexMat2x2) {
     console.log(`[${mat[0][0]}, ${mat[0][1]},\n${mat[1][0]}, ${mat[1][1]}]`)
@@ -52,18 +71,36 @@ export class FancyMatrix {
         this._latexMat = $state(this._mat.map(row => row.map(el => el.toString()))); // Convert _mat elements to string
     }
 
+    // Updates _mat if it is a new valid matrix
+    setMatrixValue(newMat:ComplexMat2x2) {
+        let res = this.#validateMatrix(newMat);
+        
+        if (res.isValid) {
+            // If the value of a matrix element I have to invalidate the
+            // multiplier and apply it to each element
+            this._latexMult = '1';
+            for (let i = 0; i < 2; i++){
+                for (let j = 0; j < 2; j++){
+                    let newElement = newMat[i][j];
+                    // Do not update if value is unchanged
+                    if (equal(newElement, this._mat[i][j])){
+                        continue
+                    }
+                    this._mat[i][j] = newElement
+                    this._latexMat[i][j] = newElement.toString();
+                }
+            } 
+        }
+        return res;
+    }
+
     // Update element i,j to value and reflect the changes in the latex
     setValue(value: Complex, i: number, j:number) {
-        this._mat[i][j] = value;
-        this._latexMat[i][j] = value.toString();
-        this._latexMult = '1';
-        // If the value of a matrix element I have to invalidate the
-        // multiplier and apply it to each element
-        for (let i = 0; i < 2; i++){
-            for (let j = 0; j < 2; j++){
-                this._latexMat[i][j] = this._mat[i][j].toString();
-            }
-        }
+        let newMat = this._mat.map(row => row.map(el => clone(el))) as ComplexMat2x2;
+        
+        newMat[i][j] = value;
+        this.setMatrixValue(newMat);
+        print_mat(this._mat);
     }
 
     // Specify a multiplier to the matrix, in latex this is just a string
@@ -92,8 +129,9 @@ export class FancyMatrix {
         this._latexMat[i][j] = latex;
     }
 
-
-
+    #validateMatrix(newMat: ComplexMat2x2) : MatrixValidity {
+        return new MatrixValidity(true, 'errorone');
+    }
 
     get mat(){
         return this._mat;
