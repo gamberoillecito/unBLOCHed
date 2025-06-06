@@ -2,16 +2,12 @@
 
 import type { Attachment } from 'svelte/attachments';
 import type {MathfieldElement } from "mathlive";
-import { getContext, setContext } from 'svelte';
-import { onMount } from 'svelte';
-	import { DensityMatrix, type ComplexMat2x2 } from './Model.svelte';
-	import { complex, number } from 'mathjs';
-	import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { getContext } from 'svelte';
+	import { DensityMatrix } from './Model.svelte';
 	import { ComputeEngine } from '@cortex-js/compute-engine';
 
     let DM: DensityMatrix = getContext('densityMatrix');
 
-    // dynMat.setLatexElements([['a', 'b'],['c', 'd']])
 	const myAttachment: Attachment = (element) => {
 		let mf = element as MathfieldElement;
         mf.value = '\\placeholder[mult]{1}\\begin{bmatrix}\\placeholder[m00]{1} & \\placeholder[m01]{0}\\\\ \\placeholder[m10]{0} & \\placeholder[m11]{1}\\end{bmatrix}';
