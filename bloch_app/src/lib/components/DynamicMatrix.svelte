@@ -13,7 +13,7 @@
     }: Props = $props();
 
     let FM: FancyMatrix = getContext(matrixContext);
-    
+    let updateMatrixButton: Element;
     // This function is run as soon as the element is loaded and
     // sets up the reactivity of the element
 	const myAttachment: Attachment = (element) => {
@@ -36,14 +36,16 @@
 
         // Whenever we receive user input on the page we need to update
         // the FancyMatrix accordingly
-        mf.addEventListener('change', ()=>{
-
+        updateMatrixButton.addEventListener('click', ()=>{
             // Update all the latex fields with the new value
             // TODO : optimize to avoid useless overrides
             for (let i = 0; i < 2; i++){
                 for (let j = 0; j < 2; j++){
                     let promptValue = mf.getPromptValue(`m${i}${j}`);
                     let res = FM.setLatex(promptValue, i, j);
+                    if (!res.isValid){
+                        alert(res.message)
+                    }
                 }
             }
             FM.setMultLatex(mf.getPromptValue('mult'));
@@ -55,4 +57,5 @@
 	};
 </script>
 
+<button bind:this={updateMatrixButton}>Update</button>
 <math-field {@attach myAttachment} ></math-field>
