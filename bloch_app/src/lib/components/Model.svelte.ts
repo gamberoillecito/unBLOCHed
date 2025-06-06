@@ -6,7 +6,6 @@ import {
     transpose,
     conj    
 } from 'mathjs'
-import { js } from 'three/tsl';
 
 export type ComplexMat2x2 = [[Complex, Complex], [Complex, Complex]];
 
@@ -19,23 +18,41 @@ function dagger(mat:ComplexMat2x2) {
     return conj(transpose(mat))
 }
 
+// This class manages both the matematical and latex aspects
+// of a 2x2 matrix for bidirectional syncing with DynamicMatrix.svelte
 export class FancyMatrix {
-    protected _latexMult: string;
-    protected _mat: ComplexMat2x2;
-    protected _latexMat: (string)[][];
+    protected _latexMult: string; // Latex multiplier in front of the matrix
+    protected _mat: ComplexMat2x2; // The "math" matrix for calculations
+    protected _latexMat: (string)[][]; // The latex version of the matrix elements for display
 
     ce: ComputeEngine;
 
     constructor(){
         this.ce = new ComputeEngine();
+        // We need to tell the ComputeEngine how to
+        // deal with placeholders
+        this.ce.latexDictionary = [
+            ...this.ce.latexDictionary,
+            {
+                latexTrigger: '\\placeholder',
+                // @ts-ignore
+                parse: (parser) => {
+                parser.parseOptionalGroup();
+                return parser.parseGroup() ?? ['Error', "'missing'"];
+                },
+            },
+            ];
+
         this._mat= $state([
             [complex(1), complex(0)], 
             [complex(0), complex(0)]
         ]);
-        this._latexMult = '1';
-        this._latexMat = $state(this._mat.map(row => row.map(el => el.toString())));
+
+        this._latexMult = '1'; // Set to one since the "math" matrix has no multiplier
+        this._latexMat = $state(this._mat.map(row => row.map(el => el.toString()))); // Convert _mat elements to string
     }
 
+    // Update element i,j to value and reflect the changes in the latex
     setValue(value: Complex, i: number, j:number) {
         this._mat[i][j] = value;
         this._latexMat[i][j] = value.toString();
@@ -49,6 +66,9 @@ export class FancyMatrix {
         }
     }
 
+    // Specify a multiplier to the matrix, in latex this is just a string
+    // but to keep the "math" matrix in sync we have to compute the value of 
+    // the multiplier and apply it to each element of _mat
     setMultLatex(latex: string){
         this._latexMult = latex;
         let eval_mult = this.ce.parse(latex).N();
@@ -59,6 +79,8 @@ export class FancyMatrix {
             }
         }
     }
+
+    // Set a new value for the latex of element i,j and update the "math"
     setLatex(latex:string, i: number, j:number) {
         // If a multiplier is present in the matrix, use it to calculate
         // the real value of the matrix element
@@ -70,20 +92,7 @@ export class FancyMatrix {
         this._latexMat[i][j] = latex;
     }
 
-    // apply_gate(gate_mat: ComplexMat2x2 ) {
-    apply_gate(gate_mat: ComplexMat2x2) {
-        // let gate_mat:ComplexMat2x2 =  [
-        // [complex(0), complex(1)], 
-        // [complex(1), complex(0)]]
 
-        console.log("apply gate")
-        console.log("this.mat")
-        print_mat(this._mat);
-        console.log("gate_mat")
-        print_mat(gate_mat);
-        let gate_dag = dagger(gate_mat)
-        this._mat = matmul(gate_mat, matmul(this._mat, gate_dag)) as ComplexMat2x2;
-    }
 
 
     get mat(){
@@ -92,7 +101,6 @@ export class FancyMatrix {
     get latexMat(){
         return this._latexMat;
     }
-
     get latexMult(){
         return this._latexMult;
     }
@@ -157,5 +165,20 @@ export class DensityMatrix extends FancyMatrix {
     }
     get d(){
         return this.#d;
+    }
+
+        // apply_gate(gate_mat: ComplexMat2x2 ) {
+    apply_gate(gate_mat: ComplexMat2x2) {
+        // let gate_mat:ComplexMat2x2 =  [
+        // [complex(0), complex(1)], 
+        // [complex(1), complex(0)]]
+
+        console.log("apply gate")
+        console.log("this.mat")
+        print_mat(this._mat);
+        console.log("gate_mat")
+        print_mat(gate_mat);
+        let gate_dag = dagger(gate_mat)
+        this._mat = matmul(gate_mat, matmul(this._mat, gate_dag)) as ComplexMat2x2;
     }
 }

@@ -23,7 +23,7 @@
     <Canvas >
     </Canvas>
   </div>
-  <DynamicMatrix ></DynamicMatrix>
+  <DynamicMatrix matrixContext='densityMatrix'></DynamicMatrix>
   <button onclick={()=>{
     DM.setValue( complex("1+i"), 0, 0);
     }}>Change DM value</button>
