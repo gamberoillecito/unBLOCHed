@@ -9,6 +9,14 @@ import {
 
 export type ComplexMat2x2 = [[Complex, Complex], [Complex, Complex]];
 
+export class matrixValidity{
+    isValid: boolean;
+    message: string|null;
+    constructor(valid: boolean, message: string|null = null) {
+        this.isValid = valid;
+        this.message = message
+    }
+}
 
 export function print_mat(mat: ComplexMat2x2) {
     console.log(`[${mat[0][0]}, ${mat[0][1]},\n${mat[1][0]}, ${mat[1][1]}]`)
@@ -17,6 +25,7 @@ export function print_mat(mat: ComplexMat2x2) {
 function dagger(mat:ComplexMat2x2) {
     return conj(transpose(mat))
 }
+
 
 // This class manages both the matematical and latex aspects
 // of a 2x2 matrix for bidirectional syncing with DynamicMatrix.svelte
@@ -54,30 +63,55 @@ export class FancyMatrix {
 
     // Update element i,j to value and reflect the changes in the latex
     setValue(value: Complex, i: number, j:number) {
-        this._mat[i][j] = value;
-        this._latexMat[i][j] = value.toString();
-        this._latexMult = '1';
-        // If the value of a matrix element I have to invalidate the
+        // I do all operations in temporary variables,
+        // perform the validity checks and then decide
+        // to apply the changes
+        let temp_mat = Object.assign({}, this._mat);
+        let temp_latexMat = Object.assign({}, this.latexMat);
+        let temp_latexMult = Object.assign({}, this._latexMult);
+
+        temp_mat[i][j] = value;
+        temp_latexMat[i][j] = value.toString();
+        temp_latexMult = '1';
+        // If the value of a matrix element changes I have to invalidate the
         // multiplier and apply it to each element
         for (let i = 0; i < 2; i++){
             for (let j = 0; j < 2; j++){
-                this._latexMat[i][j] = this._mat[i][j].toString();
+                temp_latexMat[i][j] = temp_mat[i][j].toString();
             }
         }
+
+        let result = this.validateMatrix(temp_mat);
+        if (result.isValid) {
+            this._mat = temp_mat;
+            this._latexMat = temp_latexMat;
+            this._latexMult = temp_latexMult;
+        }
+        return result;
     }
 
     // Specify a multiplier to the matrix, in latex this is just a string
     // but to keep the "math" matrix in sync we have to compute the value of 
     // the multiplier and apply it to each element of _mat
     setMultLatex(latex: string){
-        this._latexMult = latex;
+        let temp_latexMult = Object.assign({}, this._latexMult);
+        let temp_mat = Object.assign({}, this._mat);
+        
+        temp_latexMult = latex;
         let eval_mult = this.ce.parse(latex).N();
         let mult = complex(eval_mult.re, eval_mult.im);
         for (let i = 0; i < 2; i++){
             for (let j = 0; j < 2; j++){
-                this._mat[i][j]= matmul(this._mat[i][j], mult) as Complex;
+                temp_mat[i][j]= matmul(temp_mat[i][j], mult) as Complex;
             }
         }
+
+        let result = this.validateMatrix(temp_mat);
+        if (result.isValid) {
+            this._mat = temp_mat;
+            this._latexMult = temp_latexMult;
+        }
+        return result;
     }
 
     // Set a new value for the latex of element i,j and update the "math"
@@ -87,13 +121,27 @@ export class FancyMatrix {
         // The element of the latex matrix ignores the presence of the multiplier
         // let complete_expr = `(${mult}) * (${latex})`; 
         // console.info(complete_expr);
+
+        let temp_mat = Object.assign({}, this._mat);
+        let temp_latexMat = Object.assign({}, this._latexMat);
+
         let converted = this.ce.parse(latex).N();
-        this._mat[i][j] = complex(converted.re, converted.im);
-        this._latexMat[i][j] = latex;
+        temp_mat[i][j] = complex(converted.re, converted.im);
+        temp_latexMat[i][j] = latex;
+        let result = this.validateMatrix(temp_mat);
+        if (result.isValid) {
+            console.log(result.message)
+            this._mat = temp_mat;
+            this._latexMat = temp_latexMat;
+        }
+        return result;
     }
 
-
-
+    // Checks if new_mat is a valid for _mat and returns an error
+    // explaining the issue in case it isn't
+    validateMatrix(new_mat:ComplexMat2x2): matrixValidity{
+        return new matrixValidity(true)
+    }
 
     get mat(){
         return this._mat;
@@ -131,7 +179,19 @@ export class DensityMatrix extends FancyMatrix {
         2*this.#b.re,
         2*this.#a.re - 1,
         2*this.#b.im
-    ])
+        ])
+    }
+
+    // Checks if new_mat is a valid for _mat and returns an error
+    // explaining the issue in case it isn't
+    validateMatrix(new_mat:ComplexMat2x2): matrixValidity{
+        let res = true;
+        let mess = null;
+        if (new_mat[0][0].equals(complex(0))) {
+            res = false;
+            mess = 'test';
+        }
+        return new matrixValidity(res, mess);
     }
     get blochV(){
         return this.#blochV  as [number, number, number];

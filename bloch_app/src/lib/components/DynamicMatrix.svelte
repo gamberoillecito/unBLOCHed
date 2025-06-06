@@ -2,7 +2,7 @@
     import type { Attachment } from 'svelte/attachments';
     import type {MathfieldElement } from "mathlive";
     import { getContext } from 'svelte';
-	import { FancyMatrix, DensityMatrix } from './Model.svelte';
+	import { FancyMatrix } from './Model.svelte';
 
 	interface Props {
 		matrixContext: string;
@@ -43,10 +43,10 @@
             for (let i = 0; i < 2; i++){
                 for (let j = 0; j < 2; j++){
                     let promptValue = mf.getPromptValue(`m${i}${j}`);
-                    FM.setLatex(promptValue, i, j)
+                    console.log(FM.setLatex(promptValue, i, j))
                 }
             }
-            FM.setMultLatex(mf.getPromptValue('mult'));
+            // console.log(FM.setMultLatex(mf.getPromptValue('mult')));
            
         })
 		return () => {
