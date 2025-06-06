@@ -72,7 +72,7 @@ export class FancyMatrix {
     }
 
     // Updates _mat if it is a new valid matrix
-    setMatrixValue(newMat:ComplexMat2x2) {
+    setMatrixValue(newMat:ComplexMat2x2) : MatrixValidity {
         let res = this.#validateMatrix(newMat);
         
         if (res.isValid) {
@@ -95,14 +95,42 @@ export class FancyMatrix {
     }
 
     // Update element i,j to value and reflect the changes in the latex
-    setValue(value: Complex, i: number, j:number) {
+    setValue(value: Complex, i: number, j:number) : MatrixValidity {
         let newMat = this._mat.map(row => row.map(el => clone(el))) as ComplexMat2x2;
         
         newMat[i][j] = value;
-        this.setMatrixValue(newMat);
-        print_mat(this._mat);
+        return this.setMatrixValue(newMat);
     }
 
+    setMatrixLatex(newLatexMat: (string)[][]) : MatrixValidity {
+        // If a multiplier is present in the matrix, use it to calculate
+        // the real value of the matrix element
+        // The element of the latex matrix ignores the presence of the multiplier
+        // let complete_expr = `(${mult}) * (${latex})`; 
+        // console.info(complete_expr);
+        
+        // First we have to compute the resulting "math" matrix to check if it would be
+        // valid
+        let newMat = newLatexMat.map((row)=>row.map((el) => {
+            let converted = this.ce.parse(el).N();
+            return complex(converted.re, converted.im);
+        }
+        )) as ComplexMat2x2;
+
+        let res = this.#validateMatrix(newMat);
+        if (res.isValid){
+            for (let i = 0; i < 2; i++){
+                for (let j = 0; j < 2; j++){
+                    let newLatex = newLatexMat[i][j];
+                    let converted = this.ce.parse(newLatex).N();
+                    this._mat[i][j] = complex(converted.re, converted.im);
+                    this._latexMat[i][j] = newLatex;
+                }
+            }
+        }
+        return res;
+
+    }
     // Specify a multiplier to the matrix, in latex this is just a string
     // but to keep the "math" matrix in sync we have to compute the value of 
     // the multiplier and apply it to each element of _mat
@@ -114,19 +142,15 @@ export class FancyMatrix {
             for (let j = 0; j < 2; j++){
                 this._mat[i][j]= matmul(this._mat[i][j], mult) as Complex;
             }
-        }
+        }        
     }
 
     // Set a new value for the latex of element i,j and update the "math"
     setLatex(latex:string, i: number, j:number) {
-        // If a multiplier is present in the matrix, use it to calculate
-        // the real value of the matrix element
-        // The element of the latex matrix ignores the presence of the multiplier
-        // let complete_expr = `(${mult}) * (${latex})`; 
-        // console.info(complete_expr);
-        let converted = this.ce.parse(latex).N();
-        this._mat[i][j] = complex(converted.re, converted.im);
-        this._latexMat[i][j] = latex;
+        let newLatexMat = this._latexMat.map(row => row.map(el => el));
+        newLatexMat[i][j] = latex;
+
+        this.setMatrixLatex(newLatexMat);
     }
 
     #validateMatrix(newMat: ComplexMat2x2) : MatrixValidity {

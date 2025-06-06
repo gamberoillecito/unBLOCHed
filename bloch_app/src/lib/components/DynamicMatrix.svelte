@@ -43,7 +43,7 @@
             for (let i = 0; i < 2; i++){
                 for (let j = 0; j < 2; j++){
                     let promptValue = mf.getPromptValue(`m${i}${j}`);
-                    FM.setLatex(promptValue, i, j)
+                    let res = FM.setLatex(promptValue, i, j);
                 }
             }
             FM.setMultLatex(mf.getPromptValue('mult'));
