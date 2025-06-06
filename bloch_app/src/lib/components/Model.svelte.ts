@@ -19,63 +19,43 @@ function dagger(mat:ComplexMat2x2) {
     return conj(transpose(mat))
 }
 
-export class DensityMatrix {
-    #latexMult: string;
-    #mat: ComplexMat2x2;
-    latexMat: (string)[][];
-    #a: Complex; 
-    #b: Complex; 
-    #c: Complex; 
-    #d: Complex; 
-    #blochV: [number, number, number];
-    // Note that the values of y and z are swapped to account
-    // for the fact that threejs uses a different notation
-    // This *should* allow us to forget about the different
-    // notation in the rest of the code
+export class FancyMatrix {
+    protected _latexMult: string;
+    protected _mat: ComplexMat2x2;
+    protected _latexMat: (string)[][];
 
     ce: ComputeEngine;
 
     constructor(){
         this.ce = new ComputeEngine();
-        this.#mat= $state([
+        this._mat= $state([
             [complex(1), complex(0)], 
             [complex(0), complex(0)]
         ]);
-        this.#latexMult = '1';
-        this.#a = $derived(this.#mat[0][0]);
-        this.#b = $derived(this.#mat[0][1]);
-        this.#c = $derived(this.#mat[1][0]);
-        this.#d = $derived(this.#mat[1][1]);
-
-        this.latexMat = $state(this.#mat.map(row => row.map(el => el.toString())));
-        
-        this.#blochV= $derived([
-        2*this.#b.re,
-        2*this.#a.re - 1,
-        2*this.#b.im
-    ])
+        this._latexMult = '1';
+        this._latexMat = $state(this._mat.map(row => row.map(el => el.toString())));
     }
 
     setValue(value: Complex, i: number, j:number) {
-        this.#mat[i][j] = value;
-        this.latexMat[i][j] = value.toString();
-        this.#latexMult = '1';
+        this._mat[i][j] = value;
+        this._latexMat[i][j] = value.toString();
+        this._latexMult = '1';
         // If the value of a matrix element I have to invalidate the
         // multiplier and apply it to each element
         for (let i = 0; i < 2; i++){
             for (let j = 0; j < 2; j++){
-                this.latexMat[i][j] = this.#mat[i][j].toString();
+                this._latexMat[i][j] = this._mat[i][j].toString();
             }
         }
     }
 
     setMultLatex(latex: string){
-        this.#latexMult = latex;
+        this._latexMult = latex;
         let eval_mult = this.ce.parse(latex).N();
         let mult = complex(eval_mult.re, eval_mult.im);
         for (let i = 0; i < 2; i++){
             for (let j = 0; j < 2; j++){
-                this.#mat[i][j]= matmul(this.#mat[i][j], mult) as Complex;
+                this._mat[i][j]= matmul(this._mat[i][j], mult) as Complex;
             }
         }
     }
@@ -86,8 +66,8 @@ export class DensityMatrix {
         // let complete_expr = `(${mult}) * (${latex})`; 
         // console.info(complete_expr);
         let converted = this.ce.parse(latex).N();
-        this.#mat[i][j] = complex(converted.re, converted.im);
-        this.latexMat[i][j] = latex;
+        this._mat[i][j] = complex(converted.re, converted.im);
+        this._latexMat[i][j] = latex;
     }
 
     // apply_gate(gate_mat: ComplexMat2x2 ) {
@@ -98,26 +78,53 @@ export class DensityMatrix {
 
         console.log("apply gate")
         console.log("this.mat")
-        print_mat(this.#mat);
+        print_mat(this._mat);
         console.log("gate_mat")
         print_mat(gate_mat);
         let gate_dag = dagger(gate_mat)
-        this.#mat = matmul(gate_mat, matmul(this.#mat, gate_dag)) as ComplexMat2x2;
+        this._mat = matmul(gate_mat, matmul(this._mat, gate_dag)) as ComplexMat2x2;
     }
-
 
 
     get mat(){
-        return this.#mat;
+        return this._mat;
     }
-    // set mat(){
-    //     return this.#mat;
-    // }
+    get latexMat(){
+        return this._latexMat;
+    }
 
     get latexMult(){
-        return this.#latexMult;
+        return this._latexMult;
     }
 
+
+}
+
+export class DensityMatrix extends FancyMatrix {
+    #a: Complex; 
+    #b: Complex; 
+    #c: Complex; 
+    #d: Complex; 
+    // Note that the values of y and z are swapped to account
+    // for the fact that threejs uses a different notation
+    // This *should* allow us to forget about the different
+    // notation in the rest of the code
+    #blochV: [number, number, number];
+
+    constructor() {
+        super()
+        this.#a = $derived(this._mat[0][0]);
+        this.#b = $derived(this._mat[0][1]);
+        this.#c = $derived(this._mat[1][0]);
+        this.#d = $derived(this._mat[1][1]);
+
+        
+        this.#blochV= $derived([
+        2*this.#b.re,
+        2*this.#a.re - 1,
+        2*this.#b.im
+    ])
+    }
     get blochV(){
         return this.#blochV  as [number, number, number];
     }
@@ -127,16 +134,16 @@ export class DensityMatrix {
     }
 
     set a(value: Complex){
-        this.#mat[0][0] = value;
+        this._mat[0][0] = value;
     }
     set b(value: Complex){
-        this.#mat[0][1] = value;
+        this._mat[0][1] = value;
     }
     set c(value: Complex){
-        this.#mat[1][0] = value;
+        this._mat[1][0] = value;
     }
     set d(value: Complex){
-        this.#mat[1][1] = value;
+        this._mat[1][1] = value;
     }
 
     get a(){
