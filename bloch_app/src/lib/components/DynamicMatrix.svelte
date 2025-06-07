@@ -15,7 +15,7 @@
     let FM: FancyMatrix = getContext(matrixContext);
     let updateMatrixButton: Element;
     let updateMatrixButtonDisabled: boolean = $state(false);
-
+    let matrixError = $state('');
     function parseMatrixField(mf: MathfieldElement): [string[][], string] {
         let matrix: string[][] = []
         for (let i = 0; i < 2; i++){
@@ -56,6 +56,7 @@
             let parsed = parseMatrixField(mf);
             let res = FM.validateMatrix(FM.generateMatrixFromLatex(...parsed));
             updateMatrixButtonDisabled = !res.isValid;
+            matrixError = res.message;
         })
         
         // Update the FancyMatrix when the button is pressed
@@ -73,4 +74,7 @@
 </script>
 
 <button bind:this={updateMatrixButton} disabled={updateMatrixButtonDisabled}>Update</button>
-<math-field {@attach myAttachment} ></math-field>
+<div>
+    <math-field {@attach myAttachment} ></math-field>
+    <p> {matrixError} </p>
+</div>

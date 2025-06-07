@@ -10,8 +10,15 @@ import {
     conj,
     isNumber,
     typeOf,
+    trace,
+    deepEqual,
+    Matrix,
+    eigs,
+    hasNumericValue,
+    isNegative,
     
 } from 'mathjs'
+
 
 export type ComplexMat2x2 = [[Complex, Complex], [Complex, Complex]];
 
@@ -35,7 +42,7 @@ export function print_mat(mat: ComplexMat2x2) {
     console.log(`[${mat[0][0]}, ${mat[0][1]},\n${mat[1][0]}, ${mat[1][1]}]`)
 }
 
-function dagger(mat:ComplexMat2x2) {
+function dagger(mat:ComplexMat2x2|Matrix) {
     return conj(transpose(mat))
 }
 
@@ -242,7 +249,38 @@ export class DensityMatrix extends FancyMatrix {
     validateMatrix(newMat: ComplexMat2x2) : MatrixValidity {
         let preliminary_validation = super.validateMatrix(newMat); 
         if (preliminary_validation.isValid){
-            return new MatrixValidity(true, 'DM');
+            // Convert the matrix to mathjs object to
+            // make operations easier
+            let mat = matrix(newMat);
+
+            // Unitary trace
+            if (trace(matmul(mat, mat)) > 1){
+                return new MatrixValidity(false, 'Tr(\\rho^2) > 1')
+            }
+
+            // Positive semidefinite
+            let ei = eigs(mat).values.valueOf() as Complex[];
+            
+            for (let v of ei) {
+                // Cannot have complex eigenvalues
+                // (This check should be superfluous)
+                if (!hasNumericValue(v)){
+                    console.log(v);
+                    return new MatrixValidity(false, 'Negative eigenvalues')
+                }
+                if (isNegative(v)) {
+                    return new MatrixValidity(false, 'Not positive semidefinite')
+                }
+                    
+            }
+
+            // Hermitian
+            if (!deepEqual(mat, dagger(mat))) {
+                return new MatrixValidity(false, 'Not Hermitian')
+            }
+
+
+            return new MatrixValidity(true, 'Ok');
         }
         return preliminary_validation
     }
