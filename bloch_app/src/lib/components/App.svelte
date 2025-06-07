@@ -20,7 +20,8 @@
 <div id="main_content">
 
   <div id="canvasContainer">
-    <Canvas >
+    <Canvas>
+      <Scene matrixContext={'densityMatrix'}></Scene>
     </Canvas>
   </div>
   <DynamicMatrix matrixContext='densityMatrix'></DynamicMatrix>
