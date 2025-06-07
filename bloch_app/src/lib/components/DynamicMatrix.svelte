@@ -14,6 +14,20 @@
 
     let FM: FancyMatrix = getContext(matrixContext);
     let updateMatrixButton: Element;
+    let updateMatrixButtonDisabled: boolean = $state(false);
+
+    function parseMatrixField(mf: MathfieldElement): [string[][], string] {
+        let matrix: string[][] = []
+        for (let i = 0; i < 2; i++){
+            matrix.push([]);
+            for (let j = 0; j < 2; j++){
+                let promptValue = mf.getPromptValue(`m${i}${j}`);
+                matrix[i].push(promptValue);
+            }
+        }
+        let mult = mf.getPromptValue('mult');
+        return [matrix, mult]
+    }
     // This function is run as soon as the element is loaded and
     // sets up the reactivity of the element
 	const myAttachment: Attachment = (element) => {
@@ -34,22 +48,23 @@
             mf.setPromptValue(`mult`, FM.latexMult, {})
         })
 
-        // Whenever we receive user input on the page we need to update
-        // the FancyMatrix accordingly
+        // Whenever we receive user input on the page we need to check if the
+        // current input generates a valid matrix and enable/disable the
+        // update button accordingly
+        mf.addEventListener('input', ()=> {
+            // Generate a matrix starting from latex and validate it
+            let parsed = parseMatrixField(mf);
+            let res = FM.validateMatrix(FM.generateMatrixFromLatex(...parsed));
+            updateMatrixButtonDisabled = !res.isValid;
+        })
+        
+        // Update the FancyMatrix when the button is pressed
         updateMatrixButton.addEventListener('click', ()=>{
             // Update all the latex fields with the new value
             // TODO : optimize to avoid useless overrides
-            for (let i = 0; i < 2; i++){
-                for (let j = 0; j < 2; j++){
-                    let promptValue = mf.getPromptValue(`m${i}${j}`);
-                    let res = FM.setLatex(promptValue, i, j);
-                    if (!res.isValid){
-                        alert(res.message)
-                    }
-                }
-            }
-            FM.setMultLatex(mf.getPromptValue('mult'));
-           
+            let parsed = parseMatrixField(mf);
+            let res = FM.setMatrixFromLatex(...parsed);
+            
         })
 		return () => {
 			console.log('cleaning up');
@@ -57,5 +72,5 @@
 	};
 </script>
 
-<button bind:this={updateMatrixButton}>Update</button>
+<button bind:this={updateMatrixButton} disabled={updateMatrixButtonDisabled}>Update</button>
 <math-field {@attach myAttachment} ></math-field>

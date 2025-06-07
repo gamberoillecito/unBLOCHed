@@ -7,7 +7,10 @@ import {
     clone,
     equal,
     transpose,
-    conj    
+    conj,
+    isNumber,
+    typeOf,
+    
 } from 'mathjs'
 
 export type ComplexMat2x2 = [[Complex, Complex], [Complex, Complex]];
@@ -72,7 +75,7 @@ export class FancyMatrix {
 
     // Updates _mat if it is a new valid matrix
     setMatrixValue(newMat:ComplexMat2x2) : MatrixValidity {
-        let res = this.#validateMatrix(newMat);
+        let res = this.validateMatrix(newMat);
         
         if (res.isValid) {
             // If the value of a matrix element I have to invalidate the
@@ -101,7 +104,8 @@ export class FancyMatrix {
         return this.setMatrixValue(newMat);
     }
 
-    setMatrixLatex(newLatexMat: (string)[][]) : MatrixValidity {
+
+    setMatrixFromLatex(newLatexMat: (string)[][], mult: string) : MatrixValidity {
         // If a multiplier is present in the matrix, use it to calculate
         // the real value of the matrix element
         // The element of the latex matrix ignores the presence of the multiplier
@@ -110,59 +114,83 @@ export class FancyMatrix {
         
         // First we have to compute the resulting "math" matrix to check if it would be
         // valid
-        
+        let newMat = this.generateMatrixFromLatex(newLatexMat, mult);
+        let res = this.validateMatrix(newMat);
+        if (res.isValid){
+            for (let i = 0; i < 2; i++){
+                for (let j = 0; j < 2; j++){
+                    this._mat[i][j] = newMat[i][j]
+                    this._latexMat[i][j] = newLatexMat[i][j];
+                }
+            }
+            this._latexMult = mult;
+        }
+        return res;
+    }
+
+    // Given a matrix of latex strings and a latex multiplier, returns the corresponding
+    // "math" matrix
+    generateMatrixFromLatex(newLatexMat: (string)[][], mult: string) : ComplexMat2x2 {
+
         let newMat = newLatexMat.map((row)=>row.map((el) => {
             let converted = this.ce.parse(el).N();
             return complex(converted.re, converted.im);
         }
         )) as ComplexMat2x2;
 
-        let res = this.#validateMatrix(newMat);
-        if (res.isValid){
-            for (let i = 0; i < 2; i++){
-                for (let j = 0; j < 2; j++){
-                    let newLatex = newLatexMat[i][j];
-                    let converted = this.ce.parse(newLatex).N();
-                    this._mat[i][j] = complex(converted.re, converted.im);
-                    this._latexMat[i][j] = newLatex;
-                }
+        let eval_mult = this.ce.parse(mult).N();
+        let computedMult = complex(eval_mult.re, eval_mult.im);
+        for (let i = 0; i < 2; i++){
+            for (let j = 0; j < 2; j++){
+                newMat[i][j]= matmul(newMat[i][j], computedMult) as Complex;
             }
-        }
-        return res;
-
+        }   
+        print_mat(newMat);
+        return newMat;
     }
 
     // Set a new value for the latex of element i,j and update the "math"
-    setLatex(latex:string, i: number, j:number) : MatrixValidity{
+    // setLatex(latex:string, i: number, j:number) : MatrixValidity{
 
-        // Create a modified copy of the current _latexMat
-        let newLatexMat = this._latexMat.map(row => row.map(el => el));
-        newLatexMat[i][j] = latex;
+    //     // Create a modified copy of the current _latexMat
+    //     let newLatexMat = this._latexMat.map(row => row.map(el => el));
+    //     newLatexMat[i][j] = latex;
 
-        return this.setMatrixLatex(newLatexMat);
-    }
+    //     return this.setMatrixFromLatex(newLatexMat);
+    // }
+
     // Specify a multiplier to the matrix, in latex this is just a string
     // but to keep the "math" matrix in sync we have to compute the value of 
     // the multiplier and apply it to each element of _mat
-    setMultLatex(latex: string){
-        this._latexMult = latex;
-        let eval_mult = this.ce.parse(latex).N();
-        let mult = complex(eval_mult.re, eval_mult.im);
+    // setMultLatex(latex: string){
+    //     this._latexMult = latex;
+    //     let eval_mult = this.ce.parse(latex).N();
+    //     let mult = complex(eval_mult.re, eval_mult.im);
+    //     for (let i = 0; i < 2; i++){
+    //         for (let j = 0; j < 2; j++){
+    //             this._mat[i][j]= matmul(this._mat[i][j], mult) as Complex;
+    //         }
+    //     }        
+    // }
+
+
+    validateMatrix(newMat: ComplexMat2x2) : MatrixValidity {
+        print_mat(newMat)
         for (let i = 0; i < 2; i++){
             for (let j = 0; j < 2; j++){
-                this._mat[i][j]= matmul(this._mat[i][j], mult) as Complex;
-            }
-        }        
-    }
-
-    #validateMatrix(newMat: ComplexMat2x2) : MatrixValidity {
-        let res = true;
-        let mess = ''
-        if (newMat[1][1].re == 2){
-            res = false;
-            mess = '[1][1] = 2'
+                let el = newMat[i][j]
+                
+                if (
+                    typeOf(el) != 'Complex' ||
+                    el.valueOf() == 'Infinity'
+                    ){
+                    console.log(el.valueOf());
+                    
+                    return new MatrixValidity(false, `Element (${i}, ${j}) is not a number`);
+                }
+            } 
         }
-        return new MatrixValidity(res, mess);
+        return new MatrixValidity(true, '');
     }
 
     get mat(){
@@ -209,6 +237,14 @@ export class DensityMatrix extends FancyMatrix {
 
     get phase(){
         return 1; 
+    }
+
+    validateMatrix(newMat: ComplexMat2x2) : MatrixValidity {
+        let preliminary_validation = super.validateMatrix(newMat); 
+        if (preliminary_validation.isValid){
+            return new MatrixValidity(true, 'DM');
+        }
+        return preliminary_validation
     }
 
     set a(value: Complex){
