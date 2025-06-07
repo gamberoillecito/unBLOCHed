@@ -34,9 +34,6 @@
   const gradientArray = generateGradient(["#210CF5", "#F52B16", "#F5D316", "#16F57D", "#210CF5"], 100);
   let color = $derived(gradientArray[(Math.floor((gradientArray.length-1)*DM.phase/(2*Math.PI)))])
   
-  $inspect(color, length)
-
-  $inspect(color)
   let body_length = $derived(length - HEAD_LEN*length**0.5);
   let scaled_head_length = $derived(HEAD_LEN*length**0.5);
   // let pointToLookAt = [x,1,1]

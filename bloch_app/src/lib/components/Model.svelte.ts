@@ -259,13 +259,12 @@ export class DensityMatrix extends FancyMatrix {
             }
 
             // Positive semidefinite
-            let ei = eigs(mat).values.valueOf() as Complex[];
+            let ei = eigs(mat).values.valueOf() as number[];
             
             for (let v of ei) {
                 // Cannot have complex eigenvalues
                 // (This check should be superfluous)
                 if (!hasNumericValue(v)){
-                    console.log(v);
                     return new MatrixValidity(false, 'Negative eigenvalues')
                 }
                 if (isNegative(v)) {

@@ -14,13 +14,13 @@
   // }
 
   let {
-    lat_long_color="white",
+    lat_long_color="black",
     sphere_color="green",
     sphere_opacity=0.3,
     sphere_radius=1,
     num_latitudes=5,
     num_longitudes=5,
-    lat_long_thickness=0.003,
+    lat_long_thickness=0.002,
     lat_long_opacity=1,
   } = $props();
 
