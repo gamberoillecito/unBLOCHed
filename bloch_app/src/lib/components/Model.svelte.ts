@@ -28,7 +28,6 @@ class MatrixValidity {
         this.message = message
     }
 }
-
 export function print_mat(mat: ComplexMat2x2) {
     console.log(`[${mat[0][0]}, ${mat[0][1]},\n${mat[1][0]}, ${mat[1][1]}]`)
 }
@@ -111,6 +110,7 @@ export class FancyMatrix {
         
         // First we have to compute the resulting "math" matrix to check if it would be
         // valid
+        
         let newMat = newLatexMat.map((row)=>row.map((el) => {
             let converted = this.ce.parse(el).N();
             return complex(converted.re, converted.im);
@@ -131,6 +131,16 @@ export class FancyMatrix {
         return res;
 
     }
+
+    // Set a new value for the latex of element i,j and update the "math"
+    setLatex(latex:string, i: number, j:number) : MatrixValidity{
+
+        // Create a modified copy of the current _latexMat
+        let newLatexMat = this._latexMat.map(row => row.map(el => el));
+        newLatexMat[i][j] = latex;
+
+        return this.setMatrixLatex(newLatexMat);
+    }
     // Specify a multiplier to the matrix, in latex this is just a string
     // but to keep the "math" matrix in sync we have to compute the value of 
     // the multiplier and apply it to each element of _mat
@@ -145,16 +155,14 @@ export class FancyMatrix {
         }        
     }
 
-    // Set a new value for the latex of element i,j and update the "math"
-    setLatex(latex:string, i: number, j:number) {
-        let newLatexMat = this._latexMat.map(row => row.map(el => el));
-        newLatexMat[i][j] = latex;
-
-        this.setMatrixLatex(newLatexMat);
-    }
-
     #validateMatrix(newMat: ComplexMat2x2) : MatrixValidity {
-        return new MatrixValidity(true, 'errorone');
+        let res = true;
+        let mess = ''
+        if (newMat[1][1].re == 2){
+            res = false;
+            mess = '[1][1] = 2'
+        }
+        return new MatrixValidity(res, mess);
     }
 
     get mat(){
@@ -177,7 +185,7 @@ export class DensityMatrix extends FancyMatrix {
     #d: Complex; 
     // Note that the values of y and z are swapped to account
     // for the fact that threejs uses a different notation
-    // This *should* allow us to forget about the different
+    // This **should** allow us to forget about the different
     // notation in the rest of the code
     #blochV: [number, number, number];
 

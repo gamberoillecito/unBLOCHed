@@ -6,8 +6,7 @@
   import BlochSphere from './BlochSphere.svelte';
   import {complex, type Complex} from 'mathjs'
   import SolidVector from './SolidVector.svelte';
-  
-  let {matrixContext} = $props();
+    let {matrixContext} = $props();
       
 </script>
   <T.DirectionalLight
