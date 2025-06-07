@@ -7,7 +7,7 @@
   import {complex, type Complex} from 'mathjs'
   import SolidVector from './SolidVector.svelte';
   
-  let {DM} = $props();
+  let {matrixContext} = $props();
       
 </script>
   <T.DirectionalLight
@@ -29,4 +29,4 @@
 </T.PerspectiveCamera>
 
 <BlochSphere ></BlochSphere>
-<SolidVector {DM}></SolidVector>
+<SolidVector {matrixContext}></SolidVector>
