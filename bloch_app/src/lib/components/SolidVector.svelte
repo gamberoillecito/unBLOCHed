@@ -7,12 +7,23 @@
 </script>
 
 <script lang="ts">
+  import { getContext } from 'svelte';
   import { T } from '@threlte/core'
   import { Group} from 'three';
   import {generateGradient} from "typescript-color-gradient";
+	import type { DensityMatrix } from './Model.svelte';
 
   // let {length= 1, pointToLookAt, phase = 0}: Prop = $props();
-  let {DM} = $props();
+  interface Props {
+		matrixContext: string;
+	}
+
+	let {
+        matrixContext 
+  }: Props = $props();
+
+  let DM: DensityMatrix = getContext(matrixContext);
+
   let length = $derived(
         Math.sqrt(DM.blochV[0]**2 + DM.blochV[1]**2 + DM.blochV[2]**2)
   )
@@ -30,20 +41,23 @@
   let scaled_head_length = $derived(HEAD_LEN*length**0.5);
   // let pointToLookAt = [x,1,1]
   let vector:Group = $state(new Group());
-
   $effect(()=>{
-    vector.lookAt(...DM.blochV as [number, number, number]);})
+    vector.lookAt(...DM.blochV as [number, number, number]);
+  })
 
 </script>
 
 <!-- The red point the arrow should look at -->
+<!-- I kept it with radius = 0 because otherwise the vector
+ does not update immediately but only when the user clicks on
+ the viewport-->
 <T.Mesh
   position.x = {DM.blochV[0]}
   position.y = {DM.blochV[1]}
   position.z = {DM.blochV[2]}
 >
   <T.SphereGeometry
-    args={[0.1]}
+    args={[0]}
   />
   <T.MeshStandardMaterial
       color= {"red"}
