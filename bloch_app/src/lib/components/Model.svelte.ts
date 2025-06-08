@@ -246,6 +246,7 @@ export class DensityMatrix extends FancyMatrix {
         return 1; 
     }
 
+    // Validation perfomed according to Theorem 2.5 Nilsen-Chuang
     validateMatrix(newMat: ComplexMat2x2) : MatrixValidity {
         let preliminary_validation = super.validateMatrix(newMat); 
         if (preliminary_validation.isValid){
@@ -253,29 +254,26 @@ export class DensityMatrix extends FancyMatrix {
             // make operations easier
             let mat = matrix(newMat);
 
-            // Unitary trace
+            // (1) Unitary trace
             if (trace(matmul(mat, mat)) > 1){
-                return new MatrixValidity(false, 'Tr(\\rho^2) > 1')
+                return new MatrixValidity(false, 'Not unitary trace')
             }
 
-            // Positive semidefinite
+            // // Hermitian
+            // if (!deepEqual(mat, dagger(mat))) {
+            //     return new MatrixValidity(false, 'Not Hermitian')
+            // }
+
+            // (2) Positive semidefinite
             let ei = eigs(mat).values.valueOf() as number[];
             
             for (let v of ei) {
                 // Cannot have complex eigenvalues
                 // (This check should be superfluous)
-                if (!hasNumericValue(v)){
-                    return new MatrixValidity(false, 'Negative eigenvalues')
-                }
-                if (isNegative(v)) {
-                    return new MatrixValidity(false, 'Not positive semidefinite')
+                if (!hasNumericValue(v) || isNegative(v)) {
+                    return new MatrixValidity(false, 'Not a positive operator')
                 }
                     
-            }
-
-            // Hermitian
-            if (!deepEqual(mat, dagger(mat))) {
-                return new MatrixValidity(false, 'Not Hermitian')
             }
 
 
