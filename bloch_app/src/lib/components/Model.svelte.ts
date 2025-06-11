@@ -16,6 +16,7 @@ import {
     eigs,
     hasNumericValue,
     isNegative,
+    identity,
     
 } from 'mathjs'
 
@@ -277,7 +278,7 @@ export class DensityMatrix extends FancyMatrix {
             }
 
 
-            return new MatrixValidity(true, 'Ok');
+            return new MatrixValidity(true);
         }
         return preliminary_validation
     }
@@ -321,5 +322,26 @@ export class DensityMatrix extends FancyMatrix {
         print_mat(gate_mat);
         let gate_dag = dagger(gate_mat)
         this._mat = matmul(gate_mat, matmul(this._mat, gate_dag)) as ComplexMat2x2;
+    }
+}
+
+export class GateMatrix extends FancyMatrix {
+    constructor() {
+        super()
+    }
+
+    validateMatrix(newMat: ComplexMat2x2) : MatrixValidity {
+        let preliminary_validation = super.validateMatrix(newMat); 
+        if (!preliminary_validation.isValid){
+            return preliminary_validation;
+        }
+        // Check if the matrix is unitary Nilsen-Chuang pag.18
+            //Amazingly, this unitarity constraint is the only constraint on quantum gates. Any
+            //unitary matrix specifies a valid quantum gate!
+        let mTm = matmul(newMat, dagger(newMat));
+        if (!deepEqual(mTm, identity(2))) {
+            return new MatrixValidity(false, "Not unitary")
+        }
+        return new MatrixValidity(true);
     }
 }

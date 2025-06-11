@@ -3,7 +3,7 @@
   import Scene from './Scene.svelte'
   import {complex, type Complex, exp, multiply, range} from 'mathjs'
   
-  import {DensityMatrix , print_mat} from '$lib/components/Model.svelte'
+  import {DensityMatrix , GateMatrix, print_mat} from '$lib/components/Model.svelte'
   import type { ComplexMat2x2 } from '$lib/components/Model.svelte';
   import MathField from "$lib/components/MathField.svelte"
   import type {promptsDict} from "$lib/components/MathField.svelte"
@@ -13,6 +13,9 @@
     
   let DM = $state(new DensityMatrix())
   setContext('densityMatrix', DM)
+
+  let GM = $state(new GateMatrix())
+  setContext('gateMatrix', GM)
 
 </script>
 
@@ -25,6 +28,7 @@
     </Canvas>
   </div>
   <DynamicMatrix matrixContext='densityMatrix'></DynamicMatrix>
+  <DynamicMatrix matrixContext='gateMatrix'></DynamicMatrix>
   <button onclick={()=>{
     DM.setValue( complex("1+i"), 0, 0);
     }}>Change DM value</button>
