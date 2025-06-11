@@ -1,9 +1,11 @@
 <script lang="ts">
     import type { Attachment } from 'svelte/attachments';
+    import "mathlive";
     import type {MathfieldElement } from "mathlive";
     import { getContext } from 'svelte';
 	import { FancyMatrix, DensityMatrix } from './Model.svelte';
 	import { deepEqual } from 'mathjs';
+    import "mathlive/fonts.css"
 
 	interface Props {
 		matrixContext: string;

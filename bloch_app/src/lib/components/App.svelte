@@ -4,10 +4,6 @@
   import {complex, type Complex, exp, multiply, range} from 'mathjs'
   
   import {DensityMatrix , GateMatrix, print_mat} from '$lib/components/Model.svelte'
-  import type { ComplexMat2x2 } from '$lib/components/Model.svelte';
-  import MathField from "$lib/components/MathField.svelte"
-  import type {promptsDict} from "$lib/components/MathField.svelte"
-  import {ComputeEngine} from  "@cortex-js/compute-engine"
 	import DynamicMatrix from './DynamicMatrix.svelte';
   import {getContext, setContext} from 'svelte'
     
@@ -34,12 +30,12 @@
     <DynamicMatrix
       matrixContext='densityMatrix' 
       bind:validMatrix={DMValid}
-      label='\rho'
+      label={'\\rho'}
     ></DynamicMatrix>
     <DynamicMatrix 
       matrixContext='gateMatrix'
       bind:validMatrix={GMValid}
-      label='U'
+      label={'\\hat{U}'}
     ></DynamicMatrix>
     <button disabled={!(DMValid && GMValid)} onclick={()=>{
       DM.apply_gate(GM)

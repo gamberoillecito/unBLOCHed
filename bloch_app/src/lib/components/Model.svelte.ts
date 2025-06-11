@@ -168,31 +168,6 @@ export class FancyMatrix {
         return newMat;
     }
 
-    // Set a new value for the latex of element i,j and update the "math"
-    // setLatex(latex:string, i: number, j:number) : MatrixValidity{
-
-    //     // Create a modified copy of the current _latexMat
-    //     let newLatexMat = this._latexMat.map(row => row.map(el => el));
-    //     newLatexMat[i][j] = latex;
-
-    //     return this.setMatrixFromLatex(newLatexMat);
-    // }
-
-    // Specify a multiplier to the matrix, in latex this is just a string
-    // but to keep the "math" matrix in sync we have to compute the value of 
-    // the multiplier and apply it to each element of _mat
-    // setMultLatex(latex: string){
-    //     this._latexMult = latex;
-    //     let eval_mult = this.ce.parse(latex).N();
-    //     let mult = complex(eval_mult.re, eval_mult.im);
-    //     for (let i = 0; i < 2; i++){
-    //         for (let j = 0; j < 2; j++){
-    //             this._mat[i][j]= matmul(this._mat[i][j], mult) as Complex;
-    //         }
-    //     }        
-    // }
-
-
     validateMatrix(newMat: ComplexMat2x2) : MatrixValidity {
         for (let i = 0; i < 2; i++){
             for (let j = 0; j < 2; j++){
