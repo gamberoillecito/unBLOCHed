@@ -62,7 +62,7 @@
             let res = FM.validateMatrix(FM.generateMatrixFromLatex(...parsed));
             updateMatrixButtonDisabled = !res.isValid;
             matrixError = res.message;
-            
+            validMatrix = true;
             // if the displayed value is different with respect to
             // one actually in the Fancy matrix we have to set the matrix
             // as invalid (user wouldn't know the real value)
