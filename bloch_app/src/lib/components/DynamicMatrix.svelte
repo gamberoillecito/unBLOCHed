@@ -36,7 +36,7 @@
 		let mf = element as MathfieldElement;
 
         // Default value of the matrix input
-        mf.value = '\\placeholder[mult]{1}\\begin{bmatrix}\\placeholder[m00]{1} & \\placeholder[m01]{0}\\\\ \\placeholder[m10]{0} & \\placeholder[m11]{1}\\end{bmatrix}';
+        mf.value = `\\placeholder[mult]{${FM.latexMult}}\\begin{bmatrix}\\placeholder[m00]{${FM.latexMat[0][0]}} & \\placeholder[m01]{${FM.latexMat[0][1]}}\\\\ \\placeholder[m10]{${FM.latexMat[1][0]}} & \\placeholder[m11]{${FM.latexMat[1][1]}}\\end{bmatrix}`;
 
         // Whenever the latex content of the FancyMatrix changes we need to update
         // what appears on screen accordingly
@@ -54,11 +54,14 @@
         // current input generates a valid matrix and enable/disable the
         // update button accordingly
         mf.addEventListener('input', ()=> {
+
             // Generate a matrix starting from latex and validate it
             let parsed = parseMatrixField(mf);
             let res = FM.validateMatrix(FM.generateMatrixFromLatex(...parsed));
             updateMatrixButtonDisabled = !res.isValid;
             matrixError = res.message;
+            
+            validMatrix = false; // displayed matrix is not consistent with actual value
         })
         
         // Update the FancyMatrix when the button is pressed

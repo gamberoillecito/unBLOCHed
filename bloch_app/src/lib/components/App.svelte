@@ -11,12 +11,13 @@
 	import DynamicMatrix from './DynamicMatrix.svelte';
   import {getContext, setContext} from 'svelte'
     
-  let DM = $state(new DensityMatrix())
-  let DMValid = $state(false);
+  let DM = $state(new DensityMatrix([['1', '0'], ['0', '0']], '1'))
+  let DMValid = $state(true); // We can default to true since FancyMatrix does not accept invalid inputs
   setContext('densityMatrix', DM)
 
-  let GM = $state(new GateMatrix())
-  let GMValid = $state(false);
+  // let GM = $state(new GateMatrix([['1', '0'], ['0', '1']], '1'))
+  let GM = $state(new GateMatrix([['1', '1'], ['1', '-1']], '\\frac{1}{\\sqrt{2}}'))
+  let GMValid = $state(true); // We can default to true since FancyMatrix does not accept invalid inputs
   setContext('gateMatrix', GM)
 
   $effect(()=>{
@@ -38,6 +39,8 @@
   <DynamicMatrix matrixContext='gateMatrix' bind:validMatrix={GMValid}></DynamicMatrix>
   <button disabled={!(DMValid && GMValid)} onclick={()=>{
     DM.apply_gate(GM)
+    console.log('applu');
+    
     }}>Apply</button>
   <textarea>{`DM = \n[${DM.mat[0][0]}, ${DM.mat[0][1]}] \n[${DM.mat[1][0]}, ${DM.mat[1][1]}]\n\nGM = \n[${GM.mat[0][0]}, ${GM.mat[0][1]}] \n[${GM.mat[1][0]}, ${GM.mat[1][1]}]`}</textarea>
 </div>

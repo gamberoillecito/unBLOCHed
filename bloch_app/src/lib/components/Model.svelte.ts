@@ -56,7 +56,7 @@ export class FancyMatrix {
 
     ce: ComputeEngine;
 
-    constructor(){
+    constructor(latexMat: string[][], latexMult: string){
         this.ce = new ComputeEngine();
         // We need to tell the ComputeEngine how to
         // deal with placeholders
@@ -70,15 +70,17 @@ export class FancyMatrix {
                 return parser.parseGroup() ?? ['Error', "'missing'"];
                 },
             },
-            ];
+        ];
+        let generatedMatrix = this.generateMatrixFromLatex(latexMat, latexMult);
+        let res = this.validateMatrix(generatedMatrix);
+        if (!res.isValid) {
+            throw new Error(`The provided parameters would result in an invalid matrix: ${res.message}`);
+            
+        }
+        this._mat= $state(generatedMatrix);
 
-        this._mat= $state([
-            [complex(1), complex(0)], 
-            [complex(0), complex(0)]
-        ]);
-
-        this._latexMult = '1'; // Set to one since the "math" matrix has no multiplier
-        this._latexMat = $state(this._mat.map(row => row.map(el => el.toString()))); // Convert _mat elements to string
+        this._latexMult = latexMult; // Set to one since the "math" matrix has no multiplier
+        this._latexMat = $state(latexMat);
     }
 
     // Updates _mat if it is a new valid matrix
@@ -230,8 +232,8 @@ export class DensityMatrix extends FancyMatrix {
     // notation in the rest of the code
     #blochV: [number, number, number];
 
-    constructor() {
-        super()
+    constructor(latexMat: string[][], latexMult: string) {
+        super(latexMat, latexMult);
         this.#a = $derived(this._mat[0][0]);
         this.#b = $derived(this._mat[0][1]);
         this.#c = $derived(this._mat[1][0]);
@@ -324,8 +326,8 @@ export class DensityMatrix extends FancyMatrix {
 }
 
 export class GateMatrix extends FancyMatrix {
-    constructor() {
-        super()
+    constructor(latexMat: string[][], latexMult: string) {
+        super(latexMat, latexMult);
     }
 
     validateMatrix(newMat: ComplexMat2x2) : MatrixValidity {
