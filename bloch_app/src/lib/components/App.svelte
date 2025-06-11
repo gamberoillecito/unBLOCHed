@@ -30,9 +30,9 @@
   <DynamicMatrix matrixContext='densityMatrix'></DynamicMatrix>
   <DynamicMatrix matrixContext='gateMatrix'></DynamicMatrix>
   <button onclick={()=>{
-    DM.setValue( complex("1+i"), 0, 0);
-    }}>Change DM value</button>
-  <textarea>{`[[${DM.mat[0][0]}], [${DM.mat[0][1]}] \n [${DM.mat[1][0]}], [${DM.mat[1][1]}]]`}</textarea>
+    DM.apply_gate(GM)
+    }}>Apply</button>
+  <textarea>{`DM = \n[${DM.mat[0][0]}, ${DM.mat[0][1]}] \n[${DM.mat[1][0]}, ${DM.mat[1][1]}]\n\nGM = \n[${GM.mat[0][0]}, ${GM.mat[0][1]}] \n[${GM.mat[1][0]}, ${GM.mat[1][1]}]`}</textarea>
 </div>
 
 

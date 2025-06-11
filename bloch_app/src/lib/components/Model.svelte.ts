@@ -210,6 +210,14 @@ export class FancyMatrix {
     get latexMult(){
         return this._latexMult;
     }
+    
+    T() : ComplexMat2x2{
+        /**
+         * Returns the Transpose of mat
+         */
+
+        return transpose(this._mat)
+    }
 
 
 }
@@ -309,17 +317,10 @@ export class DensityMatrix extends FancyMatrix {
         return this.#d;
     }
 
-        // apply_gate(gate_mat: ComplexMat2x2 ) {
-    apply_gate(gate_mat: ComplexMat2x2) {
-        // let gate_mat:ComplexMat2x2 =  [
-        // [complex(0), complex(1)], 
-        // [complex(1), complex(0)]]
-
-        console.log("apply gate")
-        console.log("this.mat")
-        print_mat(this._mat);
-        console.log("gate_mat")
-        print_mat(gate_mat);
+    // Applies the given gate to the DensityMatrix
+    apply_gate(GM: GateMatrix) {
+        // this._mat = matmul(gate_mat, matmul(this._mat, gate_mat.T())) as ComplexMat2x2;
+        let gate_mat = GM.mat
         let gate_dag = dagger(gate_mat)
         this._mat = matmul(gate_mat, matmul(this._mat, gate_dag)) as ComplexMat2x2;
     }
@@ -336,12 +337,13 @@ export class GateMatrix extends FancyMatrix {
             return preliminary_validation;
         }
         // Check if the matrix is unitary Nilsen-Chuang pag.18
-            //Amazingly, this unitarity constraint is the only constraint on quantum gates. Any
-            //unitary matrix specifies a valid quantum gate!
+        //" Amazingly, this unitarity constraint is the only constraint on quantum gates. Any
+        //  unitary matrix specifies a valid quantum gate! "
         let mTm = matmul(newMat, dagger(newMat));
         if (!deepEqual(mTm, identity(2))) {
             return new MatrixValidity(false, "Not unitary")
         }
         return new MatrixValidity(true);
     }
+
 }
