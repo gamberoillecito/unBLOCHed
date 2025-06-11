@@ -20,11 +20,6 @@
   let GMValid = $state(true); // We can default to true since FancyMatrix does not accept invalid inputs
   setContext('gateMatrix', GM)
 
-  $effect(()=>{
-    console.log(`DMvalid: ${DMValid}`);
-    console.log(`GMvalid: ${GMValid}`);
-    
-  })
 </script>
 
 

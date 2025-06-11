@@ -53,13 +53,13 @@ export class FancyMatrix {
     protected _latexMult: string; // Latex multiplier in front of the matrix
     protected _mat: ComplexMat2x2; // The "math" matrix for calculations
     protected _latexMat: (string)[][]; // The latex version of the matrix elements for display
-
     ce: ComputeEngine;
 
     constructor(latexMat: string[][], latexMult: string){
         this.ce = new ComputeEngine();
         // We need to tell the ComputeEngine how to
-        // deal with placeholders
+        // deal with placeholders (not really necessary for now
+        // since we strip them away in DynamicMatrix.svelte)
         this.ce.latexDictionary = [
             ...this.ce.latexDictionary,
             {
@@ -74,13 +74,23 @@ export class FancyMatrix {
         let generatedMatrix = this.generateMatrixFromLatex(latexMat, latexMult);
         let res = this.validateMatrix(generatedMatrix);
         if (!res.isValid) {
-            throw new Error(`The provided parameters would result in an invalid matrix: ${res.message}`);
+            latexMult = this.fallbackLatexMult();
+            latexMat = this.fallbackLatexMat();
+            generatedMatrix = this.generateMatrixFromLatex(latexMat, latexMult);
+            console.error(`The provided parameters would result in an invalid matrix: ${res.message}`);
             
         }
         this._mat= $state(generatedMatrix);
 
-        this._latexMult = latexMult; // Set to one since the "math" matrix has no multiplier
+        this._latexMult = latexMult; 
         this._latexMat = $state(latexMat);
+    }
+    // Fallback values to set the matrix in case something breaks when initializing the class
+    protected fallbackLatexMat(): string[][]{
+        return [['0', '0'], ['0', '0']];
+    }
+    protected fallbackLatexMult(): string {
+        return  '1';
     }
 
     // Updates _mat if it is a new valid matrix
@@ -246,6 +256,10 @@ export class DensityMatrix extends FancyMatrix {
         2*this.#b.im
     ])
     }
+        
+    protected fallbackLatexMat(): string[][]{
+        return [['1', '0'], ['0', '0']];
+    }
     get blochV(){
         return this.#blochV  as [number, number, number];
     }
@@ -328,6 +342,9 @@ export class DensityMatrix extends FancyMatrix {
 export class GateMatrix extends FancyMatrix {
     constructor(latexMat: string[][], latexMult: string) {
         super(latexMat, latexMult);
+    }
+    protected fallbackLatexMat(): string[][]{
+        return [['1', '0'], ['0', '1']];
     }
 
     validateMatrix(newMat: ComplexMat2x2) : MatrixValidity {

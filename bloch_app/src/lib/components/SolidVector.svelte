@@ -27,7 +27,6 @@
   let length = $derived(
         Math.sqrt(DM.blochV[0]**2 + DM.blochV[1]**2 + DM.blochV[2]**2)
   )
-  $inspect(DM.blochV)
 
   const HEAD_RAD = 0.04;
   const HEAD_LEN = 0.1;
