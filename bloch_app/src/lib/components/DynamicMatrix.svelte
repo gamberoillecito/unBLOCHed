@@ -69,19 +69,8 @@
             let displayed_matrix = FM.generateMatrixFromLatex(...parseMatrixField(mf));
             let matrices_equal = deepEqual(FM.mat, displayed_matrix) as unknown as boolean;
             validMatrix = validMatrix &&  matrices_equal
-            // for (let i = 0; i < 2; i++){
-            //     for (let j = 0; j < 2; j++){
-            //         let displayed_value = mf.getPromptValue(`m${i}${j}`)
-            //         validMatrix = validMatrix && (FM.latexMat[i][j] == displayed_value)
-            //         // console.log(`${validMatrix}\t${i},${j}: ${displayed_value} - ${FM.latexMat[i][j]}`);
-                    
-            //     }
-            // }
+            updateMatrixButtonDisabled = matrices_equal;
 
-            // // perform same check with the multiplier
-            // validMatrix = validMatrix && (FM.latexMult == mf.getPromptValue('mult'))
-            // console.log(`mult: ${FM.latexMult} - ${mf.getPromptValue('mult')}`);
-            
         })
         
         // Update the FancyMatrix when the button is pressed
