@@ -36,8 +36,16 @@
     </Canvas>
   </div>
   <div>
-    <DynamicMatrix matrixContext='densityMatrix' bind:validMatrix={DMValid}></DynamicMatrix>
-    <DynamicMatrix matrixContext='gateMatrix' bind:validMatrix={GMValid}></DynamicMatrix>
+    <DynamicMatrix
+      matrixContext='densityMatrix' 
+      bind:validMatrix={DMValid}
+      label='\rho'
+    ></DynamicMatrix>
+    <DynamicMatrix 
+      matrixContext='gateMatrix'
+      bind:validMatrix={GMValid}
+      label='U'
+    ></DynamicMatrix>
     <button disabled={!(DMValid && GMValid)} onclick={()=>{
       DM.apply_gate(GM)
       console.log('applu');

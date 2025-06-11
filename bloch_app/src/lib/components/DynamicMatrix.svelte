@@ -8,11 +8,13 @@
 	interface Props {
 		matrixContext: string;
         validMatrix: boolean;
+        label: string;
 	}
 
 	let {
         matrixContext,
-        validMatrix = $bindable()
+        validMatrix = $bindable(),
+        label
     }: Props = $props();
 
     let FM: FancyMatrix = getContext(matrixContext);
@@ -38,7 +40,7 @@
 		let mf = element as MathfieldElement;
 
         // Default value of the matrix input
-        mf.value = `\\placeholder[mult]{${FM.latexMult}}\\begin{bmatrix}\\placeholder[m00]{${FM.latexMat[0][0]}} & \\placeholder[m01]{${FM.latexMat[0][1]}}\\\\ \\placeholder[m10]{${FM.latexMat[1][0]}} & \\placeholder[m11]{${FM.latexMat[1][1]}}\\end{bmatrix}`;
+        mf.value = `${label} = \\placeholder[mult]{${FM.latexMult}}\\begin{bmatrix}\\placeholder[m00]{${FM.latexMat[0][0]}} & \\placeholder[m01]{${FM.latexMat[0][1]}}\\\\ \\placeholder[m10]{${FM.latexMat[1][0]}} & \\placeholder[m11]{${FM.latexMat[1][1]}}\\end{bmatrix}`;
 
         // Whenever the latex content of the FancyMatrix changes we need to update
         // what appears on screen accordingly
