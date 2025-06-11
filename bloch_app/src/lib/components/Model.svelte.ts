@@ -153,7 +153,6 @@ export class FancyMatrix {
                 newMat[i][j]= matmul(newMat[i][j], computedMult) as Complex;
             }
         }   
-        print_mat(newMat);
         return newMat;
     }
 
@@ -183,7 +182,6 @@ export class FancyMatrix {
 
 
     validateMatrix(newMat: ComplexMat2x2) : MatrixValidity {
-        print_mat(newMat)
         for (let i = 0; i < 2; i++){
             for (let j = 0; j < 2; j++){
                 let el = newMat[i][j]
@@ -192,7 +190,6 @@ export class FancyMatrix {
                     typeOf(el) != 'Complex' ||
                     el.valueOf() == 'Infinity'
                     ){
-                    console.log(el.valueOf());
                     
                     return new MatrixValidity(false, `Element (${i}, ${j}) is not a number`);
                 }

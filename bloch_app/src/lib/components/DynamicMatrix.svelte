@@ -6,10 +6,12 @@
 
 	interface Props {
 		matrixContext: string;
+        validMatrix: boolean;
 	}
 
 	let {
-        matrixContext 
+        matrixContext,
+        validMatrix = $bindable()
     }: Props = $props();
 
     let FM: FancyMatrix = getContext(matrixContext);
@@ -65,6 +67,9 @@
             // TODO : optimize to avoid useless overrides
             let parsed = parseMatrixField(mf);
             let res = FM.setMatrixFromLatex(...parsed);
+            validMatrix = res.isValid;
+            console.log(validMatrix);
+            
             
         })
 		return () => {

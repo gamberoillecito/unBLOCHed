@@ -12,11 +12,18 @@
   import {getContext, setContext} from 'svelte'
     
   let DM = $state(new DensityMatrix())
+  let DMValid = $state(false);
   setContext('densityMatrix', DM)
 
   let GM = $state(new GateMatrix())
+  let GMValid = $state(false);
   setContext('gateMatrix', GM)
 
+  $effect(()=>{
+    console.log(`DMvalid: ${DMValid}`);
+    console.log(`GMvalid: ${GMValid}`);
+    
+  })
 </script>
 
 
@@ -27,9 +34,9 @@
       <Scene matrixContext={'densityMatrix'}></Scene>
     </Canvas>
   </div>
-  <DynamicMatrix matrixContext='densityMatrix'></DynamicMatrix>
-  <DynamicMatrix matrixContext='gateMatrix'></DynamicMatrix>
-  <button onclick={()=>{
+  <DynamicMatrix matrixContext='densityMatrix' bind:validMatrix={DMValid}></DynamicMatrix>
+  <DynamicMatrix matrixContext='gateMatrix' bind:validMatrix={GMValid}></DynamicMatrix>
+  <button disabled={!(DMValid && GMValid)} onclick={()=>{
     DM.apply_gate(GM)
     }}>Apply</button>
   <textarea>{`DM = \n[${DM.mat[0][0]}, ${DM.mat[0][1]}] \n[${DM.mat[1][0]}, ${DM.mat[1][1]}]\n\nGM = \n[${GM.mat[0][0]}, ${GM.mat[0][1]}] \n[${GM.mat[1][0]}, ${GM.mat[1][1]}]`}</textarea>
