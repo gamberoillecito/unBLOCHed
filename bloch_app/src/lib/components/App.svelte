@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Canvas } from '@threlte/core'
   import Scene from './Scene.svelte'
-  import {complex, type Complex, exp, multiply, range} from 'mathjs'
   
   import {DensityMatrix , GateMatrix, print_mat} from '$lib/components/Model.svelte'
 	import DynamicMatrix from './DynamicMatrix.svelte';
@@ -39,8 +38,6 @@
     ></DynamicMatrix>
     <button disabled={!(DMValid && GMValid)} onclick={()=>{
       DM.apply_gate(GM)
-      console.log('applu');
-      
       }}>Apply</button>
     <textarea style="height: 300px; width: 400px">
 {`DM = \n[${DM.mat[0][0]}, ${DM.mat[0][1]}] \n[${DM.mat[1][0]}, ${DM.mat[1][1]}]
