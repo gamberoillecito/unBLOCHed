@@ -253,10 +253,6 @@ export class DensityMatrix extends FancyMatrix {
             // make operations easier
             let mat = matrix(newMat);
 
-            // (1) Unitary trace
-            if (trace(matmul(mat, mat)) > 1){
-                return new MatrixValidity(false, 'Not unitary trace')
-            }
 
             // // Hermitian
             // if (!deepEqual(mat, dagger(mat))) {
@@ -273,6 +269,17 @@ export class DensityMatrix extends FancyMatrix {
                     return new MatrixValidity(false, 'Not a positive operator')
                 }
                     
+            }
+
+            // (1) Unitary trace
+            let Tr = trace(matmul(mat, mat)) as unknown as Complex ;
+            
+            if (Tr.im != 0) {
+                console.error('The matrix has negative eigenvalues, this should be caught by the other checks')
+            }
+
+            if (compare(Tr.re, 1) == 1){
+                return new MatrixValidity(false, `Not unitary trace ${trace(matmul(mat, mat))}`)
             }
 
 
