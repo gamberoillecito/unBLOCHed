@@ -21,7 +21,11 @@
 
     let FM: FancyMatrix = getContext(matrixContext);
     let updateMatrixButton: Element;
-    let updateMatrixButtonDisabled: boolean = $state(false);
+    let updateMatrixButtonEnabled: boolean = $state(false);
+
+    let undoChangesButton: Element;
+    let undoChangesButtonEnabled: boolean = $state(false);
+
     let matrixError = $state('');
 
     function parseMatrixField(mf: MathfieldElement): [string[][], string] {
@@ -47,6 +51,9 @@
         // Whenever the latex content of the FancyMatrix changes we need to update
         // what appears on screen accordingly
         $effect(()=>{
+            // WARNING: the code used here is repeated also below in the undo button
+            // event listener. Don't be tempted to put it in a separate function
+            // otherwise this effect will not work anymore
             for (let i = 0; i < 2; i++){
                 for (let j = 0; j < 2; j++){
                     let newValue: string = FM.latexMat[i][j];
@@ -64,7 +71,7 @@
             // Generate a matrix starting from latex and validate it
             let parsed = parseMatrixField(mf);
             let res = FM.validateMatrix(FM.generateMatrixFromLatex(...parsed));
-            updateMatrixButtonDisabled = !res.isValid;
+            // updateMatrixButtonEnabled = res.isValid;
             matrixError = res.message;
             validMatrix = true;
             // if the displayed value is different with respect to
@@ -73,8 +80,8 @@
             let displayed_matrix = FM.generateMatrixFromLatex(...parseMatrixField(mf));
             let matrices_equal = deepEqual(FM.mat, displayed_matrix) as unknown as boolean;
             validMatrix = validMatrix &&  matrices_equal
-            updateMatrixButtonDisabled = matrices_equal;
-
+            updateMatrixButtonEnabled = !matrices_equal && res.isValid;
+            undoChangesButtonEnabled = !matrices_equal;
         })
         
         // Update the FancyMatrix when the button is pressed
@@ -87,6 +94,19 @@
             console.log(validMatrix);
             
         })
+        // The undo button overrides the current displayed value
+        // and substitutes it with the actual latex value of the
+        // FancyMatrix
+        undoChangesButton.addEventListener('click', ()=>{
+            for (let i = 0; i < 2; i++){
+                for (let j = 0; j < 2; j++){
+                    let newValue: string = FM.latexMat[i][j];
+                    mf.setPromptValue(`m${i}${j}`, newValue, {})
+                }
+            }
+            mf.setPromptValue(`mult`, FM.latexMult, {})
+            
+        })
 		return () => {
 			console.log('cleaning up');
 		};
@@ -94,7 +114,8 @@
 </script>
 
 <div>
-    <button bind:this={updateMatrixButton} disabled={updateMatrixButtonDisabled}>Update</button>
+    <button bind:this={updateMatrixButton} disabled={!updateMatrixButtonEnabled}>Update</button>
+    <button bind:this={undoChangesButton} disabled={!undoChangesButtonEnabled}>Undo</button>
     <math-field {@attach myAttachment} ></math-field>
     <p> {matrixError} </p>
 </div>
