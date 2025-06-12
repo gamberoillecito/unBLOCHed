@@ -18,6 +18,9 @@ import {
     isNegative,
     identity,
     atan2,
+    compare,
+    compareNatural,
+    round,
     
 } from 'mathjs'
 
@@ -110,7 +113,7 @@ export class FancyMatrix {
                         continue
                     }
                     this._mat[i][j] = newElement
-                    this._latexMat[i][j] = newElement.toString();
+                    this._latexMat[i][j] = round(newElement, 2).toString();
                 }
             } 
         }
@@ -319,7 +322,8 @@ export class DensityMatrix extends FancyMatrix {
         // this._mat = matmul(gate_mat, matmul(this._mat, gate_mat.T())) as ComplexMat2x2;
         let gate_mat = GM.mat
         let gate_dag = dagger(gate_mat)
-        this._mat = matmul(gate_mat, matmul(this._mat, gate_dag)) as ComplexMat2x2;
+        let newMat = matmul(gate_mat, matmul(this._mat, gate_dag)) as ComplexMat2x2;
+        this.setMatrixValue(newMat);
     }
 }
 
