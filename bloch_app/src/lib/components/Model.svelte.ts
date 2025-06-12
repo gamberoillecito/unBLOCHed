@@ -17,6 +17,7 @@ import {
     hasNumericValue,
     isNegative,
     identity,
+    atan2,
     
 } from 'mathjs'
 
@@ -240,7 +241,8 @@ export class DensityMatrix extends FancyMatrix {
     }
 
     get phase(){
-        return 1; 
+        const phi = atan2(this.#b.im, this.#b.re);
+        return (phi + 2 * Math.PI) % (2 * Math.PI);
     }
 
     // Validation perfomed according to Theorem 2.5 Nilsen-Chuang
