@@ -19,7 +19,7 @@
 <T.PerspectiveCamera
   makeDefault
   position={[10, 10, 10]}
-  fov={15}
+  fov={10}
   oncreate={(ref) => {
     ref.lookAt(0, 0, 0)
   }}
