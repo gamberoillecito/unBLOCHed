@@ -59,8 +59,11 @@
             for (let i = 0; i < 2; i++){
                 for (let j = 0; j < 2; j++){
                     let newValue: string = FM.latexMat[i][j];
+                    let currentValue = mf.getPromptValue(`m${i}${j}`);
+                    if (newValue != currentValue){
                     mf.setPromptValue(`m${i}${j}`, newValue, {})
                 }
+            }
             }
             mf.setPromptValue(`mult`, FM.latexMult, {})
         })
