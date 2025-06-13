@@ -30,11 +30,13 @@
       matrixContext='densityMatrix' 
       bind:validMatrix={DMValid}
       label={'\\rho'}
+      instantUpdate={false}
     ></DynamicMatrix>
     <DynamicMatrix 
       matrixContext='gateMatrix'
       bind:validMatrix={GMValid}
       label={'\\hat{U}'}
+      instantUpdate={true}
     ></DynamicMatrix>
     <button disabled={!(DMValid && GMValid)} onclick={()=>{
       DM.apply_gate(GM)

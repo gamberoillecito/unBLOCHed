@@ -11,12 +11,14 @@
 		matrixContext: string;
         validMatrix: boolean;
         label: string;
+        instantUpdate: boolean;
 	}
 
 	let {
         matrixContext,
         validMatrix = $bindable(),
-        label
+        label,
+        instantUpdate = false,
     }: Props = $props();
 
     let FM: FancyMatrix = getContext(matrixContext);
@@ -73,15 +75,18 @@
             let res = FM.validateMatrix(FM.generateMatrixFromLatex(...parsed));
             // updateMatrixButtonEnabled = res.isValid;
             matrixError = res.message;
-            validMatrix = true;
             // if the displayed value is different with respect to
             // one actually in the Fancy matrix we have to set the matrix
             // as invalid (user wouldn't know the real value)
             let displayed_matrix = FM.generateMatrixFromLatex(...parseMatrixField(mf));
             let matrices_equal = deepEqual(FM.mat, displayed_matrix) as unknown as boolean;
-            validMatrix = validMatrix &&  matrices_equal
+            validMatrix = res.isValid &&  matrices_equal;
             updateMatrixButtonEnabled = !matrices_equal && res.isValid;
             undoChangesButtonEnabled = !matrices_equal;
+
+            if (instantUpdate && res.isValid) {
+                FM.setMatrixFromLatex(...parsed)
+            }
         })
         
         // Update the FancyMatrix when the button is pressed
@@ -114,8 +119,17 @@
 </script>
 
 <div>
-    <button bind:this={updateMatrixButton} disabled={!updateMatrixButtonEnabled}>Update</button>
-    <button bind:this={undoChangesButton} disabled={!undoChangesButtonEnabled}>Undo</button>
+    <!-- Buttons that needs to be disabled if instantUpdate is true -->
+    <div style={`display:${instantUpdate ? 'none':''}`}> 
+        <button 
+            bind:this={updateMatrixButton} 
+            disabled={!updateMatrixButtonEnabled}
+        >Update</button>
+        <button 
+            bind:this={undoChangesButton} 
+            disabled={!undoChangesButtonEnabled}
+        >Undo</button>
+    </div>
     <math-field {@attach myAttachment} ></math-field>
     <p> {matrixError} </p>
 </div>
