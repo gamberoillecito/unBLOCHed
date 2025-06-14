@@ -304,14 +304,14 @@ export class DensityMatrix extends FancyMatrix {
             // (2) Positive semidefinite
             let ei = eigs(mat).values.valueOf() as number[];
             
-            for (let v of ei) {
-                // Cannot have complex eigenvalues
-                // (This check should be superfluous)
-                if (!hasNumericValue(v) || isNegative(v)) {
-                    return new MatrixValidity(false, 'Not a positive operator')
-                }
+            // for (let v of ei) {
+            //     // Cannot have complex eigenvalues
+            //     // (This check should be superfluous)
+            //     if (!hasNumericValue(v) || isNegative(v)) {
+            //         return new MatrixValidity(false, 'Not a positive operator')
+            //     }
                     
-            }
+            // }
 
             // (1) Unitary trace
             let Tr = trace(matmul(mat, mat)) as unknown as Complex ;
@@ -323,6 +323,8 @@ export class DensityMatrix extends FancyMatrix {
             if (compare(Tr.re, 1) == 1){
                 return new MatrixValidity(false, `Not unitary trace ${trace(matmul(mat, mat))}`)
             }
+
+            if (Tr.re > 1)
 
 
             return new MatrixValidity(true);
@@ -362,7 +364,9 @@ export class DensityMatrix extends FancyMatrix {
         let gate_mat = GM.mat
         let gate_dag = dagger(gate_mat)
         let newMat = matmul(gate_mat, matmul(this._mat, gate_dag)) as ComplexMat2x2;
-        this.setMatrixValue(newMat);
+        let res = this.setMatrixValue(newMat);
+        console.log(res);
+        
     }
 }
 
