@@ -27,12 +27,6 @@ import {
 
 export type ComplexMat2x2 = [[Complex, Complex], [Complex, Complex]];
 
-export class MatrixError extends(Error) {
-    constructor(msg: string) {
-        super(msg);
-        Object.setPrototypeOf(this, MatrixError.prototype);
-    }
-}
 
 class MatrixValidity {
     isValid: boolean;
@@ -51,16 +45,36 @@ function dagger(mat:ComplexMat2x2|Matrix) {
     return conj(transpose(mat))
 }
 
+export class MatrixParam {
+    name: string;
+    latexValue: string;
+    latexLabel: string;
+    userEditable: boolean;
+
+    constructor(name: string, latexValue: string, latexLabel: string, userEditable: boolean) {
+        this.name = name;
+        this.latexValue = latexValue; 
+        this.latexLabel = latexLabel;
+        this.userEditable = userEditable;
+    }
+}
+
 // This class manages both the matematical and latex aspects
 // of a 2x2 matrix for bidirectional syncing with DynamicMatrix.svelte
 export class FancyMatrix {
     protected _latexMult: string; // Latex multiplier in front of the matrix
     protected _mat: ComplexMat2x2; // The "math" matrix for calculations
     protected _latexMat: (string)[][]; // The latex version of the matrix elements for display
+    protected _parameter_array: MatrixParam[]; 
     ce: ComputeEngine;
 
-    constructor(latexMat: string[][], latexMult: string){
+    constructor(latexMat: string[][], latexMult: string, parameters: MatrixParam[] = []){
         this.ce = new ComputeEngine();
+        
+        this._parameter_array = parameters;
+        for (let p of this._parameter_array) {
+            this.ce.box(p.name).value = p.latexValue
+        }
         // We need to tell the ComputeEngine how to
         // deal with placeholders (not really necessary for now
         // since we strip them away in DynamicMatrix.svelte)
@@ -157,7 +171,15 @@ export class FancyMatrix {
     generateMatrixFromLatex(newLatexMat: (string)[][], mult: string) : ComplexMat2x2 {
 
         let newMat = newLatexMat.map((row)=>row.map((el) => {
+
+            for (let p of this._parameter_array) {
+                this.ce.box(p.name).value = this.ce.parse(p.latexValue).N()
+                
+            }
             let converted = this.ce.parse(el).N();
+            // console.log(converted);
+            
+            
             return complex(converted.re, converted.im);
         }
         )) as ComplexMat2x2;
@@ -189,6 +211,18 @@ export class FancyMatrix {
         return new MatrixValidity(true, '');
     }
 
+    setParameterLatex(paramName: string, latexValue: string){
+        let targetParam = this._parameter_array.find(p => p.name == paramName);
+        if (targetParam) {
+            targetParam.latexValue = latexValue;
+        }
+        else {
+            console.error(`Wrong matrix parameter name ${paramName}`)
+        }
+        let res = this.setMatrixFromLatex(this._latexMat, this._latexMult);
+        return res;
+    }
+
     get mat(){
         return this._mat;
     }
@@ -199,6 +233,10 @@ export class FancyMatrix {
         return this._latexMult;
     }
     
+    get parameterArray() {
+        return this._parameter_array;
+    }
+
     T() : ComplexMat2x2{
         /**
          * Returns the Transpose of mat
@@ -221,8 +259,8 @@ export class DensityMatrix extends FancyMatrix {
     // notation in the rest of the code
     #blochV: [number, number, number];
 
-    constructor(latexMat: string[][], latexMult: string) {
-        super(latexMat, latexMult);
+    constructor(latexMat: string[][], latexMult: string, params: MatrixParam[] = []) {
+        super(latexMat, latexMult, params);
         this.#a = $derived(this._mat[0][0]);
         this.#b = $derived(this._mat[0][1]);
         this.#c = $derived(this._mat[1][0]);
@@ -328,8 +366,8 @@ export class DensityMatrix extends FancyMatrix {
 }
 
 export class GateMatrix extends FancyMatrix {
-    constructor(latexMat: string[][], latexMult: string) {
-        super(latexMat, latexMult);
+    constructor(latexMat: string[][], latexMult: string, params: MatrixParam[] = []) {
+        super(latexMat, latexMult, params);
     }
     protected fallbackLatexMat(): string[][]{
         return [['1', '0'], ['0', '1']];

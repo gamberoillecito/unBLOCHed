@@ -6,7 +6,6 @@
     import { getContext } from 'svelte';
 	import { FancyMatrix, DensityMatrix } from './Model.svelte';
 	import { deepEqual } from 'mathjs';
-
 	interface Props {
 		matrixContext: string;
         validMatrix: boolean;
@@ -29,6 +28,11 @@
     let undoChangesButtonEnabled: boolean = $state(false);
 
     let matrixError = $state('');
+
+    if (FM.parameterArray.find(p => p.userEditable) && !instantUpdate) {
+        console.error("Matrices with user editable parameters must be instantUpdate")
+    }
+    
 
     function parseMatrixField(mf: MathfieldElement): [string[][], string] {
         let matrix: string[][] = []
@@ -61,11 +65,13 @@
                     let newValue: string = FM.latexMat[i][j];
                     let currentValue = mf.getPromptValue(`m${i}${j}`);
                     if (newValue != currentValue){
-                    mf.setPromptValue(`m${i}${j}`, newValue, {})
+                        mf.setPromptValue(`m${i}${j}`, newValue, {})
+                    }
                 }
             }
-            }
             mf.setPromptValue(`mult`, FM.latexMult, {})
+            console.log(FM.latexMat);
+            
         })
 
         // Whenever we receive user input on the page we need to check if the
@@ -115,11 +121,40 @@
             mf.setPromptValue(`mult`, FM.latexMult, {})
             
         })
+
+
 		return () => {
 			console.log('cleaning up');
 		};
 	};
+
+    // Initialize the mathfield to edit the matrix parameters
+	const paramAttachment: Attachment = (element) => {
+            let mf = element as MathfieldElement; 
+            mf.addEventListener('input', ()=> {
+
+            let paramsNames = mf.getPrompts();
+            if (paramsNames.length != 1){
+                console.error(`Matrix parameter contains more than one prompt: ${paramsNames}`)
+                return;
+            }
+            let paramName = paramsNames[0];
+            let paramValue = mf.getPromptValue(paramName);
+            let res = FM.setParameterLatex(paramName, paramValue);
+            matrixError = res.message;
+            validMatrix = res.isValid; 
+        })
+    }
 </script>
+
+<style>
+math-field::part(menu-toggle) {
+  display: none;
+}
+math-field::part(virtual-keyboard-toggle) {
+    display: none;
+}
+</style>
 
 <div>
     <!-- Buttons that needs to be disabled if instantUpdate is true -->
@@ -133,6 +168,11 @@
             disabled={!undoChangesButtonEnabled}
         >Undo</button>
     </div>
-    <math-field {@attach myAttachment} ></math-field>
+    <math-field {@attach myAttachment} readonly></math-field>
+    {#each FM.parameterArray as param, index }
+        {#if param.userEditable}
+        <math-field {@attach paramAttachment} readonly>{`${param.latexLabel} = \\placeholder[${param.name}]{${param.latexValue}}`}</math-field>
+        {/if}
+    {/each}
     <p> {matrixError} </p>
 </div>
