@@ -73,7 +73,8 @@ export class FancyMatrix {
         
         this._parameter_array = parameters;
         for (let p of this._parameter_array) {
-            this.ce.box(p.name).value = p.latexValue
+            // this.ce.box(p.name).value = p.latexValue
+            this.ce.box(p.name).value = p.latexValue;
         }
         // We need to tell the ComputeEngine how to
         // deal with placeholders (not really necessary for now
@@ -173,7 +174,7 @@ export class FancyMatrix {
         let newMat = newLatexMat.map((row)=>row.map((el) => {
 
             for (let p of this._parameter_array) {
-                this.ce.box(p.name).value = this.ce.parse(p.latexValue).N()
+                this.ce.box(p.name).value = this.ce.parse(p.latexValue).N();
                 
             }
             let converted = this.ce.parse(el).N();

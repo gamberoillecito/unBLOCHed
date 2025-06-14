@@ -11,7 +11,7 @@
   setContext('densityMatrix', DM)
 
   // let GM = $state(new GateMatrix([['1', '0'], ['0', '1']], '1'))
-  let GM_parameters = [new MatrixParam('t', '1', '\\theta', true)]
+  let GM_parameters = [new MatrixParam('theta', '1', '\\theta', true)]
   let GM = $state(new GateMatrix([['1', '1'], ['1', '-1']], '\\frac{1}{\\sqrt{2}}', GM_parameters));
   let GMValid = $state(true); // We can default to true since FancyMatrix does not accept invalid inputs
   setContext('gateMatrix', GM)
