@@ -344,10 +344,11 @@ export class DensityMatrix extends FancyMatrix {
             
             if (Tr.im != 0) {
                 console.error('The matrix has negative eigenvalues, this should be caught by the other checks')
+                return new MatrixValidity(false, 'Negative eigenvalues, please report this to the developer')
             }
 
             if (compare(Tr.re, 1) == 1){
-                return new MatrixValidity(false, `Not unitary trace ${trace(matmul(mat, mat))}`)
+                return new MatrixValidity(false, `rho^2 has trace > 1`)
             }
 
 
