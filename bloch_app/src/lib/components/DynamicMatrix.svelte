@@ -121,7 +121,7 @@
                     mf.setPromptValue(`m${i}${j}`, newValue, {silenceNotifications: true})
                 }
             }
-            mf.setPromptValue(`mult`, FM.latexMult, {silenceNotifications: true})
+            mf.setPromptValue(`mult`, FM.latexMult, {})
             
         })
 
