@@ -21,6 +21,7 @@ import {
     compare,
     compareNatural,
     round,
+    isPositive,
     
 } from 'mathjs'
 
@@ -288,6 +289,9 @@ export class DensityMatrix extends FancyMatrix {
     }
 
     // Validation perfomed according to Theorem 2.5 Nilsen-Chuang
+    // Added also check to see if it is Hermitian but I'm not sure it is needed (
+    // although without this check the matrix rho =[[1,0], [1,0]] results valid)
+    // https://mathworld.wolfram.com/PositiveDefiniteMatrix.html
     validateMatrix(newMat: ComplexMat2x2) : MatrixValidity {
         let preliminary_validation = super.validateMatrix(newMat); 
         if (preliminary_validation.isValid){
@@ -296,22 +300,44 @@ export class DensityMatrix extends FancyMatrix {
             let mat = matrix(newMat);
 
 
-            // // Hermitian
-            // if (!deepEqual(mat, dagger(mat))) {
-            //     return new MatrixValidity(false, 'Not Hermitian')
-            // }
+            // Hermitian
+            if (!deepEqual(mat, dagger(mat))) {
+                return new MatrixValidity(false, 'Not Hermitian')
+            }
 
             // (2) Positive semidefinite
-            let ei = eigs(mat).values.valueOf() as number[];
+            let ei = eigs(mat).values.valueOf() as Complex[];
             
-            // for (let v of ei) {
-            //     // Cannot have complex eigenvalues
-            //     // (This check should be superfluous)
-            //     if (!hasNumericValue(v) || isNegative(v)) {
-            //         return new MatrixValidity(false, 'Not a positive operator')
-            //     }
+            for (let v of ei) {
+                v = complex(v);
+                
+                if (compare(v.im, 0) == 0) { // not complex
+                    if (compare(v.re, 1) != 1 && compare(v.re, 0) != -1){ //between 0 and 1
+                        continue
+                    }
+                }
+
+                // If complex, the imaginary part should be 0
+                // if (typeOf(v) == 'Complex'){
+                //     if (compare(v.im, 0) == 0) {
+                //         console.log(`${v} is a complex`);
+                //         continue;
+                //     }
+                // }
+                // else if (typeOf(v) == 'number') {
+                //     if (compare(v, 1) != 1 && isPositive(v as unknown as number)) {
+                //         console.log(`${v} is a number`);
+                        
+                //         continue
+                //     }
+                // }
+                console.log(typeOf(v));
+                console.log(v)
+                return new MatrixValidity(false, 'Not a positive operator')
+                
+                
                     
-            // }
+            }
 
             // (1) Unitary trace
             let Tr = trace(matmul(mat, mat)) as unknown as Complex ;
@@ -323,8 +349,6 @@ export class DensityMatrix extends FancyMatrix {
             if (compare(Tr.re, 1) == 1){
                 return new MatrixValidity(false, `Not unitary trace ${trace(matmul(mat, mat))}`)
             }
-
-            if (Tr.re > 1)
 
 
             return new MatrixValidity(true);
