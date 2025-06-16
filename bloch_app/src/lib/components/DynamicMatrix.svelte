@@ -23,7 +23,9 @@
     let FM: FancyMatrix = getContext(matrixContext);
     let updateMatrixButton: Element;
     let updateMatrixButtonEnabled: boolean = $state(false);
-
+    // Initial latex value to be set inside the MathfieldElement
+    let initialValue = `${label} = \\placeholder[mult]{${FM.latexMult}}\\begin{bmatrix}\\placeholder[m00]{${FM.latexMat[0][0]}} & \\placeholder[m01]{${FM.latexMat[0][1]}}\\\\ \\placeholder[m10]{${FM.latexMat[1][0]}} & \\placeholder[m11]{${FM.latexMat[1][1]}}\\end{bmatrix}`;
+    let counter = 0;
     let undoChangesButton: Element;
     let undoChangesButtonEnabled: boolean = $state(false);
 
@@ -50,9 +52,12 @@
     // sets up the reactivity of the element
 	const myAttachment: Attachment = (element) => {
 		let mf = element as MathfieldElement;
-
+        console.log('counter');
+        
+        console.log(counter++);
+        
         // Default value of the matrix input
-        mf.value = `${label} = \\placeholder[mult]{${FM.latexMult}}\\begin{bmatrix}\\placeholder[m00]{${FM.latexMat[0][0]}} & \\placeholder[m01]{${FM.latexMat[0][1]}}\\\\ \\placeholder[m10]{${FM.latexMat[1][0]}} & \\placeholder[m11]{${FM.latexMat[1][1]}}\\end{bmatrix}`;
+        mf.value = initialValue;
 
         // Whenever the latex content of the FancyMatrix changes we need to update
         // what appears on screen accordingly
@@ -65,11 +70,11 @@
                     let newValue: string = FM.latexMat[i][j];
                     let currentValue = mf.getPromptValue(`m${i}${j}`);
                     if (newValue != currentValue){
-                        mf.setPromptValue(`m${i}${j}`, newValue, {})
+                        mf.setPromptValue(`m${i}${j}`, newValue, {silenceNotifications: true})
                     }
                 }
             }
-            mf.setPromptValue(`mult`, FM.latexMult, {})
+            mf.setPromptValue(`mult`, FM.latexMult, {silenceNotifications: true})
             
         })
 
@@ -104,7 +109,6 @@
             let parsed = parseMatrixField(mf);
             let res = FM.setMatrixFromLatex(...parsed);
             validMatrix = res.isValid;
-            console.log(validMatrix);
             
         })
         // The undo button overrides the current displayed value
@@ -114,10 +118,10 @@
             for (let i = 0; i < 2; i++){
                 for (let j = 0; j < 2; j++){
                     let newValue: string = FM.latexMat[i][j];
-                    mf.setPromptValue(`m${i}${j}`, newValue, {})
+                    mf.setPromptValue(`m${i}${j}`, newValue, {silenceNotifications: true})
                 }
             }
-            mf.setPromptValue(`mult`, FM.latexMult, {})
+            mf.setPromptValue(`mult`, FM.latexMult, {silenceNotifications: true})
             
         })
 
