@@ -103,7 +103,10 @@ export class FancyMatrix {
         this._mat= $state(generatedMatrix);
 
         this._latexMult = latexMult; 
-        this._latexMat = $state(latexMat);
+        // I use map because I want to "loose" the reference from the original passed value
+        // to prevent scenarios where who initiates an instance of the class passing a matrix
+        // is able to edit this._latexMat by changing the value of the original matrix
+        this._latexMat = $state(latexMat.map(row => row.map(x => x)));
     }
     // Fallback values to set the matrix in case something breaks when initializing the class
     protected fallbackLatexMat(): string[][]{
@@ -239,7 +242,7 @@ export class FancyMatrix {
         return this._parameter_array;
     }
 
-    T() : ComplexMat2x2{
+    protected T() : ComplexMat2x2{
         /**
          * Returns the Transpose of mat
          */
