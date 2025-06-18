@@ -9,6 +9,5 @@
 		"typescript-color-gradient": "^4.0.1"
 	},
 	"devDependencies": {
-		"vitest": "^3.2.3"
 	}
 }
