@@ -22,7 +22,11 @@ import {
     compareNatural,
     round,
     isPositive,
-    
+    sqrt,
+    acos,
+    sin,
+    divide,
+    det,
 } from 'mathjs'
 
 
@@ -44,6 +48,22 @@ export function print_mat(mat: ComplexMat2x2) {
 
 function dagger(mat:ComplexMat2x2|Matrix) {
     return conj(transpose(mat))
+}
+
+/**
+ * Creates a new 2x2 complex matrix from a flat array of 4 entries.
+ * @param entries An array of 4 numbers, strings, or Complex values.
+ * @returns A ComplexMat2x2 or null if the input is invalid.
+ */
+function newComplexMat2x2(entries: (string|Complex|number)[]): ComplexMat2x2|null {
+    if (!Array.isArray(entries) || entries.length !== 4) {
+        return null;
+    }
+    let mat: ComplexMat2x2 = [
+        [complex(entries[0]), complex(entries[1])],
+        [complex(entries[2]), complex(entries[3])]
+    ];
+    return mat;
 }
 
 export class MatrixParam {
@@ -291,7 +311,7 @@ export class DensityMatrix extends FancyMatrix {
         return (phi + 2 * Math.PI) % (2 * Math.PI);
     }
 
-    // Validation perfomed according to Theorem 2.5 Nilsen-Chuang
+    // Validation perfomed according to Theorem 2.5 Nielsen-Chuang
     // Added also check to see if it is Hermitian but I'm not sure it is needed (
     // although without this check the matrix rho =[[1,0], [1,0]] results valid)
     // https://mathworld.wolfram.com/PositiveDefiniteMatrix.html
@@ -411,7 +431,7 @@ export class GateMatrix extends FancyMatrix {
         if (!preliminary_validation.isValid){
             return preliminary_validation;
         }
-        // Check if the matrix is unitary Nilsen-Chuang pag.18
+        // Check if the matrix is unitary Nielsen-Chuang pag.18
         //" Amazingly, this unitarity constraint is the only constraint on quantum gates. Any
         //  unitary matrix specifies a valid quantum gate! "
         let mTm = matmul(newMat, dagger(newMat));
@@ -419,6 +439,34 @@ export class GateMatrix extends FancyMatrix {
             return new MatrixValidity(false, "Not unitary")
         }
         return new MatrixValidity(true);
+    }
+
+    
+    // Based on this answer
+    // https://quantumcomputing.stackexchange.com/a/16538
+    get rotationAxis() {
+        let pauliX = newComplexMat2x2([0, 1, 1, 0]);
+        let pauliY = newComplexMat2x2([0, '-i', 'i', 0]);
+        let pauliZ = newComplexMat2x2([1, 0, 0, -1]);
+        let paulis: ComplexMat2x2[] = [pauliX!, pauliY!, pauliZ!];
+
+        let O = matrix(this._mat);
+        let e_ia = complex(sqrt(det(O)));
+        e_ia.im *= -1;
+
+
+        let argAcos = matmul(e_ia, divide(trace(O), 2)) as Complex;
+        let theta = matmul(acos(argAcos), 2) as number;
+        console.log(theta);
+
+        let rotVect: number[] = [];
+        for (let p of paulis) {
+            let num = matmul(e_ia, trace(matmul(O, p))) as Complex;
+            let den = matmul(complex('-2i'), sin(theta/2)) as Complex;
+            rotVect.push(divide(num, den) as number);
+        }
+        
+        return rotVect;
     }
 
 }

@@ -13,8 +13,9 @@
 
   // let GM = $state(new GateMatrix([['1', '0'], ['0', '1']], '1'))
   let GM_parameters = [new MatrixParam('theta', '\\pi/2', '\\theta', true)]
-  // let GM = $state(new GateMatrix([['1', '1'], ['1', '-1']], '\\frac{1}{\\sqrt{2}}', GM_parameters));
-  let GM = $state(new GateMatrix([['e^{-i \\theta}', '0'], ['0', 'e^{i \\theta}']], '1', GM_parameters));
+  // let GM = $state(new GateMatrix([['1', '1'], ['1', '-1']], '\\frac{1}{\\sqrt{2}}'));
+  let GM = $state(new GateMatrix([['1', '0'], ['0', 'i']], '1'));
+  // let GM = $state(new GateMatrix([['e^{-i \\theta}', '0'], ['0', 'e^{i \\theta}']], '1', GM_parameters));
   let GMValid = $state(true); // We can default to true since FancyMatrix does not accept invalid inputs
   setContext('gateMatrix', GM)
 
@@ -59,6 +60,9 @@ GM latex = \n ${GM.latexMult} \n[${GM.latexMat[0][0]}, ${GM.latexMat[0][1]}] \n[
       `}
     </textarea>
   </div>
+  <button onclick={() => {
+    console.log(GM.rotationAxis);
+  }}>Test</button>
 </div>
 
 
