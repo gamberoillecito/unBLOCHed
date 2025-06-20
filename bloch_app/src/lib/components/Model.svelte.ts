@@ -445,7 +445,7 @@ export class GateMatrix extends FancyMatrix {
         let pauliX = newComplexMat2x2([0, 1, 1, 0]);
         let pauliY = newComplexMat2x2([0, '-i', 'i', 0]);
         let pauliZ = newComplexMat2x2([1, 0, 0, -1]);
-        let paulis: ComplexMat2x2[] = [pauliX!, pauliY!, pauliZ!];
+        let paulis: ComplexMat2x2[] = [pauliX!, pauliZ!, pauliY!];
 
         let O = matrix(this._mat);
         let e_ia = complex(sqrt(det(O)));

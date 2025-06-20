@@ -2,7 +2,7 @@
   import { Canvas } from '@threlte/core'
   import Scene from './Scene.svelte'
   
-  import {DensityMatrix , GateMatrix, MatrixParam, print_mat} from '$lib/components/Model.svelte'
+  import {DensityMatrix , GateMatrix, GatePath, MatrixParam, print_mat} from '$lib/components/Model.svelte'
 	import DynamicMatrix from './DynamicMatrix.svelte';
   import {getContext, setContext} from 'svelte'
     
@@ -19,6 +19,7 @@
   let GMValid = $state(true); // We can default to true since FancyMatrix does not accept invalid inputs
   setContext('gateMatrix', GM)
 
+  let gatePaths : GatePath[] = $state([]);
 </script>
 
 
@@ -26,7 +27,7 @@
 
   <div id="canvasContainer">
     <Canvas>
-      <Scene matrixContext={'densityMatrix'}></Scene>
+      <Scene matrixContext={'densityMatrix'} paths={gatePaths}></Scene>
     </Canvas>
   </div>
   <div>
@@ -45,6 +46,7 @@
     ></DynamicMatrix>
 
     <button disabled={!(DMValid && GMValid)} onclick={()=>{
+      gatePaths.push(new GatePath(DM.blochV, GM.rotationAxis, GM.rotationAngle));
       DM.apply_gate(GM)
       }}>Apply</button>
     <textarea style="height: 300px; width: 400px">

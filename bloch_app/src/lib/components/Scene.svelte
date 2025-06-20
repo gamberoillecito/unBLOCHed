@@ -6,7 +6,12 @@
   import BlochSphere from './BlochSphere.svelte';
   import {complex, type Complex} from 'mathjs'
   import SolidVector from './SolidVector.svelte';
-    let {matrixContext} = $props();
+	import Path from './Path.svelte';
+	import { AxesHelper } from 'three';
+    let {
+      matrixContext,
+      paths
+    } = $props();
       
 </script>
   <T.DirectionalLight
@@ -27,5 +32,10 @@
   <OrbitControls />
 </T.PerspectiveCamera>
 
+{#each paths as path }
+  <Path path={path}></Path>
+{/each}
+
 <BlochSphere ></BlochSphere>
 <SolidVector {matrixContext}></SolidVector>
+<T.AxesHelper></T.AxesHelper>

@@ -1,9 +1,10 @@
 <script lang="ts">
     import { T } from '@threlte/core'
-    import { MathUtils, Color, EllipseCurve, BufferGeometry, Group, Vector3, Line, AxesHelper, ArrowHelper, Matrix4 } from 'three';
+    import { MathUtils, Color, EllipseCurve, BufferGeometry, Group, Vector3, Line, AxesHelper, ArrowHelper, Matrix4, LineBasicMaterial } from 'three';
 	import type { GatePath } from './Model.svelte';
 	import { color } from 'three/src/nodes/TSL.js';
 	import { Matrix } from 'mathjs';
+	import { Line2, LineGeometry, LineMaterial } from 'three/examples/jsm/Addons.js';
 
 	interface Props {
 		path: GatePath;
@@ -20,32 +21,44 @@
 	false,            // aClockwise
 	0                 // aRotation
 );
-const Xaxis = new Vector3(1, 0, 0);
-const Yaxis = new Vector3(0, 1, 0);
-const Zaxis = new Vector3(0, 0, 1);
-const startingVector = new Vector3(...path.startingPoint);
 
-const points = curve.getPoints( 50 );
-const geometry = new BufferGeometry().setFromPoints( points )
+const initialVector = new Vector3(...path.startingPoint);
 
-const auxAxis = new Vector3().crossVectors(Xaxis, startingVector).normalize();
-const auxAngle = Math.acos(Xaxis.dot(startingVector) / (Xaxis.length() * startingVector.length()))
-const rotMatrix = new Matrix4().makeRotationAxis(auxAxis, auxAngle);
+// Variabili per l'asse e l'angolo di rotazione
+const axis = new Vector3(...path.axis); 
+const angle = path.angle; 
 
-geometry.applyMatrix4(rotMatrix);
-geometry.lookAt(new Vector3(...path.axis))
+// Number of points along the arc
+const numPoints = 100;
+const points = [];
 
+// Compute the points along the arc traced by the vector
+for (let i = 0; i <= numPoints; i++) {
+    const t = i / numPoints; 
+    const interpolatedAngle = t * angle; 
+    const rotationMatrix = new Matrix4().makeRotationAxis(axis, interpolatedAngle);
+    
+    // Apply the rotation to the initial vector to keep track of consecutive movements
+    const point = initialVector.clone().applyMatrix4(rotationMatrix);
+    points.push(point);
+}
+
+const arcGeometry = new LineGeometry().setFromPoints(points);
+const line = new Line2(arcGeometry);
 const ah = new ArrowHelper((new Vector3(...path.axis)).normalize(), new Vector3(0,0,0), 1.4, '#ffffff', 0);
 // const ah = new ArrowHelper(Xaxis, new Vector3(0,0,0), 1.4, '#ffffff', 0);
 const originalBV = new ArrowHelper((new Vector3(...path.startingPoint)).normalize(), new Vector3(0,0,0), 1, '#FF0000');
-
+const material = new LineMaterial({
+	color: 'orangered',
+	worldUnits: false,
+});
+material.linewidth = 3;
 </script>
 
-<T.Line
+<T is={line}
 >
-  <T is={geometry}/>
-  <T.LineBasicMaterial color='red'/>
-</T.Line>
+  <T is={material}></T>
+</T>
 
-<T is={ah}></T>
-<T is={originalBV}></T>
+<!-- <T is={ah}></T>
+<T is={originalBV}></T> -->
