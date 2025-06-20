@@ -380,19 +380,6 @@ export class DensityMatrix extends FancyMatrix {
         return preliminary_validation
     }
 
-    set a(value: Complex){
-        this._mat[0][0] = value;
-    }
-    set b(value: Complex){
-        this._mat[0][1] = value;
-    }
-    set c(value: Complex){
-        this._mat[1][0] = value;
-    }
-    set d(value: Complex){
-        this._mat[1][1] = value;
-    }
-
     get a(){
         return this.#a;
     }
