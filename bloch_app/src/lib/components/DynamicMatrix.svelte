@@ -118,7 +118,7 @@
             for (let i = 0; i < 2; i++){
                 for (let j = 0; j < 2; j++){
                     let newValue: string = FM.latexMat[i][j];
-                    mf.setPromptValue(`m${i}${j}`, newValue, {silenceNotifications: true})
+                    mf.setPromptValue(`m${i}${j}`, newValue, {})
                 }
             }
             mf.setPromptValue(`mult`, FM.latexMult, {})

@@ -441,10 +441,20 @@ export class GateMatrix extends FancyMatrix {
         return new MatrixValidity(true);
     }
 
+    get rotationAngle() : number {
+        let O = matrix(this._mat);
+        let e_ia = complex(sqrt(det(O)));
+        e_ia.im *= -1;
+
+        let argAcos = matmul(e_ia, divide(trace(O), 2)) as Complex;
+        let theta = matmul(acos(argAcos), 2) as number;
+        
+        return theta;
+    }
     
     // Based on this answer
     // https://quantumcomputing.stackexchange.com/a/16538
-    get rotationAxis() {
+    get rotationAxis() : [number, number, number] {
         let pauliX = newComplexMat2x2([0, 1, 1, 0]);
         let pauliY = newComplexMat2x2([0, '-i', 'i', 0]);
         let pauliZ = newComplexMat2x2([1, 0, 0, -1]);
@@ -454,10 +464,7 @@ export class GateMatrix extends FancyMatrix {
         let e_ia = complex(sqrt(det(O)));
         e_ia.im *= -1;
 
-
-        let argAcos = matmul(e_ia, divide(trace(O), 2)) as Complex;
-        let theta = matmul(acos(argAcos), 2) as number;
-        console.log(theta);
+        let theta = this.rotationAngle;
 
         let rotVect: number[] = [];
         for (let p of paulis) {
@@ -466,7 +473,18 @@ export class GateMatrix extends FancyMatrix {
             rotVect.push(divide(num, den) as number);
         }
         
-        return rotVect;
+        return rotVect as [number, number, number];
     }
 
+}
+export class GatePath {
+    startingPoint: [number, number, number];
+    axis: [number, number, number];
+    angle: number;
+    
+    constructor(startingPoint: [number, number, number], axis: [number, number, number], angle: number){
+        this.startingPoint = startingPoint;
+        this.axis = axis;
+        this.angle = angle;
+    }
 }

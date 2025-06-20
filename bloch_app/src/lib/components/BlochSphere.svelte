@@ -53,7 +53,7 @@
        args={[latitudeRadius(sphere_radius, iter, num_latitudes),lat_long_thickness]}
        />
  
-       <T.MeshLambertMaterial
+       <T.LineBasicMaterial
          castshadow={false}
          receiveshadow={false}
          color = {lat_long_color}
@@ -74,7 +74,7 @@
        args={[sphere_radius,lat_long_thickness]}
        />
  
-       <T.MeshPhongMaterial
+       <T.LineBasicMaterial
          castshadow={false}
          receiveshadow={false}
          color = {lat_long_color}
