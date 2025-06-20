@@ -4,7 +4,7 @@
     import "mathlive";
     import type {MathfieldElement } from "mathlive";
     import { getContext } from 'svelte';
-	import { FancyMatrix, DensityMatrix, MatrixParam } from './Model.svelte';
+	import { FancyMatrix, DensityMatrix, MatrixParam, print_mat } from './Model.svelte';
 	import { deepEqual } from 'mathjs';
 	interface Props {
 		matrixContext: string;
@@ -25,7 +25,6 @@
     let updateMatrixButtonEnabled: boolean = $state(false);
     // Initial latex value to be set inside the MathfieldElement
     let initialValue = `${label} = \\placeholder[mult]{${FM.latexMult}}\\begin{bmatrix}\\placeholder[m00]{${FM.latexMat[0][0]}} & \\placeholder[m01]{${FM.latexMat[0][1]}}\\\\ \\placeholder[m10]{${FM.latexMat[1][0]}} & \\placeholder[m11]{${FM.latexMat[1][1]}}\\end{bmatrix}`;
-    let counter = 0;
     let undoChangesButton: Element;
     let undoChangesButtonEnabled: boolean = $state(false);
 
@@ -54,8 +53,6 @@
 		let mf = element as MathfieldElement;
         console.log('counter');
         
-        console.log(counter++);
-        
         // Default value of the matrix input
         mf.value = initialValue;
 
@@ -65,16 +62,20 @@
             // WARNING: the code used here is repeated also below in the undo button
             // event listener. Don't be tempted to put it in a separate function
             // otherwise this effect will not work anymore
+            
             for (let i = 0; i < 2; i++){
                 for (let j = 0; j < 2; j++){
                     let newValue: string = FM.latexMat[i][j];
                     let currentValue = mf.getPromptValue(`m${i}${j}`);
                     if (newValue != currentValue){
+                        
                         mf.setPromptValue(`m${i}${j}`, newValue, {silenceNotifications: true})
                     }
                 }
             }
-            mf.setPromptValue(`mult`, FM.latexMult, {silenceNotifications: true})
+            if (FM.latexMult != mf.getPromptValue('mult')){
+                mf.setPromptValue(`mult`, FM.latexMult, {silenceNotifications: true})
+            }
             
         })
 
@@ -88,18 +89,21 @@
             let res = FM.validateMatrix(FM.generateMatrixFromLatex(...parsed));
             // updateMatrixButtonEnabled = res.isValid;
             matrixError = res.message;
+            
+            if (instantUpdate && res.isValid) {
+                FM.setMatrixFromLatex(...parsed)
+            }
             // if the displayed value is different with respect to
             // one actually in the Fancy matrix we have to set the matrix
             // as invalid (user wouldn't know the real value)
             let displayed_matrix = FM.generateMatrixFromLatex(...parseMatrixField(mf));
             let matrices_equal = deepEqual(FM.mat, displayed_matrix) as unknown as boolean;
+            
+            
             validMatrix = res.isValid &&  matrices_equal;
             updateMatrixButtonEnabled = !matrices_equal && res.isValid;
             undoChangesButtonEnabled = !matrices_equal;
 
-            if (instantUpdate && res.isValid) {
-                FM.setMatrixFromLatex(...parsed)
-            }
         })
         
         // Update the FancyMatrix when the button is pressed
