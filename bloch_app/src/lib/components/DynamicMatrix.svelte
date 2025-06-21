@@ -74,6 +74,7 @@
             if (FM.latexMult != mf.getPromptValue('mult')){
                 mf.setPromptValue(`mult`, FM.latexMult, {silenceNotifications: true})
             }
+            updateMatrixButtonEnabled = false;
             
         })
 
@@ -96,7 +97,8 @@
             // as invalid (user wouldn't know the real value)
             let displayed_matrix = FM.generateMatrixFromLatex(...parseMatrixField(mf));
             let matrices_equal = deepEqual(FM.mat, displayed_matrix) as unknown as boolean;
-            
+            print_mat(displayed_matrix)
+            print_mat(FM.mat)
             
             validMatrix = res.isValid &&  matrices_equal;
             updateMatrixButtonEnabled = !matrices_equal && res.isValid;
