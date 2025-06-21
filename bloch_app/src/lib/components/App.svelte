@@ -20,8 +20,25 @@
   setContext('gateMatrix', GM)
 
   let gatePaths : GatePath[] = $state([]);
+
+  const Xgate = new GateMatrix([['0', '1'], ['1', '0']], '1', '\\hat{X}')
+  const Ygate = new GateMatrix([['0', '-i'], ['i', '0']], '1', '\\hat{Y}')
+  const Zgate = new GateMatrix([['1', '0'], ['0', '-1']], '1', '\\hat{Z}')
+  const Hgate = new GateMatrix([['1', '1'], ['1', '-1']], '\\frac{1}{\\sqrt{2}}', '\\hat{H}');
+  
+  const predefinedGates = [Xgate, Ygate, Zgate, Hgate];
 </script>
 
+{#snippet applyGateButton(gate: GateMatrix, disabled: boolean)}
+    <button disabled={disabled} onclick={()=>{
+      
+      gatePaths.push(new GatePath(DM.blochV, gate.rotationAxis, gate.rotationAngle));
+      console.log(DM.L());
+      
+      DM.apply_gate(gate)
+      console.log(DM.L());
+      }}>Apply {gate.label}</button>
+{/snippet}
 
 <div id="main_content">
 
@@ -43,14 +60,7 @@
       instantUpdate={true}
     ></DynamicMatrix>
 
-    <button disabled={!(DMValid && GMValid)} onclick={()=>{
-      
-      gatePaths.push(new GatePath(DM.blochV, GM.rotationAxis, GM.rotationAngle));
-      console.log(DM.L());
-      
-      DM.apply_gate(GM)
-      console.log(DM.L());
-      }}>Apply</button>
+    {@render applyGateButton(GM, !(DMValid && GMValid))}
     <textarea style="height: 300px; width: 400px">
 {`DM = \n[${DM.mat[0][0]}, ${DM.mat[0][1]}] \n[${DM.mat[1][0]}, ${DM.mat[1][1]}]
 
@@ -64,23 +74,24 @@ GM latex = \n ${GM.latexMult} \n[${GM.latexMat[0][0]}, ${GM.latexMat[0][1]}] \n[
       `}
     </textarea>
   </div>
-  <button onclick={() => {
-    console.log(GM.rotationAxis);
-  }}>Test</button>
+<div>
+  {#each predefinedGates as gate }
+    {@render applyGateButton(gate, false)}
+  {/each}
 </div>
-
+</div>
 
 
   <style> 
     #main_content {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       
     }
 
     #canvasContainer {
       width: 50%;
-      height: 80%;
-      background-color: rgb(170, 188, 247);
+      height: 40vh;
+      background-color: rgb(255, 255, 255);
     }
   </style>
