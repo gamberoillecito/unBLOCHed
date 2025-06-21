@@ -8,19 +8,16 @@
 
 	interface Props {
 		path: GatePath;
+		pathColor: Color|string;
+		previousPosition: boolean;
 	}
 
 	let {
         path,
+		pathColor: pathColor,
+		previousPosition=false,
     }: Props = $props();
 
-    const curve = new EllipseCurve(
-	0,  0,            // ax, aY
-	1, 1,           // xRadius, yRadius
-	0,   path.angle,  // aStartAngle, aEndAngle
-	false,            // aClockwise
-	0                 // aRotation
-);
 
 const initialVector = new Vector3(...path.startingPoint);
 
@@ -35,7 +32,7 @@ const points = [];
 // Compute the points along the arc traced by the vector
 for (let i = 0; i <= numPoints; i++) {
     const t = i / numPoints; 
-    const interpolatedAngle = t * angle; 
+    const interpolatedAngle = -t * angle; 
     const rotationMatrix = new Matrix4().makeRotationAxis(axis, interpolatedAngle);
     
     // Apply the rotation to the initial vector to keep track of consecutive movements
@@ -47,9 +44,9 @@ const arcGeometry = new LineGeometry().setFromPoints(points);
 const line = new Line2(arcGeometry);
 const ah = new ArrowHelper((new Vector3(...path.axis)).normalize(), new Vector3(0,0,0), 1.4, '#ffffff', 0);
 // const ah = new ArrowHelper(Xaxis, new Vector3(0,0,0), 1.4, '#ffffff', 0);
-const originalBV = new ArrowHelper((new Vector3(...path.startingPoint)).normalize(), new Vector3(0,0,0), 1, '#FF0000');
+const originalBV = new ArrowHelper(initialVector, new Vector3(0,0,0), initialVector.length(), '#FF0000');
 const material = new LineMaterial({
-	color: 'orangered',
+	color: pathColor,
 	worldUnits: false,
 });
 material.linewidth = 3;
@@ -60,5 +57,7 @@ material.linewidth = 3;
   <T is={material}></T>
 </T>
 
-<!-- <T is={ah}></T>
-<T is={originalBV}></T> -->
+{#if previousPosition}
+	<T is={ah}></T>
+	<T is={originalBV}></T>
+{/if}
