@@ -1,35 +1,14 @@
 import { ComputeEngine } from '@cortex-js/compute-engine';
 import {
-    complex,
     type Complex, 
-    multiply as matmul,
-    matrix,
-    clone,
-    equal,
-    transpose,
-    conj,
-    isNumber,
-    typeOf,
-    trace,
-    deepEqual,
-    Matrix,
-    eigs,
-    hasNumericValue,
-    isNegative,
-    identity,
-    atan2,
-    compare,
-    compareNatural,
-    round,
-    isPositive,
-    sqrt,
-    acos,
-    sin,
-    divide,
-    det,
+    create,
+    all,
 } from 'mathjs'
 
-
+const config = {
+    absTol: 1e-10,
+}
+const math = create(all, config)
 export type ComplexMat2x2 = [[Complex, Complex], [Complex, Complex]];
 
 
@@ -46,8 +25,8 @@ export function print_mat(mat: ComplexMat2x2) {
     console.log(`[${mat[0][0]}, ${mat[0][1]},\n${mat[1][0]}, ${mat[1][1]}]`)
 }
 
-function dagger(mat:ComplexMat2x2|Matrix) {
-    return conj(transpose(mat))
+function dagger(mat:ComplexMat2x2|math.Matrix) {
+    return math.conj(math.transpose(mat))
 }
 
 /**
@@ -60,8 +39,8 @@ function newComplexMat2x2(entries: (string|Complex|number)[]): ComplexMat2x2|nul
         return null;
     }
     let mat: ComplexMat2x2 = [
-        [complex(entries[0]), complex(entries[1])],
-        [complex(entries[2]), complex(entries[3])]
+        [math.complex(entries[0]), math.complex(entries[1])],
+        [math.complex(entries[2]), math.complex(entries[3])]
     ];
     return mat;
 }
@@ -148,11 +127,11 @@ export class FancyMatrix {
                 for (let j = 0; j < 2; j++){
                     let newElement = newMat[i][j];
                     // Do not update if value is unchanged
-                    if (equal(newElement, this._mat[i][j])){
+                    if (math.equal(newElement, this._mat[i][j])){
                         continue
                     }
                     this._mat[i][j] = newElement
-                    this._latexMat[i][j] = round(newElement, 2).toString();
+                    this._latexMat[i][j] = math.round(newElement, 2).toString();
                 }
             } 
         }
@@ -161,7 +140,7 @@ export class FancyMatrix {
 
     // Update element i,j to value and reflect the changes in the latex
     setValue(value: Complex, i: number, j:number) : MatrixValidity {
-        let newMat = this._mat.map(row => row.map(el => clone(el))) as ComplexMat2x2;
+        let newMat = this._mat.map(row => row.map(el => math.clone(el))) as ComplexMat2x2;
         
         newMat[i][j] = value;
         return this.setMatrixValue(newMat);
@@ -205,15 +184,15 @@ export class FancyMatrix {
             // console.log(converted);
             
             
-            return complex(converted.re, converted.im);
+            return math.complex(converted.re, converted.im);
         }
         )) as ComplexMat2x2;
 
         let eval_mult = this.ce.parse(mult).N();
-        let computedMult = complex(eval_mult.re, eval_mult.im);
+        let computedMult = math.complex(eval_mult.re, eval_mult.im);
         for (let i = 0; i < 2; i++){
             for (let j = 0; j < 2; j++){
-                newMat[i][j]= matmul(newMat[i][j], computedMult) as Complex;
+                newMat[i][j]= math.multiply(newMat[i][j], computedMult) as Complex;
             }
         }   
         return newMat;
@@ -225,7 +204,7 @@ export class FancyMatrix {
                 let el = newMat[i][j]
                 
                 if (
-                    typeOf(el) != 'Complex' ||
+                    math.typeOf(el) != 'Complex' ||
                     el.valueOf() == 'Infinity'
                     ){
                     
@@ -267,7 +246,7 @@ export class FancyMatrix {
          * Returns the Transpose of mat
          */
 
-        return transpose(this._mat)
+        return math.transpose(this._mat)
     }
 
 
@@ -282,32 +261,46 @@ export class DensityMatrix extends FancyMatrix {
     // for the fact that threejs uses a different notation
     // This **should** allow us to forget about the different
     // notation in the rest of the code
-    #blochV: [number, number, number];
+    // #blochV: [number, number, number];
 
     constructor(latexMat: string[][], latexMult: string, params: MatrixParam[] = []) {
         super(latexMat, latexMult, params);
         this.#a = $derived(this._mat[0][0]);
-        this.#b = $derived(this._mat[0][1]);
-        this.#c = $derived(this._mat[1][0]);
+        this.#b = $derived(this._mat[1][0]);
+        this.#c = $derived(this._mat[0][1]);
         this.#d = $derived(this._mat[1][1]);
 
         
-        this.#blochV= $derived([
-        2*this.#b.re,
-        2*this.#a.re - 1,
-        2*this.#b.im
-    ])
+    //     this.#blochV= $derived([
+    //     2*this.#b.re,
+    //     2*this.#a.re - 1,
+    //     2*this.#b.im
+    // ])
     }
         
     protected fallbackLatexMat(): string[][]{
         return [['1', '0'], ['0', '0']];
     }
+    // https://faculty.csbsju.edu/frioux/q-intro/BlochVectorEntropy.pdf
     get blochV(){
-        return this.#blochV  as [number, number, number];
+        // return this.#blochV  as [number, number, number];
+        let pauliX = newComplexMat2x2([0, 1, 1, 0]);
+        let pauliY = newComplexMat2x2([0, '-i', 'i', 0]);
+        let pauliZ = newComplexMat2x2([1, 0, 0, -1]);
+        // Note that the values of y and z are swapped to account
+        // for the fact that threejs uses a different notation
+        // This **should** allow us to forget about the different
+        // notation in the rest of the code
+        let paulis: ComplexMat2x2[] = [pauliX!, pauliZ!, pauliY!];
+        let blochV = [];
+        for (let p of paulis) {
+            blochV.push(math.trace(math.multiply(this._mat, p)));
+        }
+        return blochV as [number, number, number];
     }
 
     get phase(){
-        const phi = atan2(this.#b.im, this.#b.re);
+        const phi = math.atan2(this.#b.im, this.#b.re);
         return (phi + 2 * Math.PI) % (2 * Math.PI);
     }
 
@@ -320,22 +313,24 @@ export class DensityMatrix extends FancyMatrix {
         if (preliminary_validation.isValid){
             // Convert the matrix to mathjs object to
             // make operations easier
-            let mat = matrix(newMat);
+            let mat = math.matrix(newMat);
 
 
             // Hermitian
-            if (!deepEqual(mat, dagger(mat))) {
+            if (!math.deepEqual(mat, dagger(mat))) {
                 return new MatrixValidity(false, 'Not Hermitian')
             }
 
             // (2) Positive semidefinite
-            let ei = eigs(mat).values.valueOf() as Complex[];
+            let ei = math.eigs(mat).values.valueOf() as Complex[];
             
             for (let v of ei) {
-                v = complex(v);
+                v = math.complex(v);
+                console.log(math.typeOf(v.re));
                 
-                if (compare(v.im, 0) == 0) { // not complex
-                    if (compare(v.re, 1) != 1 && compare(v.re, 0) != -1){ //between 0 and 1
+                
+                if (math.isZero(v.im)) { // not complex
+                    if (math.smallerEq(v.re, 1)  && math.largerEq(v.re, 0)){ //between 0 and 1
                         continue
                     }
                 }
@@ -354,23 +349,25 @@ export class DensityMatrix extends FancyMatrix {
                 //         continue
                 //     }
                 // }
-                console.log(typeOf(v));
+                console.log(math.typeOf(v));
+                console.log(math.largerEq(v.re, 0));
+                
                 console.log(v)
                 return new MatrixValidity(false, 'Not a positive operator')
                 
                 
-                    
+                
             }
 
             // (1) Unitary trace
-            let Tr = trace(matmul(mat, mat)) as unknown as Complex ;
+            let Tr = math.trace(math.multiply(mat, mat)) as unknown as Complex ;
             
             if (Tr.im != 0) {
                 console.error('The matrix has negative eigenvalues, this should be caught by the other checks')
                 return new MatrixValidity(false, 'Negative eigenvalues, please report this to the developer')
             }
 
-            if (compare(Tr.re, 1) == 1){
+            if (math.compare(Tr.re, 1) == 1){
                 return new MatrixValidity(false, `rho^2 has trace > 1`)
             }
 
@@ -398,10 +395,14 @@ export class DensityMatrix extends FancyMatrix {
         // this._mat = matmul(gate_mat, matmul(this._mat, gate_mat.T())) as ComplexMat2x2;
         let gate_mat = GM.mat
         let gate_dag = dagger(gate_mat)
-        let newMat = matmul(gate_mat, matmul(this._mat, gate_dag)) as ComplexMat2x2;
+        let newMat = math.multiply(gate_mat, math.multiply(this._mat, gate_dag)) as ComplexMat2x2;
         let res = this.setMatrixValue(newMat);
         console.log(res);
         
+    }
+
+    L(){
+        return math.sqrt(this.blochV[0]^2 + this.blochV[1]^2 + this.blochV[2]^2)
     }
 }
 
@@ -421,20 +422,20 @@ export class GateMatrix extends FancyMatrix {
         // Check if the matrix is unitary Nielsen-Chuang pag.18
         //" Amazingly, this unitarity constraint is the only constraint on quantum gates. Any
         //  unitary matrix specifies a valid quantum gate! "
-        let mTm = matmul(newMat, dagger(newMat));
-        if (!deepEqual(mTm, identity(2))) {
+        let mTm = math.multiply(newMat, dagger(newMat));
+        if (!math.deepEqual(mTm, math.identity(2))) {
             return new MatrixValidity(false, "Not unitary")
         }
         return new MatrixValidity(true);
     }
 
     get rotationAngle() : number {
-        let O = matrix(this._mat);
-        let e_ia = complex(sqrt(det(O)));
+        let O = math.matrix(this._mat);
+        let e_ia = math.complex(math.sqrt(math.det(O)));
         e_ia.im *= -1;
 
-        let argAcos = matmul(e_ia, divide(trace(O), 2)) as Complex;
-        let theta = matmul(acos(argAcos), 2) as number;
+        let argAcos = math.multiply(e_ia, math.divide(math.trace(O), 2)) as Complex;
+        let theta = math.multiply(math.acos(argAcos), 2) as number;
         
         return theta;
     }
@@ -445,19 +446,23 @@ export class GateMatrix extends FancyMatrix {
         let pauliX = newComplexMat2x2([0, 1, 1, 0]);
         let pauliY = newComplexMat2x2([0, '-i', 'i', 0]);
         let pauliZ = newComplexMat2x2([1, 0, 0, -1]);
+        // Note that the values of y and z are swapped to account
+        // for the fact that threejs uses a different notation
+        // This **should** allow us to forget about the different
+        // notation in the rest of the code
         let paulis: ComplexMat2x2[] = [pauliX!, pauliZ!, pauliY!];
 
-        let O = matrix(this._mat);
-        let e_ia = complex(sqrt(det(O)));
+        let O = math.matrix(this._mat);
+        let e_ia = math.complex(math.sqrt(math.det(O)));
         e_ia.im *= -1;
 
         let theta = this.rotationAngle;
 
         let rotVect: number[] = [];
         for (let p of paulis) {
-            let num = matmul(e_ia, trace(matmul(O, p))) as Complex;
-            let den = matmul(complex('-2i'), sin(theta/2)) as Complex;
-            rotVect.push(divide(num, den) as number);
+            let num = math.multiply(e_ia, math.trace(math.multiply(O, p))) as Complex;
+            let den = math.multiply(math.complex('-2i'), math.sin(theta/2)) as Complex;
+            rotVect.push(math.divide(num, den) as number);
         }
         
         return rotVect as [number, number, number];
