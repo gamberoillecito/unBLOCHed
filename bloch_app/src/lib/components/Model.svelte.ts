@@ -66,9 +66,10 @@ export class FancyMatrix {
     protected _mat: ComplexMat2x2; // The "math" matrix for calculations
     protected _latexMat: (string)[][]; // The latex version of the matrix elements for display
     protected _parameter_array: MatrixParam[]; 
+    protected _label: string;
     ce: ComputeEngine;
 
-    constructor(latexMat: string[][], latexMult: string, parameters: MatrixParam[] = []){
+    constructor(latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[] = []){
         this.ce = new ComputeEngine();
         
         this._parameter_array = parameters;
@@ -106,6 +107,8 @@ export class FancyMatrix {
         // to prevent scenarios where who initiates an instance of the class passing a matrix
         // is able to edit this._latexMat by changing the value of the original matrix
         this._latexMat = $state(latexMat.map(row => row.map(x => x)));
+        
+        this._label = label;
     }
     // Fallback values to set the matrix in case something breaks when initializing the class
     protected fallbackLatexMat(): string[][]{
@@ -241,6 +244,9 @@ export class FancyMatrix {
         return this._parameter_array;
     }
 
+    get label(): string {
+        return this._label;
+    }
     protected T() : ComplexMat2x2{
         /**
          * Returns the Transpose of mat
@@ -263,8 +269,8 @@ export class DensityMatrix extends FancyMatrix {
     // notation in the rest of the code
     // #blochV: [number, number, number];
 
-    constructor(latexMat: string[][], latexMult: string, params: MatrixParam[] = []) {
-        super(latexMat, latexMult, params);
+    constructor(latexMat: string[][], latexMult: string, label: string, params: MatrixParam[] = []) {
+        super(latexMat, latexMult, label, params);
         this.#a = $derived(this._mat[0][0]);
         this.#b = $derived(this._mat[1][0]);
         this.#c = $derived(this._mat[0][1]);
@@ -407,8 +413,8 @@ export class DensityMatrix extends FancyMatrix {
 }
 
 export class GateMatrix extends FancyMatrix {
-    constructor(latexMat: string[][], latexMult: string, params: MatrixParam[] = []) {
-        super(latexMat, latexMult, params);
+    constructor(latexMat: string[][], latexMult: string, label: string, params: MatrixParam[] = []) {
+        super(latexMat, latexMult, label, params);
     }
     protected fallbackLatexMat(): string[][]{
         return [['1', '0'], ['0', '1']];

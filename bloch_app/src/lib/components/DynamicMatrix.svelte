@@ -9,14 +9,12 @@
 	interface Props {
 		matrixContext: string;
         validMatrix: boolean;
-        label: string;
         instantUpdate: boolean;
 	}
 
 	let {
         matrixContext,
         validMatrix = $bindable(),
-        label,
         instantUpdate = false,
     }: Props = $props();
 
@@ -24,7 +22,7 @@
     let updateMatrixButton: Element;
     let updateMatrixButtonEnabled: boolean = $state(false);
     // Initial latex value to be set inside the MathfieldElement
-    let initialValue = `${label} = \\placeholder[mult]{${FM.latexMult}}\\begin{bmatrix}\\placeholder[m00]{${FM.latexMat[0][0]}} & \\placeholder[m01]{${FM.latexMat[0][1]}}\\\\ \\placeholder[m10]{${FM.latexMat[1][0]}} & \\placeholder[m11]{${FM.latexMat[1][1]}}\\end{bmatrix}`;
+    let initialValue = `${FM.label} = \\placeholder[mult]{${FM.latexMult}}\\begin{bmatrix}\\placeholder[m00]{${FM.latexMat[0][0]}} & \\placeholder[m01]{${FM.latexMat[0][1]}}\\\\ \\placeholder[m10]{${FM.latexMat[1][0]}} & \\placeholder[m11]{${FM.latexMat[1][1]}}\\end{bmatrix}`;
     let undoChangesButton: Element;
     let undoChangesButtonEnabled: boolean = $state(false);
 

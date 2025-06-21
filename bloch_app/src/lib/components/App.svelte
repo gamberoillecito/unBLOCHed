@@ -7,15 +7,15 @@
   import {getContext, setContext} from 'svelte'
     
   // let DM = $state(new DensityMatrix([['1', '0'], ['0', '0']], '1'))
-  let DM = $state(new DensityMatrix([['1/2', '1/2'], ['1/2', '1/2']], '1'))
+  let DM = $state(new DensityMatrix([['1/2', '1/2'], ['1/2', '1/2']], '1', '\\rho'))
   let DMValid = $state(true); // We can default to true since FancyMatrix does not accept invalid inputs
   setContext('densityMatrix', DM)
 
   // let GM = $state(new GateMatrix([['1', '0'], ['0', '1']], '1'))
   let GM_parameters = [new MatrixParam('theta', '\\pi/2', '\\theta', true)]
   // let GM = $state(new GateMatrix([['1', '1'], ['1', '-1']], '\\frac{1}{\\sqrt{2}}'));
-  let GM = $state(new GateMatrix([['1', '0'], ['0', 'i']], '1'));
-  // let GM = $state(new GateMatrix([['e^{-i \\theta}', '0'], ['0', 'e^{i \\theta}']], '1', GM_parameters));
+  // let GM = $state(new GateMatrix([['1', '0'], ['0', 'i']], '1'));
+  let GM = $state(new GateMatrix([['e^{-i \\theta}', '0'], ['0', 'e^{i \\theta}']], '1', '\\hat{U}', GM_parameters));
   let GMValid = $state(true); // We can default to true since FancyMatrix does not accept invalid inputs
   setContext('gateMatrix', GM)
 
@@ -34,20 +34,22 @@
     <DynamicMatrix
       matrixContext='densityMatrix' 
       bind:validMatrix={DMValid}
-      label={'\\rho'}
       instantUpdate={false}
     ></DynamicMatrix>
 
     <DynamicMatrix 
       matrixContext='gateMatrix'
       bind:validMatrix={GMValid}
-      label={'\\hat{U}'}
       instantUpdate={true}
     ></DynamicMatrix>
 
     <button disabled={!(DMValid && GMValid)} onclick={()=>{
+      
       gatePaths.push(new GatePath(DM.blochV, GM.rotationAxis, GM.rotationAngle));
+      console.log(DM.L());
+      
       DM.apply_gate(GM)
+      console.log(DM.L());
       }}>Apply</button>
     <textarea style="height: 300px; width: 400px">
 {`DM = \n[${DM.mat[0][0]}, ${DM.mat[0][1]}] \n[${DM.mat[1][0]}, ${DM.mat[1][1]}]

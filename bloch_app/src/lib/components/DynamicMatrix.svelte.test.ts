@@ -5,7 +5,7 @@ import { complex } from "mathjs";
 test('FancyMatrix', ()=> {
     let latexMat = [['1', 'i'], ['1', '0']];
     let latexMult = '1';
-    let FM = new FancyMatrix(latexMat, latexMult);
+    let FM = new FancyMatrix(latexMat, latexMult, 'test');
 
     expect(FM.mat[0][0]).toStrictEqual(complex(1, 0));
     expect(FM.mat[0][1]).toStrictEqual(complex(0, 1));
@@ -34,7 +34,7 @@ test('FancyMatrix', ()=> {
 test('DensityMatrix', ()=> {
     let latexMat = [['1', '0'], ['0', '0']];
     let latexMult = '1';
-    let FM = new DensityMatrix(latexMat, latexMult);
+    let FM = new DensityMatrix(latexMat, latexMult, 'testDM');
 
     expect(FM.mat[0][0]).toStrictEqual(complex(1, 0));
     expect(FM.mat[0][1]).toStrictEqual(complex(0, 0));
