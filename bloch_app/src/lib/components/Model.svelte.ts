@@ -71,6 +71,7 @@ export class FancyMatrix {
 
     constructor(latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[] = []){
         this.ce = new ComputeEngine();
+        this._label = label;
         
         this._parameter_array = parameters;
         for (let p of this._parameter_array) {
@@ -97,7 +98,7 @@ export class FancyMatrix {
             latexMult = this.fallbackLatexMult();
             latexMat = this.fallbackLatexMat();
             generatedMatrix = this.generateMatrixFromLatex(latexMat, latexMult);
-            console.error(`The provided parameters would result in an invalid matrix: ${res.message}`);
+            console.error(`${this.label}: The provided parameters would result in an invalid matrix: ${res.message}`);
             
         }
         this._mat= $state(generatedMatrix);
@@ -108,7 +109,6 @@ export class FancyMatrix {
         // is able to edit this._latexMat by changing the value of the original matrix
         this._latexMat = $state(latexMat.map(row => row.map(x => x)));
         
-        this._label = label;
     }
     // Fallback values to set the matrix in case something breaks when initializing the class
     protected fallbackLatexMat(): string[][]{

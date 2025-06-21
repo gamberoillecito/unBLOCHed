@@ -21,12 +21,21 @@
 
   let gatePaths : GatePath[] = $state([]);
 
-  const Xgate = new GateMatrix([['0', '1'], ['1', '0']], '1', '\\hat{X}')
-  const Ygate = new GateMatrix([['0', '-i'], ['i', '0']], '1', '\\hat{Y}')
-  const Zgate = new GateMatrix([['1', '0'], ['0', '-1']], '1', '\\hat{Z}')
+  const Xgate = new GateMatrix([['0', '1'], ['1', '0']], '1', '\\hat{X}');
+  const Ygate = new GateMatrix([['0', '-i'], ['i', '0']], '1', '\\hat{Y}');
+  const Zgate = new GateMatrix([['1', '0'], ['0', '-1']], '1', '\\hat{Z}');
   const Hgate = new GateMatrix([['1', '1'], ['1', '-1']], '\\frac{1}{\\sqrt{2}}', '\\hat{H}');
   
+  const ket0 = new DensityMatrix([['1', '0'], ['0', '0']], '1', '|0\\rangle');
+  const ket1 = new DensityMatrix([['0', '0'], ['0', '1']], '1', '|1\\rangle');
+  const ketPlus = new DensityMatrix([['1', '1'], ['1', '1']], '\\frac{1}{2}', '|+\\rangle');
+  const ketMinus = new DensityMatrix([['1', '-1'], ['-1', '1']], '\\frac{1}{2}', '|-\\rangle');
+  const ketI = new DensityMatrix([['1', 'i'], ['-i', '1']], '\\frac{1}{2}', '|i\\rangle');
+  const ketMinI = new DensityMatrix([['1', '-i'], ['i', '1']], '\\frac{1}{2}', '|-i\\rangle');
+
+  
   const predefinedGates = [Xgate, Ygate, Zgate, Hgate];
+  const predefinedStates = [ket0, ket1, ketPlus, ketMinus, ketI, ketMinI];
 </script>
 
 {#snippet applyGateButton(gate: GateMatrix, disabled: boolean)}
@@ -38,6 +47,14 @@
       DM.apply_gate(gate)
       console.log(DM.L());
       }}>Apply {gate.label}</button>
+{/snippet}
+
+{#snippet updateStateButton(matrix: DensityMatrix, disabled: boolean)}
+    <button disabled={disabled} onclick={()=>{
+      
+      
+      DM.setMatrixFromLatex(matrix.latexMat, matrix.latexMult);
+      }}>Update state to {matrix.label}</button>
 {/snippet}
 
 <div id="main_content">
@@ -77,6 +94,11 @@ GM latex = \n ${GM.latexMult} \n[${GM.latexMat[0][0]}, ${GM.latexMat[0][1]}] \n[
 <div>
   {#each predefinedGates as gate }
     {@render applyGateButton(gate, false)}
+  {/each}
+</div>
+<div>
+  {#each predefinedStates as matrix }
+    {@render updateStateButton(matrix, false)}
   {/each}
 </div>
 </div>
