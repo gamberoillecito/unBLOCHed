@@ -49,7 +49,6 @@
     // sets up the reactivity of the element
 	const myAttachment: Attachment = (element) => {
 		let mf = element as MathfieldElement;
-        console.log('counter');
         
         // Default value of the matrix input
         mf.value = initialValue;

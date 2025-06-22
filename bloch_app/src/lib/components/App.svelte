@@ -42,10 +42,8 @@
     <button disabled={disabled} onclick={()=>{
       
       gatePaths.push(new GatePath(DM.blochV, gate.rotationAxis, gate.rotationAngle));
-      console.log(DM.L());
       
       DM.apply_gate(gate)
-      console.log(DM.L());
       }}>Apply {gate.label}</button>
 {/snippet}
 

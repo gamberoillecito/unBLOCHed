@@ -7,7 +7,7 @@
   import {complex, number, sign, type Complex} from 'mathjs'
   import SolidVector from './SolidVector.svelte';
 	import Path from './Path.svelte';
-	import { AxesHelper, Camera, DoubleSide, Mesh, PerspectiveCamera } from 'three';
+	import { AxesHelper, Camera, DoubleSide, Fog, Mesh, PerspectiveCamera } from 'three';
   import {generateGradient} from "typescript-color-gradient";
 	import type { DensityMatrix, GatePath } from './Model.svelte';
   interface Props{
@@ -22,7 +22,7 @@
   }: Props = $props();
 
       
-  const MAX_PATH_COLORS = 20;
+  const MAX_PATH_COLORS = 12;
   const colors_hex = ['#ff0000', '#ffa700', '#afff00', '#08ff00', '#00ff9f', '#00b7ff', '#0010ff', '#9700ff', '#ff00bf', '#ff0018']
   let pathGradient = generateGradient(colors_hex, MAX_PATH_COLORS);
 </script>
