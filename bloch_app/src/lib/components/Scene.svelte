@@ -1,23 +1,30 @@
 <script lang="ts">
   import { T } from '@threlte/core'
-  import { interactivity, OrbitControls } from '@threlte/extras'
+  import { interactivity, OrbitControls, SVG, Billboard } from '@threlte/extras'
   import { Spring } from 'svelte/motion'
   // import { ContactShadows, Float, Grid, OrbitControls } from '@threlte/extras'
   import BlochSphere from './BlochSphere.svelte';
-  import {complex, type Complex} from 'mathjs'
+  import {complex, number, sign, type Complex} from 'mathjs'
   import SolidVector from './SolidVector.svelte';
 	import Path from './Path.svelte';
-	import { AxesHelper } from 'three';
+	import { AxesHelper, Camera, DoubleSide, Mesh, PerspectiveCamera } from 'three';
   import {generateGradient} from "typescript-color-gradient";
-    let {
-      matrixContext,
-      paths
-    } = $props();
+	import type { DensityMatrix, GatePath } from './Model.svelte';
+  interface Props{
+    matrixContext: string,
+    paths: GatePath[],
+    POI: DensityMatrix[],
+  };
+  let {
+    matrixContext,
+    paths,
+    POI
+  }: Props = $props();
+
       
   const MAX_PATH_COLORS = 20;
   const colors_hex = ['#ff0000', '#ffa700', '#afff00', '#08ff00', '#00ff9f', '#00b7ff', '#0010ff', '#9700ff', '#ff00bf', '#ff0018']
-
-let pathGradient = generateGradient(colors_hex, MAX_PATH_COLORS);
+  let pathGradient = generateGradient(colors_hex, MAX_PATH_COLORS);
 </script>
   <T.DirectionalLight
     intensity={3}
@@ -34,11 +41,31 @@ let pathGradient = generateGradient(colors_hex, MAX_PATH_COLORS);
     ref.lookAt(0, 0, 0)
   }}
 >
-  <OrbitControls />
+  <OrbitControls enableDamping enablePan={false} dampingFactor={0.2}/>
 </T.PerspectiveCamera>
 
 {#each paths as path, idx }
   <Path path={path} pathColor={pathGradient[idx % MAX_PATH_COLORS]} previousPosition={idx === (paths.length - 1)}></Path>
+{/each}
+
+{#each POI as dm, index}
+  <Billboard
+  follow={true}
+  position={
+    [
+      complex(dm.blochV[0]).re + sign(dm.blochV[0])*0.1,
+      complex(dm.blochV[1]).re + sign(dm.blochV[1])*0.08,
+      complex(dm.blochV[2]).re + sign(dm.blochV[2])*0.1
+    ]
+    }
+  >
+
+  <SVG 
+    src={`/output(${index}).svg`}
+    scale={0.00012}
+    position={[-0.08, -0.02, +0.08]}
+  />
+  </Billboard>
 {/each}
 
 <BlochSphere ></BlochSphere>
