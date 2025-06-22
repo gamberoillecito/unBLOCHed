@@ -10,6 +10,7 @@
   import { getContext } from 'svelte';
   import { T } from '@threlte/core'
   import { Group} from 'three';
+  import {Outlines} from '@threlte/extras'
   import {generateGradient} from "typescript-color-gradient";
 	import type { DensityMatrix } from './Model.svelte';
 
@@ -87,6 +88,7 @@
             color= {color}
             castShadow
           />
+        <Outlines color="black" thickness={2} screenspace={true}/>
         </T.Mesh>
       <!-- Head -->
       <T.Mesh
@@ -100,7 +102,7 @@
             color= {color}
             castShadow
           />
+        <Outlines color="black" thickness={2} screenspace={true}/>
       </T.Mesh>
     {/if}
-
 </T.Group>
