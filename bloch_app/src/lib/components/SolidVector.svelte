@@ -43,7 +43,22 @@
     vector.lookAt(...DM.blochV as [number, number, number]);
   })
 
+
 </script>
+
+<!-- The outlines of the vector (applied to the single parts) -->
+{#snippet outline()}
+    <Outlines color="black" thickness={2.5} screenspace={true}/>
+{/snippet}
+
+<!-- The material of the arrow -->
+{#snippet arrowMaterial()}
+  <T.MeshToonMaterial
+    color= {color}
+    castShadow
+    fog={false}
+  />
+{/snippet}
 
 <!-- The red point the arrow should look at -->
 <!-- I kept it with radius = 0 because otherwise the vector
@@ -62,7 +77,6 @@
   />
 </T.Mesh>
 
-<!-- The green arrow -->
 <T.Group
   bind:ref={vector}
 >
@@ -70,10 +84,7 @@
     <T.SphereGeometry
       args={[HEAD_RAD/5]}
     />
-    <T.MeshToonMaterial
-      color= {color}
-      castShadow
-    />
+    {@render arrowMaterial()}
   </T.Mesh>
     {#if length >= 0.05}
       <!-- Body -->
@@ -84,11 +95,8 @@
         <T.CylinderGeometry
           args={[(HEAD_RAD/2)*length**0.5, HEAD_RAD/5, body_length]}
         />
-          <T.MeshToonMaterial
-            color= {color}
-            castShadow
-          />
-        <Outlines color="black" thickness={2} screenspace={true}/>
+          {@render arrowMaterial()}
+          {@render outline()}
         </T.Mesh>
       <!-- Head -->
       <T.Mesh
@@ -98,11 +106,8 @@
         <T.ConeGeometry
           args={[(length)**(0.5)*HEAD_RAD, scaled_head_length]}
         />
-          <T.MeshToonMaterial
-            color= {color}
-            castShadow
-          />
-        <Outlines color="black" thickness={2} screenspace={true}/>
+        {@render arrowMaterial()}  
+        {@render outline()}
       </T.Mesh>
     {/if}
 </T.Group>
