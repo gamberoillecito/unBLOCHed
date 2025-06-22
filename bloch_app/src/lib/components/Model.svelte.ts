@@ -332,8 +332,6 @@ export class DensityMatrix extends FancyMatrix {
             
             for (let v of ei) {
                 v = math.complex(v);
-                console.log(math.typeOf(v.re));
-                
                 
                 if (math.isZero(v.im)) { // not complex
                     if (math.smallerEq(v.re, 1)  && math.largerEq(v.re, 0)){ //between 0 and 1
@@ -368,8 +366,12 @@ export class DensityMatrix extends FancyMatrix {
             // (1) Unitary trace
             let Tr = math.trace(math.multiply(mat, mat)) as unknown as Complex ;
             
-            if (Tr.im != 0) {
-                console.error('The matrix has negative eigenvalues, this should be caught by the other checks')
+            if (!math.isZero(Tr.im)) {
+                console.log(Tr);
+                console.log(math.typeOf(Tr));
+                
+                
+                console.error(`The matrix has imaginary trace ${Tr}, this should be caught by the other checks`)
                 return new MatrixValidity(false, 'Negative eigenvalues, please report this to the developer')
             }
 
@@ -403,7 +405,6 @@ export class DensityMatrix extends FancyMatrix {
         let gate_dag = dagger(gate_mat)
         let newMat = math.multiply(gate_mat, math.multiply(this._mat, gate_dag)) as ComplexMat2x2;
         let res = this.setMatrixValue(newMat);
-        console.log(res);
         
     }
 
