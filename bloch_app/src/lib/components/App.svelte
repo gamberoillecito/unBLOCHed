@@ -61,7 +61,7 @@
 
   <div id="canvasContainer">
     <Canvas>
-      <Scene matrixContext={'densityMatrix'} paths={gatePaths}></Scene>
+      <Scene matrixContext={'densityMatrix'} paths={gatePaths} POI={predefinedStates}></Scene>
     </Canvas>
   </div>
   <div>

@@ -288,7 +288,7 @@ export class DensityMatrix extends FancyMatrix {
         return [['1', '0'], ['0', '0']];
     }
     // https://faculty.csbsju.edu/frioux/q-intro/BlochVectorEntropy.pdf
-    get blochV(){
+    get blochV(): [number, number, number]{
         // return this.#blochV  as [number, number, number];
         let pauliX = newComplexMat2x2([0, 1, 1, 0]);
         let pauliY = newComplexMat2x2([0, '-i', 'i', 0]);
