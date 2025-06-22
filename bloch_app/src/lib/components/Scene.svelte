@@ -1,6 +1,6 @@
 <script lang="ts">
   import { T } from '@threlte/core'
-  import { interactivity, OrbitControls, SVG, Billboard } from '@threlte/extras'
+  import { interactivity, OrbitControls, SVG, Billboard, Gizmo, type GizmoOptions } from '@threlte/extras'
   import { Spring } from 'svelte/motion'
   // import { ContactShadows, Float, Grid, OrbitControls } from '@threlte/extras'
   import BlochSphere from './BlochSphere.svelte';
@@ -41,7 +41,16 @@
     ref.lookAt(0, 0, 0)
   }}
 >
-  <OrbitControls enableDamping enablePan={false} dampingFactor={0.2}/>
+  <OrbitControls enableDamping enablePan={false} dampingFactor={0.2}>
+    <Gizmo
+      animated={true}
+      y={{label:'Z'}}
+      z={{label:'Y'}}
+      size={80}
+      resolution={128}
+      edges={{scale: 20}}
+    />
+  </OrbitControls>
 </T.PerspectiveCamera>
 
 {#each paths as path, idx }
@@ -70,4 +79,3 @@
 
 <BlochSphere ></BlochSphere>
 <SolidVector {matrixContext}></SolidVector>
-<T.AxesHelper></T.AxesHelper>

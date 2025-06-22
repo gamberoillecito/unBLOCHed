@@ -18,8 +18,8 @@
 		sphere_color = 'gray',
 		sphere_opacity = 0.1,
 		sphere_radius = 1,
-		num_latitudes = 5,
-		num_longitudes = 5,
+		num_latitudes = 1,
+		num_longitudes = 2,
 		lat_long_thickness = 0.002,
 		lat_long_opacity = 1
 	} = $props();
@@ -64,8 +64,8 @@
 	{/each}
 
 	<!-- Longitudes -->
-	{#each Array(num_latitudes) as _, iter}
-		<T.Mesh rotation.y={MathUtils.degToRad((360 / num_longitudes) * iter)}>
+	{#each Array(num_longitudes) as _, iter}
+		<T.Mesh rotation.y={MathUtils.degToRad((360 / num_longitudes) * iter/2)}>
 			<T.TorusGeometry args={[sphere_radius, lat_long_thickness]} />
 
 			<T.LineBasicMaterial
