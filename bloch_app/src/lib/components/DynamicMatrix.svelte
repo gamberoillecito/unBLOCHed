@@ -6,6 +6,7 @@
     import { getContext } from 'svelte';
 	import { FancyMatrix, DensityMatrix, MatrixParam, print_mat } from './Model.svelte';
 	import { deepEqual } from 'mathjs';
+	import MatrixParameterInput from "./MatrixParameterInput.svelte";
 	interface Props {
 		matrixContext: string;
         instantUpdate: boolean;
@@ -24,7 +25,6 @@
     let undoChangesButton: Element;
     let undoChangesButtonEnabled: boolean = $state(false);
 
-    let matrixError = $state('');
 
     if (FM.parameterArray.find(p => p.userEditable) && !instantUpdate) {
         console.error("Matrices with user editable parameters must be instantUpdate")
@@ -84,7 +84,7 @@
             let parsed = parseMatrixField(mf);
             let res = FM.validateMatrix(FM.generateMatrixFromLatex(...parsed));
             // updateMatrixButtonEnabled = res.isValid;
-            matrixError = res.message;
+            FM.userMessage = res.message;
             
             if (instantUpdate && res.isValid) {
                 FM.setMatrixFromLatex(...parsed)
@@ -132,26 +132,6 @@
 		};
 	};
 
-    // Initialize the mathfield to edit the matrix parameters
-	function paramAttachment(param: MatrixParam) :Attachment {
-        return (element) => {
-            let mf = element as MathfieldElement; 
-            mf.value = `${param.latexLabel} = \\placeholder[${param.name}]{${param.latexValue}}`;
-            mf.addEventListener('input', ()=> {
-
-                let paramsNames = mf.getPrompts();
-                if (paramsNames.length != 1){
-                    console.error(`Matrix parameter contains more than one prompt: ${paramsNames}`)
-                    return;
-                }
-                let paramName = paramsNames[0];
-                let paramValue = mf.getPromptValue(paramName);
-                let res = FM.setParameterLatex(paramName, paramValue);
-                matrixError = res.message;
-                FM.isConsistent = res.isValid; 
-            })
-        }
-    }
 </script>
 
 <style>
@@ -176,10 +156,6 @@ math-field::part(virtual-keyboard-toggle) {
         >Undo</button>
     </div>
     <math-field {@attach myAttachment} readonly></math-field>
-    {#each FM.parameterArray as param, index }
-        {#if param.userEditable}
-        <math-field {@attach paramAttachment(param)} readonly></math-field>
-        {/if}
-    {/each}
-    <p> {matrixError} </p>
+    <MatrixParameterInput matrixContext={matrixContext} ></MatrixParameterInput>
+    <p> {FM.userMessage} </p>
 </div>

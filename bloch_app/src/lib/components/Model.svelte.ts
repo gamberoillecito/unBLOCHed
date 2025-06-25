@@ -67,14 +67,15 @@ export class FancyMatrix {
     protected _latexMat: (string)[][]; // The latex version of the matrix elements for display
     protected _parameter_array: MatrixParam[]; 
     protected _label: string;
-    isConsistent: boolean;
+    isConsistent: boolean; // Set by the "view" to specify to others that this matrix is not consistent with what is on display
+    userMessage: string|null; // Any message for the user concerning this matrix
     ce: ComputeEngine;
 
     constructor(latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[] = []){
         this.ce = new ComputeEngine();
         this._label = label;
         this.isConsistent = $state(true);
-        
+        this.userMessage = $state(null); 
         this._parameter_array = parameters;
         for (let p of this._parameter_array) {
             // this.ce.box(p.name).value = p.latexValue
