@@ -6,13 +6,13 @@
     import { MatrixParam } from "./Model.svelte";
 
 	interface Props {
-		matrixContext: string;
+        matrix: FancyMatrix;
 	}
     
     let {
-        matrixContext,
+        matrix,
     }: Props = $props();
-    let FM: FancyMatrix = getContext(matrixContext);
+    let FM: FancyMatrix = matrix;
     
     // Initialize the mathfield to edit the matrix parameters
 	function paramAttachment(param: MatrixParam) :Attachment {

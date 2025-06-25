@@ -135,10 +135,10 @@
 </script>
 
 <style>
-math-field::part(menu-toggle) {
+:global(math-field::part(menu-toggle)) {
   display: none;
 }
-math-field::part(virtual-keyboard-toggle) {
+:global(math-field::part(virtual-keyboard-toggle)) {
     display: none;
 }
 </style>
@@ -156,6 +156,6 @@ math-field::part(virtual-keyboard-toggle) {
         >Undo</button>
     </div>
     <math-field {@attach myAttachment} readonly></math-field>
-    <MatrixParameterInput matrixContext={matrixContext} ></MatrixParameterInput>
+    <MatrixParameterInput matrix={FM} ></MatrixParameterInput>
     <p> {FM.userMessage} </p>
 </div>

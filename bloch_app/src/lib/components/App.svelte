@@ -11,6 +11,7 @@
     all,
     complex,
   } from 'mathjs'
+	import MatrixParameterInput from './MatrixParameterInput.svelte';
   
   const config = {
       absTol: 1e-10,
@@ -30,7 +31,10 @@
   const Ygate = new GateMatrix([['0', '-i'], ['i', '0']], '1', '\\hat{Y}');
   const Zgate = new GateMatrix([['1', '0'], ['0', '-1']], '1', '\\hat{Z}');
   const Hgate = new GateMatrix([['1', '1'], ['1', '-1']], '\\frac{1}{\\sqrt{2}}', '\\hat{H}');
-  
+  const RZgate = new GateMatrix([['e^{-i \\theta/2}', '0'], ['0', 'e^{i \\theta/2}']], '1', 'R_z(\\theta)', GM_parameters);
+  const RXgate = new GateMatrix([['\\cos(\\theta/2)', '-i \\sin(\\theta/2)'], ['-i \\sin(\\theta/2)', '\\cos(\\theta/2)']], '1', 'R_x(\\theta)', GM_parameters);
+  const RYgate = new GateMatrix([['\\cos(\\theta/2)', '-\\sin(\\theta/2)'], ['\\sin(\\theta/2)', '\\cos(\\theta/2)']], '1', 'R_y(\\theta)', GM_parameters);
+
   const ket0 = new DensityMatrix([['1', '0'], ['0', '0']], '1', '|0\\rangle');
   const ket1 = new DensityMatrix([['0', '0'], ['0', '1']], '1', '|1\\rangle');
   const ketPlus = new DensityMatrix([['1', '1'], ['1', '1']], '\\frac{1}{2}', '|+\\rangle');
@@ -39,11 +43,11 @@
   const ketMinI = new DensityMatrix([['1', '-i'], ['i', '1']], '\\frac{1}{2}', '|-i\\rangle');
 
   
-  const predefinedGates = [Xgate, Ygate, Zgate, Hgate];
+  const predefinedGates = [Xgate, Ygate, Zgate, Hgate, RXgate, RYgate, RZgate];
   const predefinedStates = [ket0, ket1, ketPlus, ketMinus, ketI, ketMinI];
 </script>
 
-{#snippet applyGateButton(gate: GateMatrix, disabled: boolean)}
+{#snippet applyGateButton(gate: GateMatrix, disabled: boolean, withParams: boolean)}
     <button disabled={disabled} onclick={()=>{
       if (!math.isZero(gate.rotationAngle) && gate.rotationAxis != null){
         gatePaths.push(new GatePath(DM.blochV, gate.rotationAxis, gate.rotationAngle));
@@ -54,7 +58,10 @@
       console.log(gate.rotationAxis);
       
       
-      }}>Apply {gate.label}</button>
+      }}>{gate.label}</button>
+      {#if withParams === true}
+        <MatrixParameterInput matrix={gate}></MatrixParameterInput> 
+      {/if}
 {/snippet}
 
 {#snippet updateStateButton(matrix: DensityMatrix, disabled: boolean)}
@@ -83,7 +90,7 @@
       instantUpdate={true}
     ></DynamicMatrix>
 
-    {@render applyGateButton(GM, !(DM.isConsistent && GM.isConsistent))}
+    {@render applyGateButton(GM, !(DM.isConsistent && GM.isConsistent), false)}
     <textarea style="height: 300px; width: 400px">
 {`DM = \n[${DM.mat[0][0]}, ${DM.mat[0][1]}] \n[${DM.mat[1][0]}, ${DM.mat[1][1]}]
 
@@ -99,7 +106,7 @@ GM latex = \n ${GM.latexMult} \n[${GM.latexMat[0][0]}, ${GM.latexMat[0][1]}] \n[
   </div>
 <div>
   {#each predefinedGates as gate }
-    {@render applyGateButton(gate, false)}
+    {@render applyGateButton(gate, false, true)}
   {/each}
 </div>
 <div>
