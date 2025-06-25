@@ -48,7 +48,7 @@
 
 <!-- The outlines of the vector (applied to the single parts) -->
 {#snippet outline()}
-    <Outlines color="black" thickness={2.5} screenspace={true}/>
+    <Outlines color="black" thickness={0.015} screenspace={false}/>
 {/snippet}
 
 <!-- The material of the arrow -->

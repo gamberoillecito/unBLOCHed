@@ -5,17 +5,24 @@
   import {DensityMatrix , GateMatrix, GatePath, MatrixParam, print_mat} from '$lib/components/Model.svelte'
 	import DynamicMatrix from './DynamicMatrix.svelte';
   import {getContext, setContext} from 'svelte'
+  import {
+    type Complex, 
+    create,
+    all,
+    complex,
+  } from 'mathjs'
+  
+  const config = {
+      absTol: 1e-10,
+  }
+  const math = create(all, config);
     
-  // let DM = $state(new DensityMatrix([['1', '0'], ['0', '0']], '1'))
   let DM = $state(new DensityMatrix([['1/2', '1/2'], ['1/2', '1/2']], '1', '\\rho'))
   let DMValid = $state(true); // We can default to true since FancyMatrix does not accept invalid inputs
   setContext('densityMatrix', DM)
 
-  // let GM = $state(new GateMatrix([['1', '0'], ['0', '1']], '1'))
   let GM_parameters = [new MatrixParam('theta', '\\pi/2', '\\theta', true)]
-  // let GM = $state(new GateMatrix([['1', '1'], ['1', '-1']], '\\frac{1}{\\sqrt{2}}'));
-  // let GM = $state(new GateMatrix([['1', '0'], ['0', 'i']], '1'));
-  let GM = $state(new GateMatrix([['e^{-i \\theta}', '0'], ['0', 'e^{i \\theta}']], '1', '\\hat{U}', GM_parameters));
+  let GM = $state(new GateMatrix([['e^{-i \\theta/2}', '0'], ['0', 'e^{i \\theta/2}']], '1', '\\hat{U}', GM_parameters));
   let GMValid = $state(true); // We can default to true since FancyMatrix does not accept invalid inputs
   setContext('gateMatrix', GM)
 
@@ -40,10 +47,15 @@
 
 {#snippet applyGateButton(gate: GateMatrix, disabled: boolean)}
     <button disabled={disabled} onclick={()=>{
-      
-      gatePaths.push(new GatePath(DM.blochV, gate.rotationAxis, gate.rotationAngle));
+      if (!math.isZero(gate.rotationAngle) && gate.rotationAxis != null){
+        gatePaths.push(new GatePath(DM.blochV, gate.rotationAxis, gate.rotationAngle));
+      }
       
       DM.apply_gate(gate)
+      console.log(gate.rotationAngle);
+      console.log(gate.rotationAxis);
+      
+      
       }}>Apply {gate.label}</button>
 {/snippet}
 
