@@ -18,12 +18,10 @@
   const math = create(all, config);
     
   let DM = $state(new DensityMatrix([['1/2', '1/2'], ['1/2', '1/2']], '1', '\\rho'))
-  let DMValid = $state(true); // We can default to true since FancyMatrix does not accept invalid inputs
   setContext('densityMatrix', DM)
 
   let GM_parameters = [new MatrixParam('theta', '\\pi/2', '\\theta', true)]
   let GM = $state(new GateMatrix([['e^{-i \\theta/2}', '0'], ['0', 'e^{i \\theta/2}']], '1', '\\hat{U}', GM_parameters));
-  let GMValid = $state(true); // We can default to true since FancyMatrix does not accept invalid inputs
   setContext('gateMatrix', GM)
 
   let gatePaths : GatePath[] = $state([]);
@@ -77,17 +75,15 @@
   <div>
     <DynamicMatrix
       matrixContext='densityMatrix' 
-      bind:validMatrix={DMValid}
       instantUpdate={false}
     ></DynamicMatrix>
 
     <DynamicMatrix 
       matrixContext='gateMatrix'
-      bind:validMatrix={GMValid}
       instantUpdate={true}
     ></DynamicMatrix>
 
-    {@render applyGateButton(GM, !(DMValid && GMValid))}
+    {@render applyGateButton(GM, !(DM.isConsistent && GM.isConsistent))}
     <textarea style="height: 300px; width: 400px">
 {`DM = \n[${DM.mat[0][0]}, ${DM.mat[0][1]}] \n[${DM.mat[1][0]}, ${DM.mat[1][1]}]
 

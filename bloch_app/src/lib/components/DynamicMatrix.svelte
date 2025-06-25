@@ -8,13 +8,11 @@
 	import { deepEqual } from 'mathjs';
 	interface Props {
 		matrixContext: string;
-        validMatrix: boolean;
         instantUpdate: boolean;
 	}
 
 	let {
         matrixContext,
-        validMatrix = $bindable(),
         instantUpdate = false,
     }: Props = $props();
 
@@ -99,7 +97,7 @@
             print_mat(displayed_matrix)
             print_mat(FM.mat)
             
-            validMatrix = res.isValid &&  matrices_equal;
+            FM.isConsistent = res.isValid &&  matrices_equal;
             updateMatrixButtonEnabled = !matrices_equal && res.isValid;
             undoChangesButtonEnabled = !matrices_equal;
 
@@ -111,7 +109,7 @@
             // TODO : optimize to avoid useless overrides
             let parsed = parseMatrixField(mf);
             let res = FM.setMatrixFromLatex(...parsed);
-            validMatrix = res.isValid;
+            FM.isConsistent = res.isValid;
             
         })
         // The undo button overrides the current displayed value
@@ -150,7 +148,7 @@
                 let paramValue = mf.getPromptValue(paramName);
                 let res = FM.setParameterLatex(paramName, paramValue);
                 matrixError = res.message;
-                validMatrix = res.isValid; 
+                FM.isConsistent = res.isValid; 
             })
         }
     }
