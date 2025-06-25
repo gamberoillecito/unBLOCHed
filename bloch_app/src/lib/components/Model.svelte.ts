@@ -449,7 +449,7 @@ export class GateMatrix extends FancyMatrix {
     
     // Based on this answer
     // https://quantumcomputing.stackexchange.com/a/16538
-    get rotationAxis() : [number, number, number] {
+    get rotationAxis() : [number, number, number]|null {
         let pauliX = newComplexMat2x2([0, 1, 1, 0]);
         let pauliY = newComplexMat2x2([0, '-i', 'i', 0]);
         let pauliZ = newComplexMat2x2([1, 0, 0, -1]);
@@ -468,10 +468,18 @@ export class GateMatrix extends FancyMatrix {
         let rotVect: number[] = [];
         for (let p of paulis) {
             let num = math.multiply(e_ia, math.trace(math.multiply(O, p))) as Complex;
-            let den = math.multiply(math.complex('-2i'), math.sin(theta/2)) as Complex;
+            let den = math.multiply(math.complex('2i'), math.sin(theta/2)) as Complex;
+            // den2 is an attempt at simplify the denominator by substituting the value of theta (done by wolfram:
+            // https://www.wolframalpha.com/input?i=sin%28%282*acos%28exp%28-i+alpha%29+*+B%2F2%29%29%2F2%29)
+            let den2 = math.sqrt(math.subtract(1, math.complex(math.multiply(1/4, math.exp(2) as number, e_ia, math.trace(O)/2) as Complex)) as Complex)
             rotVect.push(math.divide(num, den) as number);
         }
         
+        if (math.isZero(rotVect[0]) && 
+            math.isZero(rotVect[1]) && 
+            math.isZero(rotVect[2])){
+            return null;
+        }
         return rotVect as [number, number, number];
     }
 
