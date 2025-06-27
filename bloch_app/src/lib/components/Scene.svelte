@@ -23,8 +23,18 @@
 		matrixContext: string;
 		paths: GatePath[];
 		POI: DensityMatrix[];
+		displayAngles: boolean;
+		displayStatesLabels: boolean;
+		displayPaths: boolean;
 	}
-	let { matrixContext, paths, POI }: Props = $props();
+	let {
+		matrixContext,
+		paths,
+		POI,
+		displayAngles=true,
+		displayStatesLabels=true,
+		displayPaths=true,
+	 }: Props = $props();
 
 	let DM:DensityMatrix = getContext(matrixContext);
 	const MAX_PATH_COLORS = 12;
@@ -64,28 +74,33 @@
 		/>
 	</OrbitControls>
 </T.PerspectiveCamera>
+{#if displayPaths}
+	{#each paths as path, idx}
+		<Path
+			{path}
+			pathColor={pathGradient[idx % MAX_PATH_COLORS]}
+			previousPosition={idx === paths.length - 1}
+		></Path>
+	{/each}
+{/if}
 
-{#each paths as path, idx}
-	<Path
-		{path}
-		pathColor={pathGradient[idx % MAX_PATH_COLORS]}
-		previousPosition={idx === paths.length - 1}
-	></Path>
-{/each}
-
-{#each POI as dm, index}
-	<Billboard
-		follow={true}
-		position={[
-			complex(dm.blochV[0]).re + sign(dm.blochV[0]) * 0.1,
-			complex(dm.blochV[1]).re + sign(dm.blochV[1]) * 0.08,
-			complex(dm.blochV[2]).re + sign(dm.blochV[2]) * 0.1
-		]}
-	>
-		<SVG src={`/output(${index}).svg`} scale={0.00012} position={[-0.08, -0.02, +0.08]} />
-	</Billboard>
-{/each}
+{#if displayStatesLabels}
+	{#each POI as dm, index}
+		<Billboard
+			follow={true}
+			position={[
+				complex(dm.blochV[0]).re + sign(dm.blochV[0]) * 0.1,
+				complex(dm.blochV[1]).re + sign(dm.blochV[1]) * 0.08,
+				complex(dm.blochV[2]).re + sign(dm.blochV[2]) * 0.1
+			]}
+		>
+			<SVG src={`/output(${index}).svg`} scale={0.00012} position={[-0.08, -0.02, +0.08]} />
+		</Billboard>
+	{/each}
+{/if}
 
 <BlochSphere></BlochSphere>
 <SolidVector {matrixContext}></SolidVector>
-<AngleArc vector={DM.blochV}></AngleArc>
+{#if displayAngles}
+	<AngleArc vector={DM.blochV}></AngleArc>
+{/if}
