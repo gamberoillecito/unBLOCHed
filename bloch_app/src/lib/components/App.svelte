@@ -21,7 +21,7 @@
   let DM = $state(new DensityMatrix([['1/2', '1/2'], ['1/2', '1/2']], '1', '\\rho'))
   setContext('densityMatrix', DM)
 
-  let GM_parameters = [new MatrixParam('theta', '\\pi/8', '\\theta', true)]
+  let GM_parameters = [new MatrixParam('theta', '\\pi/30', '\\theta', true)]
   let GM = $state(new GateMatrix([['e^{-i \\theta/2}', '0'], ['0', 'e^{i \\theta/2}']], '1', '\\hat{U}', GM_parameters));
   setContext('gateMatrix', GM)
 
@@ -41,9 +41,9 @@
   const ketMinus = new DensityMatrix([['1', '-1'], ['-1', '1']], '\\frac{1}{2}', '|-\\rangle');
   const ketI = new DensityMatrix([['1', 'i'], ['-i', '1']], '\\frac{1}{2}', '|i\\rangle');
   const ketMinI = new DensityMatrix([['1', '-i'], ['i', '1']], '\\frac{1}{2}', '|-i\\rangle');
-  DM.apply_gate(RYgate)
-  DM.apply_gate(RZgate)
-  DM.apply_gate(RZgate)
+  // DM.apply_gate(RYgate)
+  // DM.apply_gate(RZgate)
+  // DM.apply_gate(RZgate)
   const predefinedGates = [Xgate, Ygate, Zgate, Hgate, RXgate, RYgate, RZgate];
   const predefinedStates = [ket0, ket1, ketPlus, ketMinus, ketI, ketMinI];
 </script>
