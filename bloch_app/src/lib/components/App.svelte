@@ -49,17 +49,21 @@
 </script>
 
 {#snippet applyGateButton(gate: GateMatrix, disabled: boolean, withParams: boolean)}
-    <button disabled={disabled} onclick={()=>{
-      if (!math.isZero(gate.rotationAngle) && gate.rotationAxis != null){
-        gatePaths.push(new GatePath(DM.blochV, gate.rotationAxis, gate.rotationAngle));
-      }
-      
-      DM.apply_gate(gate)
-      console.log(gate.rotationAngle);
-      console.log(gate.rotationAxis);
-      
-      
-      }}>{gate.label}</button>
+    <button
+      disabled = {disabled || !gate.isConsistent}    
+      onclick={()=>{
+        if (!math.isZero(gate.rotationAngle) && gate.rotationAxis != null){
+          gatePaths.push(new GatePath(DM.blochV, gate.rotationAxis, gate.rotationAngle));
+        }
+        
+        DM.apply_gate(gate)
+        console.log(gate.rotationAngle);
+        console.log(gate.rotationAxis);
+        
+        
+        }}
+    >
+      {gate.label}</button>
       {#if withParams === true}
         <MatrixParameterInput matrix={gate}></MatrixParameterInput> 
       {/if}
