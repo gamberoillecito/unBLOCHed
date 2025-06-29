@@ -12,6 +12,7 @@
     complex,
   } from 'mathjs'
 	import MatrixParameterInput from './MatrixParameterInput.svelte';
+	import { BlochHistory } from './BlochHistory.svelte';
   
   const config = {
       absTol: 1e-10,
@@ -25,8 +26,8 @@
   let GM = $state(new GateMatrix([['e^{-i \\theta/2}', '0'], ['0', 'e^{i \\theta/2}']], '1', '\\hat{U}', GM_parameters));
   setContext('gateMatrix', GM)
 
-  let gatePaths : GatePath[] = $state([]);
-
+  let history = new BlochHistory();
+  $inspect(history.list)
   const Xgate = new GateMatrix([['0', '1'], ['1', '0']], '1', '\\hat{X}');
   const Ygate = new GateMatrix([['0', '-i'], ['i', '0']], '1', '\\hat{Y}');
   const Zgate = new GateMatrix([['1', '0'], ['0', '-1']], '1', '\\hat{Z}');
@@ -52,14 +53,8 @@
     <button
       disabled = {disabled || !gate.isConsistent}    
       onclick={()=>{
-        if (!math.isZero(gate.rotationAngle) && gate.rotationAxis != null){
-          gatePaths.push(new GatePath(DM.blochV, gate.rotationAxis, gate.rotationAngle));
-        }
-        
+        history.addElement(DM, gate);
         DM.apply_gate(gate)
-        console.log(gate.rotationAngle);
-        console.log(gate.rotationAxis);
-        
         
         }}
     >
@@ -72,7 +67,7 @@
 {#snippet updateStateButton(matrix: DensityMatrix, disabled: boolean)}
     <button disabled={disabled} onclick={()=>{
       
-      
+      history.addElement(DM);
       DM.setMatrixFromLatex(matrix.latexMat, matrix.latexMult);
       }}>{matrix.label}</button>
 {/snippet}
@@ -81,7 +76,7 @@
 
   <div id="canvasContainer">
     <Canvas>
-      <Scene matrixContext={'densityMatrix'} paths={gatePaths} POI={predefinedStates}></Scene>
+      <Scene matrixContext={'densityMatrix'} history={history} POI={predefinedStates}></Scene>
     </Canvas>
   </div>
   <div>

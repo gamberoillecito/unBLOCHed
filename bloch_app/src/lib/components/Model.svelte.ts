@@ -258,6 +258,12 @@ export class FancyMatrix {
         return math.transpose(this._mat)
     }
 
+    clone(): this {
+        // I have to reconstruct a latex matrix without any approximation
+        let completeLateMat = this._mat.map(row => row.map( x => x.toString()))
+        // constructor(latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[] = []){
+        return new (this.constructor as new (latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[]) => this)(completeLateMat, this._latexMult, this.label, this._parameter_array);
+    }
 
 }
 

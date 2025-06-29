@@ -19,9 +19,10 @@
 	import type { DensityMatrix, GatePath } from './Model.svelte';
 	import AngleArc from './AngleArc.svelte';
 	import { getContext } from 'svelte';
+	import type { BlochHistory } from './BlochHistory.svelte';
 	interface Props {
 		matrixContext: string;
-		paths: GatePath[];
+		history: BlochHistory;
 		POI: DensityMatrix[];
 		displayAngles: boolean;
 		displayStatesLabels: boolean;
@@ -29,7 +30,7 @@
 	}
 	let {
 		matrixContext,
-		paths,
+		history,
 		POI,
 		displayAngles=true,
 		displayStatesLabels=true,
@@ -75,12 +76,14 @@
 	</OrbitControls>
 </T.PerspectiveCamera>
 {#if displayPaths}
-	{#each paths as path, idx}
-		<Path
-			{path}
-			pathColor={pathGradient[idx % MAX_PATH_COLORS]}
-			previousPosition={idx === paths.length - 1}
-		></Path>
+	{#each history.list as hisotryEl, idx}
+		{#if hisotryEl.path}
+			<Path
+				path = {hisotryEl.path}
+				pathColor={pathGradient[idx % MAX_PATH_COLORS]}
+				previousPosition={idx === history.list.length - 1}
+			></Path>
+		{/if}
 	{/each}
 {/if}
 
