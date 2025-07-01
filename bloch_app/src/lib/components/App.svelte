@@ -26,8 +26,14 @@
   let GM = $state(new GateMatrix([['e^{-i \\theta/2}', '0'], ['0', 'e^{i \\theta/2}']], '1', '\\hat{U}', GM_parameters));
   setContext('gateMatrix', GM)
 
-  let history = new BlochHistory();
-  $inspect(history.list)
+  let history = new BlochHistory(DM);
+  $inspect(history.nameList)
+  $effect(()=> {
+    
+        for (let el of history.list) {
+            print_mat(el.DM.mat)
+        }
+  })
   const Xgate = new GateMatrix([['0', '1'], ['1', '0']], '1', '\\hat{X}');
   const Ygate = new GateMatrix([['0', '-i'], ['i', '0']], '1', '\\hat{Y}');
   const Zgate = new GateMatrix([['1', '0'], ['0', '-1']], '1', '\\hat{Z}');
@@ -67,12 +73,22 @@
 {#snippet updateStateButton(matrix: DensityMatrix, disabled: boolean)}
     <button disabled={disabled} onclick={()=>{
       
-      history.addElement(DM);
+      history.addElement(matrix);
       DM.setMatrixFromLatex(matrix.latexMat, matrix.latexMult);
       }}>{matrix.label}</button>
 {/snippet}
 
 <div id="main_content">
+  <div>
+    <button 
+      onclick={()=>{history.undo(DM);}}
+      disabled={history.earliestChange}
+    >Undo</button>
+    <button 
+      onclick={()=>{history.redo(DM);}}
+      disabled={history.latestChange}
+    >Redo</button>
+  </div>
 
   <div id="canvasContainer">
     <Canvas>
@@ -91,6 +107,7 @@
     ></DynamicMatrix>
 
     {@render applyGateButton(GM, !(DM.isConsistent && GM.isConsistent), false)}
+    {#if false}
     <textarea style="height: 300px; width: 400px">
 {`DM = \n[${DM.mat[0][0]}, ${DM.mat[0][1]}] \n[${DM.mat[1][0]}, ${DM.mat[1][1]}]
 
@@ -103,6 +120,7 @@ GM = \n[${GM.mat[0][0]}, ${GM.mat[0][1]}] \n[${GM.mat[1][0]}, ${GM.mat[1][1]}]
 GM latex = \n ${GM.latexMult} \n[${GM.latexMat[0][0]}, ${GM.latexMat[0][1]}] \n[${GM.latexMat[1][0]}, ${GM.latexMat[1][1]}]
       `}
     </textarea>
+    {/if}
   </div>
 <div>
   {#each predefinedGates as gate }
