@@ -18,10 +18,12 @@ const math = create(all, config);
 export class BlochHistoryElement {
     protected _DM: DensityMatrix;
     protected _GM: GateMatrix|null;
+    protected _finalDM: DensityMatrix;
     pathVisible: boolean;
     
-    constructor(DM: DensityMatrix, GM: GateMatrix|null,  pathVisible:boolean = true) {
+    constructor(DM: DensityMatrix, finalDM: DensityMatrix, GM: GateMatrix|null,  pathVisible:boolean = true) {
         this.pathVisible= $state(pathVisible);
+        this._finalDM = finalDM.clone();
         this._DM = DM.clone();
         this._GM = GM? GM.clone() : null;
     }
@@ -31,6 +33,10 @@ export class BlochHistoryElement {
     }
     set DM(DM:DensityMatrix) {
         this._DM = DM;
+    }
+
+    get finalDM(): DensityMatrix {
+        return this._finalDM;
     }
 
     get GM(): GateMatrix|null {
@@ -59,25 +65,27 @@ export class BlochHistory {
     protected pathCheckpoints: number[]; //Indexes of all the pathCheckpoints
     // protected _pathList: GatePath[];
     constructor(DM: DensityMatrix) {
-        this.pathCheckpoints = [0];
+        this.pathCheckpoints = [];
         this._list = $state([]);
         this._nameList = $state([]);
         this._current = $state(-1);
-        this.addElement(DM);
+        this.addElement(DM, DM);
     }
     
-    addElement(DM: DensityMatrix, GM: GateMatrix|null = null) {
+    addElement(DM: DensityMatrix, finalDM: DensityMatrix, GM: GateMatrix|null = null) {
         // Remove all the elements past the current one
         this._current++;
         this._list.splice(this._current)
 
+        // If the state has been set directly I have to hide all the
+        // previous GatePaths
         if (!GM) {
             for (let el of this._list) {
                 el.pathVisible = false;
             }
             this.pathCheckpoints.push(this._current)            
         }
-        this._list.push(new BlochHistoryElement(DM, GM));
+        this._list.push(new BlochHistoryElement(DM, finalDM, GM));
         console.log(`Added element. Current: ${this._current}. List: ${this._list.length}`);
         console.log(`Added element. Checkpoints: ${this.pathCheckpoints}`);
     }
@@ -93,10 +101,10 @@ export class BlochHistory {
         
         // If the new current element is a path checkpoint I have to restore the
         // visibility of all the previous GatePaths up to the previous checkpoint
-        if (this._current  === this.pathCheckpoints.at(-1)) {
+        if (this._current + 1  === this.pathCheckpoints.at(-1)) {
             let counter = 0;
-            let startCheckpoint = this.pathCheckpoints[this.pathCheckpoints.length - 1]
-            let endCheckpoint = this.pathCheckpoints[this.pathCheckpoints.length ]
+            let startCheckpoint = this.pathCheckpoints[this.pathCheckpoints.length - 2]
+            let endCheckpoint = this.pathCheckpoints[this.pathCheckpoints.length -1 ]
             for (let he of this._list.slice(startCheckpoint, endCheckpoint)) {
                 he.pathVisible = true;
                 console.log(`Setting ${counter + startCheckpoint}`);
@@ -119,12 +127,7 @@ export class BlochHistory {
             this.pathCheckpoints.push(this._current)            
         }
         let targetHistoryEl = this._list[this._current];
-        
-        let finalDM = targetHistoryEl.DM.clone()
-        if (targetHistoryEl.GM) {
-            finalDM.apply_gate(targetHistoryEl.GM)
-        }
-        DM.copy(finalDM);
+        DM.copy(targetHistoryEl.finalDM);
     }
 
     get list(): BlochHistoryElement[] {
@@ -137,10 +140,10 @@ export class BlochHistory {
         for (let i = 0; i < this._list.length; i++) {
             let el = this._list[i];
             if (el.GM) {
-                lab = el.GM.label; 
+                lab = `[${el.DM.label}, ${el.GM.label}, ${el.finalDM.label}]`; 
             }
             else {
-                lab = el.DM.label;
+                lab = `[${el.DM.label}, ${el.finalDM.label}]`; 
             }
             res.push(`${i > this._current ? '#': ''} ${lab}`);
         }
@@ -157,6 +160,9 @@ export class BlochHistory {
         return this._current == this._list.length - 1
     }
 
+    get currentIdx(): number {
+        return this._current
+    }
     // get pathsList(): GatePath[] {
     //     return this._pathList;
     // }

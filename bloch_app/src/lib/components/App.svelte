@@ -27,12 +27,14 @@
   setContext('gateMatrix', GM)
 
   let history = new BlochHistory(DM);
-  $inspect(history.nameList)
+  // $inspect(history.nameList)
   $effect(()=> {
+    console.log(history.currentIdx);
+    console.log(history.nameList);
     
-        for (let el of history.list) {
-            print_mat(el.DM.mat)
-        }
+    // for (let el of history.list) {
+    //     print_mat(el.DM.mat)
+    // }
   })
   const Xgate = new GateMatrix([['0', '1'], ['1', '0']], '1', '\\hat{X}');
   const Ygate = new GateMatrix([['0', '-i'], ['i', '0']], '1', '\\hat{Y}');
@@ -59,8 +61,9 @@
     <button
       disabled = {disabled || !gate.isConsistent}    
       onclick={()=>{
-        history.addElement(DM, gate);
+        let initialDM = DM.clone();
         DM.apply_gate(gate)
+        history.addElement(initialDM, DM, gate);
         
         }}
     >
@@ -73,7 +76,7 @@
 {#snippet updateStateButton(matrix: DensityMatrix, disabled: boolean)}
     <button disabled={disabled} onclick={()=>{
       
-      history.addElement(matrix);
+      history.addElement(DM, matrix);
       DM.setMatrixFromLatex(matrix.latexMat, matrix.latexMult);
       }}>{matrix.label}</button>
 {/snippet}
