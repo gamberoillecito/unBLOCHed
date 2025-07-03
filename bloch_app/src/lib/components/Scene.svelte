@@ -76,10 +76,10 @@
 	</OrbitControls>
 </T.PerspectiveCamera>
 {#if displayPaths}
-	{#each history.list as hisotryEl, idx}
-		{#if hisotryEl.path}
+	{#each history.list as historyEl, idx}
+		{#if historyEl.path && historyEl.pathVisible}
 			<Path
-				path = {hisotryEl.path}
+				path = {historyEl.path}
 				pathColor={pathGradient[idx % MAX_PATH_COLORS]}
 				previousPosition={idx === history.list.length - 1}
 			></Path>
