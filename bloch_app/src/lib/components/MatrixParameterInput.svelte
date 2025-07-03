@@ -31,6 +31,8 @@
                 let res = FM.setParameterLatex(paramName, paramValue);
                 FM.userMessage = res.message;
                 FM.isConsistent = res.isValid; 
+                console.log(FM.isConsistent);
+                
             })
         }
     }

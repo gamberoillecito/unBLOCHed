@@ -73,6 +73,7 @@
     // Line from the projection of the Bloch Vector on the equatorial plane to the bloch vector itself
     let VLine = $derived(createSegment(BVProjectionAtRADIUS, BVProjectionAtRADIUS.clone().setComponent(1,Math.sin(blochVector.y)), DASH_MATERIAL));
 
+    // Operations needed to correctly place the label for the theta angle
     const rotAxis = $derived(Xaxis.clone().applyMatrix4(new Matrix4().makeRotationAxis(Zaxis, Math.PI/2 - phi)))
     const rotationMatrix = $derived(new Matrix4().makeRotationAxis(rotAxis, -theta/2));
     let midTheta = $derived(blochVector.clone().applyMatrix4(rotationMatrix).setLength(ARC_RADIUS*1.2));

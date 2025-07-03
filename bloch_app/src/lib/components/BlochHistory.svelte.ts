@@ -163,7 +163,4 @@ export class BlochHistory {
     get currentIdx(): number {
         return this._current
     }
-    // get pathsList(): GatePath[] {
-    //     return this._pathList;
-    // }
 }
