@@ -71,7 +71,7 @@ export class FancyMatrix {
     userMessage: string|null; // Any message for the user concerning this matrix
     ce: ComputeEngine;
 
-    constructor(latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[] = []){
+    constructor(latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[] = [], mat?: ComplexMat2x2){
         this.ce = new ComputeEngine();
         this._label = label;
         this.isConsistent = $state(true);
@@ -97,14 +97,16 @@ export class FancyMatrix {
         ];
         let generatedMatrix = this.generateMatrixFromLatex(latexMat, latexMult);
         let res = this.validateMatrix(generatedMatrix);
-        if (!res.isValid) {
+        if (!res.isValid && !mat) {
             latexMult = this.fallbackLatexMult();
             latexMat = this.fallbackLatexMat();
             generatedMatrix = this.generateMatrixFromLatex(latexMat, latexMult);
             console.error(`${this.label}: The provided parameters would result in an invalid matrix: ${res.message}`);
-            
         }
-        this._mat= $state(generatedMatrix);
+        // If a mat (ComplexMat2x2) was passed as a parameter we trust the caller and use it as this._mat
+        // This feature is used by the clone function to create an instance of the class with exactly the same values
+        // It prevents the check on latexMat in cases where we truncated the values and this would result in an invalid matrix
+        this._mat= $state(mat ? mat.map(row => row.map(x => math.complex(x))) as ComplexMat2x2 : generatedMatrix);
 
         this._latexMult = latexMult; 
         // I use map because I want to "loose" the reference from the original passed value
@@ -260,9 +262,19 @@ export class FancyMatrix {
 
     clone(): this {
         // I have to reconstruct a latex matrix without any approximation
-        let completeLateMat = this._mat.map(row => row.map( x => x.toString()))
+        // let completeLateMat = this._mat.map(row => row.map( x => x.toString()))
         // constructor(latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[] = []){
-        return new (this.constructor as new (latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[]) => this)(completeLateMat, this._latexMult, this.label, this._parameter_array);
+        return new (this.constructor as new (latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[], mat? :ComplexMat2x2) => this)(this._latexMat, this._latexMult, this.label, this._parameter_array, this._mat);
+        // const copy = Object.create(Object.getPrototypeOf(this));
+        // Object.assign(copy, this);
+    }
+    
+    copy(FM: this) {
+        this._label = FM._label;
+        this._latexMat = FM.latexMat;
+        this._latexMult = FM.latexMult;
+        this._mat = FM.mat;
+        this._parameter_array = FM.parameterArray;
     }
 
 }
@@ -278,8 +290,8 @@ export class DensityMatrix extends FancyMatrix {
     // notation in the rest of the code
     // #blochV: [number, number, number];
 
-    constructor(latexMat: string[][], latexMult: string, label: string, params: MatrixParam[] = []) {
-        super(latexMat, latexMult, label, params);
+    constructor(latexMat: string[][], latexMult: string, label: string, params: MatrixParam[] = [], mat?: ComplexMat2x2) {
+        super(latexMat, latexMult, label, params, mat);
         this.#a = $derived(this._mat[0][0]);
         this.#b = $derived(this._mat[1][0]);
         this.#c = $derived(this._mat[0][1]);
@@ -423,8 +435,8 @@ export class DensityMatrix extends FancyMatrix {
 }
 
 export class GateMatrix extends FancyMatrix {
-    constructor(latexMat: string[][], latexMult: string, label: string, params: MatrixParam[] = []) {
-        super(latexMat, latexMult, label, params);
+    constructor(latexMat: string[][], latexMult: string, label: string, params: MatrixParam[] = [], mat?: ComplexMat2x2) {
+        super(latexMat, latexMult, label, params, mat);
     }
     protected fallbackLatexMat(): string[][]{
         return [['1', '0'], ['0', '1']];
