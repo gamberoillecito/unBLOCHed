@@ -17,6 +17,10 @@
   const config = {
       absTol: 1e-10,
   }
+  
+  import {Button} from '$lib/components/ui/button/index.js';
+  import { convertLatexToMarkup } from 'mathlive';
+  import * as Card from '$lib/components/ui/card/index.js'
   const math = create(all, config);
     
   let DM = $state(new DensityMatrix([['1/2', '1/2'], ['1/2', '1/2']], '1', '\\rho'))
@@ -58,46 +62,44 @@
 </script>
 
 {#snippet applyGateButton(gate: GateMatrix, disabled: boolean, withParams: boolean)}
-    <button
+    <Button
       disabled = {disabled || !gate.isConsistent}    
       onclick={()=>{
         let initialDM = DM.clone();
         DM.apply_gate(gate)
         history.addElement(initialDM, DM, gate);
-        
         }}
+        {@attach (el)=> { el.innerHTML =(convertLatexToMarkup(gate.label))}}
     >
-      <math-field read-only style="display:inline-block">
-          {gate.label}
-      </math-field>
-    </button>
+      <!-- <math-field read-only style="display:inline-block"> -->
+      <!-- </math-field> -->
+    </Button>
       {#if withParams === true}
         <MatrixParameterInput matrix={gate}></MatrixParameterInput> 
       {/if}
 {/snippet}
 
 {#snippet updateStateButton(matrix: DensityMatrix, disabled: boolean)}
-    <button disabled={disabled} onclick={()=>{
+    <Button disabled={disabled} onclick={()=>{
       
       history.addElement(DM, matrix);
       DM.setMatrixFromLatex(matrix.latexMat, matrix.latexMult);
-      }}>
-      <math-field read-only style="display:inline-block">
-          {matrix.label}
-      </math-field>
-    </button>
+      }}
+        {@attach (el)=> { el.innerHTML =(convertLatexToMarkup(matrix.label))}}
+      >
+    </Button>
 {/snippet}
 
 <div id="main_content">
   <div>
-    <button 
+    <Button 
       onclick={()=>{history.undo(DM);}}
       disabled={history.earliestChange}
-    >Undo</button>
-    <button 
+    >Undo</Button>
+    <Button 
       onclick={()=>{history.redo(DM);}}
       disabled={history.latestChange}
-    >Redo</button>
+    >Redo</Button>
   </div>
 
   <div id="canvasContainer">
@@ -157,9 +159,5 @@ GM latex = \n ${GM.latexMult} \n[${GM.latexMat[0][0]}, ${GM.latexMat[0][1]}] \n[
       height: 40vh;
       background-color: rgb(255, 255, 255);
     }
-math-field[read-only] {
-  border: none;
-  background-color: transparent;
-}
-  </style>
+</style>
   
