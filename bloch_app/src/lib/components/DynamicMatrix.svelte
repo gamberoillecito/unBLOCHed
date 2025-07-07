@@ -7,6 +7,7 @@
 	import { FancyMatrix, DensityMatrix, MatrixParam, print_mat } from './Model.svelte';
 	import { deepEqual } from 'mathjs';
 	import MatrixParameterInput from "./MatrixParameterInput.svelte";
+    import {Button} from '$lib/components/ui/button/index.js';
 	interface Props {
 		matrixContext: string;
         instantUpdate: boolean;
@@ -18,11 +19,11 @@
     }: Props = $props();
 
     let FM: FancyMatrix = getContext(matrixContext);
-    let updateMatrixButton: Element;
+    let updateMatrixButton: HTMLElement|null = $state(null);
     let updateMatrixButtonEnabled: boolean = $state(false);
     // Initial latex value to be set inside the MathfieldElement
     let initialValue = `${FM.label} = \\placeholder[mult]{${FM.latexMult}}\\begin{bmatrix}\\placeholder[m00]{${FM.latexMat[0][0]}} & \\placeholder[m01]{${FM.latexMat[0][1]}}\\\\ \\placeholder[m10]{${FM.latexMat[1][0]}} & \\placeholder[m11]{${FM.latexMat[1][1]}}\\end{bmatrix}`;
-    let undoChangesButton: Element;
+    let undoChangesButton: HTMLElement|null = $state(null);
     let undoChangesButtonEnabled: boolean = $state(false);
 
 
@@ -104,7 +105,7 @@
         })
         
         // Update the FancyMatrix when the button is pressed
-        updateMatrixButton.addEventListener('click', ()=>{
+        updateMatrixButton?.addEventListener('click', ()=>{
             // Update all the latex fields with the new value
             // TODO : optimize to avoid useless overrides
             let parsed = parseMatrixField(mf);
@@ -115,7 +116,7 @@
         // The undo button overrides the current displayed value
         // and substitutes it with the actual latex value of the
         // FancyMatrix
-        undoChangesButton.addEventListener('click', ()=>{
+        undoChangesButton?.addEventListener('click', ()=>{
             for (let i = 0; i < 2; i++){
                 for (let j = 0; j < 2; j++){
                     let newValue: string = FM.latexMat[i][j];
@@ -146,14 +147,14 @@
 <div>
     <!-- Buttons that needs to be disabled if instantUpdate is true -->
     <div style={`display:${instantUpdate ? 'none':''}`}> 
-        <button 
-            bind:this={updateMatrixButton} 
+        <Button 
+            bind:ref={updateMatrixButton} 
             disabled={!updateMatrixButtonEnabled}
-        >Update</button>
-        <button 
-            bind:this={undoChangesButton} 
+        >Update</Button>
+        <Button 
+            bind:ref={undoChangesButton} 
             disabled={!undoChangesButtonEnabled}
-        >Undo</button>
+        >Undo</Button>
     </div>
     <math-field {@attach myAttachment} readonly></math-field>
     <MatrixParameterInput matrix={FM} ></MatrixParameterInput>
