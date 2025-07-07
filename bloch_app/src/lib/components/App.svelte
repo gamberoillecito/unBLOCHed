@@ -1,3 +1,4 @@
+
 <script lang="ts">
   import { Canvas } from '@threlte/core'
   import Scene from './Scene.svelte'
@@ -13,7 +14,6 @@
   } from 'mathjs'
 	import MatrixParameterInput from './MatrixParameterInput.svelte';
 	import { BlochHistory } from './BlochHistory.svelte';
-  
   const config = {
       absTol: 1e-10,
   }
@@ -36,7 +36,7 @@
     //     print_mat(el.DM.mat)
     // }
   })
-  const Xgate = new GateMatrix([['0', '1'], ['1', '0']], '1', '\\hat{X}');
+  const Xgate = new GateMatrix([['0', '1'], ['1', '0']], '1', '$$\\hat{X}$$');
   const Ygate = new GateMatrix([['0', '-i'], ['i', '0']], '1', '\\hat{Y}');
   const Zgate = new GateMatrix([['1', '0'], ['0', '-1']], '1', '\\hat{Z}');
   const Hgate = new GateMatrix([['1', '1'], ['1', '-1']], '\\frac{1}{\\sqrt{2}}', '\\hat{H}');
@@ -67,7 +67,10 @@
         
         }}
     >
-      {gate.label}</button>
+      <math-field read-only style="display:inline-block">
+          {gate.label}
+      </math-field>
+    </button>
       {#if withParams === true}
         <MatrixParameterInput matrix={gate}></MatrixParameterInput> 
       {/if}
@@ -78,7 +81,11 @@
       
       history.addElement(DM, matrix);
       DM.setMatrixFromLatex(matrix.latexMat, matrix.latexMult);
-      }}>{matrix.label}</button>
+      }}>
+      <math-field read-only style="display:inline-block">
+          {matrix.label}
+      </math-field>
+    </button>
 {/snippet}
 
 <div id="main_content">
@@ -150,4 +157,9 @@ GM latex = \n ${GM.latexMult} \n[${GM.latexMat[0][0]}, ${GM.latexMat[0][1]}] \n[
       height: 40vh;
       background-color: rgb(255, 255, 255);
     }
+math-field[read-only] {
+  border: none;
+  background-color: transparent;
+}
   </style>
+  

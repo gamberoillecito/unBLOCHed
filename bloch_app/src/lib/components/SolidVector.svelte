@@ -47,7 +47,7 @@
 
 <!-- The outlines of the vector (applied to the single parts) -->
 {#snippet outline()}
-	<Outlines color="black" thickness={0.015} screenspace={false} />
+	<Outlines color="black" thickness={8} screenspace={true} />
 {/snippet}
 
 <!-- The material of the arrow -->
@@ -71,13 +71,25 @@
 	</T.Mesh>
 	{#if length >= 0.05}
 		<!-- Body -->
-		<T.Mesh position.z={body_length / 2} rotation.x={Math.PI / 2}>
-			<T.CylinderGeometry args={[(HEAD_RAD / 2) * length ** 0.5, HEAD_RAD / 5, body_length]} />
+		<T.Mesh 
+			position.z={body_length / 2}
+			rotation.x={Math.PI / 2}
+			scale.x={(HEAD_RAD / 2) * length ** 0.5}
+			scale.z={(HEAD_RAD / 2) * length ** 0.5}
+			scale.y={body_length}
+		>
+			<T.CylinderGeometry args={[1, 0.4, 1]} />
 			{@render arrowMaterial()}
 		</T.Mesh>
 		<!-- Head -->
-		<T.Mesh position.z={length - scaled_head_length / 2} rotation.x={Math.PI / 2}>
-			<T.ConeGeometry args={[length ** 0.5 * HEAD_RAD, scaled_head_length]} />
+		<T.Mesh
+			position.z={length - scaled_head_length / 2}
+			rotation.x={Math.PI / 2}
+			scale.x={length ** 0.5 * HEAD_RAD}
+			scale.z={length ** 0.5 * HEAD_RAD}
+			scale.y={scaled_head_length}
+		>
+			<T.ConeGeometry args={[1, 1]} />
 			{@render arrowMaterial()}
 		</T.Mesh>
 	{/if}
