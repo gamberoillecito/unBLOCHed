@@ -11,6 +11,7 @@
     create,
     all,
     complex,
+	boolean,
   } from 'mathjs'
 	import MatrixParameterInput from './MatrixParameterInput.svelte';
 	import { BlochHistory } from './BlochHistory.svelte';
@@ -18,9 +19,10 @@
       absTol: 1e-10,
   }
   
-  import {Button} from '$lib/components/ui/button/index.js';
+  import {Button, type ButtonVariant} from '$lib/components/ui/button/index.js';
   import { convertLatexToMarkup } from 'mathlive';
-  import * as Card from '$lib/components/ui/card/index.js'
+  import * as Card from '$lib/components/ui/card/index.js';
+  import { Badge } from "$lib/components/ui/badge/index.js";
   const math = create(all, config);
     
   let DM = $state(new DensityMatrix([['1/2', '1/2'], ['1/2', '1/2']], '1', '\\rho'))
@@ -61,33 +63,55 @@
   const predefinedStates = [ket0, ket1, ketPlus, ketMinus, ketI, ketMinI];
 </script>
 
-{#snippet applyGateButton(gate: GateMatrix, disabled: boolean, withParams: boolean)}
-    <Button
-      disabled = {disabled || !gate.isConsistent}    
-      onclick={()=>{
-        let initialDM = DM.clone();
-        DM.apply_gate(gate)
-        history.addElement(initialDM, DM, gate);
-        }}
-        {@attach (el)=> { el.innerHTML =(convertLatexToMarkup(gate.label))}}
-    >
-      <!-- <math-field read-only style="display:inline-block"> -->
-      <!-- </math-field> -->
+<!-- Generic button with an onclick action and a latex label -->
+{#snippet latexButton(onclick: (arg: any) => void , label: string, disabled: boolean, variant?: ButtonVariant)}
+      <Button
+        variant={variant}
+        class="size-12 aspect-square"
+        disabled = {disabled }
+        onclick={onclick}
+          {@attach (el: HTMLElement)=> { el.innerHTML =(convertLatexToMarkup(label))}}
+      >
     </Button>
-      {#if withParams === true}
-        <MatrixParameterInput matrix={gate}></MatrixParameterInput> 
-      {/if}
+{/snippet}
+
+<!-- Button that, when clicked, applies a gate -->
+
+{#snippet applyGateButton(gate: GateMatrix, disabled: boolean)}
+  {@render latexButton(
+        ()=>{
+          let initialDM = DM.clone();
+          DM.apply_gate(gate);
+          history.addElement(initialDM, DM, gate);
+        },
+        gate.label,
+        disabled || !gate.isConsistent,
+      "outline")
+      }
+{/snippet}
+
+{#snippet gateButtonWithParams(gate: GateMatrix, disabled: boolean, withParams: boolean)}
+  {#if withParams && gate.parameterArray.length > 0}
+
+    <div class="border p-3 rounded-(--radius)">
+    {@render applyGateButton(gate, disabled)}
+    <MatrixParameterInput matrix={gate}></MatrixParameterInput> 
+    </div>
+
+  {:else}
+    {@render applyGateButton(gate, disabled)}
+  {/if}
 {/snippet}
 
 {#snippet updateStateButton(matrix: DensityMatrix, disabled: boolean)}
-    <Button disabled={disabled} onclick={()=>{
-      
-      history.addElement(DM, matrix);
-      DM.setMatrixFromLatex(matrix.latexMat, matrix.latexMult);
-      }}
-        {@attach (el)=> { el.innerHTML =(convertLatexToMarkup(matrix.label))}}
-      >
-    </Button>
+    {@render latexButton(
+      ()=>{
+        history.addElement(DM, matrix);
+        DM.setMatrixFromLatex(matrix.latexMat, matrix.latexMult);
+      },
+      matrix.label,
+      disabled
+    )}
 {/snippet}
 
 <div id="main_content">
@@ -102,7 +126,7 @@
     >Redo</Button>
   </div>
 
-  <div id="canvasContainer">
+  <div class="aspect-square max-w-md">
     <Canvas>
       <Scene matrixContext={'densityMatrix'} history={history} POI={predefinedStates}></Scene>
     </Canvas>
@@ -112,13 +136,6 @@
       matrixContext='densityMatrix' 
       instantUpdate={false}
     ></DynamicMatrix>
-
-    <DynamicMatrix 
-      matrixContext='gateMatrix'
-      instantUpdate={true}
-    ></DynamicMatrix>
-
-    {@render applyGateButton(GM, !(DM.isConsistent && GM.isConsistent), false)}
     {#if false}
     <textarea style="height: 300px; width: 400px">
 {`DM = \n[${DM.mat[0][0]}, ${DM.mat[0][1]}] \n[${DM.mat[1][0]}, ${DM.mat[1][1]}]
@@ -134,30 +151,23 @@ GM latex = \n ${GM.latexMult} \n[${GM.latexMat[0][0]}, ${GM.latexMat[0][1]}] \n[
     </textarea>
     {/if}
   </div>
-<div>
-  {#each predefinedGates as gate }
-    {@render applyGateButton(gate, false, true)}
-  {/each}
-</div>
-<div>
+<div class="grid grid-cols-6 gap-6 m-3">
   {#each predefinedStates as matrix }
     {@render updateStateButton(matrix, false)}
   {/each}
 </div>
+<div class="grid grid-cols-4 gap-6 m-3">
+  {#each predefinedGates as gate}
+    {@render gateButtonWithParams(gate, false, true)}
+  {/each}
 </div>
+</div>
+<div>
+    <DynamicMatrix 
+      matrixContext='gateMatrix'
+      instantUpdate={true}
+    ></DynamicMatrix>
 
+    {@render gateButtonWithParams(GM, !(DM.isConsistent && GM.isConsistent), false)}
 
-  <style> 
-    #main_content {
-      display: flex;
-      flex-direction: column;
-      
-    }
-
-    #canvasContainer {
-      width: 50%;
-      height: 40vh;
-      background-color: rgb(255, 255, 255);
-    }
-</style>
-  
+</div>
