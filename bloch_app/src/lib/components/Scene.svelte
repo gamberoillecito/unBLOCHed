@@ -24,9 +24,9 @@
 		matrixContext: string;
 		history: BlochHistory;
 		POI: DensityMatrix[];
-		displayAngles: boolean;
-		displayStatesLabels: boolean;
-		displayPaths: boolean;
+		displayAngles?: boolean;
+		displayStatesLabels?: boolean;
+		displayPaths?: boolean;
 	}
 	let {
 		matrixContext,
