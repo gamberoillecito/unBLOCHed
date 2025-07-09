@@ -93,7 +93,7 @@
 {#snippet gateButtonWithParams(gate: GateMatrix, disabled: boolean, withParams: boolean)}
   {#if withParams && gate.parameterArray.length > 0}
 
-    <div class="border p-3 rounded-(--radius)">
+    <div class="border p-3 px-1 rounded-(--radius) bg-(--card) shadow-xs flex flex-col items-center">
     {@render applyGateButton(gate, disabled)}
     <MatrixParameterInput matrix={gate}></MatrixParameterInput> 
     </div>
@@ -151,13 +151,18 @@ GM latex = \n ${GM.latexMult} \n[${GM.latexMat[0][0]}, ${GM.latexMat[0][1]}] \n[
     </textarea>
     {/if}
   </div>
-<div class="grid grid-cols-6 gap-6 m-3">
+<div class="flex justify-center gap-6 m-3">
   {#each predefinedStates as matrix }
     {@render updateStateButton(matrix, false)}
   {/each}
 </div>
-<div class="grid grid-cols-4 gap-6 m-3">
-  {#each predefinedGates as gate}
+<div class="flex justify-center gap-6 m-3">
+  {#each predefinedGates.filter(g => (g.parameterArray.length === 0)) as gate}
+    {@render gateButtonWithParams(gate, false, true)}
+  {/each}
+</div>
+<div class="flex justify-center gap-6 m-3">
+  {#each predefinedGates.filter(g => (g.parameterArray.length !== 0)) as gate}
     {@render gateButtonWithParams(gate, false, true)}
   {/each}
 </div>

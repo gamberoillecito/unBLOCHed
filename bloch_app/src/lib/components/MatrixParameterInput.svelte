@@ -18,7 +18,7 @@
 	function paramAttachment(param: MatrixParam) :Attachment {
         return (element) => {
             let mf = element as MathfieldElement; 
-            mf.value = `${param.latexLabel} = \\placeholder[${param.name}]{${param.latexValue}}`;
+            mf.value = `\\small{${param.latexLabel} = \\placeholder[${param.name}]{${param.latexValue}}}`;
             mf.addEventListener('input', ()=> {
 
                 let paramsNames = mf.getPrompts();
