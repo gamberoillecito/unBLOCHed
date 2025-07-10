@@ -13,16 +13,18 @@
     complex,
 	boolean,
   } from 'mathjs'
-	import MatrixParameterInput from './MatrixParameterInput.svelte';
+	import MatrixInfoInput from './MatrixInfoInput.svelte';
 	import { BlochHistory } from './BlochHistory.svelte';
-  const config = {
-      absTol: 1e-10,
-  }
-  
+  import Info from '@lucide/svelte/icons/info';
   import {Button, type ButtonVariant} from '$lib/components/ui/button/index.js';
   import { convertLatexToMarkup } from 'mathlive';
   import * as Card from '$lib/components/ui/card/index.js';
   import { Badge } from "$lib/components/ui/badge/index.js";
+  import * as ContextMenu from "$lib/components/ui/context-menu/index.js";
+  
+  const config = {
+      absTol: 1e-10,
+  }
   const math = create(all, config);
     
   let DM = $state(new DensityMatrix([['1/2', '1/2'], ['1/2', '1/2']], '1', '\\rho'))
@@ -67,7 +69,7 @@
 {#snippet latexButton(onclick: (arg: any) => void , label: string, disabled: boolean, variant?: ButtonVariant)}
       <Button
         variant={variant}
-        class="size-12 aspect-square"
+        class="w-12 h-10 aspect-square rounded-none rounded-s-md"
         disabled = {disabled }
         onclick={onclick}
           {@attach (el: HTMLElement)=> { el.innerHTML =(convertLatexToMarkup(label))}}
@@ -86,16 +88,16 @@
         },
         gate.label,
         disabled || !gate.isConsistent,
-      "outline")
+      "default")
       }
 {/snippet}
 
 {#snippet gateButtonWithParams(gate: GateMatrix, disabled: boolean, withParams: boolean)}
   {#if withParams && gate.parameterArray.length > 0}
 
-    <div class="border p-3 px-1 rounded-(--radius) bg-(--card) shadow-xs flex flex-col items-center">
-    {@render applyGateButton(gate, disabled)}
-    <MatrixParameterInput matrix={gate}></MatrixParameterInput> 
+    <div class="gap-0 flex">
+      {@render applyGateButton(gate, disabled)}
+      <MatrixInfoInput matrix={gate}></MatrixInfoInput>
     </div>
 
   {:else}

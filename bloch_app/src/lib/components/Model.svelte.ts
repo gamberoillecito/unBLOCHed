@@ -57,6 +57,10 @@ export class MatrixParam {
         this.latexLabel = latexLabel;
         this.userEditable = userEditable;
     }
+
+    clone() : MatrixParam {
+        return new MatrixParam(this.name, this.latexValue, this.latexLabel, this.userEditable)
+    }
 }
 
 // This class manages both the matematical and latex aspects

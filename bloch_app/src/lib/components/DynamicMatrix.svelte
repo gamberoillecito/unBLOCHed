@@ -6,7 +6,7 @@
     import { getContext } from 'svelte';
 	import { FancyMatrix, DensityMatrix, MatrixParam, print_mat } from './Model.svelte';
 	import { deepEqual } from 'mathjs';
-	import MatrixParameterInput from "./MatrixParameterInput.svelte";
+	import MatrixParameterInput from "./MatrixInfoInput.svelte";
     import {Button} from '$lib/components/ui/button/index.js';
 	interface Props {
 		matrixContext: string;
