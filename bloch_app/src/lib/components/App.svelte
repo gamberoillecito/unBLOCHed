@@ -46,9 +46,9 @@
   const Ygate = new GateMatrix([['0', '-i'], ['i', '0']], '1', '\\hat{Y}');
   const Zgate = new GateMatrix([['1', '0'], ['0', '-1']], '1', '\\hat{Z}');
   const Hgate = new GateMatrix([['1', '1'], ['1', '-1']], '\\frac{1}{\\sqrt{2}}', '\\hat{H}');
-  const RZgate = new GateMatrix([['e^{-i \\theta/2}', '0'], ['0', 'e^{i \\theta/2}']], '1', 'R_z(\\theta)', GM_parameters);
-  const RXgate = new GateMatrix([['\\cos(\\theta/2)', '-i \\sin(\\theta/2)'], ['-i \\sin(\\theta/2)', '\\cos(\\theta/2)']], '1', 'R_x(\\theta)', GM_parameters);
-  const RYgate = new GateMatrix([['\\cos(\\theta/2)', '-\\sin(\\theta/2)'], ['\\sin(\\theta/2)', '\\cos(\\theta/2)']], '1', 'R_y(\\theta)', GM_parameters);
+  const RZgate = new GateMatrix([['e^{-i \\theta/2}', '0'], ['0', 'e^{i \\theta/2}']], '1', 'R_z(\\theta)', GM_parameters.map(x => x.clone()));
+  const RXgate = new GateMatrix([['\\cos(\\theta/2)', '-i \\sin(\\theta/2)'], ['-i \\sin(\\theta/2)', '\\cos(\\theta/2)']], '1', 'R_x(\\theta)', GM_parameters.map(x => x.clone()));
+  const RYgate = new GateMatrix([['\\cos(\\theta/2)', '-\\sin(\\theta/2)'], ['\\sin(\\theta/2)', '\\cos(\\theta/2)']], '1', 'R_y(\\theta)', GM_parameters.map(x => x.clone()));
 
   const ket0 = new DensityMatrix([['1', '0'], ['0', '0']], '1', '|0\\rangle');
   const ket1 = new DensityMatrix([['0', '0'], ['0', '1']], '1', '|1\\rangle');
