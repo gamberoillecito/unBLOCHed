@@ -5,8 +5,9 @@
 	import { getContext } from 'svelte';
 	import { MatrixParam } from './Model.svelte';
     import * as Popover from "$lib/components/ui/popover/index.js";
-    import {Button, type ButtonVariant} from '$lib/components/ui/button/index.js';
+    import {Button, buttonVariants, type ButtonVariant} from '$lib/components/ui/button/index.js';
     import SquarePen from '@lucide/svelte/icons/square-pen'
+    import Info from '@lucide/svelte/icons/info';
 	interface Props {
 		matrix: FancyMatrix;
 	}
@@ -37,12 +38,18 @@
 </script>
 
 <Popover.Root>
-	<Popover.Trigger>
-		<Button variant="outline" class="m-0 h-10 w-8 rounded-none rounded-e-md">
-			<SquarePen />
-		</Button>
+	<!-- The trigger is itself a button but with a different style. Take the style from the button styles and apply to it -->
+	<Popover.Trigger class={`m-0 h-10 w-6 rounded-none rounded-e-md ${buttonVariants.variants.variant.outline}`}>
+		{#if FM.parameterArray.length === 0}
+			<Info class="size-4 m-auto"/>
+		{:else}
+			<SquarePen class="size-4 m-auto"/>
+		{/if}
 	</Popover.Trigger>
 	<Popover.Content>
+		<math-field readonly {@attach (mf: MathfieldElement)=> {
+			mf.value = `${FM.label} = {${FM.latexMult == '1' ? '' : FM.latexMult}}\\begin{bmatrix}{${FM.latexMat[0][0]}} & {${FM.latexMat[0][1]}}\\\\ {${FM.latexMat[1][0]}} & {${FM.latexMat[1][1]}}\\end{bmatrix}`
+		}}></math-field>
         {#each FM.parameterArray as param, index}
             {#if param.userEditable}
                 <math-field {@attach paramAttachment(param)} readonly></math-field>
