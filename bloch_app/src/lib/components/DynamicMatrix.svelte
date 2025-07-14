@@ -7,7 +7,10 @@
 	import { FancyMatrix, DensityMatrix, MatrixParam, print_mat } from './Model.svelte';
 	import { deepEqual } from 'mathjs';
 	import MatrixParameterInput from "./MatrixInfoInput.svelte";
-    import {Button} from '$lib/components/ui/button/index.js';
+    import {Button, buttonVariants, type ButtonVariant} from '$lib/components/ui/button/index.js';
+    import * as Tooltip from "$lib/components/ui/tooltip/index.js";
+    import Trash from '@lucide/svelte/icons/trash';
+    import Save from '@lucide/svelte/icons/save';
 	interface Props {
 		matrixContext: string;
         instantUpdate: boolean;
@@ -144,19 +147,34 @@
 }
 </style>
 
-<div>
+<div class="flex">
+
+    <Tooltip.Provider >
+        <Tooltip.Root open={!FM.isConsistent && FM.userMessage!=''}>
+            <Tooltip.Trigger disabled={true}>
+                <math-field {@attach myAttachment} readonly></math-field>
+            </Tooltip.Trigger>
+            <Tooltip.Content >
+                <p> {FM.userMessage} </p>
+            </Tooltip.Content>
+        </Tooltip.Root>            
+    </Tooltip.Provider>
     <!-- Buttons that needs to be disabled if instantUpdate is true -->
-    <div style={`display:${instantUpdate ? 'none':''}`}> 
-        <Button 
+    <div class={`${instantUpdate ? 'hidden ':''} flex flex-col justify-around`} > 
+
+        <Button class="size-6" variant="ghost"
             bind:ref={updateMatrixButton} 
             disabled={!updateMatrixButtonEnabled}
-        >Update</Button>
-        <Button 
+        >
+            <Save />
+        </Button>
+        <Button class="size-6" variant="ghost"
             bind:ref={undoChangesButton} 
             disabled={!undoChangesButtonEnabled}
-        >Undo</Button>
+        >
+            <Trash />
+        </Button>
     </div>
-    <math-field {@attach myAttachment} readonly></math-field>
-    <MatrixParameterInput matrix={FM} ></MatrixParameterInput>
-    <p> {FM.userMessage} </p>
+    <!-- <MatrixParameterInput matrix={FM} ></MatrixParameterInput> -->
+    <!-- <p> {FM.userMessage} </p> -->
 </div>
