@@ -30,6 +30,7 @@
 		"eslint-config-prettier": "^10.1.5",
 		"eslint-plugin-svelte": "^3.9.1",
 		"globals": "^16.2.0",
+		"paneforge": "^1.0.0",
 		"prettier": "^3.5.3",
 		"prettier-plugin-svelte": "^3.4.0",
 		"prettier-plugin-tailwindcss": "^0.6.11",
