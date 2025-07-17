@@ -25,6 +25,10 @@ export class BlochHistoryElement {
         this.pathVisible= $state(pathVisible);
         this._finalDM = finalDM.clone();
         this._DM = DM.clone();
+        
+        // If the matrix is in the history it is not displayed and so
+        // it is consistent by definition
+        this._DM.isConsistent = true; 
         this._GM = GM? GM.clone() : null;
     }
     
@@ -85,9 +89,11 @@ export class BlochHistory {
             }
             this.pathCheckpoints.push(this._current)            
         }
+
+        if (!finalDM.isConsistent) {
+            console.error("finalDM is not consistent");
+        }
         this._list.push(new BlochHistoryElement(DM, finalDM, GM));
-        console.log(`Added element. Current: ${this._current}. List: ${this._list.length}`);
-        console.log(`Added element. Checkpoints: ${this.pathCheckpoints}`);
     }
 
     // Undoes the previous operation restoring DM to the previous state
