@@ -14,11 +14,15 @@
 	interface Props {
 		matrixContext: string;
         instantUpdate: boolean;
+        onChangeCallback?: (FM:FancyMatrix, oldFM: FancyMatrix, args:any) => void;
+        onChangeArguments?: any;
 	}
 
 	let {
         matrixContext,
         instantUpdate = false,
+        onChangeCallback,
+        onChangeArguments
     }: Props = $props();
 
     let FM: FancyMatrix = getContext(matrixContext);
@@ -91,7 +95,14 @@
             FM.userMessage = res.message;
             
             if (instantUpdate && res.isValid) {
+                // Save the state previous to updating for the callback function
+                let oldFM = FM.clone();
                 FM.setMatrixFromLatex(...parsed)
+                
+                if (res.isValid && onChangeCallback !== undefined) {
+                    onChangeCallback(FM.clone(), oldFM, onChangeArguments );
+                }
+                
             }
             // if the displayed value is different with respect to
             // one actually in the Fancy matrix we have to set the matrix
@@ -112,8 +123,14 @@
             // Update all the latex fields with the new value
             // TODO : optimize to avoid useless overrides
             let parsed = parseMatrixField(mf);
+            // Save the state previous to updating for the callback function
+            let oldFM = FM.clone();
             let res = FM.setMatrixFromLatex(...parsed);
             FM.isConsistent = res.isValid;
+            // If the update was successful call the onChangeCallback function
+            if (res.isValid && onChangeCallback !== undefined) {
+                onChangeCallback(FM.clone(), oldFM, onChangeArguments);
+            }
             
         })
         // The undo button overrides the current displayed value
