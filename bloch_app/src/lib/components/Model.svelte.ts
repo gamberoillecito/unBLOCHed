@@ -178,6 +178,7 @@ export class FancyMatrix {
                 }
             }
             this._latexMult = mult;
+            this.isConsistent = true;
         }
         return res;
     }
@@ -268,7 +269,10 @@ export class FancyMatrix {
         // I have to reconstruct a latex matrix without any approximation
         // let completeLateMat = this._mat.map(row => row.map( x => x.toString()))
         // constructor(latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[] = []){
-        return new (this.constructor as new (latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[], mat? :ComplexMat2x2) => this)(this._latexMat, this._latexMult, this.label, this._parameter_array, this._mat);
+        let cl = new (this.constructor as new (latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[], mat? :ComplexMat2x2) => this)(this._latexMat, this._latexMult, this.label, this._parameter_array, this._mat);
+        cl.isConsistent = this.isConsistent;
+        cl.userMessage = this.userMessage;
+        return cl;
         // const copy = Object.create(Object.getPrototypeOf(this));
         // Object.assign(copy, this);
     }
@@ -279,6 +283,8 @@ export class FancyMatrix {
         this._latexMult = FM.latexMult;
         this._mat = FM.mat;
         this._parameter_array = FM.parameterArray;
+        this.isConsistent = FM.isConsistent;
+        this.userMessage = FM.userMessage;
     }
 
 }
