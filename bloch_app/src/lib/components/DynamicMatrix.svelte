@@ -11,6 +11,7 @@
     import * as Tooltip from "$lib/components/ui/tooltip/index.js";
     import Trash from '@lucide/svelte/icons/trash';
     import Save from '@lucide/svelte/icons/save';
+
 	interface Props {
 		matrixContext: string;
         instantUpdate: boolean;
@@ -38,7 +39,14 @@
         console.error("Matrices with user editable parameters must be instantUpdate")
     }
     
-
+    /**
+     * Given a properly shaped mathfield, it returns a list with a 2x2 matrix
+     * of strings containing the latex entries of the matrix, followd by a string
+     * containing the multiplier of the matrix.
+     * mf.value must have the following format:
+     * ${FM.label} = \\placeholder[mult]{${m}}\\begin{bmatrix}\\placeholder[m00]{${a}} & \\placeholder[m01]{${b}}\\\\ \\placeholder[m10]{${c}} & \\placeholder[m11]{${d}\\end{bmatrix}
+     * where `m` is the multiplier of the matrix and `a,b,c,d` are the entries
+    */
     function parseMatrixField(mf: MathfieldElement): [string[][], string] {
         let matrix: string[][] = []
         for (let i = 0; i < 2; i++){
@@ -51,9 +59,10 @@
         let mult = mf.getPromptValue('mult');
         return [matrix, mult]
     }
-    // This function is run as soon as the element is loaded and
-    // sets up the reactivity of the element
-	const myAttachment: Attachment = (element) => {
+    /**
+     * This function is run as soon as the element is loaded and sets up the reactivity of the element
+    */
+	const mfAttachment: Attachment = (element) => {
 		let mf = element as MathfieldElement;
         
         // Default value of the matrix input
@@ -83,9 +92,11 @@
             
         })
 
-        // Whenever we receive user input on the page we need to check if the
-        // current input generates a valid matrix and enable/disable the
-        // update button accordingly
+        /**
+         * Whenever we receive user input on the page we need to check if the
+         * current input generates a valid matrix and enable/disable the
+         * update button accordingly
+        */
         mf.addEventListener('input', ()=> {
 
             // Generate a matrix starting from latex and validate it
@@ -144,7 +155,7 @@
                 }
             }
             mf.setPromptValue(`mult`, FM.latexMult, {})
-            
+            FM.isConsistent = true;
         })
 
 
@@ -169,7 +180,7 @@
     <Tooltip.Provider >
         <Tooltip.Root open={!FM.isConsistent && FM.userMessage!=''}>
             <Tooltip.Trigger disabled={true}>
-                <math-field {@attach myAttachment} readonly></math-field>
+                <math-field {@attach mfAttachment} readonly></math-field>
             </Tooltip.Trigger>
             <Tooltip.Content >
                 <p> {FM.userMessage} </p>
