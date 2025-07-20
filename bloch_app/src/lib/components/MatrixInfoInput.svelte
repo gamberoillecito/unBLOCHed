@@ -46,14 +46,19 @@
 			<SquarePen class="size-4 m-auto"/>
 		{/if}
 	</Popover.Trigger>
-	<Popover.Content>
-		<math-field readonly {@attach (mf: MathfieldElement)=> {
-			mf.value = `${FM.label} = {${FM.latexMult == '1' ? '' : FM.latexMult}}\\begin{bmatrix}{${FM.latexMat[0][0]}} & {${FM.latexMat[0][1]}}\\\\ {${FM.latexMat[1][0]}} & {${FM.latexMat[1][1]}}\\end{bmatrix}`
-		}}></math-field>
-        {#each FM.parameterArray as param, index}
-            {#if param.userEditable}
-                <math-field {@attach paramAttachment(param)} readonly></math-field>
-            {/if}
-        {/each}
+	<Popover.Content class="w-fit">
+		<div class="flex flex-col items-center">
+			<math-field readonly {@attach (mf: MathfieldElement)=> {
+				mf.value = `${FM.label} = {${FM.latexMult == '1' ? '' : FM.latexMult}}\\begin{bmatrix}{${FM.latexMat[0][0]}} & {${FM.latexMat[0][1]}}\\\\ {${FM.latexMat[1][0]}} & {${FM.latexMat[1][1]}}\\end{bmatrix}`
+			}}></math-field>
+			{#if FM.parameterArray.filter(x => x.userEditable).length > 0}
+				<p>Parameters:</p>
+			{/if}
+			{#each FM.parameterArray as param, index}
+				{#if param.userEditable}
+					<math-field {@attach paramAttachment(param)} readonly></math-field>
+				{/if}
+			{/each}
+		</div>
 	</Popover.Content>
 </Popover.Root>
