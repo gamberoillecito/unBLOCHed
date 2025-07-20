@@ -55,6 +55,8 @@
 		"@threlte/core": "^8.0.5",
 		"@threlte/extras": "^9.4.0",
 		"@types/three": "^0.174.0",
+		"marked": "^16.1.1",
+		"marked-katex-extension": "^5.1.5",
 		"mathjs": "^14.5.2",
 		"mathlive": "^0.105.3",
 		"three": "^0.174.0",
