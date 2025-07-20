@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
 <script lang="ts">
 	import { Canvas } from '@threlte/core';
 	import Scene from './Scene.svelte';
@@ -15,17 +16,22 @@
 	import MatrixInfoInput from './MatrixInfoInput.svelte';
 	import { BlochHistory } from './BlochHistory.svelte';
 	import { Button, type ButtonVariant } from '$lib/components/ui/button/index.js';
-  import { Separator } from "$lib/components/ui/separator/index.js";
+	import { Separator } from "$lib/components/ui/separator/index.js";
 	import { convertLatexToMarkup } from 'mathlive';
-  import * as Resizable from "$lib/components/ui/resizable/index.js";
+	import * as Resizable from "$lib/components/ui/resizable/index.js";
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
-  import Undo from '@lucide/svelte/icons/undo';
-  import Redo from '@lucide/svelte/icons/redo';
-  
-  
-
+	import Undo from '@lucide/svelte/icons/undo';
+	import Redo from '@lucide/svelte/icons/redo';
+	import { marked } from 'marked';
+	import markedKatex from "marked-katex-extension";
+	
+	const markedKatexOptions = {
+		throwOnError: false
+	}
+	marked.use(markedKatex(markedKatexOptions));
+	// MathfieldElement.MathfieldElement.plonkSound = null;
 	const config = {
 		absTol: 1e-10
 	};
@@ -271,6 +277,7 @@
 	</div>
   <Separator class=""></Separator>
 	<div>
+	<h4>Density Matrix</h4>
 		<DynamicMatrix matrixContext="densityMatrix" instantUpdate={false} onChangeCallback ={(FM, oldFM, history:BlochHistory)=> {history.addElement(oldFM as DensityMatrix, FM as DensityMatrix)}} onChangeArguments={history}></DynamicMatrix>
 		{#if false}
 			<textarea style="height: 300px; width: 400px">
@@ -288,6 +295,7 @@ GM latex = \n ${GM.latexMult} \n[${GM.latexMat[0][0]}, ${GM.latexMat[0][1]}] \n[
 		{/if}
 	</div>
   <Separator class=""></Separator>
+  <h4> States </h4>
   <!-- Standard states -->
 	<div class="m-3 flex flex-wrap justify-center gap-2">
 		{#each predefinedStates as matrix}
@@ -295,6 +303,7 @@ GM latex = \n ${GM.latexMult} \n[${GM.latexMat[0][0]}, ${GM.latexMat[0][1]}] \n[
 		{/each}
 	</div>
   <Separator class=""></Separator>
+  <h4> Gates </h4>
   <!-- Standard gates (no parameters) -->
 	<div class="m-3 flex flex-wrap justify-center gap-2">
 		{#each predefinedGates.filter((g) => g.parameterArray.length === 0) as gate}
@@ -313,3 +322,5 @@ GM latex = \n ${GM.latexMult} \n[${GM.latexMat[0][0]}, ${GM.latexMat[0][1]}] \n[
 
 	{@render gateButtonWithParams(GM, !(DM.isConsistent && GM.isConsistent), true)}
 </div>
+
+<p {@attach (p)=> {p.innerHTML = marked.parse('# Marked in browser\n\nRendered by **marked**. $x/3$')}}></p>
