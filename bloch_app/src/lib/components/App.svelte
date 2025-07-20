@@ -27,6 +27,8 @@
 	import { marked } from 'marked';
 	import markedKatex from "marked-katex-extension";
 	
+	import { predefinedGates, predefinedStates, theta_param } from '$lib/data/matrices';
+	
 	const markedKatexOptions = {
 		throwOnError: false
 	}
@@ -49,7 +51,6 @@
 	);
 	setContext('densityMatrix', DM);
 
-	let GM_parameters = [new MatrixParam('theta', '\\pi/30', '\\theta', true)];
 	let GM = $state(
 		new GateMatrix(
 			[
@@ -58,7 +59,7 @@
 			],
 			'1',
 			'\\hat{U}',
-			GM_parameters
+			theta_param
 		)
 	);
 	setContext('gateMatrix', GM);
@@ -73,119 +74,7 @@
 		//     print_mat(el.DM.mat)
 		// }
 	});
-	const Xgate = new GateMatrix(
-		[
-			['0', '1'],
-			['1', '0']
-		],
-		'1',
-		'$$\\hat{X}$$'
-	);
-	const Ygate = new GateMatrix(
-		[
-			['0', '-i'],
-			['i', '0']
-		],
-		'1',
-		'\\hat{Y}'
-	);
-	const Zgate = new GateMatrix(
-		[
-			['1', '0'],
-			['0', '-1']
-		],
-		'1',
-		'\\hat{Z}'
-	);
-	const Hgate = new GateMatrix(
-		[
-			['1', '1'],
-			['1', '-1']
-		],
-		'\\frac{1}{\\sqrt{2}}',
-		'\\hat{H}'
-	);
-	const RZgate = new GateMatrix(
-		[
-			['e^{-i \\theta/2}', '0'],
-			['0', 'e^{i \\theta/2}']
-		],
-		'1',
-		'R_z(\\theta)',
-		GM_parameters.map((x) => x.clone())
-	);
-	const RXgate = new GateMatrix(
-		[
-			['\\cos(\\theta/2)', '-i \\sin(\\theta/2)'],
-			['-i \\sin(\\theta/2)', '\\cos(\\theta/2)']
-		],
-		'1',
-		'R_x(\\theta)',
-		GM_parameters.map((x) => x.clone())
-	);
-	const RYgate = new GateMatrix(
-		[
-			['\\cos(\\theta/2)', '-\\sin(\\theta/2)'],
-			['\\sin(\\theta/2)', '\\cos(\\theta/2)']
-		],
-		'1',
-		'R_y(\\theta)',
-		GM_parameters.map((x) => x.clone())
-	);
 
-	const ket0 = new DensityMatrix(
-		[
-			['1', '0'],
-			['0', '0']
-		],
-		'1',
-		'|0\\rangle'
-	);
-	const ket1 = new DensityMatrix(
-		[
-			['0', '0'],
-			['0', '1']
-		],
-		'1',
-		'|1\\rangle'
-	);
-	const ketPlus = new DensityMatrix(
-		[
-			['1', '1'],
-			['1', '1']
-		],
-		'\\frac{1}{2}',
-		'|+\\rangle'
-	);
-	const ketMinus = new DensityMatrix(
-		[
-			['1', '-1'],
-			['-1', '1']
-		],
-		'\\frac{1}{2}',
-		'|-\\rangle'
-	);
-	const ketI = new DensityMatrix(
-		[
-			['1', 'i'],
-			['-i', '1']
-		],
-		'\\frac{1}{2}',
-		'|i\\rangle'
-	);
-	const ketMinI = new DensityMatrix(
-		[
-			['1', '-i'],
-			['i', '1']
-		],
-		'\\frac{1}{2}',
-		'|-i\\rangle'
-	);
-	// DM.apply_gate(RYgate)
-	// DM.apply_gate(RZgate)
-	// DM.apply_gate(RZgate)
-	const predefinedGates = [Xgate, Ygate, Zgate, Hgate, RXgate, RYgate, RZgate];
-	const predefinedStates = [ket0, ket1, ketPlus, ketMinus, ketI, ketMinI];
 	let gateButtonsEnabled = $state();
 </script>
 
