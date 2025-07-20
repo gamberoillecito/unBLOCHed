@@ -15,12 +15,22 @@ const config = {
 
 const math = create(all, config);
 
+/**
+ * This class stores the necessary fields to save and restore a given state of both
+ * the UI and the inner structure of the website.
+ */
 export class BlochHistoryElement {
     protected _DM: DensityMatrix;
     protected _GM: GateMatrix|null;
     protected _finalDM: DensityMatrix;
     pathVisible: boolean;
     
+    /**
+     * @param DM - The density matrix before the edit
+     * @param finalDM - The density matrix after the edit 
+     * @param GM - The applied gate (optional)
+     * @param pathVisible - Whether to show the path relative to this Element on the GUI
+     */
     constructor(DM: DensityMatrix, finalDM: DensityMatrix, GM: GateMatrix|null,  pathVisible:boolean = true) {
         this.pathVisible= $state(pathVisible);
         this._finalDM = finalDM.clone();
@@ -49,7 +59,11 @@ export class BlochHistoryElement {
     set GM(GM:GateMatrix) {
         this._GM = GM
     }
-    
+    /**
+     * If the current element is related to the application of a gate, returns the 
+     * `GatePath` relative to the application of `GM` of the initial state of the 
+     * density matrix `DM`
+     */
     get path() :GatePath|null{
         if (this._GM) {
           if (!math.isZero(this._GM.rotationAngle) && this._GM.rotationAxis != null){
@@ -61,13 +75,23 @@ export class BlochHistoryElement {
 }
 
 
-
+/**
+ * The class implements the full history of the actions performed by the user on the GUI.
+ * It can be seen as a list of `BlochHistoryElements` which performs all the operations
+ * needed to insert elements and advance/restore the history (basically CTRL+Z and CTRL+Y)
+ */
 export class BlochHistory {
     protected _list: BlochHistoryElement[]; 
     protected _nameList: string[]; // List of the labels of the history elements
     protected _current: number; // Index of the currently active history element
+    /** Checkpoints are points in the history which are NOT related to the application of a gate,
+     * Their indices are saved because when we encounter a checkpoint we have to either hide or re-show
+     * all the paths prior (or following) the checkpoint
+     */
     protected pathCheckpoints: number[]; //Indexes of all the pathCheckpoints
-    // protected _pathList: GatePath[];
+    /**
+     * @param DM - The initial state to use for setting the first state of the history
+     */
     constructor(DM: DensityMatrix) {
         this.pathCheckpoints = [];
         this._list = $state([]);
@@ -75,7 +99,13 @@ export class BlochHistory {
         this._current = $state(-1);
         this.addElement(DM, DM);
     }
-    
+    /**
+     * Adds an element to the history. If the state of the list was not at the latest change
+     * it also deletes all the "undone" items.
+     * @param DM - The density matrix before the edit
+     * @param finalDM - The density matrix after the edit 
+     * @param GM - The applied gate (optional)
+     */
     addElement(DM: DensityMatrix, finalDM: DensityMatrix, GM: GateMatrix|null = null) {
         // Remove all the elements past the current one
         this._current++;
@@ -96,7 +126,11 @@ export class BlochHistory {
         this._list.push(new BlochHistoryElement(DM, finalDM, GM));
     }
 
-    // Undoes the previous operation restoring DM to the previous state
+    /**
+     * Undoes the previous operation restoring DM to the previous state.
+     * The function also performs the necessary operations to hide the GatePaths
+     * that should not be displayed (i.e. that are in the "future")
+    */ 
     undo(DM: DensityMatrix) {
         this._current = this._current == -1 ? this._current : this._current - 1;
         
@@ -136,6 +170,9 @@ export class BlochHistory {
         DM.copy(targetHistoryEl.finalDM);
     }
 
+    /** List of the BlochHistoryElements from the beginning up to the current element (i.e. 
+     * elements that have been "undone" are not returned.
+    ) */
     get list(): BlochHistoryElement[] {
         return this._list.slice(0, this._current + 1);
     }
@@ -155,17 +192,19 @@ export class BlochHistory {
         }
         return res;
     }
-
+    /** `true` if we are at the beginning of the history */
     get earliestChange(): boolean {
         // return this._earliestChange;
         return this._current == 0;
     }
-    
+
+    /** `true` if we are at the end of the history */
     get latestChange() :boolean {
         // return this._latestChange;
         return this._current == this._list.length - 1
     }
 
+    /** index of the current element of the history */
     get currentIdx(): number {
         return this._current
     }
