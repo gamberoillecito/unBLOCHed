@@ -7,8 +7,4 @@
 />
 
 
-<div class="container bg-background h-screen">
-  <div class="scene">
-    <App />
-  </div>
-</div>
+<App />

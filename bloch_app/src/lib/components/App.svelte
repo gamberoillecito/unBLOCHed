@@ -136,7 +136,7 @@
 	</div>
 {/snippet}
 
-<div class="flex flex-col items-center gap-2">
+<div class="flex flex-col items-center gap-2 h-screen">
 	<div class="flex m-2 gap-1">
 		<Button
 			onclick={() => {
@@ -159,7 +159,7 @@
     </Button>
 	</div>
 
-	<div class="aspect-square grow border-1 rounded-md shadow-sm">
+	<div class=" border-1 rounded-md shadow-sm max-w-[70vw] max-h-[70vw] grow-1 shrink-1 aspect-square">
 		<Canvas>
 			<Scene matrixContext={'densityMatrix'} {history} POI={predefinedStates}></Scene>
 		</Canvas>
@@ -205,11 +205,11 @@ GM latex = \n ${GM.latexMult} \n[${GM.latexMat[0][0]}, ${GM.latexMat[0][1]}] \n[
 			{@render gateButtonWithParams(gate, !DM.isConsistent, true)}
 		{/each}
 	</div>
-</div>
-<div class="m-3 flex flex-wrap justify-center gap-2 items-center">
-	<DynamicMatrix matrixContext="gateMatrix" instantUpdate={true}></DynamicMatrix>
+	<div class="m-3 flex flex-wrap justify-center gap-2 items-center">
+		<DynamicMatrix matrixContext="gateMatrix" instantUpdate={true}></DynamicMatrix>
 
-	{@render gateButtonWithParams(GM, !(DM.isConsistent && GM.isConsistent), true)}
+		{@render gateButtonWithParams(GM, !(DM.isConsistent && GM.isConsistent), true)}
+	</div>
 </div>
 
-<p {@attach (p)=> {p.innerHTML = marked.parse('# Marked in browser\n\nRendered by **marked**. $x/3$')}}></p>
+<!-- <p {@attach (p)=> {p.innerHTML = marked.parse('# Marked in browser\n\nRendered by **marked**. $x/3$') as string}}></p> -->
