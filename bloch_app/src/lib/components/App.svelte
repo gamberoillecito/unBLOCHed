@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
 <script lang="ts">
 	import { Canvas } from '@threlte/core';
 	import Scene from './Scene.svelte';
@@ -16,22 +15,22 @@
 	import MatrixInfoInput from './MatrixInfoInput.svelte';
 	import { BlochHistory } from './BlochHistory.svelte';
 	import { Button, type ButtonVariant } from '$lib/components/ui/button/index.js';
-	import { Separator } from "$lib/components/ui/separator/index.js";
+	import { Separator } from '$lib/components/ui/separator/index.js';
 	import { convertLatexToMarkup } from 'mathlive';
-	import * as Resizable from "$lib/components/ui/resizable/index.js";
+	import * as Resizable from '$lib/components/ui/resizable/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
 	import Undo from '@lucide/svelte/icons/undo';
 	import Redo from '@lucide/svelte/icons/redo';
 	import { marked } from 'marked';
-	import markedKatex from "marked-katex-extension";
-	
+	import markedKatex from 'marked-katex-extension';
+	import { AspectRatio } from '$lib/components/ui/aspect-ratio/index.js';
 	import { predefinedGates, predefinedStates, theta_param } from '$lib/data/matrices';
-	
+
 	const markedKatexOptions = {
 		throwOnError: false
-	}
+	};
 	marked.use(markedKatex(markedKatexOptions));
 	// MathfieldElement.MathfieldElement.plonkSound = null;
 	const config = {
@@ -77,6 +76,13 @@
 
 	let gateButtonsEnabled = $state();
 </script>
+
+<link
+	rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+	integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn"
+	crossorigin="anonymous"
+/>
 
 <!-- Generic button with an onclick action and a latex label -->
 {#snippet latexButton(
@@ -136,79 +142,92 @@
 	</div>
 {/snippet}
 
-<div class="flex flex-col items-center gap-2 h-screen">
-	<div class="flex m-2 gap-1">
-		<Button
-			onclick={() => {
-				history.undo(DM);
-			}}
-			disabled={history.earliestChange}
-      size="icon"
-    >
-      <Undo />
-    </Button
+<div
+	class="flex h-screen flex-col content-evenly items-center justify-start gap-2 bg-orange-400 lg:flex-row lg:justify-center"
+>
+	<div class="flex flex-col items-center">
+		<div class="m-2 flex gap-1 ">
+			<Button
+				onclick={() => {
+					history.undo(DM);
+				}}
+				disabled={history.earliestChange}
+				size="icon"
+			>
+				<Undo />
+			</Button>
+			<Button
+				onclick={() => {
+					history.redo(DM);
+				}}
+				disabled={history.latestChange}
+				size="icon"
+			>
+				<Redo />
+			</Button>
+		</div>
+		<div
+			class="border-1 aspect-square max-h-[40vh] max-w-[40vh] lg:max-h-[900px] lg:max-w[900px] grow rounded-md bg-green-400 shadow-sm"
 		>
-		<Button
-			onclick={() => {
-				history.redo(DM);
-			}}
-			disabled={history.latestChange}
-      size="icon"
-    >
-      <Redo />
-    </Button>
-	</div>
+			<Canvas>
+				<Scene matrixContext={'densityMatrix'} {history} POI={predefinedStates}></Scene>
+			</Canvas>
+		</div>
 
-	<div class=" border-1 rounded-md shadow-sm max-w-[70vw] max-h-[70vw] grow-1 shrink-1 aspect-square">
-		<Canvas>
-			<Scene matrixContext={'densityMatrix'} {history} POI={predefinedStates}></Scene>
-		</Canvas>
 	</div>
-  <Separator class=""></Separator>
-	<div>
-	<h4>Density Matrix</h4>
-		<DynamicMatrix matrixContext="densityMatrix" instantUpdate={false} onChangeCallback ={(FM, oldFM, history:BlochHistory)=> {history.addElement(oldFM as DensityMatrix, FM as DensityMatrix)}} onChangeArguments={history}></DynamicMatrix>
-		{#if false}
-			<textarea style="height: 300px; width: 400px">
-				{`DM = \n[${DM.mat[0][0]}, ${DM.mat[0][1]}] \n[${DM.mat[1][0]}, ${DM.mat[1][1]}]
+	<div class="overflow-hidden p-2">
+		<div>
+			<h4>Density Matrix</h4>
+			<DynamicMatrix
+				matrixContext="densityMatrix"
+				instantUpdate={false}
+				onChangeCallback={(FM, oldFM, history: BlochHistory) => {
+					history.addElement(oldFM as DensityMatrix, FM as DensityMatrix);
+				}}
+				onChangeArguments={history}
+			></DynamicMatrix>
+			{#if false}
+				<textarea style="height: 300px; width: 400px">
+					{`DM = \n[${DM.mat[0][0]}, ${DM.mat[0][1]}] \n[${DM.mat[1][0]}, ${DM.mat[1][1]}]
+	
+	Phase = ${DM.phase}
+	
+	DM latex = \n ${DM.latexMult} \n[${DM.latexMat[0][0]}, ${DM.latexMat[0][1]}] \n[${DM.latexMat[1][0]}, ${DM.latexMat[1][1]}]
+	
+	GM = \n[${GM.mat[0][0]}, ${GM.mat[0][1]}] \n[${GM.mat[1][0]}, ${GM.mat[1][1]}]
+	
+	GM latex = \n ${GM.latexMult} \n[${GM.latexMat[0][0]}, ${GM.latexMat[0][1]}] \n[${GM.latexMat[1][0]}, ${GM.latexMat[1][1]}]
+	      `}
+				</textarea>
+			{/if}
+		</div>
+		<Separator class=""></Separator>
+		<h4>States</h4>
+		<!-- Standard states -->
+		<div class="m-3 flex flex-wrap justify-center gap-2">
+			{#each predefinedStates as matrix}
+				{@render updateStateButton(matrix, false)}
+			{/each}
+		</div>
+		<Separator class=""></Separator>
+		<h4 class="font-bold">Gates</h4>
+		<!-- Standard gates (no parameters) -->
+		<div class="m-3 flex flex-wrap justify-center gap-2">
+			{#each predefinedGates.filter((g) => g.parameterArray.length === 0) as gate}
+				{@render gateButtonWithParams(gate, !DM.isConsistent, true)}
+			{/each}
+		</div>
+		<!-- Standard gates (with parameters) -->
+		<div class="m-3 flex flex-wrap justify-center gap-2">
+			{#each predefinedGates.filter((g) => g.parameterArray.length !== 0) as gate}
+				{@render gateButtonWithParams(gate, !DM.isConsistent, true)}
+			{/each}
+		</div>
+		<div class="m-3 flex flex-wrap items-center justify-center gap-2">
+			<DynamicMatrix matrixContext="gateMatrix" instantUpdate={true}></DynamicMatrix>
 
-Phase = ${DM.phase}
-
-DM latex = \n ${DM.latexMult} \n[${DM.latexMat[0][0]}, ${DM.latexMat[0][1]}] \n[${DM.latexMat[1][0]}, ${DM.latexMat[1][1]}]
-
-GM = \n[${GM.mat[0][0]}, ${GM.mat[0][1]}] \n[${GM.mat[1][0]}, ${GM.mat[1][1]}]
-
-GM latex = \n ${GM.latexMult} \n[${GM.latexMat[0][0]}, ${GM.latexMat[0][1]}] \n[${GM.latexMat[1][0]}, ${GM.latexMat[1][1]}]
-      `}
-			</textarea>
-		{/if}
-	</div>
-  <Separator class=""></Separator>
-  <h4> States </h4>
-  <!-- Standard states -->
-	<div class="m-3 flex flex-wrap justify-center gap-2">
-		{#each predefinedStates as matrix}
-			{@render updateStateButton(matrix, false)}
-		{/each}
-	</div>
-  <Separator class=""></Separator>
-  <h4> Gates </h4>
-  <!-- Standard gates (no parameters) -->
-	<div class="m-3 flex flex-wrap justify-center gap-2">
-		{#each predefinedGates.filter((g) => g.parameterArray.length === 0) as gate}
-			{@render gateButtonWithParams(gate, !DM.isConsistent, true)}
-		{/each}
-	</div>
-  <!-- Standard gates (with parameters) -->
-	<div class="m-3 flex flex-wrap justify-center gap-2">
-		{#each predefinedGates.filter((g) => g.parameterArray.length !== 0) as gate}
-			{@render gateButtonWithParams(gate, !DM.isConsistent, true)}
-		{/each}
-	</div>
-	<div class="m-3 flex flex-wrap justify-center gap-2 items-center">
-		<DynamicMatrix matrixContext="gateMatrix" instantUpdate={true}></DynamicMatrix>
-
-		{@render gateButtonWithParams(GM, !(DM.isConsistent && GM.isConsistent), true)}
+			{@render gateButtonWithParams(GM, !(DM.isConsistent && GM.isConsistent), true)}
+		</div>
 	</div>
 </div>
 
