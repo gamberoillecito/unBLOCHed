@@ -143,9 +143,9 @@
 {/snippet}
 
 <div
-	class="flex h-screen flex-col content-evenly items-center justify-start gap-2 bg-orange-400 lg:flex-row lg:justify-center"
+	class="flex h-full w-full bg-amber-400 flex-col @lg:flex-row content-evenly place-items-center justify-start @lg:justify-center-safe @lg:place-items-center gap-2 p-2 "
 >
-	<div class="flex flex-col items-center">
+	<div class="flex flex-col shrink-2 self-stretch @lg:self-auto @lg:justify-self-stretch  h-fit items-center max-h-[700px] max-w-[700px] border-amber-800 border-2">
 		<div class="m-2 flex gap-1 ">
 			<Button
 				onclick={() => {
@@ -167,7 +167,7 @@
 			</Button>
 		</div>
 		<div
-			class="border-1 aspect-square max-h-[40vh] max-w-[40vh] lg:max-h-[900px] lg:max-w[900px] grow rounded-md bg-green-400 shadow-sm"
+			class="border-1 shrink-2 place-self-stretch aspect-square rounded-md bg-green-400 shadow-sm m-3"
 		>
 			<Canvas>
 				<Scene matrixContext={'densityMatrix'} {history} POI={predefinedStates}></Scene>
@@ -175,7 +175,7 @@
 		</div>
 
 	</div>
-	<div class="overflow-hidden p-2">
+	<div class="p-2 border-purple-500 border-2">
 		<div>
 			<h4>Density Matrix</h4>
 			<DynamicMatrix
@@ -210,7 +210,7 @@
 			{/each}
 		</div>
 		<Separator class=""></Separator>
-		<h4 class="font-bold">Gates</h4>
+		<h4>Gates</h4>
 		<!-- Standard gates (no parameters) -->
 		<div class="m-3 flex flex-wrap justify-center gap-2">
 			{#each predefinedGates.filter((g) => g.parameterArray.length === 0) as gate}
