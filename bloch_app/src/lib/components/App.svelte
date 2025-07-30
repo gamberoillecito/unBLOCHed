@@ -145,8 +145,10 @@
 <div
 	class="flex h-full overflow-scroll w-full bg-amber-400 flex-col @lg:flex-row content-evenly place-items-center justify-start @lg:justify-center-safe @lg:place-items-center gap-2 p-2 "
 >
-	<div class="flex flex-col shrink-1 @lg:basis-full justify-self-auto self-stretch @lg:self-auto items-center max-h-lg max-w-lg border-amber-800 border-2">
-		<div class="m-2 flex gap-1 ">
+	<!-- Container of undo/redo buttons and canvas -->
+	<div class="flex flex-row-reverse justify-center @lg:flex-col shrink-1 @lg:basis-full justify-self-auto self-stretch @lg:self-auto items-center max-h-lg max-w-lg border-amber-800 border-2">
+		<!-- Undo/redo buttons -->
+		<div class="m-2 flex flex-col @lg:flex-row gap-1 border-2">
 			<Button
 				onclick={() => {
 					history.undo(DM);
@@ -166,6 +168,7 @@
 				<Redo />
 			</Button>
 		</div>
+		<!-- Canvas container -->
 		<div
 			class="border-1 shrink h-[90%] @lg:h-auto @lg:w-[90%] aspect-square rounded-md bg-green-400 shadow-sm m-3"
 		>
@@ -175,6 +178,7 @@
 		</div>
 
 	</div>
+	<!-- Buttons and matrices -->
 	<div class="p-2 border-purple-500 border-2">
 		<div>
 			<h4>Density Matrix</h4>

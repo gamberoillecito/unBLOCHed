@@ -4,11 +4,11 @@
 	import * as Resizable from '$lib/components/ui/resizable/index.js';
 	import Button from '$lib/components/ui/button/button.svelte';
 
-  let tutorialVisible = $state(false)
+  let tutorialVisible = $state(false);
 </script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mathlive/mathlive-static.css" />
-<div class="flex h-dvh flex-col">
+<div class="flex h-svh flex-col">
 	<!-- Header -->
 	<div
 		class="bg-foreground text-(--background) w-[100%] flex-none items-center justify-between p-2 text-center text-xl lg:flex lg:pl-6 lg:text-left lg:text-2xl"
