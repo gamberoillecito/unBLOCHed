@@ -143,9 +143,9 @@
 {/snippet}
 
 <div
-	class="flex h-full w-full bg-amber-400 flex-col @lg:flex-row content-evenly place-items-center justify-start @lg:justify-center-safe @lg:place-items-center gap-2 p-2 "
+	class="flex h-full overflow-scroll w-full bg-amber-400 flex-col @lg:flex-row content-evenly place-items-center justify-start @lg:justify-center-safe @lg:place-items-center gap-2 p-2 "
 >
-	<div class="flex flex-col shrink-2 self-stretch @lg:self-auto @lg:justify-self-stretch  h-fit items-center max-h-[700px] max-w-[700px] border-amber-800 border-2">
+	<div class="flex flex-col shrink-1 @lg:basis-full justify-self-auto self-stretch @lg:self-auto items-center max-h-lg max-w-lg border-amber-800 border-2">
 		<div class="m-2 flex gap-1 ">
 			<Button
 				onclick={() => {
@@ -167,7 +167,7 @@
 			</Button>
 		</div>
 		<div
-			class="border-1 shrink-2 place-self-stretch aspect-square rounded-md bg-green-400 shadow-sm m-3"
+			class="border-1 shrink h-[90%] @lg:h-auto @lg:w-[90%] aspect-square rounded-md bg-green-400 shadow-sm m-3"
 		>
 			<Canvas>
 				<Scene matrixContext={'densityMatrix'} {history} POI={predefinedStates}></Scene>
