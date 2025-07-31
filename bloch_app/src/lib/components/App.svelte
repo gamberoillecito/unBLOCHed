@@ -23,15 +23,10 @@
 	import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
 	import Undo from '@lucide/svelte/icons/undo';
 	import Redo from '@lucide/svelte/icons/redo';
-	import { marked } from 'marked';
-	import markedKatex from 'marked-katex-extension';
 	import { AspectRatio } from '$lib/components/ui/aspect-ratio/index.js';
 	import { predefinedGates, predefinedStates, theta_param } from '$lib/data/matrices';
+	import ScrollArea from './ui/scroll-area/scroll-area.svelte';
 
-	const markedKatexOptions = {
-		throwOnError: false
-	};
-	marked.use(markedKatex(markedKatexOptions));
 	// MathfieldElement.MathfieldElement.plonkSound = null;
 	const config = {
 		absTol: 1e-10
@@ -142,13 +137,15 @@
 	</div>
 {/snippet}
 
+	
+	<ScrollArea class="h-full w-full">
 <div
-	class="flex h-full overflow-scroll w-full bg-amber-400 flex-col @lg:flex-row content-evenly place-items-center justify-start @lg:justify-center-safe @lg:place-items-center gap-2 p-2 "
+	class="flex h-full w-full  flex-col @lg:flex-row content-evenly place-items-center justify-start @lg:justify-center-safe @lg:place-items-center gap-2 p-2 "
 >
 	<!-- Container of undo/redo buttons and canvas -->
-	<div class="flex flex-row-reverse justify-center @lg:flex-col shrink-1 @lg:basis-full justify-self-auto self-stretch @lg:self-auto items-center max-h-lg max-w-lg border-amber-800 border-2">
+	<div class="flex flex-row-reverse justify-center @lg:flex-col shrink-1 @lg:basis-full justify-self-auto self-stretch @lg:self-auto items-center max-h-lg max-w-lg">
 		<!-- Undo/redo buttons -->
-		<div class="m-2 flex flex-col @lg:flex-row gap-1 border-2">
+		<div class="m-2 flex flex-col @lg:flex-row gap-1 ">
 			<Button
 				onclick={() => {
 					history.undo(DM);
@@ -170,7 +167,7 @@
 		</div>
 		<!-- Canvas container -->
 		<div
-			class="border-1 shrink h-[90%] @lg:h-auto @lg:w-[90%] aspect-square rounded-md bg-green-400 shadow-sm m-3"
+			class="border-1 shrink h-[90%] @lg:h-auto @lg:w-[90%] aspect-square rounded-md  shadow-sm m-3"
 		>
 			<Canvas>
 				<Scene matrixContext={'densityMatrix'} {history} POI={predefinedStates}></Scene>
@@ -179,7 +176,7 @@
 
 	</div>
 	<!-- Buttons and matrices -->
-	<div class="p-2 border-purple-500 border-2">
+	<div class="p-2 ">
 		<div>
 			<h4>Density Matrix</h4>
 			<DynamicMatrix
@@ -234,5 +231,6 @@
 		</div>
 	</div>
 </div>
+</ScrollArea>
 
 <!-- <p {@attach (p)=> {p.innerHTML = marked.parse('# Marked in browser\n\nRendered by **marked**. $x/3$') as string}}></p> -->
