@@ -5,7 +5,8 @@
 	import { Toggle } from "$lib/components/ui/toggle/index.js";
 	import Tutorial from '$lib/components/Tutorial.svelte';
 
-  let tutorialVisible = $state(false);
+  let tutorialVisible = $state(true);
+  $inspect(tutorialVisible);
 </script>
 
 <style>
@@ -18,6 +19,7 @@
 	<div
 		class="bg-foreground text-(--background) w-[100%] flex-none items-center justify-between p-2 text-center text-xl lg:flex lg:pl-6 lg:text-left lg:text-2xl"
 	>
+  <button onclick={()=>{console.log("click")}}>prova</button>
 		<span class=""
 			><span class="font-normal">un</span><span class="font-semibold">BLOCH</span><span
 				class="font-normal">ed</span
@@ -39,7 +41,7 @@
     {#if tutorialVisible}
       <Resizable.Handle  withHandle/>
       <Resizable.Pane>
-      <div class="@container h-full w-full flex-1 min-h-0">
+      <div class="@container h-full w-full flex-1 min-h-0 p-2">
         <Tutorial/>
       </div>      
       </Resizable.Pane>
@@ -47,3 +49,4 @@
 	</Resizable.PaneGroup>
 	<!-- Footer -->
 </div>
+
