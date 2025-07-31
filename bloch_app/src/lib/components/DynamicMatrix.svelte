@@ -11,7 +11,8 @@
     import * as Tooltip from "$lib/components/ui/tooltip/index.js";
     import Trash from '@lucide/svelte/icons/trash';
     import Save from '@lucide/svelte/icons/save';
-
+    import CircleCheckBig from '@lucide/svelte/icons/circle-check-big'
+    import CircleX from '@lucide/svelte/icons/circle-x';
 	interface Props {
 		matrixContext: string;
         instantUpdate: boolean;
@@ -89,7 +90,6 @@
                 mf.setPromptValue(`mult`, FM.latexMult, {silenceNotifications: true})
             }
             updateMatrixButtonEnabled = false;
-            
         })
 
         /**
@@ -126,7 +126,6 @@
             FM.isConsistent = res.isValid &&  matrices_equal;
             updateMatrixButtonEnabled = !matrices_equal && res.isValid;
             undoChangesButtonEnabled = !matrices_equal;
-
         })
         
         // Update the FancyMatrix when the button is pressed
@@ -189,18 +188,20 @@
     </Tooltip.Provider>
     <!-- Buttons that needs to be disabled if instantUpdate is true -->
     <div class={`${instantUpdate ? 'hidden ':''} flex flex-col justify-around`} > 
-
+        
         <Button class="size-6" variant="ghost"
             bind:ref={updateMatrixButton} 
             disabled={!updateMatrixButtonEnabled}
         >
-            <Save />
+            <!-- <Save /> -->
+            <CircleCheckBig/>
         </Button>
         <Button class="size-6" variant="ghost"
             bind:ref={undoChangesButton} 
             disabled={!undoChangesButtonEnabled}
         >
-            <Trash />
+            <!-- <Trash />-->
+            <CircleX class="stroke-destructive"/>
         </Button>
     </div>
     <!-- <MatrixParameterInput matrix={FM} ></MatrixParameterInput> -->
