@@ -82,7 +82,6 @@ export class FancyMatrix {
         this.userMessage = $state(null); 
         this._parameter_array = parameters;
         for (let p of this._parameter_array) {
-            // this.ce.box(p.name).value = p.latexValue
             this.ce.box(p.name).value = p.latexValue;
         }
         // We need to tell the ComputeEngine how to

@@ -2,10 +2,10 @@
 	import App from '$lib/components/App.svelte';
 	import CircleQuestionMark from '@lucide/svelte/icons/message-circle-question';
 	import * as Resizable from '$lib/components/ui/resizable/index.js';
-	import Button from '$lib/components/ui/button/button.svelte';
+	import { Toggle } from "$lib/components/ui/toggle/index.js";
 	import Tutorial from '$lib/components/Tutorial.svelte';
 
-  let tutorialVisible = $state(true);
+  let tutorialVisible = $state(false);
 </script>
 
 <style>
@@ -23,12 +23,11 @@
 				class="font-normal">ed</span
 			> <span class="font-light">- Bloch sphere simulator</span></span
 		>
-    <Button variant="secondary" class="hidden lg:flex" onclick={()=>{tutorialVisible = !tutorialVisible; console.log("click");
-    }}>
+    <Toggle variant="outline" bind:pressed={tutorialVisible} class="hidden lg:flex">
 
       <CircleQuestionMark />
       Tutorial
-    </Button>
+    </Toggle>
 	</div>
 	<!-- Body -->
 	<Resizable.PaneGroup direction="horizontal">
