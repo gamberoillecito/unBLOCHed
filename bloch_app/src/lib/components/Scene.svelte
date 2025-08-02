@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Canvas } from '@threlte/core';
 	import { T } from '@threlte/core';
 	import {
 		interactivity,
@@ -20,22 +21,22 @@
 	import AngleArc from './AngleArc.svelte';
 	import { getContext } from 'svelte';
 	import type { BlochHistory } from './BlochHistory.svelte';
+	import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
 	interface Props {
 		matrixContext: string;
 		history: BlochHistory;
 		POI: DensityMatrix[];
-		displayAngles?: boolean;
-		displayStatesLabels?: boolean;
-		displayPaths?: boolean;
 	}
 	let {
 		matrixContext,
 		history,
 		POI,
-		displayAngles=true,
-		displayStatesLabels=true,
-		displayPaths=true,
 	 }: Props = $props();
+	
+	let displayAngles= $state(true);
+	let displayStatesLabels= $state(true);
+	let displayPaths= $state(true);
+
 
 	let DM:DensityMatrix = getContext(matrixContext);
 	const MAX_PATH_COLORS = 12;
@@ -53,7 +54,7 @@
 	];
 	let pathGradient = generateGradient(colors_hex, MAX_PATH_COLORS);
 </script>
-
+{#snippet canvasContent()}
 <T.DirectionalLight intensity={3} position.x={5} position.y={10} castgetContext(matrixContext) />
 <T.AmbientLight intensity={0.5} />
 <T.PerspectiveCamera
@@ -107,3 +108,15 @@
 {#if displayAngles}
 	<AngleArc vector={DM.blochV}></AngleArc>
 {/if}
+{/snippet}
+<ContextMenu.Root>
+	<ContextMenu.Trigger  class="h-full w-full min-h-0">
+		<Canvas>
+			{@render canvasContent()}
+		</Canvas>
+	</ContextMenu.Trigger>
+	<ContextMenu.Content>
+		<ContextMenu.CheckboxItem bind:checked={displayAngles}>Show  Angles</ContextMenu.CheckboxItem>
+		<ContextMenu.CheckboxItem bind:checked={displayPaths}>Show  Paths</ContextMenu.CheckboxItem>
+	</ContextMenu.Content>
+</ContextMenu.Root>
