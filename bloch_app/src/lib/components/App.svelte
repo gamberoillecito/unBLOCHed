@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Canvas } from '@threlte/core';
 	import Scene from './Scene.svelte';
 
 	import {
@@ -20,7 +19,6 @@
 	import * as Resizable from '$lib/components/ui/resizable/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
-	import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
 	import Undo from '@lucide/svelte/icons/undo';
 	import Redo from '@lucide/svelte/icons/redo';
 	import { AspectRatio } from '$lib/components/ui/aspect-ratio/index.js';
@@ -168,14 +166,12 @@
 		<div
 			class="border-1 shrink h-[90%] @lg:h-auto @lg:w-[90%] aspect-square rounded-md  shadow-sm m-3"
 		>
-			<Canvas>
-				<Scene matrixContext={'densityMatrix'} {history} POI={predefinedStates}></Scene>
-			</Canvas>
+			<Scene matrixContext={'densityMatrix'} {history} POI={predefinedStates}></Scene>
 		</div>
 
 	</div>
 	<!-- Buttons and matrices -->
-	<ScrollArea class="p-2 shrink min-h-0 @lg:min-h-auto">
+	<ScrollArea class="p-2 shrink min-h-0 @lg:min-h-auto" type="auto">
 		<div class="flex flex-col items-center">
 			<h4 class="self-start w-fit ">Density Matrix</h4>
 			<DynamicMatrix
