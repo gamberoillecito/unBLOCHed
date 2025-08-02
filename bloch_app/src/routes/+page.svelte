@@ -11,8 +11,13 @@
     window.MathfieldElement.soundsDirectory = null;
   })
   
+  let innerWidth = $state(0);
+  
+	let resizablePanelMin = $derived(Math.ceil((300 / innerWidth) * 100));
   
 </script>
+
+<svelte:window bind:innerWidth />
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
@@ -37,14 +42,14 @@
 	</div>
 	<!-- Body -->
 	<Resizable.PaneGroup direction="horizontal">
-		<Resizable.Pane>
+		<Resizable.Pane minSize={resizablePanelMin}>
       <div class="@container h-full w-full flex-1 min-h-0">
         <App />
       </div>      
     </Resizable.Pane>
     {#if tutorialVisible}
       <Resizable.Handle  withHandle/>
-      <Resizable.Pane>
+      <Resizable.Pane minSize={resizablePanelMin}>
       <div class="@container h-full w-full flex-1 min-h-0 p-2">
         <Tutorial/>
       </div>      

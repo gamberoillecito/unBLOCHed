@@ -220,7 +220,7 @@ export class FancyMatrix {
                     el.valueOf() == 'Infinity'
                     ){
                     
-                    return new MatrixValidity(false, `Element (${i}, ${j}) is not a number`);
+                    return new MatrixValidity(false, `Invalid input`);
                 }
             } 
         }
@@ -406,7 +406,7 @@ export class DensityMatrix extends FancyMatrix {
             }
 
             if (math.compare(Tr.re, 1) == 1){
-                return new MatrixValidity(false, `rho^2 has trace > 1`)
+                return new MatrixValidity(false, `$\\Tr[\\rho^2] > 1$`)
             }
 
 

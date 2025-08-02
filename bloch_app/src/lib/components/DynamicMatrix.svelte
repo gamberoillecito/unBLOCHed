@@ -188,7 +188,7 @@
         <Popover.Trigger>
                 <math-field {@attach mfAttachment} readonly></math-field>
         </Popover.Trigger>
-        <Popover.Content class="py-1 px-2 w-fit"
+        <Popover.Content class="py-1 px-2 w-fit bg-destructive"
             interactOutsideBehavior='ignore'
             side='top'
             align='center'
@@ -196,7 +196,7 @@
             onOpenAutoFocus={(e) => {
                 e.preventDefault();
             }}>
-                <article class="prose-sm"> {FM.userMessage} </article>
+                <article class="prose-sm text-destructive-foreground"> {FM.userMessage} </article>
         </Popover.Content>
     </Popover.Root>
     <!-- Buttons that needs to be disabled if instantUpdate is true -->
