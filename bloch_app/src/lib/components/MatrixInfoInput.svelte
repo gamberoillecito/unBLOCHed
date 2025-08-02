@@ -8,6 +8,8 @@
     import {Button, buttonVariants, type ButtonVariant} from '$lib/components/ui/button/index.js';
     import SquarePen from '@lucide/svelte/icons/square-pen'
     import Info from '@lucide/svelte/icons/info';
+	import { Separator } from '$lib/components/ui/separator/index.js';
+	import {Label} from '$lib/components/ui/label/index.js'
 	interface Props {
 		matrix: FancyMatrix;
 	}
@@ -19,7 +21,7 @@
 	function paramAttachment(param: MatrixParam): Attachment {
 		return (element) => {
 			let mf = element as MathfieldElement;
-			mf.value = `\\small{${param.latexLabel} = \\placeholder[${param.name}]{${param.latexValue}}}`;
+			mf.value = `\\small{\\placeholder[${param.name}]{${param.latexValue}}}`;
 			mf.addEventListener('input', () => {
 				let paramsNames = mf.getPrompts();
 				if (paramsNames.length != 1) {
@@ -46,17 +48,20 @@
 			<SquarePen class="size-4 m-auto"/>
 		{/if}
 	</Popover.Trigger>
-	<Popover.Content class="w-fit">
-		<div class="flex flex-col items-center">
+	<Popover.Content class="w-fit py-2 px-3">
+		<div class="flex flex-col items-start">
 			<math-field readonly {@attach (mf: MathfieldElement)=> {
 				mf.value = `${FM.label} = {${FM.latexMult == '1' ? '' : FM.latexMult}}\\begin{bmatrix}{${FM.latexMat[0][0]}} & {${FM.latexMat[0][1]}}\\\\ {${FM.latexMat[1][0]}} & {${FM.latexMat[1][1]}}\\end{bmatrix}`
 			}}></math-field>
 			{#if FM.parameterArray.filter(x => x.userEditable).length > 0}
-				<p>Parameters:</p>
+				<Separator/>
 			{/if}
 			{#each FM.parameterArray as param, index}
 				{#if param.userEditable}
-					<math-field {@attach paramAttachment(param)} readonly></math-field>
+					<div class="flex flex-row gap-2">
+						<Label for={param.latexLabel}><math-field readonly>{`\\mathbf${param.latexLabel}`}</math-field></Label>
+						<math-field id={param.latexLabel} {@attach paramAttachment(param)} readonly></math-field>
+					</div>
 				{/if}
 			{/each}
 		</div>
