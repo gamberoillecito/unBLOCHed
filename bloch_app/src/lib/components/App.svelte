@@ -138,11 +138,10 @@
 {/snippet}
 
 	
-	<ScrollArea class="h-full w-full">
 <div
-	class="flex h-full w-full  flex-col @lg:flex-row content-evenly place-items-center justify-start @lg:justify-center-safe @lg:place-items-center gap-2 p-2 "
+	class="flex  h-full w-full  flex-col @lg:flex-row content-evenly place-items-center justify-start @lg:justify-center-safe @lg:place-items-center gap-2 p-2 "
 >
-	<!-- Container of undo/redo buttons and canvas -->
+<!-- Container of undo/redo buttons and canvas -->
 	<div class="flex flex-row-reverse justify-center @lg:flex-col shrink-1 @lg:basis-full justify-self-auto self-stretch @lg:self-auto items-center max-h-lg max-w-lg">
 		<!-- Undo/redo buttons -->
 		<div class="m-2 flex flex-col @lg:flex-row gap-1 ">
@@ -176,9 +175,9 @@
 
 	</div>
 	<!-- Buttons and matrices -->
-	<div class="p-2 ">
-		<div>
-			<h4>Density Matrix</h4>
+	<ScrollArea class="p-2 shrink min-h-0 @lg:min-h-auto">
+		<div class="flex flex-col items-center">
+			<h4 class="self-start w-fit ">Density Matrix</h4>
 			<DynamicMatrix
 				matrixContext="densityMatrix"
 				instantUpdate={false}
@@ -189,16 +188,16 @@
 			></DynamicMatrix>
 			{#if false}
 				<textarea style="height: 300px; width: 400px">
-					{`DM = \n[${DM.mat[0][0]}, ${DM.mat[0][1]}] \n[${DM.mat[1][0]}, ${DM.mat[1][1]}]
-	
-	Phase = ${DM.phase}
-	
-	DM latex = \n ${DM.latexMult} \n[${DM.latexMat[0][0]}, ${DM.latexMat[0][1]}] \n[${DM.latexMat[1][0]}, ${DM.latexMat[1][1]}]
-	
-	GM = \n[${GM.mat[0][0]}, ${GM.mat[0][1]}] \n[${GM.mat[1][0]}, ${GM.mat[1][1]}]
-	
-	GM latex = \n ${GM.latexMult} \n[${GM.latexMat[0][0]}, ${GM.latexMat[0][1]}] \n[${GM.latexMat[1][0]}, ${GM.latexMat[1][1]}]
-	      `}
+								{`DM = \n[${DM.mat[0][0]}, ${DM.mat[0][1]}] \n[${DM.mat[1][0]}, ${DM.mat[1][1]}]
+				
+				Phase = ${DM.phase}
+				
+				DM latex = \n ${DM.latexMult} \n[${DM.latexMat[0][0]}, ${DM.latexMat[0][1]}] \n[${DM.latexMat[1][0]}, ${DM.latexMat[1][1]}]
+				
+				GM = \n[${GM.mat[0][0]}, ${GM.mat[0][1]}] \n[${GM.mat[1][0]}, ${GM.mat[1][1]}]
+				
+				GM latex = \n ${GM.latexMult} \n[${GM.latexMat[0][0]}, ${GM.latexMat[0][1]}] \n[${GM.latexMat[1][0]}, ${GM.latexMat[1][1]}]
+					`}
 				</textarea>
 			{/if}
 		</div>
@@ -229,8 +228,7 @@
 
 			{@render gateButtonWithParams(GM, !(DM.isConsistent && GM.isConsistent), true)}
 		</div>
-	</div>
+	</ScrollArea>
 </div>
-</ScrollArea>
 
 <!-- <p {@attach (p)=> {p.innerHTML = marked.parse('# Marked in browser\n\nRendered by **marked**. $x/3$') as string}}></p> -->
