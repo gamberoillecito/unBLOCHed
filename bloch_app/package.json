@@ -58,7 +58,7 @@
 		"marked": "^16.1.1",
 		"marked-katex-extension": "^5.1.5",
 		"mathjs": "^14.5.2",
-		"mathlive": "^0.105.3",
+		"mathlive": "^0.106.0",
 		"three": "^0.174.0",
 		"typescript-color-gradient": "^4.0.1"
 	}

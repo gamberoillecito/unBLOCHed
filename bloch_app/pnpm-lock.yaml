@@ -30,8 +30,8 @@ importers:
         specifier: ^14.5.2
         version: 14.5.2
       mathlive:
-        specifier: ^0.105.3
-        version: 0.105.3
+        specifier: ^0.106.0
+        version: 0.106.0
       three:
         specifier: ^0.174.0
         version: 0.174.0
@@ -1307,8 +1307,8 @@ packages:
     engines: {node: '>= 18'}
     hasBin: true
 
-  mathlive@0.105.3:
-    resolution: {integrity: sha512-eEnJIlRm1ga18ymY79di5Iuc161CzHs3PTXIg8WUHeEt/jpxFHs2CPVYRNxAzOo+5t4S7lA+HDretW4i5dsTmg==}
+  mathlive@0.106.0:
+    resolution: {integrity: sha512-TfoX+A9SoHlWzJkcpMadN6ZrUpK7okGLAf4qXi8N7L6zBj5dvQICwGuCC5PP8oIU5ffxGeGQDoZqAj7UC155JA==}
 
   merge2@1.4.1:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
@@ -2974,7 +2974,7 @@ snapshots:
       tiny-emitter: 2.1.0
       typed-function: 4.2.1
 
-  mathlive@0.105.3:
+  mathlive@0.106.0:
     dependencies:
       '@cortex-js/compute-engine': 0.28.0
 
