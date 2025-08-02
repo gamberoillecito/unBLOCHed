@@ -4,9 +4,15 @@
 	import * as Resizable from '$lib/components/ui/resizable/index.js';
 	import { Toggle } from "$lib/components/ui/toggle/index.js";
 	import Tutorial from '$lib/components/Tutorial.svelte';
-
-  let tutorialVisible = $state(true);
-  $inspect(tutorialVisible);
+  import {onMount} from 'svelte'
+  import ProvaML from '$lib/components/ProvaML.svelte'
+  let tutorialVisible = $state(false);
+  onMount(()=>{
+    window.scrollY = 300;
+    window.MathfieldElement.soundsDirectory = null;
+  })
+  
+  
 </script>
 
 <style>

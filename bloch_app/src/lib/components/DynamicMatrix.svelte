@@ -1,8 +1,8 @@
 <script lang="ts">
     import "mathlive/fonts.css"
     import type { Attachment } from 'svelte/attachments';
-    import "mathlive";
-    import type {MathfieldElement } from "mathlive";
+    import "mathlive"
+    // import type {MathfieldElement } from "mathlive";
     import { getContext } from 'svelte';
 	import { FancyMatrix, DensityMatrix, MatrixParam, print_mat } from './Model.svelte';
 	import { deepEqual } from 'mathjs';
