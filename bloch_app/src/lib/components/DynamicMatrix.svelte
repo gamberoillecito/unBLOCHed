@@ -8,11 +8,14 @@
 	import { deepEqual } from 'mathjs';
 	import MatrixParameterInput from "./MatrixInfoInput.svelte";
     import {Button, buttonVariants, type ButtonVariant} from '$lib/components/ui/button/index.js';
+    import * as Popover from "$lib/components/ui/popover/index.js";
     import * as Tooltip from "$lib/components/ui/tooltip/index.js";
     import Trash from '@lucide/svelte/icons/trash';
     import Save from '@lucide/svelte/icons/save';
     import CircleCheckBig from '@lucide/svelte/icons/circle-check-big'
     import CircleX from '@lucide/svelte/icons/circle-x';
+    import { marked } from 'marked';
+    import markedKatex from 'marked-katex-extension';
 	interface Props {
 		matrixContext: string;
         instantUpdate: boolean;
@@ -26,6 +29,11 @@
         onChangeCallback,
         onChangeArguments
     }: Props = $props();
+    
+	const markedKatexOptions = {
+		throwOnError: false
+	};
+	marked.use(markedKatex(markedKatexOptions));
 
     let FM: FancyMatrix = getContext(matrixContext);
     let updateMatrixButton: HTMLElement|null = $state(null);
@@ -176,16 +184,21 @@
 
 <div class="flex">
 
-    <Tooltip.Provider >
-        <Tooltip.Root open={!FM.isConsistent && FM.userMessage!=''}>
-            <Tooltip.Trigger disabled={true}>
+    <Popover.Root open={!FM.isConsistent && FM.userMessage !== ''}>
+        <Popover.Trigger>
                 <math-field {@attach mfAttachment} readonly></math-field>
-            </Tooltip.Trigger>
-            <Tooltip.Content >
-                <p> {FM.userMessage} </p>
-            </Tooltip.Content>
-        </Tooltip.Root>            
-    </Tooltip.Provider>
+        </Popover.Trigger>
+        <Popover.Content class="py-1 px-2 w-fit"
+            interactOutsideBehavior='ignore'
+            side='top'
+            align='center'
+            trapFocus={false}
+            onOpenAutoFocus={(e) => {
+                e.preventDefault();
+            }}>
+                <article class="prose-sm"> {FM.userMessage} </article>
+        </Popover.Content>
+    </Popover.Root>
     <!-- Buttons that needs to be disabled if instantUpdate is true -->
     <div class={`${instantUpdate ? 'hidden ':''} flex flex-col justify-around`} > 
         

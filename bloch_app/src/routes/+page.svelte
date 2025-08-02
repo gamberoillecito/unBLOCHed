@@ -5,7 +5,6 @@
 	import { Toggle } from "$lib/components/ui/toggle/index.js";
 	import Tutorial from '$lib/components/Tutorial.svelte';
   import {onMount} from 'svelte'
-  import ProvaML from '$lib/components/ProvaML.svelte'
   let tutorialVisible = $state(false);
   onMount(()=>{
     window.scrollY = 300;
@@ -25,7 +24,6 @@
 	<div
 		class="bg-foreground text-(--background) w-[100%] flex-none items-center justify-between p-2 text-center text-xl lg:flex lg:pl-6 lg:text-left lg:text-2xl"
 	>
-  <button onclick={()=>{console.log("click")}}>prova</button>
 		<span class=""
 			><span class="font-normal">un</span><span class="font-semibold">BLOCH</span><span
 				class="font-normal">ed</span
