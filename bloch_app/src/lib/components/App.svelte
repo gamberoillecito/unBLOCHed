@@ -164,7 +164,7 @@
 		</div>
 		<!-- Canvas container -->
 		<div
-			class="border-1 shrink h-[90%] @lg:h-auto @lg:w-[90%] aspect-square rounded-md  shadow-sm m-3"
+			class="border-1 relative  shrink h-[90%] @lg:h-auto @lg:w-[90%] aspect-square rounded-md  shadow-sm m-3"
 		>
 			<Scene matrixContext={'densityMatrix'} {history} POI={predefinedStates}></Scene>
 		</div>

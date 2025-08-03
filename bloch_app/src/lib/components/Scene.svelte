@@ -22,6 +22,10 @@
 	import { getContext } from 'svelte';
 	import type { BlochHistory } from './BlochHistory.svelte';
 	import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
+    import {Button, buttonVariants, type ButtonVariant} from '$lib/components/ui/button/index.js';
+	import Toggle from './ui/toggle/toggle.svelte';
+	import Menu from '@lucide/svelte/icons/menu';
+	import * as DropdownMenu from'$lib/components/ui/dropdown-menu';
 	interface Props {
 		matrixContext: string;
 		history: BlochHistory;
@@ -53,6 +57,11 @@
 		'#ff0018'
 	];
 	let pathGradient = generateGradient(colors_hex, MAX_PATH_COLORS);
+	let menuOpen = $state(false);
+	let menuButton = $state(null);
+	let customMenuAnchor = $state(null);
+	let menuButtonDisabled = $state(false);
+	$inspect(menuOpen);
 </script>
 {#snippet canvasContent()}
 <T.DirectionalLight intensity={3} position.x={5} position.y={10} castgetContext(matrixContext) />
@@ -109,14 +118,19 @@
 	<AngleArc vector={DM.blochV}></AngleArc>
 {/if}
 {/snippet}
-<ContextMenu.Root>
-	<ContextMenu.Trigger  class="h-full w-full min-h-0">
+
 		<Canvas>
 			{@render canvasContent()}
 		</Canvas>
-	</ContextMenu.Trigger>
-	<ContextMenu.Content>
-		<ContextMenu.CheckboxItem bind:checked={displayAngles}>Show  Angles</ContextMenu.CheckboxItem>
-		<ContextMenu.CheckboxItem bind:checked={displayPaths}>Show  Paths</ContextMenu.CheckboxItem>
-	</ContextMenu.Content>
-</ContextMenu.Root>
+
+<DropdownMenu.Root >
+<DropdownMenu.Trigger class="absolute top-[0] right-0 z-[9999] p-2 ${buttonVariants.variants.variant.secondary} ">
+	<Menu/>
+</DropdownMenu.Trigger>
+	<DropdownMenu.Content>
+
+		<DropdownMenu.CheckboxItem bind:checked={displayAngles}>Show Angles</DropdownMenu.CheckboxItem>
+		<DropdownMenu.CheckboxItem bind:checked={displayPaths}>Show Paths</DropdownMenu.CheckboxItem>
+		<DropdownMenu.CheckboxItem bind:checked={displayStatesLabels}>Show Labels</DropdownMenu.CheckboxItem>
+	</DropdownMenu.Content>
+</DropdownMenu.Root>
