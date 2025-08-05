@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Canvas } from '@threlte/core';
+	import { Canvas, useThrelte, useTask, } from '@threlte/core';
 	import { T } from '@threlte/core';
 	import {
 		interactivity,
@@ -12,7 +12,7 @@
 	import { Spring } from 'svelte/motion';
 	// import { ContactShadows, Float, Grid, OrbitControls } from '@threlte/extras'
 	import BlochSphere from './BlochSphere.svelte';
-	import { complex, number, sign, type Complex } from 'mathjs';
+	import { boolean, complex, number, sign, type Complex } from 'mathjs';
 	import SolidVector from './SolidVector.svelte';
 	import Path from './Path.svelte';
 	import { ArrowHelper, AxesHelper, Camera, DoubleSide, Fog, Mesh, PerspectiveCamera } from 'three';
@@ -22,24 +22,28 @@
 	import { getContext } from 'svelte';
 	import type { BlochHistory } from './BlochHistory.svelte';
 	import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
-    import {Button, buttonVariants, type ButtonVariant} from '$lib/components/ui/button/index.js';
-	import Toggle from './ui/toggle/toggle.svelte';
-	import Menu from '@lucide/svelte/icons/menu';
-	import * as DropdownMenu from'$lib/components/ui/dropdown-menu';
+	export type sceneSettings = {displayAngles: boolean, displayStateLabels: boolean, displayPaths: boolean }	 
 	interface Props {
 		matrixContext: string;
 		history: BlochHistory;
 		POI: DensityMatrix[];
+		settings: sceneSettings;
+		imageData: string;
+		requestImage: boolean;
+		
 	}
+
 	let {
 		matrixContext,
 		history,
 		POI,
-	 }: Props = $props();
+		settings,
+		imageData = $bindable(),
+		requestImage,
+	}: Props = $props();
+
+	$inspect(requestImage)
 	
-	let displayAngles= $state(true);
-	let displayStatesLabels= $state(true);
-	let displayPaths= $state(true);
 
 
 	let DM:DensityMatrix = getContext(matrixContext);
@@ -57,16 +61,34 @@
 		'#ff0018'
 	];
 	let pathGradient = generateGradient(colors_hex, MAX_PATH_COLORS);
-	let menuOpen = $state(false);
-	let menuButton = $state(null);
-	let customMenuAnchor = $state(null);
-	let menuButtonDisabled = $state(false);
-	$inspect(menuOpen);
+
+	let camera = $state<PerspectiveCamera>();
+	const { renderer, scene, renderStage, autoRenderTask } = useThrelte();
+	const task = useTask(() => {
+			console.log('tasking');
+			
+			if (requestImage){
+				const data = renderer.domElement.toDataURL('image/png');
+				console.log(data);
+				requestImage = false
+				const link = document.createElement('a');
+                link.download = `bloch-sphere-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.png`;
+                link.href = data;
+                
+                // Trigger download
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+			}
+		},
+	{after: autoRenderTask});
+
 </script>
-{#snippet canvasContent()}
+
 <T.DirectionalLight intensity={3} position.x={5} position.y={10} castgetContext(matrixContext) />
 <T.AmbientLight intensity={0.5} />
 <T.PerspectiveCamera
+	bind:ref={camera}
 	makeDefault
 	position={[10, 10, 10]}
 	fov={10}
@@ -85,7 +107,7 @@
 		/>
 	</OrbitControls>
 </T.PerspectiveCamera>
-{#if displayPaths}
+{#if settings.displayPaths}
 	{#each history.list as historyEl, idx}
 		{#if historyEl.path && historyEl.pathVisible}
 			<Path
@@ -97,7 +119,7 @@
 	{/each}
 {/if}
 
-{#if displayStatesLabels}
+{#if settings.displayStateLabels}
 	{#each POI as dm, index}
 		<Billboard
 			follow={true}
@@ -114,23 +136,6 @@
 
 <BlochSphere></BlochSphere>
 <SolidVector {matrixContext}></SolidVector>
-{#if displayAngles}
+{#if settings.displayAngles}
 	<AngleArc vector={DM.blochV}></AngleArc>
 {/if}
-{/snippet}
-
-		<Canvas>
-			{@render canvasContent()}
-		</Canvas>
-
-<DropdownMenu.Root >
-<DropdownMenu.Trigger class="absolute top-[0] right-0 z-[9999] p-2 ${buttonVariants.variants.variant.secondary} ">
-	<Menu/>
-</DropdownMenu.Trigger>
-	<DropdownMenu.Content>
-
-		<DropdownMenu.CheckboxItem bind:checked={displayAngles}>Show Angles</DropdownMenu.CheckboxItem>
-		<DropdownMenu.CheckboxItem bind:checked={displayPaths}>Show Paths</DropdownMenu.CheckboxItem>
-		<DropdownMenu.CheckboxItem bind:checked={displayStatesLabels}>Show Labels</DropdownMenu.CheckboxItem>
-	</DropdownMenu.Content>
-</DropdownMenu.Root>

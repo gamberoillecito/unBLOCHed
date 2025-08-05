@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { type sceneSettings } from './Scene.svelte';
 	import Scene from './Scene.svelte';
 
 	import {
@@ -13,7 +14,6 @@
 	import { type Complex, create, all, complex, boolean } from 'mathjs';
 	import MatrixInfoInput from './MatrixInfoInput.svelte';
 	import { BlochHistory } from './BlochHistory.svelte';
-	import { Button, type ButtonVariant } from '$lib/components/ui/button/index.js';
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import { convertLatexToMarkup } from 'mathlive';
 	import * as Resizable from '$lib/components/ui/resizable/index.js';
@@ -24,6 +24,10 @@
 	import { AspectRatio } from '$lib/components/ui/aspect-ratio/index.js';
 	import { predefinedGates, predefinedStates, theta_param } from '$lib/data/matrices';
 	import ScrollArea from './ui/scroll-area/scroll-area.svelte';
+	import { Canvas } from '@threlte/core';
+	import Menu from '@lucide/svelte/icons/menu';
+    import {Button, buttonVariants, type ButtonVariant} from '$lib/components/ui/button/index.js';
+	import * as DropdownMenu from'$lib/components/ui/dropdown-menu';
 
 	// MathfieldElement.MathfieldElement.plonkSound = null;
 	const config = {
@@ -67,7 +71,14 @@
 		// }
 	});
 
-	let gateButtonsEnabled = $state();
+	let settings3DScene:sceneSettings = $state({
+		displayAngles: true,
+		displayPaths: true,
+		displayStateLabels: true
+	})
+	
+	let imageData = $state() as string;
+	let requestImage = $state(false);
 </script>
 
 <link
@@ -166,7 +177,22 @@
 		<div
 			class="border-1 relative  shrink h-[90%] @lg:h-auto @lg:w-[90%] aspect-square rounded-md  shadow-sm m-3"
 		>
-			<Scene matrixContext={'densityMatrix'} {history} POI={predefinedStates}></Scene>
+			<Canvas>
+				<Scene requestImage={requestImage} matrixContext={'densityMatrix'} {history} POI={predefinedStates} settings={settings3DScene} imageData={imageData}></Scene>
+			</Canvas>
+
+			<DropdownMenu.Root >
+			<DropdownMenu.Trigger class="absolute top-[0] right-0 z-[9999] p-2 ${buttonVariants.variants.variant.secondary} ">
+				<Menu/>
+			</DropdownMenu.Trigger>
+				<DropdownMenu.Content>
+
+					<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayAngles}>Show Angles</DropdownMenu.CheckboxItem>
+					<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayPaths}>Show Paths</DropdownMenu.CheckboxItem>
+					<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayStateLabels}>Show Labels</DropdownMenu.CheckboxItem>
+					<DropdownMenu.Item inset onclick={()=>{requestImage = true}}>Save Image</DropdownMenu.Item>
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
 		</div>
 
 	</div>
