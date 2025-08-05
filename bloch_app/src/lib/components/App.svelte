@@ -28,6 +28,7 @@
 	import Menu from '@lucide/svelte/icons/menu';
     import {Button, buttonVariants, type ButtonVariant} from '$lib/components/ui/button/index.js';
 	import * as DropdownMenu from'$lib/components/ui/dropdown-menu';
+	import { toast } from 'svelte-sonner';
 
 	// MathfieldElement.MathfieldElement.plonkSound = null;
 	const config = {
@@ -190,7 +191,13 @@
 					<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayAngles}>Show Angles</DropdownMenu.CheckboxItem>
 					<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayPaths}>Show Paths</DropdownMenu.CheckboxItem>
 					<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayStateLabels}>Show Labels</DropdownMenu.CheckboxItem>
-					<DropdownMenu.Item inset onclick={()=>{requestImage = true}}>Save Image</DropdownMenu.Item>
+					<DropdownMenu.Item inset onclick={()=>{
+						requestImage = true;
+						toast.success(
+							"Download started"
+						)
+
+					}}>Save Image</DropdownMenu.Item>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 		</div>

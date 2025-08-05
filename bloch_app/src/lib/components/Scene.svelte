@@ -61,7 +61,7 @@
 		'#ff0018'
 	];
 	let pathGradient = generateGradient(colors_hex, MAX_PATH_COLORS);
-
+	let downloadImageA = $state() as HTMLAnchorElement;
 	let camera = $state<PerspectiveCamera>();
 	const { renderer, scene, renderStage, autoRenderTask } = useThrelte();
 	const task = useTask(() => {
@@ -77,7 +77,7 @@
                 
                 // Trigger download
                 document.body.appendChild(link);
-                link.click();
+                // link.click();
                 document.body.removeChild(link);
 			}
 		},
