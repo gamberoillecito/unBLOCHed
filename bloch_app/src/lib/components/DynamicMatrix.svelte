@@ -138,7 +138,7 @@
             // Listen for presses on the ENTER key and respond as if the user clicked the
             // updateMatrixButton
             if ((ev as InputEvent).inputType === "insertLineBreak") {
-                // updateMatrixButton?.click();
+                updateMatrixButton?.click();
             }
         })
         
@@ -201,6 +201,9 @@
             align='center'
             trapFocus={false}
             onOpenAutoFocus={(e) => {
+                e.preventDefault();
+            }}
+            onCloseAutoFocus={(e) => {
                 e.preventDefault();
             }}>
                 <article class="prose-sm text-destructive-foreground"> {FM.userMessage} </article>
