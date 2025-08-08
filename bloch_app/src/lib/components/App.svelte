@@ -29,8 +29,8 @@
     import {Button, buttonVariants, type ButtonVariant} from '$lib/components/ui/button/index.js';
 	import * as DropdownMenu from'$lib/components/ui/dropdown-menu';
 	import { toast } from 'svelte-sonner';
+	import ImageDown from '@lucide/svelte/icons/image-down'
 
-	// MathfieldElement.MathfieldElement.plonkSound = null;
 	const config = {
 		absTol: 1e-10
 	};
@@ -191,13 +191,14 @@
 					<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayAngles}>Show Angles</DropdownMenu.CheckboxItem>
 					<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayPaths}>Show Paths</DropdownMenu.CheckboxItem>
 					<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayStateLabels}>Show Labels</DropdownMenu.CheckboxItem>
-					<DropdownMenu.Item inset onclick={()=>{
+					<DropdownMenu.Separator></DropdownMenu.Separator>
+					<DropdownMenu.Item onclick={()=>{
 						requestImage = true;
 						toast.success(
 							"Download started"
 						)
 
-					}}>Save Image</DropdownMenu.Item>
+					}}> <ImageDown/> Save Image</DropdownMenu.Item>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 		</div>
