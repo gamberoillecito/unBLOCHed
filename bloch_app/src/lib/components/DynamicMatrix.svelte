@@ -98,6 +98,8 @@
                 mf.setPromptValue(`mult`, FM.latexMult, {silenceNotifications: true})
             }
             updateMatrixButtonEnabled = false;
+            console.log("effect");
+            
         })
 
         /**
@@ -105,8 +107,8 @@
          * current input generates a valid matrix and enable/disable the
          * update button accordingly
         */
-        mf.addEventListener('input', ()=> {
-
+        mf.addEventListener('input', (ev)=> {
+            
             // Generate a matrix starting from latex and validate it
             let parsed = parseMatrixField(mf);
             let res = FM.validateMatrix(FM.generateMatrixFromLatex(...parsed));
@@ -128,12 +130,16 @@
             // as invalid (user wouldn't know the real value)
             let displayed_matrix = FM.generateMatrixFromLatex(...parseMatrixField(mf));
             let matrices_equal = deepEqual(FM.mat, displayed_matrix) as unknown as boolean;
-            print_mat(displayed_matrix)
-            print_mat(FM.mat)
             
             FM.isConsistent = res.isValid &&  matrices_equal;
             updateMatrixButtonEnabled = !matrices_equal && res.isValid;
             undoChangesButtonEnabled = !matrices_equal;
+
+            // Listen for presses on the ENTER key and respond as if the user clicked the
+            // updateMatrixButton
+            if ((ev as InputEvent).inputType === "insertLineBreak") {
+                // updateMatrixButton?.click();
+            }
         })
         
         // Update the FancyMatrix when the button is pressed
@@ -166,6 +172,7 @@
         })
 
 
+
 		return () => {
 			console.log('cleaning up');
 		};
@@ -184,7 +191,7 @@
 
 <div class="flex">
 
-    <Popover.Root open={!FM.isConsistent && FM.userMessage !== ''}>
+    <Popover.Root open={!FM.isConsistent && FM.userMessage != ''}>
         <Popover.Trigger>
                 <math-field {@attach mfAttachment} readonly></math-field>
         </Popover.Trigger>

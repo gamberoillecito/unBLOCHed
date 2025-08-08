@@ -64,8 +64,6 @@
 	let camera = $state<PerspectiveCamera>();
 	const { renderer, scene, renderStage, autoRenderTask } = useThrelte();
 	const task = useTask(() => {
-			console.log('tasking');
-			
 			if (requestImage){
 				const data = renderer.domElement.toDataURL('image/png');
 				console.log(data);
