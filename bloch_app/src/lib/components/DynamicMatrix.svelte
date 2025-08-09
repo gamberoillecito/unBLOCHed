@@ -193,7 +193,7 @@
 
     <Popover.Root open={!FM.isConsistent && FM.userMessage != ''}>
         <Popover.Trigger disabled>
-                <math-field {@attach mfAttachment} readonly></math-field>
+                <math-field {@attach mfAttachment} readonly aria-label="matrix input"></math-field>
         </Popover.Trigger>
         <Popover.Content class="py-1 px-2 w-fit bg-destructive"
             interactOutsideBehavior='ignore'
@@ -215,6 +215,7 @@
         <Button class="size-6" variant="ghost"
             bind:ref={updateMatrixButton} 
             disabled={!updateMatrixButtonEnabled}
+            name="apply changes"
         >
             <!-- <Save /> -->
             <CircleCheckBig/>
@@ -222,6 +223,7 @@
         <Button class="size-6" variant="ghost"
             bind:ref={undoChangesButton} 
             disabled={!undoChangesButtonEnabled}
+            name="restore"
         >
             <!-- <Trash />-->
             <CircleX class="stroke-destructive"/>

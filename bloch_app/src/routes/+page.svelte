@@ -6,6 +6,7 @@
 	import Tutorial from '$lib/components/Tutorial.svelte';
 	import { onMount } from 'svelte';
 	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
+	import 'mathlive/static.css'
 	let tutorialVisible = $state(false);
 	let loaded = $state(false);
 
@@ -33,7 +34,7 @@
   <meta name="description" content="Interactive and intuitive Bloch spehere simulator ">
 </svelte:head>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mathlive/mathlive-static.css" />
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mathlive/mathlive-static.css" /> -->
 <div class="flex h-svh flex-col overflow-hidden">
 	<!-- Header -->
 	<div

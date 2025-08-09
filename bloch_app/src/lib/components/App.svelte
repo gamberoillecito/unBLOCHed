@@ -84,12 +84,12 @@
 
 </script>
 
-<link
+<!-- <link
 	rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
 	integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn"
 	crossorigin="anonymous"
-/>
+/> -->
 
 <!-- Generic button with an onclick action and a latex label -->
 {#snippet latexButton(
@@ -163,6 +163,7 @@
 				}}
 				disabled={history.earliestChange}
 				size="icon"
+				name="undo"
 			>
 				<Undo />
 			</Button>
@@ -172,6 +173,7 @@
 				}}
 				disabled={history.latestChange}
 				size="icon"
+				name="redo"
 			>
 				<Redo />
 			</Button>
@@ -185,7 +187,7 @@
 			</Canvas>
 
 			<DropdownMenu.Root >
-			<DropdownMenu.Trigger class="absolute top-[0] right-0 z-[9999] p-2 ${buttonVariants.variants.variant.secondary} ">
+			<DropdownMenu.Trigger name="menu" class="absolute top-[0] right-0 z-[9999] p-2 ${buttonVariants.variants.variant.secondary} ">
 				<Menu/>
 			</DropdownMenu.Trigger>
 				<DropdownMenu.Content>

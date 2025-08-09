@@ -41,7 +41,7 @@
 
 <Popover.Root>
 	<!-- The trigger is itself a button but with a different style. Take the style from the button styles and apply to it -->
-	<Popover.Trigger class={`m-0 h-10 w-6 rounded-none rounded-e-md ${buttonVariants.variants.variant.outline}`}>
+	<Popover.Trigger name={FM.parameterArray.length === 0 ? "info":"edit"} class={`m-0 h-10 w-6 rounded-none rounded-e-md ${buttonVariants.variants.variant.outline}`}>
 		{#if FM.parameterArray.length === 0}
 			<Info class="size-4 m-auto"/>
 		{:else}
@@ -61,7 +61,7 @@
 					{#if param.userEditable}
 						<div class="flex flex-row gap-2">
 							<Label for={param.latexLabel}><math-field readonly>{`\\mathbf${param.latexLabel}`}</math-field></Label>
-							<math-field id={param.latexLabel} {@attach paramAttachment(param)} readonly></math-field>
+							<math-field aria-labelledby={param.latexLabel} id={param.latexLabel} {@attach paramAttachment(param)} readonly></math-field>
 						</div>
 					{/if}
 				{/each}
