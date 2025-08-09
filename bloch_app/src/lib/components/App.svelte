@@ -23,13 +23,14 @@
 	import Redo from '@lucide/svelte/icons/redo';
 	import { AspectRatio } from '$lib/components/ui/aspect-ratio/index.js';
 	import { predefinedGates, predefinedStates, theta_param } from '$lib/data/matrices';
-	import ScrollArea from './ui/scroll-area/scroll-area.svelte';
+	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import { Canvas } from '@threlte/core';
 	import Menu from '@lucide/svelte/icons/menu';
     import {Button, buttonVariants, type ButtonVariant} from '$lib/components/ui/button/index.js';
 	import * as DropdownMenu from'$lib/components/ui/dropdown-menu';
 	import { toast } from 'svelte-sonner';
-	import ImageDown from '@lucide/svelte/icons/image-down'
+	import ImageDown from '@lucide/svelte/icons/image-down';
+	import { onMount } from 'svelte';
 
 	const config = {
 		absTol: 1e-10
@@ -80,6 +81,7 @@
 	
 	let imageData = $state() as string;
 	let requestImage = $state(false);
+
 </script>
 
 <link

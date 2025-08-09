@@ -88,7 +88,7 @@
 	bind:ref={camera}
 	makeDefault
 	position={[10, 10, 10]}
-	fov={10}
+	fov={8}
 	oncreate={(ref) => {
 		ref.lookAt(0, 0, 0);
 	}}
