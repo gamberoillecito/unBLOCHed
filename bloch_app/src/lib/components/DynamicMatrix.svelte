@@ -192,14 +192,12 @@
 
     <ErrorPopover
         isOpen={!FM.isConsistent && FM.userMessage != ''}
+        popoverContent={FM.userMessage}
     >
     {#snippet trigger()}
         <math-field {@attach mfAttachment} readonly aria-label="matrix input"></math-field>
     {/snippet}
 
-    {#snippet popoverContent()}
-        <article class="prose-sm text-destructive-foreground"> {FM.userMessage} </article>
-    {/snippet}
     </ErrorPopover>
     <!-- Buttons that needs to be disabled if instantUpdate is true -->
     <div class={`${instantUpdate ? 'hidden ':''} flex flex-col justify-around`} > 

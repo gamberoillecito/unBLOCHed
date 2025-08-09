@@ -4,19 +4,20 @@
 	import { type MathfieldElement } from 'mathlive';
 	import { getContext } from 'svelte';
 	import { MatrixParam } from './Model.svelte';
-    import * as Popover from "$lib/components/ui/popover/index.js";
-    import {Button, buttonVariants, type ButtonVariant} from '$lib/components/ui/button/index.js';
-    import SquarePen from '@lucide/svelte/icons/square-pen'
-    import Info from '@lucide/svelte/icons/info';
+	import * as Popover from '$lib/components/ui/popover/index.js';
+	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';
+	import SquarePen from '@lucide/svelte/icons/square-pen';
+	import Info from '@lucide/svelte/icons/info';
 	import { Separator } from '$lib/components/ui/separator/index.js';
-	import {Label} from '$lib/components/ui/label/index.js'
+	import { Label } from '$lib/components/ui/label/index.js';
+	import ErrorPopover from './custom-ui/ErrorPopover.svelte';
 	interface Props {
 		matrix: FancyMatrix;
 	}
 
 	let { matrix }: Props = $props();
 	let FM: FancyMatrix = matrix;
-
+	let mainPopoverOpen = $state(false);
 	// Initialize the mathfield to edit the matrix parameters
 	function paramAttachment(param: MatrixParam): Attachment {
 		return (element) => {
@@ -39,29 +40,50 @@
 	}
 </script>
 
-<Popover.Root>
+<Popover.Root bind:open={mainPopoverOpen}>
 	<!-- The trigger is itself a button but with a different style. Take the style from the button styles and apply to it -->
-	<Popover.Trigger name={FM.parameterArray.length === 0 ? "info":"edit"} class={`m-0 h-10 w-6 rounded-none rounded-e-md ${buttonVariants.variants.variant.outline}`}>
+	<Popover.Trigger
+		name={FM.parameterArray.length === 0 ? 'info' : 'edit'}
+		class={`m-0 h-10 w-6 rounded-none rounded-e-md ${buttonVariants.variants.variant.outline}`}
+	>
 		{#if FM.parameterArray.length === 0}
-			<Info class="size-4 m-auto"/>
+			<Info class="m-auto size-4" />
 		{:else}
-			<SquarePen class="size-4 m-auto"/>
+			<SquarePen class="m-auto size-4" />
 		{/if}
 	</Popover.Trigger>
-	<Popover.Content class="w-fit py-2 px-3">
+	<Popover.Content class="w-fit px-3 py-2">
 		<div class="flex flex-col items-start">
-			<math-field readonly {@attach (mf: MathfieldElement)=> {
-				mf.value = `${FM.labelWParams} = {${FM.latexMult == '1' ? '' : FM.latexMult}}\\begin{bmatrix}{${FM.latexMat[0][0]}} & {${FM.latexMat[0][1]}}\\\\ {${FM.latexMat[1][0]}} & {${FM.latexMat[1][1]}}\\end{bmatrix}`
-			}}></math-field>
-			{#if FM.parameterArray.filter(x => x.userEditable).length > 0}
-				<Separator/>
+			<ErrorPopover
+			isOpen={mainPopoverOpen && !FM.isConsistent}
+			popoverContent={FM.userMessage}
+			>
+
+				{#snippet trigger()}
+					<math-field
+						readonly
+						{@attach (mf: MathfieldElement) => {
+							mf.value = `${FM.labelWParams} = {${FM.latexMult == '1' ? '' : FM.latexMult}}\\begin{bmatrix}{${FM.latexMat[0][0]}} & {${FM.latexMat[0][1]}}\\\\ {${FM.latexMat[1][0]}} & {${FM.latexMat[1][1]}}\\end{bmatrix}`;
+						}}
+					></math-field>
+				{/snippet}
+			</ErrorPopover>
+			{#if FM.parameterArray.filter((x) => x.userEditable).length > 0}
+				<Separator />
 			{/if}
-			<div class="flex flex-row place-content-around w-full">
+			<div class="flex w-full flex-row place-content-around">
 				{#each FM.parameterArray as param, index}
 					{#if param.userEditable}
 						<div class="flex flex-row gap-2">
-							<Label for={param.latexLabel}><math-field readonly>{`\\mathbf${param.latexLabel}`}</math-field></Label>
-							<math-field aria-labelledby={param.latexLabel} id={param.latexLabel} {@attach paramAttachment(param)} readonly></math-field>
+							<Label for={param.latexLabel}
+								><math-field readonly>{`\\mathbf${param.latexLabel}`}</math-field></Label
+							>
+							<math-field
+								aria-labelledby={param.latexLabel}
+								id={param.latexLabel}
+								{@attach paramAttachment(param)}
+								readonly
+							></math-field>
 						</div>
 					{/if}
 				{/each}

@@ -4,7 +4,7 @@
     interface Props {
         isOpen: boolean;
         trigger: Snippet;
-        popoverContent: Snippet
+        popoverContent: string|null
     }
 
     let {
@@ -29,6 +29,6 @@
         onCloseAutoFocus={(e) => {
             e.preventDefault();
         }}>
-        {@render popoverContent()}
+        <article class="prose-sm text-destructive-foreground"> {popoverContent} </article>
     </Popover.Content>
 </Popover.Root>
