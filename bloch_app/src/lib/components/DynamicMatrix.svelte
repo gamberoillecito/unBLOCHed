@@ -8,14 +8,13 @@
 	import { deepEqual } from 'mathjs';
 	import MatrixParameterInput from "./MatrixInfoInput.svelte";
     import {Button, buttonVariants, type ButtonVariant} from '$lib/components/ui/button/index.js';
-    import * as Popover from "$lib/components/ui/popover/index.js";
-    import * as Tooltip from "$lib/components/ui/tooltip/index.js";
     import Trash from '@lucide/svelte/icons/trash';
     import Save from '@lucide/svelte/icons/save';
     import CircleCheckBig from '@lucide/svelte/icons/circle-check-big'
     import CircleX from '@lucide/svelte/icons/circle-x';
     import { marked } from 'marked';
     import markedKatex from 'marked-katex-extension';
+	import ErrorPopover from "./custom-ui/ErrorPopover.svelte";
 	interface Props {
 		matrixContext: string;
         instantUpdate: boolean;
@@ -191,24 +190,17 @@
 
 <div class="flex">
 
-    <Popover.Root open={!FM.isConsistent && FM.userMessage != ''}>
-        <Popover.Trigger disabled>
-                <math-field {@attach mfAttachment} readonly aria-label="matrix input"></math-field>
-        </Popover.Trigger>
-        <Popover.Content class="py-1 px-2 w-fit bg-destructive"
-            interactOutsideBehavior='ignore'
-            side='top'
-            align='center'
-            trapFocus={false}
-            onOpenAutoFocus={(e) => {
-                e.preventDefault();
-            }}
-            onCloseAutoFocus={(e) => {
-                e.preventDefault();
-            }}>
-                <article class="prose-sm text-destructive-foreground"> {FM.userMessage} </article>
-        </Popover.Content>
-    </Popover.Root>
+    <ErrorPopover
+        isOpen={!FM.isConsistent && FM.userMessage != ''}
+    >
+    {#snippet trigger()}
+        <math-field {@attach mfAttachment} readonly aria-label="matrix input"></math-field>
+    {/snippet}
+
+    {#snippet popoverContent()}
+        <article class="prose-sm text-destructive-foreground"> {FM.userMessage} </article>
+    {/snippet}
+    </ErrorPopover>
     <!-- Buttons that needs to be disabled if instantUpdate is true -->
     <div class={`${instantUpdate ? 'hidden ':''} flex flex-col justify-around`} > 
         
