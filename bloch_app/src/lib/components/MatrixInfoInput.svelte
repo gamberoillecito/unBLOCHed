@@ -51,19 +51,21 @@
 	<Popover.Content class="w-fit py-2 px-3">
 		<div class="flex flex-col items-start">
 			<math-field readonly {@attach (mf: MathfieldElement)=> {
-				mf.value = `${FM.label} = {${FM.latexMult == '1' ? '' : FM.latexMult}}\\begin{bmatrix}{${FM.latexMat[0][0]}} & {${FM.latexMat[0][1]}}\\\\ {${FM.latexMat[1][0]}} & {${FM.latexMat[1][1]}}\\end{bmatrix}`
+				mf.value = `${FM.labelWParams} = {${FM.latexMult == '1' ? '' : FM.latexMult}}\\begin{bmatrix}{${FM.latexMat[0][0]}} & {${FM.latexMat[0][1]}}\\\\ {${FM.latexMat[1][0]}} & {${FM.latexMat[1][1]}}\\end{bmatrix}`
 			}}></math-field>
 			{#if FM.parameterArray.filter(x => x.userEditable).length > 0}
 				<Separator/>
 			{/if}
-			{#each FM.parameterArray as param, index}
-				{#if param.userEditable}
-					<div class="flex flex-row gap-2">
-						<Label for={param.latexLabel}><math-field readonly>{`\\mathbf${param.latexLabel}`}</math-field></Label>
-						<math-field id={param.latexLabel} {@attach paramAttachment(param)} readonly></math-field>
-					</div>
-				{/if}
-			{/each}
+			<div class="flex flex-row place-content-around w-full">
+				{#each FM.parameterArray as param, index}
+					{#if param.userEditable}
+						<div class="flex flex-row gap-2">
+							<Label for={param.latexLabel}><math-field readonly>{`\\mathbf${param.latexLabel}`}</math-field></Label>
+							<math-field id={param.latexLabel} {@attach paramAttachment(param)} readonly></math-field>
+						</div>
+					{/if}
+				{/each}
+			</div>
 		</div>
 	</Popover.Content>
 </Popover.Root>

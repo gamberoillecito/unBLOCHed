@@ -2,7 +2,12 @@
 	import { DensityMatrix } from "$lib/components/Model.svelte";	
 	import { MatrixParam } from "$lib/components/Model.svelte";
 	
-	export let theta_param = [new MatrixParam('theta', '\\pi/30', '\\theta', true)];
+	export let theta_param = [new MatrixParam('theta', '\\pi/2', '\\theta', true)];
+	export let theta_phi_lambdaa_param = [
+		new MatrixParam('theta', '\\pi/2', '\\theta', true),
+		new MatrixParam('phi', '\\pi/2', '\\phi', true),
+		new MatrixParam('lambda', '\\pi/2', '\\lambda', true),
+	];
 	const Xgate = new GateMatrix(
 		[
 			['0', '1'],
@@ -41,7 +46,7 @@
 			['0', 'e^{i \\theta/2}']
 		],
 		'1',
-		'R_z(\\theta)',
+		'\\hat{R}_z',
 		theta_param.map((x) => x.clone())
 	);
 	const RXgate = new GateMatrix(
@@ -50,7 +55,7 @@
 			['-i \\sin(\\theta/2)', '\\cos(\\theta/2)']
 		],
 		'1',
-		'R_x(\\theta)',
+		'\\hat{R}_x',
 		theta_param.map((x) => x.clone())
 	);
 	const RYgate = new GateMatrix(
@@ -59,8 +64,18 @@
 			['\\sin(\\theta/2)', '\\cos(\\theta/2)']
 		],
 		'1',
-		'R_y(\\theta)',
+		'\\hat{R}_y',
 		theta_param.map((x) => x.clone())
+	);
+	
+	const U3gate = new GateMatrix(
+		[
+			['\\cos(\\theta/2)', '-e^{i \\lambda} \\sin(\\theta/2)'],
+			['e^{i \\phi} \\sin(\\theta/2)', 'e^{i (\\phi + \\lambda)}\\cos(\\theta/2)']
+		],
+		'1',
+		'\\hat{U}_3',
+		theta_phi_lambdaa_param.map((x) => x.clone())
 	);
 
 	const ket0 = new DensityMatrix(
@@ -111,5 +126,5 @@
 		'\\frac{1}{2}',
 		'|-i\\rangle'
 	);
-	export const predefinedGates = [Xgate, Ygate, Zgate, Hgate, RXgate, RYgate, RZgate];
+	export const predefinedGates = [Xgate, Ygate, Zgate, Hgate, RXgate, RYgate, RZgate, U3gate];
 	export const predefinedStates = [ket0, ket1, ketPlus, ketMinus, ketI, ketMinI];

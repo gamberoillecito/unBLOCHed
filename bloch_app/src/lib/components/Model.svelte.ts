@@ -71,6 +71,7 @@ export class FancyMatrix {
     protected _latexMat: (string)[][]; // The latex version of the matrix elements for display
     protected _parameter_array: MatrixParam[]; 
     protected _label: string;
+    protected _labelWParams: string;
     isConsistent: boolean; // Set by the "view" to specify to others that this matrix is not consistent with what is on display
     userMessage: string|null; // Any message for the user concerning this matrix
     ce: ComputeEngine;
@@ -116,6 +117,19 @@ export class FancyMatrix {
         // to prevent scenarios where who initiates an instance of the class passing a matrix
         // is able to edit this._latexMat by changing the value of the original matrix
         this._latexMat = $state(latexMat.map(row => row.map(x => x)));
+
+        this._labelWParams = this.label;
+        let editableParams = this.parameterArray.filter(x => x.userEditable)
+        if (this.parameterArray.length > 0 && editableParams.length > 0){
+            this._labelWParams += '(';
+            for (let i = 0; i < editableParams.length; i++) {
+                this._labelWParams += editableParams[i].latexLabel;
+                if (i !== editableParams.length - 1) {
+                    this._labelWParams += ", ";
+                }
+            }
+            this._labelWParams += ')';
+        }
         
     }
     // Fallback values to set the matrix in case something breaks when initializing the class
@@ -255,6 +269,10 @@ export class FancyMatrix {
 
     get label(): string {
         return this._label;
+    }
+    
+    get labelWParams(): string {
+        return this._labelWParams;
     }
     protected T() : ComplexMat2x2{
         /**
