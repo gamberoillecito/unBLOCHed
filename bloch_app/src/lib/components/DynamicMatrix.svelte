@@ -192,7 +192,7 @@
 <div class="flex">
 
     <Popover.Root open={!FM.isConsistent && FM.userMessage != ''}>
-        <Popover.Trigger>
+        <Popover.Trigger disabled>
                 <math-field {@attach mfAttachment} readonly></math-field>
         </Popover.Trigger>
         <Popover.Content class="py-1 px-2 w-fit bg-destructive"
