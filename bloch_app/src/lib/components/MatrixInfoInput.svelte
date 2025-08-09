@@ -35,6 +35,10 @@
 				FM.userMessage = res.message;
 				FM.isConsistent = res.isValid;
 			});
+			
+
+			// Prevent the user from leavin math mode (it happens for example when pressing ESC)
+			mf.addEventListener('mode-change', (ev)=>{ev.preventDefault();})
 		};
 	}
 </script>
@@ -53,11 +57,7 @@
 	</Popover.Trigger>
 	<Popover.Content class="w-fit px-3 py-2">
 		<div class="flex flex-col items-start">
-			<ErrorPopover
-			isOpen={mainPopoverOpen && !FM.isConsistent}
-			popoverContent={FM.userMessage}
-			>
-
+			<ErrorPopover isOpen={mainPopoverOpen && !FM.isConsistent} popoverContent={FM.userMessage}>
 				{#snippet trigger()}
 					<math-field
 						readonly
@@ -82,7 +82,6 @@
 								id={param.latexLabel}
 								{@attach paramAttachment(param)}
 								readonly
-								
 							></math-field>
 						</div>
 					{/if}

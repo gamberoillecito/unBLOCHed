@@ -20,6 +20,7 @@
     </Popover.Trigger>
     <Popover.Content class="py-1 px-2 w-fit bg-destructive"
         interactOutsideBehavior='ignore'
+        escapeKeydownBehavior="ignore"
         side='top'
         align='center'
         trapFocus={false}

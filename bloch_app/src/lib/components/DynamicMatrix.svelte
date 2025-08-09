@@ -139,6 +139,9 @@
             }
         })
         
+        // Prevent the user from leavin math mode (it happens for example when pressing ESC)
+        mf.addEventListener('mode-change', (ev)=>{ev.preventDefault();})
+        
         // Update the FancyMatrix when the button is pressed
         updateMatrixButton?.addEventListener('click', ()=>{
             // Update all the latex fields with the new value
@@ -171,7 +174,6 @@
 
 
 		return () => {
-			console.log('cleaning up');
 		};
 	};
 
