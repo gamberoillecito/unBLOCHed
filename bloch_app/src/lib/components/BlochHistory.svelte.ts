@@ -135,7 +135,6 @@ export class BlochHistory {
         this._current = this._current == -1 ? this._current : this._current - 1;
         
         
-        console.log(`current in undo: ${this._current} len ${this._list.length}`);
         let targetHistoryEl = this._list[this._current + 1];
         DM.copy(targetHistoryEl.DM);
         
@@ -147,18 +146,15 @@ export class BlochHistory {
             let endCheckpoint = this.pathCheckpoints[this.pathCheckpoints.length -1 ]
             for (let he of this._list.slice(startCheckpoint, endCheckpoint)) {
                 he.pathVisible = true;
-                console.log(`Setting ${counter + startCheckpoint}`);
                 counter++
             }
             this.pathCheckpoints.pop()
         }
-        console.log(`undo:${this.nameList}`);
         
     }
     
     redo(DM: DensityMatrix) {
         this._current = this._current == (this._list.length - 1) ? this._current : this._current + 1;
-        console.log(`current in redo: ${this._current} len ${this._list.length}`);
         
         if (!this._list[this._current].GM) {
             for (let el of this._list.slice(0, this._current)) {

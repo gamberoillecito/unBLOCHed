@@ -23,7 +23,7 @@
 		return (element) => {
 			let mf = element as MathfieldElement;
 			mf.value = `\\small{\\placeholder[${param.name}]{${param.latexValue}}}`;
-			mf.addEventListener('input', () => {
+			mf.addEventListener('input', (ev: Event) => {
 				let paramsNames = mf.getPrompts();
 				if (paramsNames.length != 1) {
 					console.error(`Matrix parameter contains more than one prompt: ${paramsNames}`);
@@ -34,7 +34,6 @@
 				let res = FM.setParameterLatex(paramName, paramValue);
 				FM.userMessage = res.message;
 				FM.isConsistent = res.isValid;
-				console.log(FM.isConsistent);
 			});
 		};
 	}
@@ -83,6 +82,7 @@
 								id={param.latexLabel}
 								{@attach paramAttachment(param)}
 								readonly
+								
 							></math-field>
 						</div>
 					{/if}

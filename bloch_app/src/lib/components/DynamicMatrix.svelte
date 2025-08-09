@@ -97,8 +97,6 @@
                 mf.setPromptValue(`mult`, FM.latexMult, {silenceNotifications: true})
             }
             updateMatrixButtonEnabled = false;
-            console.log("effect");
-            
         })
 
         /**

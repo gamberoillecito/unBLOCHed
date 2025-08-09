@@ -63,15 +63,6 @@
 	setContext('gateMatrix', GM);
 
 	let history = new BlochHistory(DM);
-	// $inspect(history.nameList)
-	$effect(() => {
-		console.log(history.currentIdx);
-		console.log(history.nameList);
-
-		// for (let el of history.list) {
-		//     print_mat(el.DM.mat)
-		// }
-	});
 
 	let settings3DScene:sceneSettings = $state({
 		displayAngles: true,
