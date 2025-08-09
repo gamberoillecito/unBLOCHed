@@ -8,18 +8,30 @@
 	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
 	let tutorialVisible = $state(false);
 	let loaded = $state(false);
-	onMount(() => {
-		window.scrollY = 300;
-		window.MathfieldElement.soundsDirectory = null;
-		loaded = true;
-	});
 
 	let innerWidth = $state(0);
 
 	let resizablePanelMin = $derived(Math.ceil((300 / innerWidth) * 100));
+  const loadingSentencesArray = [
+    "Initializing <em>qubit</em>",
+    "Inflating <em>Bloch sphere</em>",
+    "Opening <em>gates</em>",
+  ]
+	onMount(() => {
+		window.scrollY = 300;
+		window.MathfieldElement.soundsDirectory = null;
+    loaded = true;
+    console.log("LOADED");
+    
+	});
+
 </script>
 
 <svelte:window bind:innerWidth />
+<svelte:head>
+  <title>unBLOCHed</title>
+  <meta name="description" content="Interactive and intuitive Bloch spehere simulator ">
+</svelte:head>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mathlive/mathlive-static.css" />
 <div class="flex h-svh flex-col overflow-hidden">
@@ -45,7 +57,9 @@
 			class="bg-muted flex h-full w-full animate-pulse flex-col place-content-center items-center"
 		>
 			<LoaderCircle class="h animate-spin" />
-			<p>Initializing qubit</p>
+			<p>
+        {@html loadingSentencesArray[Math.floor(Math.random()*loadingSentencesArray.length)]}
+      </p>
 		</div>
 	{:else}
 		<Resizable.PaneGroup direction="horizontal">

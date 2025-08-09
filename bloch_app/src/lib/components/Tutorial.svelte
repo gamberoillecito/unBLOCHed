@@ -15,7 +15,7 @@ import markedKatex from 'marked-katex-extension';
     const tutorialList = [
         {
             mdContent: tutorial1,
-            title: "Qubit",
+            title: "Qubits",
         }, 
         {
             mdContent: tutorial2,
@@ -51,5 +51,4 @@ import markedKatex from 'marked-katex-extension';
  {#each tutorialList as tut}
      {@render tabContent(tut.title, tut.mdContent)}
  {/each}
- <Tabs.Content value="password">Change your password here.</Tabs.Content>
 </Tabs.Root>
