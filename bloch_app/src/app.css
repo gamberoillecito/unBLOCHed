@@ -157,6 +157,7 @@
   --tracking-widest: calc(var(--tracking-normal) + 0.1em);
   
   --animate-small-ping: small-ping 3s infinite;
+  --animate-gate-applied: gate-applied 0.3s 1;
 
   @keyframes small-ping {
     0% {
@@ -167,6 +168,18 @@
     }
     100% {
       transform: scale(1);
+    }
+  }
+  
+  @keyframes gate-applied {
+    0% {
+      opacity: 1
+    }
+    50% {
+      opacity: 0.7
+    }
+    100% {
+      opacity: 1
     }
   }
 }

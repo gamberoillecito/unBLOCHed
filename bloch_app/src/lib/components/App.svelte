@@ -31,6 +31,7 @@
 	import { toast } from 'svelte-sonner';
 	import ImageDown from '@lucide/svelte/icons/image-down';
 	import { onMount } from 'svelte';
+	import { append } from 'three/src/nodes/TSL.js';
 
 	const config = {
 		absTol: 1e-10
@@ -77,6 +78,7 @@
 	let imageData = $state() as string;
 	let requestImage = $state(false);
 
+	let canvasContainer = $state() as HTMLDivElement;
 </script>
 
 <!-- <link
@@ -112,6 +114,13 @@
 			let initialDM = DM.clone();
 			DM.apply_gate(gate);
 			history.addElement(initialDM, DM, gate);
+			
+			// Make the canvas react to show the user that the gate has been applied
+			let newClasses = 'animate-gate-applied'
+			canvasContainer.classList.add(newClasses);
+			setTimeout(() => {
+				canvasContainer.classList.remove(newClasses);	
+			}, 300);
 		},
 		gate.label,
 		disabled || !gate.isConsistent,
@@ -175,7 +184,8 @@
 		</div>
 		<!-- Canvas container -->
 		<div
-			class="border-1 relative  shrink h-[90%] @lg:h-auto @lg:w-[90%] aspect-square rounded-md  shadow-sm m-3"
+			bind:this={canvasContainer}
+			class="border-1 relative shrink h-[90%] @lg:h-auto @lg:w-[90%] aspect-square rounded-md  shadow-sm m-3"
 		>
 			<Canvas>
 				<Scene requestImage={requestImage} matrixContext={'densityMatrix'} {history} POI={predefinedStates} settings={settings3DScene} imageData={imageData}></Scene>
