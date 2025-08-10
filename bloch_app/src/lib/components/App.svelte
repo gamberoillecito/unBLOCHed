@@ -241,13 +241,11 @@
 		<Separator class=""></Separator>
 		<h4>Gates</h4>
 		<!-- Standard gates (no parameters) -->
-		<div class="m-3 flex flex-wrap justify-center gap-2">
+		<div class="m-3 flex flex-wrap justify-center gap-2 @lg:max-w-[400px]">
 			{#each predefinedGates.filter((g) => g.parameterArray.length === 0) as gate}
 				{@render gateButtonWithParams(gate, !DM.isConsistent, true)}
 			{/each}
-		</div>
 		<!-- Standard gates (with parameters) -->
-		<div class="m-3 flex flex-wrap justify-center gap-2">
 			{#each predefinedGates.filter((g) => g.parameterArray.length !== 0) as gate}
 				{@render gateButtonWithParams(gate, !DM.isConsistent, true)}
 			{/each}
