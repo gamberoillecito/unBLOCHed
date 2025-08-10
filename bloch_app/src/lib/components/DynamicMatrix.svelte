@@ -183,14 +183,6 @@
 
 </script>
 
-<style>
-:global(math-field::part(menu-toggle)) {
-  display: none;
-}
-:global(math-field::part(virtual-keyboard-toggle)) {
-    display: none;
-}
-</style>
 
 <div class="flex">
 

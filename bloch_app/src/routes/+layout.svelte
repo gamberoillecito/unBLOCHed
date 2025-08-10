@@ -16,3 +16,16 @@
 <!-- CSS styles for katex to render formulas correctly -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
 {@render children()}
+
+<style>
+:global(math-field::part(menu-toggle)) {
+  display: none;
+}
+:global(math-field::part(virtual-keyboard-toggle)) {
+    display: none;
+}
+:global(math-field) {
+    background-color: var(--color-background);
+	color: var(--color-foreground);
+}
+</style>
