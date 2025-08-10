@@ -10,7 +10,7 @@
 	import Info from '@lucide/svelte/icons/info';
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
-	import ErrorPopover from './custom-ui/ErrorPopover.svelte';
+	import ErrorPopover from '$lib/components/custom-ui/ErrorPopover.svelte';
 	interface Props {
 		matrix: FancyMatrix;
 	}
@@ -18,6 +18,9 @@
 	let { matrix }: Props = $props();
 	let FM: FancyMatrix = matrix;
 	let mainPopoverOpen = $state(false);
+	let secondaryPopoverOpen = $derived(mainPopoverOpen && !FM.isConsistent);
+	const popoversContext = getContext('popoversContext') as {preventOpening: boolean};
+	$effect(()=>{popoversContext.preventOpening = secondaryPopoverOpen})
 	// Initialize the mathfield to edit the matrix parameters
 	function paramAttachment(param: MatrixParam): Attachment {
 		return (element) => {
@@ -57,7 +60,7 @@
 	</Popover.Trigger>
 	<Popover.Content class="w-fit px-3 py-2">
 		<div class="flex flex-col items-start">
-			<ErrorPopover isOpen={mainPopoverOpen && !FM.isConsistent} popoverContent={FM.userMessage}>
+			<ErrorPopover isOpen={secondaryPopoverOpen} popoverContent={FM.userMessage} dismissable={true}>
 				{#snippet trigger()}
 					<math-field
 						readonly

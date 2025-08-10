@@ -48,6 +48,10 @@
 		)
 	);
 	setContext('densityMatrix', DM);
+	let popoversContext = $state({
+		preventOpening: false
+	})
+	setContext('popoversContext', popoversContext);
 
 	let GM = $state(
 		new GateMatrix(

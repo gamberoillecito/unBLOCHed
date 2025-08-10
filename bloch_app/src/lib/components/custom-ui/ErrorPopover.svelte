@@ -1,16 +1,19 @@
 <script lang="ts">
     import * as Popover from "$lib/components/ui/popover/index.js";
 	import type { Snippet } from "svelte";
+    
     interface Props {
         isOpen: boolean;
         trigger: Snippet;
-        popoverContent: string|null
+        popoverContent: string|null;
+		dismissable?: boolean;
     }
 
     let {
         isOpen,
         trigger,
         popoverContent,
+        dismissable=false 
     }: Props = $props();
 </script>
 
@@ -19,8 +22,8 @@
         {@render trigger()}
     </Popover.Trigger>
     <Popover.Content class="py-1 px-2 w-fit bg-destructive"
-        interactOutsideBehavior='ignore'
-        escapeKeydownBehavior="ignore"
+        interactOutsideBehavior={dismissable === true ? undefined : 'ignore'}
+        escapeKeydownBehavior={dismissable === true ? undefined : 'ignore'}
         side='top'
         align='center'
         trapFocus={false}
