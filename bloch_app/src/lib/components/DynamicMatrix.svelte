@@ -99,6 +99,7 @@
                 mf.setPromptValue(`mult`, FM.latexMult, {silenceNotifications: true})
             }
             updateMatrixButtonEnabled = false;
+            undoChangesButtonEnabled = false;
         })
 
         /**
@@ -133,6 +134,7 @@
             FM.isConsistent = res.isValid &&  matrices_equal;
             updateMatrixButtonEnabled = !matrices_equal && res.isValid;
             undoChangesButtonEnabled = !matrices_equal;
+            
 
             // Listen for presses on the ENTER key and respond as if the user clicked the
             // updateMatrixButton

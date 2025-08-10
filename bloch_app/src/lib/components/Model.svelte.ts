@@ -424,7 +424,7 @@ export class DensityMatrix extends FancyMatrix {
             }
 
             if (math.compare(Tr.re, 1) == 1){
-                return new MatrixValidity(false, `$\\Tr[\\rho^2] > 1$`)
+                return new MatrixValidity(false, `$\\operatorname{Tr}[\\rho^2] > 1$`)
             }
 
 

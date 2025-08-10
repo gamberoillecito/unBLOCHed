@@ -1,6 +1,12 @@
 <script lang="ts">
     import * as Popover from "$lib/components/ui/popover/index.js";
 	import type { Snippet } from "svelte";
+	import { marked } from 'marked';
+	import markedKatex from 'marked-katex-extension';
+	const markedKatexOptions = {
+		throwOnError: false
+	};
+	marked.use(markedKatex(markedKatexOptions));
     
     interface Props {
         isOpen: boolean;
@@ -22,7 +28,7 @@
         {@render trigger()}
     </Popover.Trigger>
     <Popover.Content class="py-1 px-2 w-fit bg-destructive"
-        interactOutsideBehavior={dismissable === true ? undefined : 'ignore'}
+        interactOutsideBehavior={dismissable === true ? undefined : 'defer-otherwise-ignore'}
         escapeKeydownBehavior={dismissable === true ? undefined : 'ignore'}
         side='top'
         align='center'
@@ -33,6 +39,6 @@
         onCloseAutoFocus={(e) => {
             e.preventDefault();
         }}>
-        <article class="prose-sm text-destructive-foreground"> {popoverContent} </article>
+        <article class="prose-sm text-destructive-foreground"> {@html marked.parse(popoverContent ?? '') as string} </article>
     </Popover.Content>
 </Popover.Root>

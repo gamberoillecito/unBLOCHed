@@ -15,7 +15,7 @@
 
 	let {
 		lat_long_color = 'gray',
-		sphere_color = 'gray',
+		sphere_color = 'muted',
 		sphere_opacity = 0.1,
 		sphere_radius = 1,
 		num_latitudes = 1,
