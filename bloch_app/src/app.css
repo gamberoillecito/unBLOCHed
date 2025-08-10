@@ -155,8 +155,19 @@
   --tracking-wide: calc(var(--tracking-normal) + 0.025em);
   --tracking-wider: calc(var(--tracking-normal) + 0.05em);
   --tracking-widest: calc(var(--tracking-normal) + 0.1em);
+  
+  --animate-small-ping: small-ping 3s infinite;
+
+  @keyframes small-ping {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.06);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
 }
 
-body {
-  letter-spacing: var(--tracking-normal);
-}

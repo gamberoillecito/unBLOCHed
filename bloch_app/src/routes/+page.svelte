@@ -21,8 +21,7 @@
 	onMount(() => {
 		window.scrollY = 300;
 		window.MathfieldElement.soundsDirectory = null;
-    loaded = true;
-    console.log("LOADED");
+    	loaded = true;
     
 	});
 
@@ -58,9 +57,9 @@
 			class="bg-muted flex h-full w-full animate-pulse flex-col place-content-center items-center"
 		>
 			<LoaderCircle class="h animate-spin" />
-			<p>
-        {@html loadingSentencesArray[Math.floor(Math.random()*loadingSentencesArray.length)]}
-      </p>
+			<p class="animate-small-ping">
+				{@html loadingSentencesArray[1]}
+			</p>
 		</div>
 	{:else}
 		<Resizable.PaneGroup direction="horizontal">
