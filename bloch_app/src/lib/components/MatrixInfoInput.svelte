@@ -26,6 +26,10 @@
 		return (element) => {
 			let mf = element as MathfieldElement;
 			mf.value = `\\small{\\placeholder[${param.name}]{${param.latexValue}}}`;
+			
+			// Prevent menu from opening when user right-clicks
+			mf.menuItems = [];
+			
 			mf.addEventListener('input', (ev: Event) => {
 				let paramsNames = mf.getPrompts();
 				if (paramsNames.length != 1) {

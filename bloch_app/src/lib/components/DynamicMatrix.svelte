@@ -77,6 +77,9 @@
         
         // Default value of the matrix input
         mf.value = initialValue;
+        
+        // Prevent menu from opening when user right-clicks
+        mf.menuItems = [];
 
         // Whenever the latex content of the FancyMatrix changes we need to update
         // what appears on screen accordingly
