@@ -11,7 +11,7 @@
 	} from '$lib/components/Model.svelte';
 	import DynamicMatrix from './DynamicMatrix.svelte';
 	import { getContext, setContext } from 'svelte';
-	import { type Complex, create, all, complex, boolean } from 'mathjs';
+	import { type Complex, create, all, complex, boolean, mod as modulus, compare, pi, isZero, multiply, equal } from 'mathjs';
 	import MatrixInfoInput from './MatrixInfoInput.svelte';
 	import { BlochHistory } from './BlochHistory.svelte';
 	import { Separator } from '$lib/components/ui/separator/index.js';
@@ -32,6 +32,13 @@
 	import ImageDown from '@lucide/svelte/icons/image-down';
 	import { onMount } from 'svelte';
 	import { append } from 'three/src/nodes/TSL.js';
+	import * as Tooltip from "$lib/components/ui/tooltip/index.js";
+	import { marked } from 'marked';
+	import markedKatex from 'marked-katex-extension';
+	const markedKatexOptions = {
+		throwOnError: false
+	};
+	marked.use(markedKatex(markedKatexOptions));
 
 	const config = {
 		absTol: 1e-10
@@ -93,22 +100,38 @@
 	onclick: (arg: any) => void,
 	label: string,
 	disabled: boolean,
-	variant?: ButtonVariant
+	variant?: ButtonVariant,
+	tooltip: boolean = false,
 )}
+	{@const btnClass = "aspect-square h-10 min-w-10 rounded-none rounded-s-md"}
+	{#if !tooltip}
 	<Button
 		{variant}
-		class="aspect-square h-10 min-w-10 rounded-none rounded-s-md"
+		class={btnClass}
 		{disabled}
 		{onclick}
 		{@attach (el: HTMLElement) => {
 			el.innerHTML = `<span class="pointer-events-none">${convertLatexToMarkup(label)}</span>`;
 		}}
 	></Button>
+	{:else}
+	<Tooltip.Trigger
+		class={btnClass + ' ' + buttonVariants({ variant: variant })}
+		{disabled}
+		{onclick}
+		{@attach (el: HTMLElement) => {
+			el.innerHTML = `<span class="pointer-events-none">${convertLatexToMarkup(label)}</span>`;
+		}}
+	></Tooltip.Trigger>
+
+	{/if}
 {/snippet}
 
 <!-- Button that, when clicked, applies a gate -->
 
 {#snippet applyGateButton(gate: GateMatrix, disabled: boolean)}
+	<Tooltip.Provider>
+	<Tooltip.Root>
 	{@render latexButton(
 		() => {
 			let initialDM = DM.clone();
@@ -124,8 +147,14 @@
 		},
 		gate.label,
 		disabled || !gate.isConsistent,
-		'default'
+		'default',
+		true
 	)}
+	{#if (isZero(gate.rotationAngle) || equal(gate.rotationAngle, multiply(2, pi)))}
+	<Tooltip.Content class="bg-muted text-muted-foreground border-1">{@html marked.parse("Gate results in a $0$ or $2\\pi$ rotation")}</Tooltip.Content>
+	{/if}
+	</Tooltip.Root>
+	</Tooltip.Provider>
 {/snippet}
 
 {#snippet gateButtonWithParams(gate: GateMatrix, disabled: boolean, withParams: boolean)}
