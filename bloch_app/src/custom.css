@@ -1,0 +1,36 @@
+:root {
+    --gate-brightness: 1.12;
+}
+
+.dark {
+    --gate-brightness: 1.2;
+}
+
+@theme inline {
+    --animate-small-ping: small-ping 3s infinite;
+    --animate-gate-applied: gate-applied 0.3s 1;
+
+    @keyframes small-ping {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.06);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    
+    @keyframes gate-applied {
+      0% {
+        filter: brightness(1)
+      }
+      50% {
+        filter: brightness(var(--gate-brightness))
+      }
+      100% {
+        filter: brightness(1)
+      }
+    }
+}
