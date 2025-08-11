@@ -7,17 +7,22 @@
 	import { onMount } from 'svelte';
 	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
 	import 'mathlive/static.css'
+	import SunIcon from "@lucide/svelte/icons/sun";
+	import MoonIcon from "@lucide/svelte/icons/moon";
+	import { toggleMode } from "mode-watcher";
+	import { Button } from "$lib/components/ui/button/index.js";
+	
 	let tutorialVisible = $state(false);
 	let loaded = $state(false);
 
 	let innerWidth = $state(0);
 
 	let resizablePanelMin = $derived(Math.ceil((300 / innerWidth) * 100));
-  const loadingSentencesArray = [
-    "Initializing <em>qubit</em>",
-    "Inflating <em>Bloch sphere</em>",
-    "Opening <em>gates</em>",
-  ]
+	const loadingSentencesArray = [
+		"Initializing <em>qubit</em>",
+		"Inflating <em>Bloch sphere</em>",
+		"Opening <em>gates</em>",
+	]
 	onMount(() => {
 		window.scrollY = 300;
 		window.MathfieldElement.soundsDirectory = null;
@@ -50,6 +55,16 @@
 			Tutorial
 		</Toggle>
     {/if}
+	
+<Button onclick={toggleMode} variant="default" size="icon" class="group">
+  <SunIcon
+    class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 !transition-all dark:-rotate-90 dark:scale-0 duration-300"
+  />
+  <MoonIcon
+    class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 !transition-all dark:rotate-0 dark:scale-100 duration-300"
+  />
+  <span class="sr-only">Toggle theme</span>
+</Button>
 	</div>
 	<!-- Body -->
 	{#if !loaded}
@@ -64,14 +79,14 @@
 	{:else}
 		<Resizable.PaneGroup direction="horizontal">
 			<Resizable.Pane minSize={resizablePanelMin}>
-				<div class="@container h-full min-h-0 w-full flex-1">
+				<div class="@container h-full min-h-0 w-full flex-1 bg-background">
 					<App />
 				</div>
 			</Resizable.Pane>
 			{#if tutorialVisible}
 				<Resizable.Handle withHandle />
 				<Resizable.Pane minSize={resizablePanelMin}>
-					<div class="@container h-full min-h-0 w-full flex-1 p-2">
+					<div class="@container h-full min-h-0 w-full flex-1 p-2 bg-background">
 						<Tutorial />
 					</div>
 				</Resizable.Pane>

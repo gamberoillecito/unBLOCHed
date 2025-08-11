@@ -9,7 +9,6 @@
 		Gizmo,
 		type GizmoOptions
 	} from '@threlte/extras';
-	import { Spring } from 'svelte/motion';
 	// import { ContactShadows, Float, Grid, OrbitControls } from '@threlte/extras'
 	import BlochSphere from './BlochSphere.svelte';
 	import { boolean, complex, number, sign, type Complex } from 'mathjs';
@@ -21,7 +20,8 @@
 	import AngleArc from './AngleArc.svelte';
 	import { getContext } from 'svelte';
 	import type { BlochHistory } from './BlochHistory.svelte';
-	import * as ContextMenu from '$lib/components/ui/context-menu/index.js';
+	import { mode } from "mode-watcher";
+	
 	export type sceneSettings = {displayAngles: boolean, displayStateLabels: boolean, displayPaths: boolean }	 
 	interface Props {
 		matrixContext: string;
@@ -126,7 +126,7 @@
 				complex(dm.blochV[2]).re + sign(dm.blochV[2]) * 0.1
 			]}
 		>
-			<SVG src={`/output(${index}).svg`} scale={0.00012} position={[-0.08, -0.02, +0.08]} />
+			<SVG src={`/${mode.current}/output(${index}).svg`} scale={0.00012} position={[-0.08, -0.02, +0.08]} />
 		</Billboard>
 	{/each}
 {/if}

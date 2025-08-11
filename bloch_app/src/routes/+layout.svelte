@@ -2,10 +2,11 @@
 <script lang="ts">
 	import '../app.css';
 	import { Toaster } from "$lib/components/ui/sonner";
-
+	
+	import { ModeWatcher } from "mode-watcher";
 	let { children } = $props();
 </script>
-
+<ModeWatcher />
 <Toaster
 	toastOptions={{
 		unstyled: true,
@@ -28,4 +29,5 @@
     background-color: var(--color-background);
 	color: var(--color-foreground);
 }
+
 </style>

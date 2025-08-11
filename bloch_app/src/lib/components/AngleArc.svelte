@@ -3,6 +3,7 @@
 	import { cos, help } from 'mathjs';
     import { MathUtils, Euler, Color,ArrowHelper, Object3D, EllipseCurve, ArcCurve, BufferGeometry, Group, Vector3, Line, AxesHelper, Matrix4, LineBasicMaterial, LineDashedMaterial, Material, Path, CurvePath, Curve } from 'three';
     import {Billboard, SVG} from '@threlte/extras'
+	import { mode } from "mode-watcher";
     
 	interface Props {
         vector: [number, number, number]
@@ -22,9 +23,9 @@
     const ARC_RADIUS = 0.2; // Radius of the arcs
     const LINE_RADIUS = 1; // Radius at which the lines connected to the arcs should end
     const THRESHOLD_ANGLE = Math.PI/10;
-    const ARCS_COLOR = 0x333333;
+    const ARCS_COLOR = 'foreground';
     // Material for the dashed lines
-    const DASH_MATERIAL = new LineDashedMaterial({color: "black", dashSize: 0.02, gapSize: 0.03});
+    const DASH_MATERIAL = new LineDashedMaterial({color: "foreground", dashSize: 0.02, gapSize: 0.03});
     const ARC_MATERIAL = new LineBasicMaterial({color: ARCS_COLOR });
     
     // Function to create an arc, it returns also the midpoint to allow to place a label there
@@ -101,7 +102,7 @@
         position.x = {(ARC_RADIUS*1.2)*Math.cos(phi/2)}
         position.z = {(ARC_RADIUS*1.2)*Math.sin(phi/2)}
     >
-        <SVG src={`/phi.svg`} scale={0.0001} position={[-0.04, 0,0]} />
+        <SVG src={`/${mode.current}/phi.svg`} scale={0.0001} position={[-0.04, 0,0]} />
     </Billboard>
 {/if}
 
@@ -113,6 +114,6 @@
         position.z= {midTheta.z}
 
     >
-        <SVG src={`/theta.svg`} scale={0.0001} position={[-0.02, 0,0]} />
+        <SVG src={`/${mode.current}/theta.svg`} scale={0.0001} position={[-0.02, 0,0]} />
     </Billboard>
 {/if}

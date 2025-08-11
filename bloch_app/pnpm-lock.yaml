@@ -91,7 +91,7 @@ importers:
         specifier: ^16.2.0
         version: 16.2.0
       mode-watcher:
-        specifier: ^1.0.8
+        specifier: ^1.1.0
         version: 1.1.0(svelte@5.33.13)
       paneforge:
         specifier: ^1.0.0
