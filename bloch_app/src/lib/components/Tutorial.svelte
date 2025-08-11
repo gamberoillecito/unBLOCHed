@@ -36,7 +36,7 @@
 	<Tabs.Content value={title} class="bg-card mx-4 my-2 min-h-0 flex-1 rounded-xl border shadow-sm">
 		<ScrollArea class="h-full w-full">
 			<article
-				class="prose max-h-full w-full px-6 py-4"
+				class="prose dark:prose-invert max-h-full w-full px-6 py-4"
 				{@attach (p) => {
 					p.innerHTML = marked.parse(mdContent) as string;
 				}}

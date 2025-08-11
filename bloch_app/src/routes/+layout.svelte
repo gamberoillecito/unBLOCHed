@@ -26,7 +26,8 @@
     display: none;
 }
 :global(math-field) {
-    background-color: var(--color-background);
+    /* background-color: var(--color-background); */
+	background-color: inherit;
 	color: var(--color-foreground);
 }
 

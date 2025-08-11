@@ -49,16 +49,17 @@
   --shadow-2xl: 2px 2px 0px 0px hsl(0 0% 0% / 1.25);
   --tracking-normal: 0.025em;
   --spacing: 0.25rem;
+  --gate-brightness: 1.12;
 }
 
 .dark {
-  --background: oklch(0.2478 0 0);
-  --foreground: oklch(1.0000 0 0);
+  --background: oklch(0.2393 0 0);
+  --foreground: oklch(0.8452 0 0);
   --card: oklch(0.3404 0.0205 265.9658);
   --card-foreground: oklch(1.0000 0 0);
   --popover: oklch(0.3211 0 0);
   --popover-foreground: oklch(1.0000 0 0);
-  --primary: oklch(0.6602 0.2294 35.4025);
+  --primary: oklch(0.6731 0.2173 35.4025);
   --primary-foreground: oklch(1.0000 0 0);
   --secondary: oklch(0.3867 0 0);
   --secondary-foreground: oklch(1.0000 0 0);
@@ -96,6 +97,7 @@
   --shadow-lg: 2px 2px 0px 0px hsl(0 0% 0% / 0.50), 2px 4px 6px -1px hsl(0 0% 0% / 0.50);
   --shadow-xl: 2px 2px 0px 0px hsl(0 0% 0% / 0.50), 2px 8px 10px -1px hsl(0 0% 0% / 0.50);
   --shadow-2xl: 2px 2px 0px 0px hsl(0 0% 0% / 1.25);
+  --gate-brightness: 1.2;
 }
 
 @theme inline {
@@ -174,13 +176,13 @@
   
   @keyframes gate-applied {
     0% {
-      opacity: 1
+      filter: brightness(1)
     }
     50% {
-      opacity: 0.7
+      filter: brightness(var(--gate-brightness))
     }
     100% {
-      opacity: 1
+      filter: brightness(1)
     }
   }
 }
