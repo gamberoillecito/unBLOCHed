@@ -2,27 +2,27 @@
 	import { T } from '@threlte/core';
 	import { MathUtils, Color, DoubleSide } from 'three';
 
-	// interface BlochSphereProps {
-	//   lat_long_color: Color;
-	//   sphere_color: Color;
-	//   sphere_opacity?: number;
-	//   sphere_radius?: number;
-	//   num_latitudes?: number;
-	//   num_longitudes?: number;
-	//   lat_long_thickness?: number;
-	//   lat_long_opacity?: number;
-	// }
+	interface Props  {
+	  lat_long_color?: Color;
+	  sphere_color?: Color;
+	  sphere_opacity?: number;
+	  sphere_radius?: number;
+	  num_latitudes?: number;
+	  num_longitudes?: number;
+	  lat_long_thickness?: number;
+	  lat_long_opacity?: number;
+	}
 
 	let {
-		lat_long_color = 'gray',
-		sphere_color = 'muted',
+		lat_long_color = new Color().setHSL(0, 0, 0.2),
+		sphere_color = new Color().setHSL(0, 0, 0.5),
 		sphere_opacity = 0.1,
 		sphere_radius = 1,
 		num_latitudes = 1,
 		num_longitudes = 2,
 		lat_long_thickness = 0.002,
 		lat_long_opacity = 1
-	} = $props();
+	}:Props = $props();
 
 	function latitudeSpacing(sphereRad: number, numLatitudes: number) {
 		let spacing = (sphereRad * 2) / (numLatitudes + 1);
@@ -80,7 +80,7 @@
 
 	<!-- Transparent mesh -->
 	<T.Mesh>
-		<T.SphereGeometry />
+		<T.SphereGeometry args={[1, 50, 50]} />
 		<T.MeshPhongMaterial
 			color={sphere_color}
 			transparent

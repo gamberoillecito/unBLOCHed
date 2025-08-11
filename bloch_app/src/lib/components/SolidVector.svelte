@@ -9,11 +9,12 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
 	import { T } from '@threlte/core';
-	import { Group } from 'three';
+	import { Group, Color, type HSL } from 'three';
 	import { Outlines } from '@threlte/extras';
 	import { generateGradient } from 'typescript-color-gradient';
 	import type { DensityMatrix } from './Model.svelte';
-
+	import { mode } from "mode-watcher";
+	
 	// let {length= 1, pointToLookAt, phase = 0}: Prop = $props();
 	interface Props {
 		matrixContext: string;
@@ -32,9 +33,18 @@
 		['#210CF5', '#F52B16', '#F5D316', '#16F57D', '#210CF5'],
 		100
 	);
-	let color = $derived(
-		gradientArray[Math.floor(((gradientArray.length - 1) * DM.phase) / (2 * Math.PI))]
-	);
+	let color = $state() as Color;
+	$effect(()=>{
+		let lightCol = new Color(gradientArray[Math.floor(((gradientArray.length - 1) * DM.phase) / (2 * Math.PI))]);
+		let darkCol = lightCol.clone();
+		let hsl = {} as HSL;
+		lightCol.getHSL(hsl)
+		hsl.l = 0.8 - hsl.l;
+		darkCol.setHSL(hsl.h, hsl.s+0.2, hsl.l);	
+
+		color = mode.current === "light" ? lightCol : darkCol;
+		
+	})
 
 	let body_length = $derived(length - HEAD_LEN * length ** 0.5);
 	let scaled_head_length = $derived(HEAD_LEN * length ** 0.5);
