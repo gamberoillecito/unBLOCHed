@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Canvas, useThrelte, useTask, } from '@threlte/core';
+	import { Canvas, useThrelte, useTask } from '@threlte/core';
 	import { T } from '@threlte/core';
 	import {
 		interactivity,
@@ -14,11 +14,11 @@
 	import { boolean, complex, number, sign, type Complex } from 'mathjs';
 	import SolidVector from './SolidVector.svelte';
 	import Path from './Path.svelte';
-	import { ArrowHelper, AxesHelper, Camera, DoubleSide, Fog, Mesh, PerspectiveCamera } from 'three';
+	import { ArrowHelper, AxesHelper, Camera, DoubleSide, Fog, Mesh, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
 	import { generateGradient } from 'typescript-color-gradient';
 	import type { DensityMatrix, GatePath } from './Model.svelte';
 	import AngleArc from './AngleArc.svelte';
-	import { getContext } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import type { BlochHistory } from './BlochHistory.svelte';
 	import { mode } from "mode-watcher";
 	
@@ -30,7 +30,10 @@
 		settings: sceneSettings;
 		imageData: string;
 		requestImage: boolean;
-		
+		canvasElement: HTMLCanvasElement;
+		rendererP: WebGLRenderer;
+		cameraP: PerspectiveCamera;
+		sceneP: Scene;
 	}
 
 	let {
@@ -40,6 +43,10 @@
 		settings,
 		imageData = $bindable(),
 		requestImage,
+		canvasElement = $bindable(),
+		rendererP = $bindable(),
+		cameraP = $bindable(),
+		sceneP = $bindable(),
 	}: Props = $props();
 
 	$inspect(requestImage)
@@ -61,31 +68,40 @@
 		'#ff0018'
 	];
 	let pathGradient = generateGradient(colors_hex, MAX_PATH_COLORS);
-	let camera = $state<PerspectiveCamera>();
-	const { renderer, scene, renderStage, autoRenderTask } = useThrelte();
+	const { renderer, scene, renderStage, autoRenderTask, canvas } = useThrelte();
 	const task = useTask(() => {
 			if (requestImage){
-				const data = renderer.domElement.toDataURL('image/png');
-				console.log(data);
-				requestImage = false
-				const link = document.createElement('a');
-                link.download = `bloch-sphere-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.png`;
-                link.href = data;
-                
-                // Trigger download
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+
+				requestImage = false;
+				setTimeout(() => {
+					const data = renderer.domElement.toDataURL('image/png');
+					console.log(data);
+					const link = document.createElement('a');
+					link.download = `bloch-sphere-${new Date().toISOString().replace(/:/g, '-')}.png`;
+					link.href = data;
+					
+					// Trigger download
+					document.body.appendChild(link);
+					link.click();
+					document.body.removeChild(link);
+				}, 1000);
 			}
 		},
 	{after: autoRenderTask});
-
+	
+	onMount(()=> {
+		canvasElement = canvas;
+		sceneP = scene;
+		rendererP = renderer;
+	})
+	
 </script>
+
 
 <T.DirectionalLight intensity={3} position.x={5} position.y={10} castgetContext(matrixContext) />
 <T.AmbientLight intensity={0.5} />
 <T.PerspectiveCamera
-	bind:ref={camera}
+	bind:ref={cameraP}
 	makeDefault
 	position={[10, 10, 10]}
 	fov={8}

@@ -24,7 +24,7 @@
 	import { AspectRatio } from '$lib/components/ui/aspect-ratio/index.js';
 	import { predefinedGates, predefinedStates, theta_param } from '$lib/data/matrices';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
-	import { Canvas } from '@threlte/core';
+	import { Canvas, type ThrelteContext } from '@threlte/core';
 	import Menu from '@lucide/svelte/icons/menu';
     import {Button, buttonVariants, type ButtonVariant} from '$lib/components/ui/button/index.js';
 	import * as DropdownMenu from'$lib/components/ui/dropdown-menu';
@@ -35,6 +35,7 @@
 	import * as Tooltip from "$lib/components/ui/tooltip/index.js";
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
+	import type { PerspectiveCamera, WebGLRenderer, Scene as TScene } from 'three';
 	const markedKatexOptions = {
 		throwOnError: false
 	};
@@ -86,6 +87,11 @@
 	let requestImage = $state(false);
 
 	let canvasContainer = $state() as HTMLDivElement;
+	let canvasElement= $state() as HTMLCanvasElement;
+	let cameraP = $state() as PerspectiveCamera;
+	let rendererP = $state() as WebGLRenderer;
+	let sceneP = $state() as TScene;
+	$inspect(canvasElement);
 </script>
 
 <!-- <link
@@ -216,8 +222,8 @@
 			bind:this={canvasContainer}
 			class="border-1 relative shrink h-[90%] @lg:h-auto @lg:w-[90%] aspect-square rounded-md  shadow-sm m-3"
 		>
-			<Canvas>
-				<Scene requestImage={requestImage} matrixContext={'densityMatrix'} {history} POI={predefinedStates} settings={settings3DScene} imageData={imageData}></Scene>
+			<Canvas >
+				<Scene bind:sceneP bind:cameraP bind:rendererP bind:canvasElement requestImage={requestImage} matrixContext={'densityMatrix'} {history} POI={predefinedStates} settings={settings3DScene} imageData={imageData}></Scene>
 			</Canvas>
 
 			<DropdownMenu.Root >
@@ -231,7 +237,20 @@
 					<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayStateLabels}>Show Labels</DropdownMenu.CheckboxItem>
 					<DropdownMenu.Separator></DropdownMenu.Separator>
 					<DropdownMenu.Item onclick={()=>{
-						requestImage = true;
+						// requestImage = true;
+						// let data = canvasElement.toDataURL('image/png');
+						rendererP.render(sceneP, cameraP);
+						let data = rendererP.domElement.toDataURL('image/png');
+						console.log(data);
+						
+						const link = document.createElement('a');
+						link.download = `bloch-sphere-${new Date().toISOString().replace(/:/g, '-')}.png`;
+						link.href = data;
+						
+						// Trigger download
+						document.body.appendChild(link);
+						link.click();
+						document.body.removeChild(link);
 						toast.success(
 							"Download started"
 						)
