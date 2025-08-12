@@ -16,12 +16,9 @@
 	import { BlochHistory } from './BlochHistory.svelte';
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import { convertLatexToMarkup } from 'mathlive';
-	import * as Resizable from '$lib/components/ui/resizable/index.js';
-	import * as Card from '$lib/components/ui/card/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import Undo from '@lucide/svelte/icons/undo';
 	import Redo from '@lucide/svelte/icons/redo';
-	import { AspectRatio } from '$lib/components/ui/aspect-ratio/index.js';
 	import { predefinedGates, predefinedStates, theta_param } from '$lib/data/matrices';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import { Canvas, type ThrelteContext } from '@threlte/core';
@@ -30,12 +27,9 @@
 	import * as DropdownMenu from'$lib/components/ui/dropdown-menu';
 	import { toast } from 'svelte-sonner';
 	import ImageDown from '@lucide/svelte/icons/image-down';
-	import { onMount } from 'svelte';
-	import { append } from 'three/src/nodes/TSL.js';
 	import * as Tooltip from "$lib/components/ui/tooltip/index.js";
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
-	import type { PerspectiveCamera, WebGLRenderer, Scene as TScene } from 'three';
 	const markedKatexOptions = {
 		throwOnError: false
 	};
@@ -87,11 +81,8 @@
 	let requestImage = $state(false);
 
 	let canvasContainer = $state() as HTMLDivElement;
-	let canvasElement= $state() as HTMLCanvasElement;
-	let cameraP = $state() as PerspectiveCamera;
-	let rendererP = $state() as WebGLRenderer;
-	let sceneP = $state() as TScene;
-	$inspect(canvasElement);
+	/**Function to download image from the canvas*/
+	let getImage = $state() as ()=>string;
 </script>
 
 <!-- <link
@@ -223,7 +214,7 @@
 			class="border-1 relative shrink h-[90%] @lg:h-auto @lg:w-[90%] aspect-square rounded-md  shadow-sm m-3"
 		>
 			<Canvas >
-				<Scene bind:sceneP bind:cameraP bind:rendererP bind:canvasElement requestImage={requestImage} matrixContext={'densityMatrix'} {history} POI={predefinedStates} settings={settings3DScene} imageData={imageData}></Scene>
+				<Scene bind:getImage matrixContext={'densityMatrix'} {history} POI={predefinedStates} settings={settings3DScene}></Scene>
 			</Canvas>
 
 			<DropdownMenu.Root >
@@ -239,8 +230,7 @@
 					<DropdownMenu.Item onclick={()=>{
 						// requestImage = true;
 						// let data = canvasElement.toDataURL('image/png');
-						rendererP.render(sceneP, cameraP);
-						let data = rendererP.domElement.toDataURL('image/png');
+						let data = getImage();
 						console.log(data);
 						
 						const link = document.createElement('a');

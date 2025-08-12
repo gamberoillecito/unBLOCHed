@@ -28,12 +28,7 @@
 		history: BlochHistory;
 		POI: DensityMatrix[];
 		settings: sceneSettings;
-		imageData: string;
-		requestImage: boolean;
-		canvasElement: HTMLCanvasElement;
-		rendererP: WebGLRenderer;
-		cameraP: PerspectiveCamera;
-		sceneP: Scene;
+		getImage: ()=> string;
 	}
 
 	let {
@@ -41,15 +36,9 @@
 		history,
 		POI,
 		settings,
-		imageData = $bindable(),
-		requestImage,
-		canvasElement = $bindable(),
-		rendererP = $bindable(),
-		cameraP = $bindable(),
-		sceneP = $bindable(),
+		getImage = $bindable()
 	}: Props = $props();
 
-	$inspect(requestImage)
 	
 
 
@@ -69,31 +58,13 @@
 	];
 	let pathGradient = generateGradient(colors_hex, MAX_PATH_COLORS);
 	const { renderer, scene, renderStage, autoRenderTask, canvas } = useThrelte();
-	const task = useTask(() => {
-			if (requestImage){
-
-				requestImage = false;
-				setTimeout(() => {
-					const data = renderer.domElement.toDataURL('image/png');
-					console.log(data);
-					const link = document.createElement('a');
-					link.download = `bloch-sphere-${new Date().toISOString().replace(/:/g, '-')}.png`;
-					link.href = data;
-					
-					// Trigger download
-					document.body.appendChild(link);
-					link.click();
-					document.body.removeChild(link);
-				}, 1000);
-			}
-		},
-	{after: autoRenderTask});
-	
-	onMount(()=> {
-		canvasElement = canvas;
-		sceneP = scene;
-		rendererP = renderer;
-	})
+	let camera = $state() as PerspectiveCamera;
+	function downloadImage() {
+		renderer.render(scene, camera);
+		let data = renderer.domElement.toDataURL('image/png');
+		return data;
+	}
+	getImage = downloadImage
 	
 </script>
 
@@ -101,7 +72,7 @@
 <T.DirectionalLight intensity={3} position.x={5} position.y={10} castgetContext(matrixContext) />
 <T.AmbientLight intensity={0.5} />
 <T.PerspectiveCamera
-	bind:ref={cameraP}
+	bind:ref={camera}
 	makeDefault
 	position={[10, 10, 10]}
 	fov={8}
