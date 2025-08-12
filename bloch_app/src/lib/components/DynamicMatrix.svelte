@@ -10,7 +10,7 @@
     import {Button, buttonVariants, type ButtonVariant} from '$lib/components/ui/button/index.js';
     import Trash from '@lucide/svelte/icons/trash';
     import Save from '@lucide/svelte/icons/save';
-    import CircleCheckBig from '@lucide/svelte/icons/circle-check-big'
+    import Eraser from '@lucide/svelte/icons/eraser';
     import CircleX from '@lucide/svelte/icons/circle-x';
     import { marked } from 'marked';
     import markedKatex from 'marked-katex-extension';
@@ -199,23 +199,23 @@
 
     </ErrorPopover>
     <!-- Buttons that needs to be disabled if instantUpdate is true -->
-    <div class={`${instantUpdate ? 'hidden ':''} flex flex-col justify-around`} > 
+    <div class={`${instantUpdate ? 'hidden ':''} flex flex-col @xl:flex-row align-middle gap-2 content-center justify-around m-auto`} > 
         
-        <Button class="size-6" variant="ghost"
+        <Button class="size-6 rounded-sm bg-(--approve) hover:bg-(--approve) hover:opacity-75" variant="outline"
             bind:ref={updateMatrixButton} 
             disabled={!updateMatrixButtonEnabled}
             name="apply changes"
         >
             <!-- <Save /> -->
-            <CircleCheckBig/>
+            <Save class="size-4 stroke-(--approve-foreground)"/>
         </Button>
-        <Button class="size-6" variant="ghost"
+        <Button class="size-6 rounded-sm" variant="destructive"
             bind:ref={undoChangesButton} 
             disabled={!undoChangesButtonEnabled}
             name="restore"
         >
             <!-- <Trash />-->
-            <CircleX class="stroke-destructive"/>
+            <Eraser class=" size-4"/>
         </Button>
     </div>
     <!-- <MatrixParameterInput matrix={FM} ></MatrixParameterInput> -->

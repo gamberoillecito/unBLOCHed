@@ -1,5 +1,7 @@
 :root {
     --gate-brightness: 1.12;
+    --approve: oklch(48.762% 0.11601 153.41);
+    --approve-foreground: oklch(100% 0.00011 271.152);
 }
 
 .dark {
