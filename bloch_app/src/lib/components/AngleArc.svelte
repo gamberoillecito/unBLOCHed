@@ -23,10 +23,11 @@
     const ARC_RADIUS = 0.2; // Radius of the arcs
     const LINE_RADIUS = 1; // Radius at which the lines connected to the arcs should end
     const THRESHOLD_ANGLE = Math.PI/10;
-    const ARCS_COLOR = 'foreground';
+    let arcs_color = $derived(mode.current === 'light' ? new Color(0,0,0) : new Color().setHSL(0, 0, 0.5));
+    $inspect(arcs_color)
     // Material for the dashed lines
-    const DASH_MATERIAL = new LineDashedMaterial({color: "foreground", dashSize: 0.02, gapSize: 0.03});
-    const ARC_MATERIAL = new LineBasicMaterial({color: ARCS_COLOR });
+    let dash_material = $derived(new LineDashedMaterial({color: arcs_color, dashSize: 0.02, gapSize: 0.03}));
+    let arc_material = $derived(new LineBasicMaterial({color: arcs_color }));
     
     // Function to create an arc, it returns also the midpoint to allow to place a label there
     function createArc(radius: number, startAngle: number, endAngle: number, material: Material): Line {
@@ -52,8 +53,8 @@
     let blochVector = $derived(new Vector3(...vector).normalize()); // Replace with your Bloch vector
     let theta = $derived(Math.acos(blochVector.y));
     let phi = $derived(blochVector.z >= 0 ? Math.atan2(blochVector.z, blochVector.x) : Math.atan2(blochVector.z, blochVector.x)+ 2*Math.PI ) 
-    let arcTheta = $derived(createArc(ARC_RADIUS, 0, theta, ARC_MATERIAL));
-    let arcPhi = $derived(createArc(ARC_RADIUS, 0, phi, ARC_MATERIAL)); 
+    let arcTheta = $derived(createArc(ARC_RADIUS, 0, theta, arc_material));
+    let arcPhi = $derived(createArc(ARC_RADIUS, 0, phi, arc_material)); 
     $effect(()=>{
         arcTheta.rotation.y = -phi;
         arcPhi.rotation.x = -Math.PI / 2;
@@ -66,13 +67,13 @@
     let BVProjectionAtRADIUS: Vector3 = $derived(blochVector.clone().setComponent(1, 0));
     
     //  Line from the origin towards the z axis
-    let XLine = createSegment(origin, Xaxis.clone().setLength(LINE_RADIUS), DASH_MATERIAL);
+    let XLine = $derived(createSegment(origin, Xaxis.clone().setLength(LINE_RADIUS), dash_material));
     // Line from the origin towards the z axis    
-    let ZLine = createSegment(origin, Zaxis.clone().setLength(LINE_RADIUS), DASH_MATERIAL);
+    let ZLine = $derived(createSegment(origin, Zaxis.clone().setLength(LINE_RADIUS), dash_material));
     // Line from the origin towards the projection of the Bloch Vector on the equatorial plane    
-    let HLine = $derived(createSegment(origin, BVProjectionAtRADIUS, DASH_MATERIAL));
+    let HLine = $derived(createSegment(origin, BVProjectionAtRADIUS, dash_material));
     // Line from the projection of the Bloch Vector on the equatorial plane to the bloch vector itself
-    let VLine = $derived(createSegment(BVProjectionAtRADIUS, BVProjectionAtRADIUS.clone().setComponent(1,Math.sin(blochVector.y)), DASH_MATERIAL));
+    let VLine = $derived(createSegment(BVProjectionAtRADIUS, BVProjectionAtRADIUS.clone().setComponent(1,Math.sin(blochVector.y)), dash_material));
 
     // Operations needed to correctly place the label for the theta angle
     const rotAxis = $derived(Xaxis.clone().applyMatrix4(new Matrix4().makeRotationAxis(Zaxis, Math.PI/2 - phi)))
