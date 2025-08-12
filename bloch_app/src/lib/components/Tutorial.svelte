@@ -1,9 +1,9 @@
 <script lang="ts">
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
-	import tutorial1 from '$lib/tutorial_pages/tutorial_1_en.md?raw';
-	import tutorial2 from '$lib/tutorial_pages/tutorial_2_en.md?raw';
-	import tutorial3 from '$lib/tutorial_pages/tutorial_3_en.md?raw';
-	import tutorial4 from '$lib/tutorial_pages/tutorial_4_en.md?raw';
+	import tutorial1 from '$lib/markdown/tutorial_pages/tutorial_1_en.md?raw';
+	import tutorial2 from '$lib/markdown/tutorial_pages/tutorial_2_en.md?raw';
+	import tutorial3 from '$lib/markdown/tutorial_pages/tutorial_3_en.md?raw';
+	import tutorial4 from '$lib/markdown/tutorial_pages/tutorial_4_en.md?raw';
 	import ScrollArea from './ui/scroll-area/scroll-area.svelte';
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
