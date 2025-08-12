@@ -11,7 +11,8 @@
 	import MoonIcon from '@lucide/svelte/icons/moon';
 	import { toggleMode } from 'mode-watcher';
 	import { Button } from '$lib/components/ui/button/index.js';
-
+	import Title from '$lib/components/Title.svelte';
+	import { MediaQuery } from 'svelte/reactivity';
 	let tutorialVisible = $state(false);
 	let loaded = $state(false);
 
@@ -28,6 +29,8 @@
 		window.MathfieldElement.soundsDirectory = null;
 		loaded = true;
 	});
+
+	const isDesktop = new MediaQuery("(min-width: 768px)");
 </script>
 
 <svelte:window bind:innerWidth />
@@ -40,28 +43,22 @@
 <div class="flex h-svh flex-col overflow-hidden">
 	<!-- Header -->
 	<div
-		class="bg-foreground text-(--background) w-[100%] flex-none items-center justify-between p-2 text-center text-xl lg:flex lg:pl-6 lg:text-left lg:text-2xl"
+		class="bg-foreground text-(--background) w-[100%]  flex-row-reverse lg:flex-row items-center justify-between p-2 text-center text-xl flex px-6 lg:text-left lg:text-2xl"
 	>
-		<Button onclick={toggleMode} variant="secondary" size="sm" class="group ">
+		<Button onclick={toggleMode} variant="secondary" size="sm" class="group scale-80 md:scale-100">
 			<MoonIcon
-				class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 !transition-all duration-500 dark:-rotate-180 dark:scale-0"
+				class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 !transition-all delay-300 duration-500 dark:-rotate-180 dark:scale-0"
 			/>
 			<SunIcon
-				class="absolute h-[1.2rem] w-[1.2rem] rotate-180 scale-0 !transition-all duration-500 dark:rotate-0 dark:scale-100"
+				class="absolute h-[1.2rem] w-[1.2rem] rotate-180 scale-0 !transition-all delay-300 duration-500 dark:rotate-0 dark:scale-100"
 			/>
 			<span class="sr-only">Toggle theme</span>
 		</Button>
-		<span class=""
-			><span class="font-normal">un</span><span class="font-semibold">BLOCH</span><span
-				class="font-normal">ed</span
-			> <span class="font-light">- Bloch sphere simulator</span></span
-		>
-		{#if loaded}
-			<Toggle variant="outline" bind:pressed={tutorialVisible} class="hidden lg:flex">
+		<Title withSubTitle={isDesktop.current}/>
+			<Toggle variant="outline" bind:pressed={tutorialVisible} class="hidden lg:flex {loaded? '': 'opacity-0'}">
 				<CircleQuestionMark />
 				Tutorial
 			</Toggle>
-		{/if}
 	</div>
 	<!-- Body -->
 	{#if !loaded}
