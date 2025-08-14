@@ -31,11 +31,13 @@
 		"eslint-config-prettier": "^10.1.5",
 		"eslint-plugin-svelte": "^3.9.1",
 		"globals": "^16.2.0",
+		"mdsvex": "^0.12.6",
 		"mode-watcher": "^1.1.0",
 		"paneforge": "^1.0.0",
 		"prettier": "^3.5.3",
 		"prettier-plugin-svelte": "^3.4.0",
 		"prettier-plugin-tailwindcss": "^0.6.11",
+		"remark-math": "3",
 		"svelte": "^5.33.13",
 		"svelte-check": "^4.2.1",
 		"svelte-sonner": "^1.0.5",
@@ -64,6 +66,7 @@
 		"marked-katex-extension": "^5.1.5",
 		"mathjs": "^14.5.2",
 		"mathlive": "^0.106.0",
+		"rehype-katex": "^7.0.1",
 		"three": "^0.174.0",
 		"typescript-color-gradient": "^4.0.1"
 	}
