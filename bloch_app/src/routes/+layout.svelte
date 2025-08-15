@@ -19,7 +19,11 @@
 <Welcome/>
 
 <!-- CSS styles for katex to render formulas correctly -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
+<svelte:head>
+	<title>unBLOCHed</title>
+	<meta name="description" content="Interactive and intuitive Bloch spehere simulator " />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
+</svelte:head>
 {@render children()}
 
 <style>

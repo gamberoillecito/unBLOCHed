@@ -34,10 +34,6 @@
 </script>
 
 <svelte:window bind:innerWidth />
-<svelte:head>
-	<title>unBLOCHed</title>
-	<meta name="description" content="Interactive and intuitive Bloch spehere simulator " />
-</svelte:head>
 
 <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mathlive/mathlive-static.css" /> -->
 <div class="flex h-svh flex-col overflow-hidden">

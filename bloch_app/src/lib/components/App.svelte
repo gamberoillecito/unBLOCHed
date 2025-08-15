@@ -183,9 +183,6 @@
 {/snippet}
 
 	
-<div class="prose">
-<Section/>
-</div>
 <div
 	class="flex h-full w-full  flex-col @lg:flex-row content-evenly place-items-center justify-start @lg:justify-center-safe @lg:place-items-center gap-2 p-2 "
 >
