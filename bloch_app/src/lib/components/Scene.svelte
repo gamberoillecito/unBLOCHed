@@ -7,7 +7,8 @@
 		SVG,
 		Billboard,
 		Gizmo,
-		type GizmoOptions
+		type GizmoOptions,
+		Text
 	} from '@threlte/extras';
 	// import { ContactShadows, Float, Grid, OrbitControls } from '@threlte/extras'
 	import BlochSphere from './BlochSphere.svelte';
@@ -90,6 +91,9 @@
 			edges={{ scale: 20 }}
 		/>
 	</OrbitControls>
+{#if settings.displayAngles}
+<Text  position={[0.65, -0.6,-10]}  anchorX="right" color="gray" text="unBLOCHed" anchorY="baseline" textAlign="right" scale={0.4}/>
+{/if}
 </T.PerspectiveCamera>
 {#if settings.displayPaths}
 	{#each history.list as historyEl, idx}
@@ -123,3 +127,5 @@
 {#if settings.displayAngles}
 	<AngleArc vector={DM.blochV}></AngleArc>
 {/if}
+
+
