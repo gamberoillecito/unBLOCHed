@@ -73,7 +73,9 @@
     // Line from the origin towards the projection of the Bloch Vector on the equatorial plane    
     let HLine = $derived(createSegment(origin, BVProjectionAtRADIUS, dash_material));
     // Line from the projection of the Bloch Vector on the equatorial plane to the bloch vector itself
-    let VLine = $derived(createSegment(BVProjectionAtRADIUS, BVProjectionAtRADIUS.clone().setComponent(1,Math.sin(blochVector.y)), dash_material));
+    let VLine = $derived(createSegment(BVProjectionAtRADIUS, blochVector, dash_material));
+    // Prolungation of the Bloch vector, useful as a visual aid for mixed states
+    let ProlongLine = $derived(createSegment(origin, blochVector, dash_material));
 
     // Operations needed to correctly place the label for the theta angle
     const rotAxis = $derived(Xaxis.clone().applyMatrix4(new Matrix4().makeRotationAxis(Zaxis, Math.PI/2 - phi)))
@@ -95,6 +97,9 @@
 
 <!-- Line from the projection of the Bloch Vector on the equatorial plane to the bloch vector itself -->
 <T is={VLine}></T>
+
+<!-- Prolungation of the Bloch vector, useful as a visual aid for mixed states -->
+<T is={ProlongLine}></T>
 
 
 {#if phi>THRESHOLD_ANGLE}
