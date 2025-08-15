@@ -31,8 +31,6 @@
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
 
-	import  Section from './Section.svx'
-	
 	const markedKatexOptions = {
 		throwOnError: false
 	};
@@ -270,7 +268,7 @@
 				<textarea style="height: 300px; width: 400px">
 								{`DM = \n[${DM.mat[0][0]}, ${DM.mat[0][1]}] \n[${DM.mat[1][0]}, ${DM.mat[1][1]}]
 				
-				Phase = ${DM.phase}
+				Phase = ${DM.phi}
 				
 				DM latex = \n ${DM.latexMult} \n[${DM.latexMat[0][0]}, ${DM.latexMat[0][1]}] \n[${DM.latexMat[1][0]}, ${DM.latexMat[1][1]}]
 				

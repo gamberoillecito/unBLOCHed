@@ -3,6 +3,8 @@ import {
     type Complex, 
     create,
     all,
+    mod,
+    multiply,
 } from 'mathjs'
 
 const config = {
@@ -353,7 +355,7 @@ export class DensityMatrix extends FancyMatrix {
         return blochV as [number, number, number];
     }
 
-    get phase(){
+    get phi(){
         const phi = math.atan2(this.#b.im, this.#b.re);
         return (phi + 2 * Math.PI) % (2 * Math.PI);
     }
@@ -458,6 +460,53 @@ export class DensityMatrix extends FancyMatrix {
 
     L(){
         return math.sqrt(this.blochV[0]^2 + this.blochV[1]^2 + this.blochV[2]^2)
+    }
+}
+
+export class FakeDensityMatrix extends DensityMatrix {
+    private _phi: number;
+    private _theta: number;
+    private _length: number;
+    constructor(latexMat: string[][], latexMult: string, label: string, params: MatrixParam[] = [], mat?: ComplexMat2x2) {
+        super(latexMat, latexMult, label, params, mat);
+        this._phi = $state(0);
+        this._theta = $state(0);
+        this._length = $state(1);
+    }
+    
+    get phi() {
+        return this._phi;
+    }
+
+    set phi(p: number) {
+        this._phi = math.mod(p, math.multiply(2, math.pi));
+    }
+
+    get theta() {
+        return this._theta;
+    }
+
+    set theta(t: number) {
+        this._theta = math.mod(t, math.multiply(2, math.pi));
+    }
+    
+    get length() {
+        return this._length;
+    }
+    
+    
+    set length(v : number) {
+        this._length = math.min(math.max(v, 0), 1);
+    }
+    
+
+        
+    get blochV() : [number, number, number] {
+        const x = this.length * Math.sin(this.theta) * Math.cos(this.phi);
+        const y = this.length * Math.sin(this.theta) * Math.sin(this.phi);
+        const z = this.length * Math.cos(this.theta);
+        console.log([x,z,y]);
+        return [x, z, y];
     }
 }
 
