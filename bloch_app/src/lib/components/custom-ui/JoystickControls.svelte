@@ -29,26 +29,23 @@
 	const avgEventsOld = 40;
 	let oldCounter = 0;
 
-	function handleMouseDown(e: MouseEvent) {
+	// unify drag logic so it can be used for mouse AND touch
+	function startDrag(x: number, y: number) {
 		isDragging = true;
-		lastX = e.clientX;
-		lastY = e.clientY;
-		// Listen globally for mouseup and mousemove
-		window.addEventListener('mousemove', handleMouseMove);
-		window.addEventListener('mouseup', handleMouseUp);
+		lastX = x;
+		lastY = y;
+		// add global mouse listeners for mouse case
+		window.addEventListener('mousemove', onWindowMouseMove);
+		window.addEventListener('mouseup', onWindowMouseUp);
+		// add global touch listeners for touch case (non-passive so we can preventDefault)
+		window.addEventListener('touchmove', onWindowTouchMove, { passive: false });
+		window.addEventListener('touchend', onWindowTouchEnd);
 	}
 
-	function handleMouseUp() {
-		isDragging = false;
-		// Remove global listeners
-		window.removeEventListener('mousemove', handleMouseMove);
-		window.removeEventListener('mouseup', handleMouseUp);
-	}
-
-	function handleMouseMove(e: MouseEvent) {
+	function moveDrag(x: number, y: number) {
 		if (!isDragging) return;
-		const dx = e.clientX - lastX;
-		const dy = e.clientY - lastY;
+		const dx = x - lastX;
+		const dy = y - lastY;
 
 		// Sensitivity factors (adjust as needed)
 		const thetaStep = 0.01;
@@ -57,8 +54,63 @@
 		DM.theta = DM.theta - dy * thetaStep;
 		DM.phi = (DM.phi + dx * phiStep) % (2 * Math.PI);
 
-		lastX = e.clientX;
-		lastY = e.clientY;
+		lastX = x;
+		lastY = y;
+	}
+
+	function endDrag() {
+		isDragging = false;
+		// remove listeners
+		window.removeEventListener('mousemove', onWindowMouseMove);
+		window.removeEventListener('mouseup', onWindowMouseUp);
+		window.removeEventListener('touchmove', onWindowTouchMove);
+		window.removeEventListener('touchend', onWindowTouchEnd);
+	}
+
+	// mouse handlers (wrap the unified functions)
+	function handleMouseDown(e: MouseEvent) {
+		// left button only
+		if (e.button !== 0) return;
+		startDrag(e.clientX, e.clientY);
+	}
+
+	function onWindowMouseMove(e: MouseEvent) {
+		moveDrag(e.clientX, e.clientY);
+	}
+
+	function onWindowMouseUp(_: MouseEvent) {
+		endDrag();
+	}
+
+	// touch handlers
+	function handleTouchStart(e: TouchEvent) {
+		if (!e.touches || e.touches.length === 0) return;
+		// prevent scrolling while interacting
+		e.preventDefault();
+		const t = e.touches[0];
+		startDrag(t.clientX, t.clientY);
+	}
+
+	function onWindowTouchMove(e: TouchEvent) {
+		// prevent default to avoid page scroll during drag
+		if (e.cancelable) e.preventDefault();
+		const t = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
+		if (!t) return;
+		moveDrag(t.clientX, t.clientY);
+	}
+
+	function onWindowTouchEnd(_: TouchEvent) {
+		endDrag();
+	}
+
+	function handleMouseMove(e: MouseEvent) {
+		// kept for compatibility (if any local listeners call it)
+		if (!isDragging) return;
+		moveDrag(e.clientX, e.clientY);
+	}
+
+	function handleMouseUp() {
+		endDrag();
 	}
 
 	function handleScroll(e: WheelEvent) {
@@ -123,6 +175,7 @@
 		id="joystick-btn"
 		class="grid w-[300px] aspect-square @lg:h-[200px] @lg:w-[200px] grid-cols-3 grid-rows-3 place-content-center place-items-center items-center rounded-[1em] border-2"
 		onmousedown={handleMouseDown}
+		ontouchstart={handleTouchStart}
 		onwheel={handleScroll}
 		aria-label="sphere-controls"
 	>
