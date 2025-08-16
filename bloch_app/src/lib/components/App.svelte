@@ -214,8 +214,10 @@
 <div
 	class="@lg:flex-row @lg:justify-center-safe @lg:place-items-center flex h-full w-full flex-col place-items-center content-evenly justify-start gap-2 p-2"
 >
-<!-- Container of undo/redo buttons and canvas -->
-	<div class="flex flex-row-reverse justify-center @lg:flex-col shrink-1 @lg:basis-full justify-self-auto self-stretch @lg:self-auto items-center max-h-lg max-w-lg">
+	<!-- Container of undo/redo buttons and canvas -->
+	<div
+		class="@lg:flex-col shrink-1 @lg:basis-full @lg:self-auto max-h-lg flex max-w-lg flex-row-reverse items-center justify-center self-stretch justify-self-auto"
+	>
 		<!-- Undo/redo buttons -->
 		<div class="@lg:flex-row m-2 flex flex-col gap-1 {joystickMode ? 'hidden' : ''}">
 			<Button
