@@ -4,6 +4,7 @@
 
 	import {
 		DensityMatrix,
+		FakeDensityMatrix,
 		GateMatrix,
 		GatePath,
 		MatrixParam,
@@ -30,6 +31,9 @@
 	import * as Tooltip from "$lib/components/ui/tooltip/index.js";
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
+	import {Switch} from '$lib/components/ui/switch/index';
+	import { Label } from "$lib/components/ui/label/index.js";
+	import JoystickControls from './custom-ui/JoystickControls.svelte';
 
 	const markedKatexOptions = {
 		throwOnError: false
@@ -40,17 +44,20 @@
 		absTol: 1e-10
 	};
 	const math = create(all, config);
+	
+	let joystickMode = $state(true);
 
-	let DM = $state(
-		new DensityMatrix(
-			[
-				['1/2', '1/2'],
-				['1/2', '1/2']
-			],
-			'1',
-			'\\rho'
-		)
-	);
+	let DM = new FakeDensityMatrix();
+	// let DM = $state(
+	// 	new DensityMatrix(
+	// 		[
+	// 			['1/2', '1/2'],
+	// 			['1/2', '1/2']
+	// 		],
+	// 		'1',
+	// 		'\\rho'
+	// 	)
+	// );
 	setContext('densityMatrix', DM);
 	let popoversContext = $state({
 		preventOpening: false
@@ -208,7 +215,14 @@
 			>
 				<Redo />
 			</Button>
+			<div class="flex items-center space-x-1" >
+				<Switch id="current-mode" bind:checked={joystickMode}/>
+				<Label for="current-mode">Joystick mode</Label>
+			</div>
 		</div>
+		<input type="number" step="0.1" bind:value={DM.phi}/>
+		<input type="number" step="0.1" bind:value={DM.theta}/>
+		<input type="number" step="0.1" bind:value={DM.length}/>
 		<!-- Canvas container -->
 		<div
 			bind:this={canvasContainer}
@@ -253,6 +267,7 @@
 
 	</div>
 	<!-- Buttons and matrices -->
+	{#if !joystickMode}
 	<ScrollArea class="p-2 shrink min-h-0 @lg:min-h-auto" type="auto">
 		<div class="flex flex-col items-center">
 			<h4 class="self-start w-fit ">Density Matrix</h4>
@@ -305,6 +320,9 @@
 			{@render gateButtonWithParams(GM, !(DM.isConsistent && GM.isConsistent), true)}
 		</div>
 	</ScrollArea>
+	{:else}
+		<JoystickControls DM={DM}/>
+	{/if}
 </div>
 
 <!-- <p {@attach (p)=> {p.innerHTML = marked.parse('# Marked in browser\n\nRendered by **marked**. $x/3$') as string}}></p> -->

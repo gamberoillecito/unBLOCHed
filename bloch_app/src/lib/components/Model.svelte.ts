@@ -467,11 +467,21 @@ export class FakeDensityMatrix extends DensityMatrix {
     private _phi: number;
     private _theta: number;
     private _length: number;
-    constructor(latexMat: string[][], latexMult: string, label: string, params: MatrixParam[] = [], mat?: ComplexMat2x2) {
-        super(latexMat, latexMult, label, params, mat);
-        this._phi = $state(0);
-        this._theta = $state(0);
-        this._length = $state(1);
+    constructor(phi: number =0 , theta: number = 0 , length: number = 1) {
+        let params = [
+            new MatrixParam(`theta`, `0`, `\\theta`, false),
+            new MatrixParam(`phi`, `0`, `\\phi`, false),
+        ];
+        let latexMult = '1';
+        let label = '\\rho';
+        let latexMat = [
+            ['\\cos^2(\\frac{\\theta}{2})', '\\frac{1}{2} \\sin(\\theta) e^{-i \\phi}'],
+            ['\\frac{1}{2} \\sin(\\theta) e^{i \\phi}', '\\sin^2(\\frac{\\theta}{2})']
+        ]
+        super(latexMat, latexMult, label, params);
+        this._phi = $state(phi);
+        this._theta = $state(theta);
+        this._length = $state(length);
     }
     
     get phi() {
@@ -480,6 +490,7 @@ export class FakeDensityMatrix extends DensityMatrix {
 
     set phi(p: number) {
         this._phi = math.mod(p, math.multiply(2, math.pi));
+        this.setParameterLatex('phi', `${this._phi}`);
     }
 
     get theta() {
@@ -488,6 +499,7 @@ export class FakeDensityMatrix extends DensityMatrix {
 
     set theta(t: number) {
         this._theta = math.mod(t, math.multiply(2, math.pi));
+        this.setParameterLatex('theta', `${this._theta}`);
     }
     
     get length() {
@@ -508,6 +520,7 @@ export class FakeDensityMatrix extends DensityMatrix {
         console.log([x,z,y]);
         return [x, z, y];
     }
+
 }
 
 export class GateMatrix extends FancyMatrix {
