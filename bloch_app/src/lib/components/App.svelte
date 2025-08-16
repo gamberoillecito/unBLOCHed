@@ -45,20 +45,18 @@
 	};
 	const math = create(all, config);
 	
-	let joystickMode = $state(true);
+	let joystickMode = $state(false);
 
-	let DM = new FakeDensityMatrix();
-	// let DM = $state(
-	// 	new DensityMatrix(
-	// 		[
-	// 			['1/2', '1/2'],
-	// 			['1/2', '1/2']
-	// 		],
-	// 		'1',
-	// 		'\\rho'
-	// 	)
-	// );
-	setContext('densityMatrix', DM);
+	let DM = $state(
+		new DensityMatrix(
+			[
+				['1/2', '1/2'],
+				['1/2', '1/2']
+			],
+			'1',
+			'\\rho'
+		)
+	);
 	let popoversContext = $state({
 		preventOpening: false
 	})
@@ -220,16 +218,13 @@
 				<Label for="current-mode">Joystick mode</Label>
 			</div>
 		</div>
-		<input type="number" step="0.1" bind:value={DM.phi}/>
-		<input type="number" step="0.1" bind:value={DM.theta}/>
-		<input type="number" step="0.1" bind:value={DM.length}/>
 		<!-- Canvas container -->
 		<div
 			bind:this={canvasContainer}
 			class="border-1 relative shrink h-[90%] @lg:h-auto @lg:w-[90%] aspect-square rounded-md  shadow-sm m-3"
 		>
 			<Canvas >
-				<Scene bind:getImage matrixContext={'densityMatrix'} {history} POI={predefinedStates} settings={settings3DScene}></Scene>
+				<Scene bind:getImage DM={DM} {history} POI={predefinedStates} settings={settings3DScene}></Scene>
 			</Canvas>
 
 			<DropdownMenu.Root >
@@ -272,7 +267,7 @@
 		<div class="flex flex-col items-center">
 			<h4 class="self-start w-fit ">Density Matrix</h4>
 			<DynamicMatrix
-				matrixContext="densityMatrix"
+				FM={DM}
 				instantUpdate={false}
 				onChangeCallback={(FM, oldFM, history: BlochHistory) => {
 					history.addElement(oldFM as DensityMatrix, FM as DensityMatrix);
@@ -315,13 +310,13 @@
 			{/each}
 		</div>
 		<div class="m-3 flex flex-wrap items-center justify-center gap-2">
-			<DynamicMatrix matrixContext="gateMatrix" instantUpdate={true}></DynamicMatrix>
+			<DynamicMatrix FM={GM} instantUpdate={true}></DynamicMatrix>
 
 			{@render gateButtonWithParams(GM, !(DM.isConsistent && GM.isConsistent), true)}
 		</div>
 	</ScrollArea>
 	{:else}
-		<JoystickControls DM={DM}/>
+		<!-- <JoystickControls DM={DM}/> -->
 	{/if}
 </div>
 

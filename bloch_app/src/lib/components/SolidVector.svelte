@@ -17,12 +17,11 @@
 	
 	// let {length= 1, pointToLookAt, phase = 0}: Prop = $props();
 	interface Props {
-		matrixContext: string;
+		DM: DensityMatrix;
 	}
 
-	let { matrixContext }: Props = $props();
+	let { DM }: Props = $props();
 
-	let DM: DensityMatrix = getContext(matrixContext);
 
 	let length = $derived(Math.sqrt(DM.blochV[0] ** 2 + DM.blochV[1] ** 2 + DM.blochV[2] ** 2));
 

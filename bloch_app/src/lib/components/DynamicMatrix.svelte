@@ -16,14 +16,14 @@
     import markedKatex from 'marked-katex-extension';
 	import ErrorPopover from "./custom-ui/ErrorPopover.svelte";
 	interface Props {
-		matrixContext: string;
+        FM: FancyMatrix;
         instantUpdate: boolean;
         onChangeCallback?: (FM:FancyMatrix, oldFM: FancyMatrix, args:any) => void;
         onChangeArguments?: any;
 	}
 
 	let {
-        matrixContext,
+        FM,
         instantUpdate = false,
         onChangeCallback,
         onChangeArguments
@@ -34,7 +34,6 @@
 	};
 	marked.use(markedKatex(markedKatexOptions));
 
-    let FM: FancyMatrix = getContext(matrixContext);
     let updateMatrixButton: HTMLElement|null = $state(null);
     let updateMatrixButtonEnabled: boolean = $state(false);
     // Initial latex value to be set inside the MathfieldElement

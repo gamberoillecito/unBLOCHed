@@ -25,7 +25,7 @@
 	
 	export type sceneSettings = {displayAngles: boolean, displayStateLabels: boolean, displayPaths: boolean }	 
 	interface Props {
-		matrixContext: string;
+		DM: DensityMatrix;
 		history: BlochHistory;
 		POI: DensityMatrix[];
 		settings: sceneSettings;
@@ -33,7 +33,7 @@
 	}
 
 	let {
-		matrixContext,
+		DM,
 		history,
 		POI,
 		settings,
@@ -43,7 +43,6 @@
 	
 
 
-	let DM:DensityMatrix = getContext(matrixContext);
 	const MAX_PATH_COLORS = 12;
 	const colors_hex = [
 		'#ff0000',
@@ -123,7 +122,7 @@
 {/if}
 
 <BlochSphere></BlochSphere>
-<SolidVector {matrixContext}></SolidVector>
+<SolidVector DM={DM}></SolidVector>
 {#if settings.displayAngles}
 	<AngleArc vector={DM.blochV}></AngleArc>
 {/if}
