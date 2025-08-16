@@ -517,7 +517,6 @@ export class FakeDensityMatrix extends DensityMatrix {
         const x = this.length * Math.sin(this.theta) * Math.cos(this.phi);
         const y = this.length * Math.sin(this.theta) * Math.sin(this.phi);
         const z = this.length * Math.cos(this.theta);
-        console.log([x,z,y]);
         return [x, z, y];
     }
 
