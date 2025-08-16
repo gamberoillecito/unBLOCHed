@@ -18,10 +18,16 @@
 	    isDragging = true;
 	    lastX = e.clientX;
 	    lastY = e.clientY;
+	    // Listen globally for mouseup and mousemove
+	    window.addEventListener('mousemove', handleMouseMove);
+	    window.addEventListener('mouseup', handleMouseUp);
 	}
 
 	function handleMouseUp() {
 	    isDragging = false;
+	    // Remove global listeners
+	    window.removeEventListener('mousemove', handleMouseMove);
+	    window.removeEventListener('mouseup', handleMouseUp);
 	}
 
 	function handleMouseMove(e: MouseEvent) {
@@ -39,13 +45,29 @@
 	    lastX = e.clientX;
 	    lastY = e.clientY;
 	}
+
+	function handleScroll(e: WheelEvent) {
+		const lengthStep = 0.01;
+		DM.length += -Math.sign(e.deltaY) * lengthStep;
+	}
+
+	$effect(() => {
+    const btn = document.getElementById('joystick-btn');
+    if (isDragging) {
+        document.body.style.cursor = "grabbing";
+        if (btn) btn.style.cursor = "grabbing";
+    } else {
+        document.body.style.cursor = "";
+        if (btn) btn.style.cursor = "grab";
+    }
+});
 </script>
 
-<div
-    class="w-[600px] h-[600px] border-2"
-    onmousedown={handleMouseDown}
-    onmouseup={handleMouseUp}
-    onmouseleave={handleMouseUp}
-    onmousemove={handleMouseMove}
+<button
+	id="joystick-btn"
+	class="w-[300px] h-[300px] border-2 rounded-md"
+	onmousedown={handleMouseDown}
+	onwheel={handleScroll}
+	aria-label="sphere-controls"
 >
-</div>
+</button>

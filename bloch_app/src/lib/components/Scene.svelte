@@ -30,6 +30,7 @@
 		POI: DensityMatrix[];
 		settings: sceneSettings;
 		getImage: ()=> string;
+		joystickMode: boolean;
 	}
 
 	let {
@@ -37,7 +38,8 @@
 		history,
 		POI,
 		settings,
-		getImage = $bindable()
+		getImage = $bindable(),
+		joystickMode = $bindable(),
 	}: Props = $props();
 
 	
@@ -96,7 +98,7 @@
 </T.PerspectiveCamera>
 {#if settings.displayPaths}
 	{#each history.list as historyEl, idx}
-		{#if historyEl.path && historyEl.pathVisible}
+		{#if historyEl.path && historyEl.pathVisible && !joystickMode}
 			<Path
 				path = {historyEl.path}
 				pathColor={pathGradient[idx % MAX_PATH_COLORS]}

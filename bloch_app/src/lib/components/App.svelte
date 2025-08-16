@@ -11,7 +11,7 @@
 		print_mat
 	} from '$lib/components/Model.svelte';
 	import DynamicMatrix from './DynamicMatrix.svelte';
-	import { getContext, setContext } from 'svelte';
+	import { getContext, setContext, untrack } from 'svelte';
 	import { type Complex, create, all, complex, boolean, mod as modulus, compare, pi, isZero, multiply, equal } from 'mathjs';
 	import MatrixInfoInput from './MatrixInfoInput.svelte';
 	import { BlochHistory } from './BlochHistory.svelte';
@@ -45,10 +45,22 @@
 	};
 	const math = create(all, config);
 	
+	
 	let joystickMode = $state(false);
+	// $effect(()=>{
+	// 	if (joystickMode) {
+	// 		untrack(()=> {history.addElement(DM, new FakeDensityMatrix())})
+	// 		oldDM = DM;
+	// 		DM = new FakeDensityMatrix();
+	// 	}
+	// 	else {
+	// 		untrack(()=>{history.undo(DM)});
+	// 		DM = oldDM;
+	// 	}
+	// })
 
-	let DM = $state(
-		new DensityMatrix(
+
+	let DM = $state( new DensityMatrix(
 			[
 				['1/2', '1/2'],
 				['1/2', '1/2']
@@ -57,6 +69,8 @@
 			'\\rho'
 		)
 	);
+	let fakeDM = $state(new FakeDensityMatrix());
+	$inspect(DM);
 	let popoversContext = $state({
 		preventOpening: false
 	})
@@ -213,10 +227,6 @@
 			>
 				<Redo />
 			</Button>
-			<div class="flex items-center space-x-1" >
-				<Switch id="current-mode" bind:checked={joystickMode}/>
-				<Label for="current-mode">Joystick mode</Label>
-			</div>
 		</div>
 		<!-- Canvas container -->
 		<div
@@ -224,7 +234,7 @@
 			class="border-1 relative shrink h-[90%] @lg:h-auto @lg:w-[90%] aspect-square rounded-md  shadow-sm m-3"
 		>
 			<Canvas >
-				<Scene bind:getImage DM={DM} {history} POI={predefinedStates} settings={settings3DScene}></Scene>
+				<Scene bind:getImage DM={joystickMode ? fakeDM : DM} {history} POI={predefinedStates} settings={settings3DScene} bind:joystickMode></Scene>
 			</Canvas>
 
 			<DropdownMenu.Root >
@@ -258,6 +268,11 @@
 					}}> <ImageDown/> Save Image</DropdownMenu.Item>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
+		</div>
+		<!-- Toggle to switch between normal and joystick mode -->
+		<div class="hidden lg:flex items-center space-x-1" >
+			<Switch id="current-mode" bind:checked={joystickMode}/>
+			<Label for="current-mode">Joystick mode</Label>
 		</div>
 
 	</div>
@@ -316,7 +331,7 @@
 		</div>
 	</ScrollArea>
 	{:else}
-		<!-- <JoystickControls DM={DM}/> -->
+		<JoystickControls DM={fakeDM}/>
 	{/if}
 </div>
 
