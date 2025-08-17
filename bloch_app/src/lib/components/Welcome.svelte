@@ -6,53 +6,63 @@
 	import * as Dialog from "$lib/components/ui/dialog/index.js";
 	import { Button, buttonVariants } from "$lib/components/ui/button/index.js";
 	import Title from '$lib/components/Title.svelte';
-    import welcomemd from '$lib/markdown/welcome_en.md?raw';
-
+  import welcomemd from '$lib/markdown/welcome_en.md?raw';
+	import * as Alert from './ui/alert/index.js';
+  import MonitorSmartphone from '@lucide/svelte/icons/monitor-smartphone'
 	const markedKatexOptions = {
 		throwOnError: false,
 	};
 	marked.use(markedKatex(markedKatexOptions));
 	let open = $state(true);
 	const isDesktop = new MediaQuery("(min-width: 768px)");
+  
+  const DESCRIPTION = "This website allows you to experiment with a 'real' Bloch sphere and learn more about Quantum"
+		
 </script>
+
+{#snippet welcomeContent()}
+  <article class="prose-sm lg:columns-2 dark:prose-invert m-auto lg:m-2">
+    {@html marked.parse(welcomemd)}
+  </article>
+{/snippet}
 
 {#if isDesktop.current}
   <Dialog.Root bind:open>
-    <Dialog.Content class="sm:max-w-[600px] sm:max-h-[50%] z-10000">
+    <Dialog.Content class="sm:max-w-[600px] sm:max-h-[70%] z-10000">
       <Dialog.Header>
         <Dialog.Title class="font-light">Welcome to <Title withSubTitle={false}/>!</Dialog.Title>
         <Dialog.Description>
-		This website allows you to experiment with a "real" Bloch sphere
+        {DESCRIPTION}
         </Dialog.Description>
       </Dialog.Header>
-	  <article class="prose-sm columns-2 dark:prose-invert">
-		{@html marked.parse(welcomemd)}
-	  </article>
+      <div class="bg-red">
+        {@render welcomeContent()}
+      </div>
     </Dialog.Content>
   </Dialog.Root>
 {:else}
   <Drawer.Root bind:open>
-    <Drawer.Content>
+    <Drawer.Content class="pb-4 px-2">
       <Drawer.Header class="text-left">
-        <Drawer.Title>Edit profile</Drawer.Title>
+        <Drawer.Title class="font-light">Welcome to <Title withSubTitle={false}/>!</Drawer.Title>
         <Drawer.Description>
-          Make changes to your profile here. Click save when you're done.
+          {DESCRIPTION}
         </Drawer.Description>
       </Drawer.Header>
-      <form class="grid items-start gap-4 px-4">
-        <div class="grid gap-2">
-		ciao
-        </div>
-        <div class="grid gap-2">
-		ciao
-        </div>
-        <Button type="submit">Save changes</Button>
-      </form>
-      <Drawer.Footer class="pt-2">
-        <Drawer.Close class={buttonVariants({ variant: "outline" })}
-          >Cancel</Drawer.Close
-        >
-      </Drawer.Footer>
+      {@render welcomeContent()}
+    <Drawer.Footer>
+      <Alert.Root variant="destructive">
+        <MonitorSmartphone/>
+        <Alert.Title>
+          This website works best on larger screens
+        </Alert.Title>
+        <Alert.Description>
+          Please view it on a computer for a better experience
+        </Alert.Description>
+      </Alert.Root >
+      <div class="font-destructive">
+      </div>
+    </Drawer.Footer>
     </Drawer.Content>
   </Drawer.Root>
 {/if}
