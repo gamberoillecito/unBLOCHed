@@ -93,7 +93,7 @@
 		/>
 	</OrbitControls>
 {#if settings.displayAngles}
-<Text  position={[0.65, -0.6,-10]}  anchorX="right" color="gray" text="unBLOCHed" anchorY="baseline" textAlign="right" scale={0.4}/>
+<Text  position={[0.6, -0.6,-10]}  anchorX="right" color="gray" text="unBLOCHed" anchorY="baseline" textAlign="right" scale={0.4}/>
 {/if}
 </T.PerspectiveCamera>
 {#if settings.displayPaths}

@@ -219,7 +219,7 @@
 		<div class="flex-cols flex gap-2">
 			<Keyboard />
 			<div class="grid">
-				<p>WASD / Arrows</p>
+				<p>WASD / Arrows / +-</p>
 			</div>
 		</div>
 	</div>
