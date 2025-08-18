@@ -3,9 +3,7 @@
 	import '../app.css';
 	import { Toaster } from "$lib/components/ui/sonner";
 	import { ModeWatcher } from "mode-watcher";
-	import Welcome from '$lib/components/Welcome.svelte';
 	let { children } = $props();
-	
 
 </script>
 <ModeWatcher />
@@ -15,8 +13,6 @@
 		class: 'w-fit flex flex-row border-1 gap-2 px-4 py-3  align-baseline shadow-sm rounded-md bg-card fg-card'
 	}}
 />
-
-<Welcome/>
 
 <!-- CSS styles for katex to render formulas correctly -->
 <svelte:head>

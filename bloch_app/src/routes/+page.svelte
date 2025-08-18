@@ -13,12 +13,21 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import Title from '$lib/components/Title.svelte';
 	import { MediaQuery } from 'svelte/reactivity';
+	
+	import Welcome from '$lib/components/Welcome.svelte';
+	import { preferences } from '$lib/preferences';
+	import { get } from 'svelte/store';
+	
+	
+	let showWelcomeAtStart= get(preferences).showWelcomeAtStart;	
 	let tutorialVisible = $state(false);
 	let loaded = $state(false);
 
 	let innerWidth = $state(0);
 
 	let resizablePanelMin = $derived(Math.ceil((300 / innerWidth) * 100));
+
+	let welcomeMessageOpen = $state(false);
 	const loadingSentencesArray = [
 		'Initializing <em>qubit</em>',
 		'Inflating <em>Bloch sphere</em>',
@@ -28,12 +37,18 @@
 		window.scrollY = 300;
 		window.MathfieldElement.soundsDirectory = null;
 		loaded = true;
+		if (showWelcomeAtStart) {
+			welcomeMessageOpen = true;
+		}
 	});
 
 	const isDesktop = new MediaQuery("(min-width: 768px)");
+
 </script>
 
 <svelte:window bind:innerWidth />
+
+<Welcome bind:open={welcomeMessageOpen}/>
 
 <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mathlive/mathlive-static.css" /> -->
 <div class="flex h-svh flex-col overflow-hidden">
@@ -50,7 +65,12 @@
 			/>
 			<span class="sr-only">Toggle theme</span>
 		</Button>
-		<Title withSubTitle={isDesktop.current}/>
+		<div>
+			<Title withSubTitle={isDesktop.current}/>
+			<Toggle bind:pressed={welcomeMessageOpen}>
+				<CircleQuestionMark />
+			</Toggle>
+		</div>
 			<Toggle variant="outline" bind:pressed={tutorialVisible} class="hidden lg:flex {loaded? '': 'opacity-0'}">
 				<CircleQuestionMark />
 				Tutorial

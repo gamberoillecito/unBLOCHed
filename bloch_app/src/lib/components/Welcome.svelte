@@ -9,15 +9,38 @@
   import welcomemd from '$lib/markdown/welcome_en.md?raw';
 	import * as Alert from './ui/alert/index.js';
   import MonitorSmartphone from '@lucide/svelte/icons/monitor-smartphone'
+  import { preferences }from '$lib/preferences';
+  import { get } from 'svelte/store';
+	import Toggle from './ui/toggle/toggle.svelte';
+	import Checkbox from './ui/checkbox/checkbox.svelte';
+	import Label from './ui/label/label.svelte';
+	import { onMount } from 'svelte';
 	const markedKatexOptions = {
 		throwOnError: false,
 	};
+  interface Props{
+    open: boolean;
+  };
+
+  let {
+    open = $bindable(true),
+  } : Props = $props();
 	marked.use(markedKatex(markedKatexOptions));
-	let open = $state(true);
+
 	const isDesktop = new MediaQuery("(min-width: 768px)");
   
   const DESCRIPTION = "This website allows you to experiment with a 'real' Bloch sphere and learn more about Quantum"
-		
+  let showWelcomeAtStart = $state(true);
+
+  onMount(()=>{
+    showWelcomeAtStart = get(preferences).showWelcomeAtStart ?? true;
+  })
+  $effect(()=> {
+    preferences.set({showWelcomeAtStart: showWelcomeAtStart});
+    console.log(`aggiornato ${showWelcomeAtStart}`);
+    
+  })
+  
 </script>
 
 {#snippet welcomeContent()}
@@ -38,7 +61,12 @@
       <div class="bg-red">
         {@render welcomeContent()}
       </div>
+      <Dialog.Footer>
+          <Checkbox id="showWelcomeMessage" bind:checked={showWelcomeAtStart}/>
+          <Label for="showWelcomeMessage">Show this message at startup</Label>
+      </Dialog.Footer>
     </Dialog.Content>
+    
   </Dialog.Root>
 {:else}
   <Drawer.Root bind:open>

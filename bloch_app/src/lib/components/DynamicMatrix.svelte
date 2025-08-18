@@ -200,7 +200,7 @@
     <!-- Buttons that needs to be disabled if instantUpdate is true -->
     <div class={`${instantUpdate ? 'hidden ':''} flex flex-col @xl:flex-row align-middle gap-2 content-center justify-around m-auto`} > 
         
-        <Button class="size-6 rounded-sm bg-(--approve) hover:bg-(--approve) hover:opacity-75" variant="outline"
+        <Button class="size-6 rounded-sm bg-(--approve) hover:bg-(--approve) dark:bg-(--approve) hover:opacity-75" variant="outline"
             bind:ref={updateMatrixButton} 
             disabled={!updateMatrixButtonEnabled}
             name="apply changes"

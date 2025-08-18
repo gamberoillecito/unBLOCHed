@@ -46,7 +46,7 @@
 	import { Switch } from '$lib/components/ui/switch/index';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import JoystickControls from './custom-ui/JoystickControls.svelte';
-
+	
 	const markedKatexOptions = {
 		throwOnError: false
 	};
@@ -201,6 +201,7 @@
 	</div>
 {/snippet}
 
+
 <div
 	class="@lg:flex-row @lg:justify-center-safe @lg:place-items-center flex h-full w-full flex-col place-items-center content-evenly justify-start gap-2 p-1"
 >
@@ -345,7 +346,7 @@
 					{@render gateButtonWithParams(gate, !DM.isConsistent, true)}
 				{/each}
 			</div>
-			<div class="m-auto flex shrink min-h-0 items-center space-x-1 w-fit p-2">
+			<div class="m-auto flex @lg:hidden shrink min-h-0 items-center space-x-1 w-fit p-2">
 				<Switch id="current-mode" bind:checked={customGateVisible} />
 				<Label for="current-mode">Custom gate</Label>
 			</div>
