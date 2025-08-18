@@ -57,18 +57,7 @@
 	};
 	const math = create(all, config);
 
-	let joystickMode = $state(true);
-	// $effect(()=>{
-	// 	if (joystickMode) {
-	// 		untrack(()=> {history.addElement(DM, new FakeDensityMatrix())})
-	// 		oldDM = DM;
-	// 		DM = new FakeDensityMatrix();
-	// 	}
-	// 	else {
-	// 		untrack(()=>{history.undo(DM)});
-	// 		DM = oldDM;
-	// 	}
-	// })
+	let joystickMode = $state(false);
 
 	let DM = $state(
 		new DensityMatrix(
@@ -114,6 +103,7 @@
 	let canvasContainer = $state() as HTMLDivElement;
 	/**Function to download image from the canvas*/
 	let getImage = $state() as () => string;
+	let customGateVisible = $state(false);
 </script>
 
 <!-- <link
@@ -212,14 +202,14 @@
 {/snippet}
 
 <div
-	class="@lg:flex-row @lg:justify-center-safe @lg:place-items-center flex h-full w-full flex-col place-items-center content-evenly justify-start gap-2 p-2"
+	class="@lg:flex-row @lg:justify-center-safe @lg:place-items-center flex h-full w-full flex-col place-items-center content-evenly justify-start gap-2 p-1"
 >
 	<!-- Container of undo/redo buttons and canvas -->
 	<div
 		class="@lg:flex-col shrink-1 @lg:basis-full @lg:self-auto max-h-lg flex max-w-lg flex-row-reverse items-center justify-center self-stretch justify-self-auto"
 	>
 		<!-- Undo/redo buttons -->
-		<div class="@lg:flex-row m-2 flex flex-col gap-1 {joystickMode ? 'hidden' : ''}">
+		<div class="@lg:flex-row @lg:m-2 flex flex-col gap-1 {joystickMode ? 'hidden' : ''}">
 			<Button
 				onclick={() => {
 					history.undo(DM);
@@ -244,18 +234,20 @@
 		<!-- Canvas container -->
 		<div
 			bind:this={canvasContainer}
-			class="border-1 @lg:h-auto @lg:w-[90%] relative m-3 aspect-square h-[85%] shrink rounded-md shadow-sm"
+			class=" @lg:h-auto @lg:w-[90%] relative m-2 h-fit shrink rounded-md shadow-sm"
 		>
-			<Canvas>
-				<Scene
-					bind:getImage
-					DM={joystickMode ? fakeDM : DM}
-					{history}
-					POI={predefinedStates}
-					settings={settings3DScene}
-					bind:joystickMode
-				></Scene>
-			</Canvas>
+			<div class="h-[85%] aspect-square border-1">
+				<Canvas>
+					<Scene
+						bind:getImage
+						DM={joystickMode ? fakeDM : DM}
+						{history}
+						POI={predefinedStates}
+						settings={settings3DScene}
+						bind:joystickMode
+					></Scene>
+				</Canvas>
+			</div>
 
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger
@@ -353,9 +345,12 @@
 					{@render gateButtonWithParams(gate, !DM.isConsistent, true)}
 				{/each}
 			</div>
-			<div class="m-3 flex flex-wrap items-center justify-center gap-2">
+			<div class="m-auto flex shrink min-h-0 items-center space-x-1 w-fit p-2">
+				<Switch id="current-mode" bind:checked={customGateVisible} />
+				<Label for="current-mode">Custom gate</Label>
+			</div>
+			<div class="m-3 {customGateVisible ? 'flex' : 'hidden'} @lg:flex  flex-wrap items-center justify-center gap-2">
 				<DynamicMatrix FM={GM} instantUpdate={true}></DynamicMatrix>
-
 				{@render gateButtonWithParams(GM, !(DM.isConsistent && GM.isConsistent), true)}
 			</div>
 		</ScrollArea>
