@@ -10,10 +10,10 @@
 	import SunIcon from '@lucide/svelte/icons/sun';
 	import MoonIcon from '@lucide/svelte/icons/moon';
 	import { toggleMode } from 'mode-watcher';
-	import { Button } from '$lib/components/ui/button/index.js';
+	import { Button, buttonVariants } from '$lib/components/ui/button/index.js';
 	import Title from '$lib/components/Title.svelte';
 	import { MediaQuery } from 'svelte/reactivity';
-	
+	import Info from '@lucide/svelte/icons/info'
 	import Welcome from '$lib/components/Welcome.svelte';
 	import { preferences } from '$lib/preferences';
 	import { get } from 'svelte/store';
@@ -66,10 +66,15 @@
 			<span class="sr-only">Toggle theme</span>
 		</Button>
 		<div>
-			<Title withSubTitle={isDesktop.current}/>
-			<Toggle bind:pressed={welcomeMessageOpen}>
-				<CircleQuestionMark />
-			</Toggle>
+			<!-- The line with title is a hacky way to change the title style using CSS, 
+			if using svelte media queries it gets calculated only after part of the content has loaded -->
+			<Title subtitle={false}/> <span class="hidden lg:inline"><Title title={false}/></span>
+			<!-- <Toggle bind:pressed={welcomeMessageOpen} class={buttonVariants.variants.variant.link}>
+				<Info />
+			</Toggle> -->
+			<Button variant="ghost" onclick={()=>{welcomeMessageOpen = !welcomeMessageOpen}}>
+				<Info />
+			</Button>
 		</div>
 			<Toggle variant="outline" bind:pressed={tutorialVisible} class="hidden lg:flex {loaded? '': 'opacity-0'}">
 				<CircleQuestionMark />

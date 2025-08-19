@@ -53,7 +53,7 @@
   <Dialog.Root bind:open>
     <Dialog.Content class="sm:max-w-[600px] sm:max-h-[70%] z-10000">
       <Dialog.Header>
-        <Dialog.Title class="font-light">Welcome to <Title withSubTitle={false}/>!</Dialog.Title>
+        <Dialog.Title class="font-light">Welcome to <Title subtitle={false}/>!</Dialog.Title>
         <Dialog.Description>
         {DESCRIPTION}
         </Dialog.Description>
@@ -63,7 +63,7 @@
       </div>
       <Dialog.Footer>
           <Checkbox id="showWelcomeMessage" bind:checked={showWelcomeAtStart}/>
-          <Label for="showWelcomeMessage">Show this message at startup</Label>
+          <Label for="showWelcomeMessage">Show this message next time</Label>
       </Dialog.Footer>
     </Dialog.Content>
     
@@ -72,7 +72,7 @@
   <Drawer.Root bind:open>
     <Drawer.Content class="pb-4 px-2">
       <Drawer.Header class="text-left">
-        <Drawer.Title class="font-light">Welcome to <Title withSubTitle={false}/>!</Drawer.Title>
+        <Drawer.Title class="font-light">Welcome to <Title subtitle={false}/>!</Drawer.Title>
         <Drawer.Description>
           {DESCRIPTION}
         </Drawer.Description>

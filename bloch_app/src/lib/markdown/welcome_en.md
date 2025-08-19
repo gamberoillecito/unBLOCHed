@@ -5,9 +5,10 @@
 - [X] Joystick mode
 - [X] Custom and parametric gates
 - [X] Image export
-- [X] Mixed states
 
 ### Coming soon...
 
+- [ ] Tutorial
 - [ ] GIF export
 - [ ] Time evolution
+- [ ] Many more...
