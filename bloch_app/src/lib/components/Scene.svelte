@@ -43,7 +43,7 @@
 	}: Props = $props();
 
 	
-
+	const SHOW_PATH_HELPERS = false;
 
 	const MAX_PATH_COLORS = 12;
 	const colors_hex = [
@@ -66,7 +66,7 @@
 		let data = renderer.domElement.toDataURL('image/png');
 		return data;
 	}
-	getImage = downloadImage
+	getImage = downloadImage;
 	
 </script>
 
@@ -102,7 +102,7 @@
 			<Path
 				path = {historyEl.path}
 				pathColor={pathGradient[idx % MAX_PATH_COLORS]}
-				previousPosition={idx === history.list.length - 1}
+				previousPosition={(idx === history.list.length - 1) && SHOW_PATH_HELPERS}
 			></Path>
 		{/if}
 	{/each}
