@@ -2,7 +2,7 @@
 
 I created this website during my last year of the Master's degree in Quantum Engineering as a way to learn more on the topic and about web-developement. 
 
-<img width="48%"  alt="floorp_4pGa802WMX" src="https://github.com/user-attachments/assets/c66fcfbc-ed63-47b6-8c38-2c04ca77f32e" />
+<img width="48%" alt="image" src="https://github.com/user-attachments/assets/32c0f059-6c1c-4133-a90b-ee427b48e633" />
 <img width="48%"  alt="floorp_tJ5qx5463K" src="https://github.com/user-attachments/assets/46476b5e-d62b-49c9-be21-bcd50081415c" />
 
 
@@ -13,7 +13,7 @@ The goal of the website is to give users a quick and easy way to "skecth" some i
 - [X] ✍️**Latex input**: All values can be inserted in a user-friendly way using the usual LaTeX commands, with the benefit of smart recognition of the most common symbols. To type $\phi$ simply write `phi`, to insert a fraction, typing `\` is sufficient. (This wouldn't be possible without the amazing [https://mathlive.io/](mathlive.io) and the support of its creator).
 - [X] 🆗**Custom matrices with validation**: Both the density matrix and the gate matrix can be fully customized and instant validation is performed to give the user a feedback of what they are typing. Example: if a gate matrix is not unitary, the user is warned and stopped from proceeding.
 - [X] 🌐**3D visualization**: The 3D view of the Bloch sphere reacts instantly to the changes done by the user and can be customized to show or hide different visual aids.
-- [X] 🖼**Image export**: You can export the 3D scene as a PNG image with a single click. (Hamburger menu in the 3D scene -> Save Image)
+- [X] 🖼**Image export**: You can export the 3D scene as a PNG image with a single click. (_Hamburger menu in the 3D scene_ $\rightarrow$ _Save Image_)
 - [X] 🕹**Joystick mode**: No more frustating "3D" drawing of the Bloch spehre or animations using your arms to show what you mean! Now you can control the Bloch vector as in a video game using your mouse and/or keyboard.
 
 - [ ] 📱**Mobile support**: Partial support for small screens and/or touch devices. There are still some bugs that need to be fixed but many features are already working!
