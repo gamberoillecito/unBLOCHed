@@ -11,6 +11,7 @@ The goal of the website is to give users a quick and easy way to "skecth" some i
 - [X] **3D visualization**: The 3D view of the Bloch sphere reacts instantly to the changes done by the user and can be customized to show or hide different visual aids.
 - [X] **Image exoprt**: You can export the 3D scene as a PNG image with a single click. (Hamburger menu in the 3D scene -> Save Image)
 - [X] **Joystick mode**: No more frustating "3D" drawing of the Bloch spehre or animations using your arms to show what you mean! Now you can control the Bloch vector as in a video game using your mouse and/or keyboard.
+- [X] **Dark mode**: Everybody loves dark mode.
 
 - [ ] **Mobile support**: Partial support for small screens and/or touch devices. There are still some bugs that need to be fixed but many features are already working!
 - [ ] **Mixed states**: Partial support for mixed states is already present but I plan to expand this in the future, so stay tuned for an update! 

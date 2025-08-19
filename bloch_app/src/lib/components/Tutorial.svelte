@@ -4,6 +4,8 @@
 	import tutorial2 from '$lib/markdown/tutorial_pages/tutorial_2_en.md?raw';
 	import tutorial3 from '$lib/markdown/tutorial_pages/tutorial_3_en.md?raw';
 	import tutorial4 from '$lib/markdown/tutorial_pages/tutorial_4_en.md?raw';
+	import comingSoon from '$lib/markdown/tutorial_pages/coming_soon.md?raw';
+	
 	import ScrollArea from './ui/scroll-area/scroll-area.svelte';
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
@@ -14,21 +16,25 @@
 
 	const tutorialList = [
 		{
-			mdContent: tutorial1,
-			title: 'Qubits'
-		},
-		{
-			mdContent: tutorial2,
-			title: 'Bloch Sphere'
-		},
-		{
-			mdContent: tutorial3,
-			title: 'States'
-		},
-		{
-			mdContent: tutorial4,
-			title: 'Gates'
+			mdContent: comingSoon,
+			title: "Almost ready"
 		}
+		// {
+		// 	mdContent: tutorial1,
+		// 	title: 'Qubits'
+		// },
+		// {
+		// 	mdContent: tutorial2,
+		// 	title: 'Bloch Sphere'
+		// },
+		// {
+		// 	mdContent: tutorial3,
+		// 	title: 'States'
+		// },
+		// {
+		// 	mdContent: tutorial4,
+		// 	title: 'Gates'
+		// }
 	];
 </script>
 
