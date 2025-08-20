@@ -49,6 +49,7 @@ jobs:
 
       - name: Build
         run: pnpm run build
+        working-directory: ./bloch_app
 
       - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v4.0.0
