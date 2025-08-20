@@ -34,7 +34,8 @@
 	);
 	let color = $state() as Color;
 	$effect(()=>{
-		let lightCol = new Color(gradientArray[Math.floor(((gradientArray.length - 1) * DM.phi) / (2 * Math.PI))]);
+		let colorIdx = Math.floor(((gradientArray.length) * DM.phi) / (2 * Math.PI));
+		let lightCol = new Color(gradientArray[colorIdx]);
 		let darkCol = lightCol.clone();
 		let hsl = {} as HSL;
 		lightCol.getHSL(hsl)
