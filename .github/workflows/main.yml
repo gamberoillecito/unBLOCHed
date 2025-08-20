@@ -56,7 +56,7 @@ jobs:
         uses: actions/upload-pages-artifact@v4.0.0
         with:
           # this should match the `pages` option in your adapter-static options
-          path: 'build/'
+          path: 'bloch_app/build/'
 
   deploy:
     needs: build
