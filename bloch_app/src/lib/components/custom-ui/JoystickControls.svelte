@@ -25,45 +25,60 @@
 	let isDragging = $state(false);
 	let lastX = $state(0);
 	let lastY = $state(0);
-	const avgEventsOld = 40;
-	let oldCounter = 0;
 
-	// unify drag logic so it can be used for mouse AND touch
-	function startDrag(x: number, y: number) {
-		isDragging = true;
-		lastX = x;
-		lastY = y;
-		// add global mouse listeners for mouse case
-		window.addEventListener('mousemove', onWindowMouseMove);
-		window.addEventListener('mouseup', onWindowMouseUp);
-		// add global touch listeners for touch case (non-passive so we can preventDefault)
-		window.addEventListener('touchmove', onWindowTouchMove, { passive: false });
-		window.addEventListener('touchend', onWindowTouchEnd);
+	// NEW: RAF batching state
+	let pendingDx = 0;
+	let pendingDy = 0;
+	let rafScheduled = false;
+	let rafId: number | null = null;
+
+	function scheduleApply() {
+	    if (rafScheduled) return;
+	    rafScheduled = true;
+	    rafId = requestAnimationFrame(() => {
+	        rafScheduled = false;
+	        rafId = null;
+	        // apply accumulated movement once per frame
+	        if (pendingDx !== 0 || pendingDy !== 0) {
+	            applyDelta(pendingDx, pendingDy);
+	            pendingDx = 0;
+	            pendingDy = 0;
+	        }
+	    });
 	}
 
+	// replace moveDrag with incremental accumulation + RAF scheduling
 	function moveDrag(x: number, y: number) {
-		if (!isDragging) return;
-		const dx = x - lastX;
-		const dy = y - lastY;
-
-		// Sensitivity factors (adjust as needed)
-		const thetaStep = 0.01;
-		const phiStep = 0.01;
-
-		DM.theta = DM.theta - dy * thetaStep;
-		DM.phi = (DM.phi + dx * phiStep) % (2 * Math.PI);
-
-		lastX = x;
-		lastY = y;
+	    if (!isDragging) return;
+	    // accumulate incremental deltas, update last positions for next event
+	    const dx = x - lastX;
+	    const dy = y - lastY;
+	    pendingDx += dx;
+	    pendingDy += dy;
+	    lastX = x;
+	    lastY = y;
+	    scheduleApply();
 	}
 
 	function endDrag() {
-		isDragging = false;
-		// remove listeners
-		window.removeEventListener('mousemove', onWindowMouseMove);
-		window.removeEventListener('mouseup', onWindowMouseUp);
-		window.removeEventListener('touchmove', onWindowTouchMove);
-		window.removeEventListener('touchend', onWindowTouchEnd);
+	    isDragging = false;
+	    // flush pending and cancel RAF
+	    if (rafId !== null) {
+	        cancelAnimationFrame(rafId);
+	        rafId = null;
+	        rafScheduled = false;
+	    }
+	    // apply any remaining small delta immediately
+	    if (pendingDx !== 0 || pendingDy !== 0) {
+	        applyDelta(pendingDx, pendingDy);
+	        pendingDx = 0;
+	        pendingDy = 0;
+	    }
+	    // remove listeners
+	    window.removeEventListener('mousemove', onWindowMouseMove);
+	    window.removeEventListener('mouseup', onWindowMouseUp);
+	    window.removeEventListener('touchmove', onWindowTouchMove);
+	    window.removeEventListener('touchend', onWindowTouchEnd);
 	}
 
 	// mouse handlers (wrap the unified functions)
@@ -120,7 +135,6 @@
 	function handleKeys(e: KeyboardEvent) {
 		if (!joystickMode) return;
 
-		console.log(e.key);
 		const thetaStep = 0.1;
 		const phiStep = 0.1;
 		const lenStep = 0.1;
@@ -167,6 +181,36 @@
 		}
 	});
 	document.addEventListener('keydown', handleKeys);
+
+	// helper used elsewhere in file (kept, no change)
+	function applyDelta(dx: number, dy: number) {
+	    const thetaStep = 0.01;
+	    const phiStep = 0.01;
+	    DM.theta = DM.theta - dy * thetaStep;
+	    DM.phi = (DM.phi + dx * phiStep) % (2 * Math.PI);
+	}
+
+	function startDrag(x: number, y: number) {
+    // initialize dragging state and RAF batching
+    isDragging = true;
+    lastX = x;
+    lastY = y;
+
+    // reset any pending accumulated movement so we start fresh
+    pendingDx = 0;
+    pendingDy = 0;
+    if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+        rafScheduled = false;
+    }
+
+    // add global listeners (mouse + touch)
+    window.addEventListener('mousemove', onWindowMouseMove);
+    window.addEventListener('mouseup', onWindowMouseUp);
+    window.addEventListener('touchmove', onWindowTouchMove, { passive: false });
+    window.addEventListener('touchend', onWindowTouchEnd);
+}
 </script>
 
 <div class="flex flex-col items-center gap-2">
