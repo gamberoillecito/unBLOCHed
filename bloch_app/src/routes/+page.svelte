@@ -72,7 +72,7 @@
 			<!-- <Toggle bind:pressed={welcomeMessageOpen} class={buttonVariants.variants.variant.link}>
 				<Info />
 			</Toggle> -->
-			<Button variant="ghost" onclick={()=>{welcomeMessageOpen = !welcomeMessageOpen}}>
+			<Button variant="ghost" onclick={()=>{welcomeMessageOpen = !welcomeMessageOpen}} aria-label="info about website">
 				<Info />
 			</Button>
 		</div>

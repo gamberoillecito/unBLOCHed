@@ -53,7 +53,7 @@
 <Popover.Root bind:open={mainPopoverOpen}>
 	<!-- The trigger is itself a button but with a different style. Take the style from the button styles and apply to it -->
 	<Popover.Trigger
-		name={FM.parameterArray.length === 0 ? 'info' : 'edit'}
+		aria-label={FM.parameterArray.length === 0 ? 'info' : 'edit'}
 		class={`m-0 h-10 w-6 rounded-none rounded-e-md ${buttonVariants.variants.variant.outline}`}
 	>
 		{#if FM.parameterArray.length === 0}

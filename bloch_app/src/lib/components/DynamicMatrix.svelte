@@ -1,5 +1,4 @@
 <script lang="ts">
-    import "mathlive/fonts.css"
     import type { Attachment } from 'svelte/attachments';
     import "mathlive"
     import type {MathfieldElement } from "mathlive";
@@ -204,6 +203,7 @@
             bind:ref={updateMatrixButton} 
             disabled={!updateMatrixButtonEnabled}
             name="apply changes"
+            aria-label="apply changes"
         >
             <!-- <Save /> -->
             <Save class="size-4 stroke-(--approve-foreground)"/>
@@ -212,6 +212,7 @@
             bind:ref={undoChangesButton} 
             disabled={!undoChangesButtonEnabled}
             name="restore"
+            aria-label="restore"
         >
             <!-- <Trash />-->
             <Eraser class=" size-4"/>

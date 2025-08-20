@@ -70,7 +70,6 @@
 		)
 	);
 	let fakeDM = $state(new FakeDensityMatrix());
-	$inspect(DM);
 	let popoversContext = $state({
 		preventOpening: false
 	});
@@ -126,6 +125,7 @@
 		<Button
 			{variant}
 			class={btnClass}
+			aria-label="latex button"
 			{disabled}
 			{onclick}
 			{@attach (el: HTMLElement) => {
@@ -135,6 +135,7 @@
 	{:else}
 		<Tooltip.Trigger
 			class={btnClass + ' ' + buttonVariants({ variant: variant })}
+			aria-label="latex button"
 			{disabled}
 			{onclick}
 			{@attach (el: HTMLElement) => {
@@ -218,6 +219,7 @@
 				disabled={history.earliestChange}
 				size="icon"
 				name="undo"
+				aria-label="undo"
 			>
 				<Undo />
 			</Button>
@@ -228,6 +230,7 @@
 				disabled={history.latestChange}
 				size="icon"
 				name="redo"
+				aria-label="redo"
 			>
 				<Redo />
 			</Button>
@@ -253,6 +256,7 @@
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger
 					name="menu"
+					aria-label="menu"
 					class="absolute right-0 top-[0] z-[9999] p-2 ${buttonVariants.variants.variant
 						.secondary} "
 				>

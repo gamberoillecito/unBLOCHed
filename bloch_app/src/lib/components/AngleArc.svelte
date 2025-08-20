@@ -24,7 +24,6 @@
     const LINE_RADIUS = 1; // Radius at which the lines connected to the arcs should end
     const THRESHOLD_ANGLE = Math.PI/10;
     let arcs_color = $derived(mode.current === 'light' ? new Color(0,0,0) : new Color().setHSL(0, 0, 0.5));
-    $inspect(arcs_color)
     // Material for the dashed lines
     let dash_material = $derived(new LineDashedMaterial({color: arcs_color, dashSize: 0.02, gapSize: 0.03}));
     let arc_material = $derived(new LineBasicMaterial({color: arcs_color }));

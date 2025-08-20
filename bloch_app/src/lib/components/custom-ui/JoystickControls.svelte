@@ -22,7 +22,6 @@
 
 	let { DM, joystickMode = $bindable() }: Props = $props();
 
-	$inspect(joystickMode);
 	let isDragging = $state(false);
 	let lastX = $state(0);
 	let lastY = $state(0);

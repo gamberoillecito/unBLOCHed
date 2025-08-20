@@ -22,6 +22,7 @@
     open: boolean;
   };
 
+
   let {
     open = $bindable(true),
   } : Props = $props();
