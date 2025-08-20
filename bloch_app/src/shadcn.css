@@ -31,7 +31,7 @@
   --sidebar-accent-foreground: oklch(0.2046 0 0);
   --sidebar-border: oklch(0.8699 0 0);
   --sidebar-ring: oklch(0.6461 0.1943 41.1158);
-  --font-sans: Inter, sans-serif;
+  --font-sans: AR One Sans, sans-serif;
   --font-serif: serif;
   --font-mono: Roboto Mono, monospace;
   --radius: 0rem;
@@ -80,7 +80,7 @@
   --sidebar-accent-foreground: oklch(0.9702 0 0);
   --sidebar-border: oklch(0.3904 0 0);
   --sidebar-ring: oklch(0.7049 0.1867 47.6044);
-  --font-sans: Inter, sans-serif;
+  --font-sans: AR One Sans, sans-serif;
   --font-serif: serif;
   --font-mono: Roboto Mono, monospace;
   --radius: 0rem;
