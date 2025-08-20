@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-static';
 import { mdsvex } from 'mdsvex';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import remarkMath from 'remark-math';
@@ -30,7 +30,10 @@ const config = {
 			fallback: undefined,
 			precompress: false,
 			strict: true
-		})
+		}),
+		paths: {
+			base: process.argv.includes('dev') ? 'unBLOCHed' : process.env.BASE_PATH
+		}
 	},
 	extensions: ['.svelte', '.svx']
 };
