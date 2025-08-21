@@ -31,7 +31,7 @@ const config = {
 			strict: true
 		}),
 		paths: {
-			base: process.argv.includes('dev') ? '' : '/unBLOCHed'
+			base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
 		}
 	},
 	extensions: ['.svelte', '.svx']
