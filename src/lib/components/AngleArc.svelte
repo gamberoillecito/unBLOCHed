@@ -4,6 +4,7 @@
     import { MathUtils, Euler, Color,ArrowHelper, Object3D, EllipseCurve, ArcCurve, BufferGeometry, Group, Vector3, Line, AxesHelper, Matrix4, LineBasicMaterial, LineDashedMaterial, Material, Path, CurvePath, Curve } from 'three';
     import {Billboard, SVG} from '@threlte/extras'
 	import { mode } from "mode-watcher";
+	import { base } from '$app/paths';
     
 	interface Props {
         vector: [number, number, number]
@@ -119,6 +120,6 @@
         position.z= {midTheta.z}
 
     >
-        <SVG src={`/${mode.current}/theta.svg`} scale={0.0001} position={[-0.02, 0,0]} />
+        <SVG src={`${base}/${mode.current}/theta.svg`} scale={0.0001} position={[-0.02, 0,0]} />
     </Billboard>
 {/if}

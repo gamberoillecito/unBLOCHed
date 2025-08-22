@@ -22,6 +22,7 @@
 	import { getContext, onMount } from 'svelte';
 	import type { BlochHistory } from './BlochHistory.svelte';
 	import { mode } from "mode-watcher";
+	import { base } from '$app/paths';
 	
 	export type sceneSettings = {displayAngles: boolean, displayStateLabels: boolean, displayPaths: boolean }	 
 	interface Props {
@@ -118,7 +119,7 @@
 				complex(dm.blochV[2]).re + sign(dm.blochV[2]) * 0.1
 			]}
 		>
-			<SVG src={`/${mode.current}/output(${index}).svg`} scale={0.00012} position={[-0.08, -0.02, +0.08]} />
+			<SVG src={`${base}/${mode.current}/output(${index}).svg`} scale={0.00012} position={[-0.08, -0.02, +0.08]} />
 		</Billboard>
 	{/each}
 {/if}
