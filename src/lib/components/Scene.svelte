@@ -93,9 +93,7 @@
 			edges={{ scale: 20 }}
 		/>
 	</OrbitControls>
-{#if settings.displayAngles}
-<Text  position={[0.6, -0.6,-10]}  anchorX="right" color="gray" text="unBLOCHed" anchorY="baseline" textAlign="right" scale={0.4}/>
-{/if}
+	<Text  position={[0.6, -0.6,-10]}  anchorX="right" color="gray" text="unBLOCHed" anchorY="baseline" textAlign="right" scale={0.4}/>
 </T.PerspectiveCamera>
 {#if settings.displayPaths}
 	{#each history.list as historyEl, idx}

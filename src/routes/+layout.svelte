@@ -18,6 +18,7 @@
 <svelte:head>
 	<title>unBLOCHed</title>
 	<meta name="description" content="Interactive and intuitive Bloch spehere simulator" />
+	<script defer src="https://cloud.umami.is/script.js" data-website-id="0ee63b18-31fe-4396-9051-84766149f498"></script>
 </svelte:head>
 {@render children()}
 
