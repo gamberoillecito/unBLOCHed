@@ -38,8 +38,6 @@
   })
   $effect(()=> {
     preferences.set({showWelcomeAtStart: showWelcomeAtStart});
-    console.log(`aggiornato ${showWelcomeAtStart}`);
-    
   })
   
 </script>
@@ -86,7 +84,7 @@
 {:else}
   <Drawer.Root bind:open>
     <Drawer.Content class="pb-4 px-2 z-10000 max-h-[90%]">
-      <Alert.Root variant="destructive" class="m-2">
+      <Alert.Root variant="destructive" class="mx-auto py-4 max-w-[95%]">
         <MonitorSmartphone/>
         <Alert.Title>
           This website works best on larger screens

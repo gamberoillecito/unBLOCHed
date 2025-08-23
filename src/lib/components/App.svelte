@@ -278,7 +278,6 @@
 							// requestImage = true;
 							// let data = canvasElement.toDataURL('image/png');
 							let data = getImage();
-							console.log(data);
 
 							const link = document.createElement('a');
 							link.download = `bloch-sphere-${new Date().toISOString().replace(/:/g, '-')}.png`;
