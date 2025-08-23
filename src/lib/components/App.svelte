@@ -46,7 +46,6 @@
 	import { Switch } from '$lib/components/ui/switch/index';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import JoystickControls from './custom-ui/JoystickControls.svelte';
-	import DropdownMenuGroup from './ui/dropdown-menu/dropdown-menu-group.svelte';
 
 	const markedKatexOptions = {
 		throwOnError: false
