@@ -46,7 +46,7 @@
 	import { Switch } from '$lib/components/ui/switch/index';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import JoystickControls from './custom-ui/JoystickControls.svelte';
-	
+
 	const markedKatexOptions = {
 		throwOnError: false
 	};
@@ -101,8 +101,30 @@
 
 	let canvasContainer = $state() as HTMLDivElement;
 	/**Function to download image from the canvas*/
-	let getImage = $state() as () => string;
+	let getImage = $state() as (withBackground?: boolean) => string;
 	let customGateVisible = $state(false);
+
+	function saveImage(
+		getImage: (withBackground?: boolean) => string,
+		withBackground: boolean = true
+	) {
+		if (getImage) {
+			let imgData = getImage(withBackground);
+			// Create a temporary link element
+			const link = document.createElement('a');
+			link.href = imgData;
+			const bgSuffix = withBackground ? '-bg' : 'nobg';
+			link.download = `bloch-sphere-${bgSuffix}-${new Date().toISOString().replace(/:/g, '-')}.png`;
+
+			// Trigger download
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+			toast.success('Download started');
+		} else {
+			toast.error('Image data not available');
+		}
+	}
 </script>
 
 <!-- <link
@@ -202,16 +224,15 @@
 	</div>
 {/snippet}
 
-
 <div
-	class="@lg:flex-row @lg:justify-center-safe @lg:place-items-center flex h-full w-full flex-col place-items-center content-evenly justify-start gap-2 p-1"
+	class="flex h-full w-full flex-col place-items-center content-evenly justify-start gap-2 p-1 @lg:flex-row @lg:place-items-center @lg:justify-center-safe"
 >
 	<!-- Container of undo/redo buttons and canvas -->
 	<div
-		class="@lg:flex-col shrink-1 @lg:basis-full @lg:self-auto max-h-lg flex max-w-lg flex-row-reverse items-center justify-center self-stretch justify-self-auto"
+		class="max-h-lg flex max-w-lg shrink-1 flex-row-reverse items-center justify-center self-stretch justify-self-auto @lg:basis-full @lg:flex-col @lg:self-auto"
 	>
 		<!-- Undo/redo buttons -->
-		<div class="@lg:flex-row @lg:m-2 flex flex-col gap-1 {joystickMode ? 'hidden' : ''}">
+		<div class="flex flex-col gap-1 @lg:m-2 @lg:flex-row {joystickMode ? 'hidden' : ''}">
 			<Button
 				onclick={() => {
 					history.undo(DM);
@@ -238,9 +259,9 @@
 		<!-- Canvas container -->
 		<div
 			bind:this={canvasContainer}
-			class=" @lg:h-auto @lg:w-[90%] relative m-2 h-fit shrink rounded-md shadow-sm"
+			class=" relative m-2 h-fit shrink rounded-md shadow-sm @lg:h-auto @lg:w-[90%]"
 		>
-			<div class="h-[85%] aspect-square border-1">
+			<div class="aspect-square h-[85%] border-1">
 				<Canvas>
 					<Scene
 						bind:getImage
@@ -257,7 +278,7 @@
 				<DropdownMenu.Trigger
 					name="menu"
 					aria-label="menu"
-					class="absolute right-0 top-[0] z-[9999] p-2 ${buttonVariants.variants.variant
+					class="absolute top-[0] right-0 z-[9999] p-2 ${buttonVariants.variants.variant
 						.secondary} "
 				>
 					<Menu />
@@ -273,29 +294,21 @@
 						>Show Labels</DropdownMenu.CheckboxItem
 					>
 					<DropdownMenu.Separator></DropdownMenu.Separator>
-					<DropdownMenu.Item
-						onclick={() => {
-							// requestImage = true;
-							// let data = canvasElement.toDataURL('image/png');
-							let data = getImage();
-
-							const link = document.createElement('a');
-							link.download = `bloch-sphere-${new Date().toISOString().replace(/:/g, '-')}.png`;
-							link.href = data;
-
-							// Trigger download
-							document.body.appendChild(link);
-							link.click();
-							document.body.removeChild(link);
-							toast.success('Download started');
-						}}
-					>
-						<ImageDown /> Save Image</DropdownMenu.Item
-					>
+					<DropdownMenu.Sub>
+						<DropdownMenu.SubTrigger><ImageDown /> Save Image</DropdownMenu.SubTrigger>
+						<DropdownMenu.SubContent>
+							<DropdownMenu.Item onclick={() => saveImage(getImage, true)}
+								>With Background</DropdownMenu.Item
+							>
+							<DropdownMenu.Item onclick={() => saveImage(getImage, false)}
+								>Without Background</DropdownMenu.Item
+							>
+						</DropdownMenu.SubContent>
+					</DropdownMenu.Sub>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 			<!-- Toggle to switch between normal and joystick mode -->
-			<div class="m-auto flex shrink min-h-0 items-center space-x-1 w-fit p-2">
+			<div class="m-auto flex min-h-0 w-fit shrink items-center space-x-1 p-2">
 				<Switch id="current-mode" bind:checked={joystickMode} />
 				<Label for="current-mode">Joystick mode</Label>
 			</div>
@@ -303,7 +316,7 @@
 	</div>
 	<!-- Buttons and matrices -->
 	{#if !joystickMode}
-		<ScrollArea class="@lg:min-h-auto min-h-0 shrink p-2" type="auto">
+		<ScrollArea class="min-h-0 shrink p-2 @lg:min-h-auto" type="auto">
 			<div class="flex flex-col items-center">
 				<h4 class="w-fit self-start">Density Matrix</h4>
 				<DynamicMatrix
@@ -340,7 +353,7 @@
 			<Separator class=""></Separator>
 			<h4>Gates</h4>
 			<!-- Standard gates (no parameters) -->
-			<div class="@lg:max-w-[400px] m-3 flex flex-wrap justify-center gap-2">
+			<div class="m-3 flex flex-wrap justify-center gap-2 @lg:max-w-[400px]">
 				{#each predefinedGates.filter((g) => g.parameterArray.length === 0) as gate}
 					{@render gateButtonWithParams(gate, !DM.isConsistent, true)}
 				{/each}
@@ -349,11 +362,15 @@
 					{@render gateButtonWithParams(gate, !DM.isConsistent, true)}
 				{/each}
 			</div>
-			<div class="m-auto flex @lg:hidden shrink min-h-0 items-center space-x-1 w-fit p-2">
+			<div class="m-auto flex min-h-0 w-fit shrink items-center space-x-1 p-2 @lg:hidden">
 				<Switch id="current-mode" bind:checked={customGateVisible} />
 				<Label for="current-mode">Custom gate</Label>
 			</div>
-			<div class="m-3 {customGateVisible ? 'flex' : 'hidden'} @lg:flex  flex-wrap items-center justify-center gap-2">
+			<div
+				class="m-3 {customGateVisible
+					? 'flex'
+					: 'hidden'} flex-wrap items-center justify-center gap-2 @lg:flex"
+			>
 				<DynamicMatrix FM={GM} instantUpdate={true}></DynamicMatrix>
 				{@render gateButtonWithParams(GM, !(DM.isConsistent && GM.isConsistent), true)}
 			</div>

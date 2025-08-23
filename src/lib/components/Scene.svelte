@@ -15,22 +15,38 @@
 	import { boolean, complex, number, sign, type Complex } from 'mathjs';
 	import SolidVector from './SolidVector.svelte';
 	import Path from './Path.svelte';
-	import { ArrowHelper, AxesHelper, Camera, DoubleSide, Fog, Mesh, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
+	import {
+		ArrowHelper,
+		AxesHelper,
+		Camera,
+		DoubleSide,
+		Fog,
+		Mesh,
+		PerspectiveCamera,
+		Scene,
+		WebGLRenderer,
+		Color
+	} from 'three';
 	import { generateGradient } from 'typescript-color-gradient';
 	import type { DensityMatrix, GatePath } from './Model.svelte';
 	import AngleArc from './AngleArc.svelte';
 	import { getContext, onMount } from 'svelte';
 	import type { BlochHistory } from './BlochHistory.svelte';
-	import { mode } from "mode-watcher";
+	import { mode } from 'mode-watcher';
 	import { base } from '$app/paths';
-	
-	export type sceneSettings = {displayAngles: boolean, displayStateLabels: boolean, displayPaths: boolean }	 
+	import * as culori from 'culori';
+
+	export type sceneSettings = {
+		displayAngles: boolean;
+		displayStateLabels: boolean;
+		displayPaths: boolean;
+	};
 	interface Props {
 		DM: DensityMatrix;
 		history: BlochHistory;
 		POI: DensityMatrix[];
 		settings: sceneSettings;
-		getImage: ()=> string;
+		getImage: (withBackground?: boolean) => string;
 		joystickMode: boolean;
 	}
 
@@ -40,10 +56,9 @@
 		POI,
 		settings,
 		getImage = $bindable(),
-		joystickMode = $bindable(),
+		joystickMode = $bindable()
 	}: Props = $props();
 
-	
 	const SHOW_PATH_HELPERS = false;
 
 	const MAX_PATH_COLORS = 12;
@@ -62,15 +77,49 @@
 	let pathGradient = generateGradient(colors_hex, MAX_PATH_COLORS);
 	const { renderer, scene, renderStage, autoRenderTask, canvas } = useThrelte();
 	let camera = $state() as PerspectiveCamera;
-	function downloadImage() {
+
+	function downloadImage(withBackground = true) {
+		const prevClearColor = new Color();
+		renderer.getClearColor(prevClearColor);
+		const prevClearAlpha = renderer.getClearAlpha();
+
+		if (withBackground) {
+			// Get the root element
+			const root = document.documentElement;
+
+			// Get the value of the CSS variable
+			const color = getComputedStyle(root).getPropertyValue('--background');
+			let bgColor: string | null = null;
+
+			// Parse the color using the 'color' library
+			try {
+				const c = culori.parse(color); // parses ok/oklch/hsl/rgb
+				if (c) bgColor = culori.formatRgb(c); // returns "rgb(r,g,b)"
+			} catch (e) {
+				console.warn('Failed to parse background color:', color);
+			}
+
+			// Set background color
+			if (bgColor) {
+				renderer.setClearColor(bgColor);
+			} else {
+				renderer.setClearColor('#ffffff'); // default to white if variable not found
+			}
+			renderer.setClearAlpha(1); // fully opaque
+		}
+
 		renderer.render(scene, camera);
-		let data = renderer.domElement.toDataURL('image/png');
+		const data = renderer.domElement.toDataURL('image/png');
+
+		// Restore previous state
+		renderer.setClearColor(prevClearColor);
+		renderer.setClearAlpha(prevClearAlpha);
+
 		return data;
 	}
-	getImage = downloadImage;
-	
-</script>
 
+	getImage = downloadImage;
+</script>
 
 <T.DirectionalLight intensity={3} position.x={5} position.y={10} castgetContext(matrixContext) />
 <T.AmbientLight intensity={0.5} />
@@ -93,15 +142,23 @@
 			edges={{ scale: 20 }}
 		/>
 	</OrbitControls>
-	<Text  position={[0.6, -0.6,-10]}  anchorX="right" color="gray" text="unBLOCHed" anchorY="baseline" textAlign="right" scale={0.4}/>
+	<Text
+		position={[0.6, -0.6, -10]}
+		anchorX="right"
+		color="gray"
+		text="unBLOCHed"
+		anchorY="baseline"
+		textAlign="right"
+		scale={0.4}
+	/>
 </T.PerspectiveCamera>
 {#if settings.displayPaths}
 	{#each history.list as historyEl, idx}
 		{#if historyEl.path && historyEl.pathVisible && !joystickMode}
 			<Path
-				path = {historyEl.path}
+				path={historyEl.path}
 				pathColor={pathGradient[idx % MAX_PATH_COLORS]}
-				previousPosition={(idx === history.list.length - 1) && SHOW_PATH_HELPERS}
+				previousPosition={idx === history.list.length - 1 && SHOW_PATH_HELPERS}
 			></Path>
 		{/if}
 	{/each}
@@ -117,15 +174,17 @@
 				complex(dm.blochV[2]).re + sign(dm.blochV[2]) * 0.1
 			]}
 		>
-			<SVG src={`${base}/${mode.current}/output(${index}).svg`} scale={0.00012} position={[-0.08, -0.02, +0.08]} />
+			<SVG
+				src={`${base}/${mode.current}/output(${index}).svg`}
+				scale={0.00012}
+				position={[-0.08, -0.02, +0.08]}
+			/>
 		</Billboard>
 	{/each}
 {/if}
 
 <BlochSphere></BlochSphere>
-<SolidVector DM={DM}></SolidVector>
+<SolidVector {DM}></SolidVector>
 {#if settings.displayAngles}
 	<AngleArc vector={DM.blochV}></AngleArc>
 {/if}
-
-
