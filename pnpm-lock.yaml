@@ -20,6 +20,9 @@ importers:
       '@types/three':
         specifier: ^0.174.0
         version: 0.174.0
+      culori:
+        specifier: ^4.0.2
+        version: 4.0.2
       gifenc:
         specifier: github:mattdesl/gifenc
         version: https://codeload.github.com/mattdesl/gifenc/tar.gz/27db5b982dba701ca440b55ea36fad3999040973
@@ -78,6 +81,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.0.0
         version: 4.1.11(vite@6.3.5(jiti@2.4.2)(lightningcss@1.30.1))
+      '@types/culori':
+        specifier: ^4.0.0
+        version: 4.0.0
       bits-ui:
         specifier: ^2.8.6
         version: 2.8.10(@internationalized/date@3.8.2)(svelte@5.33.13)
@@ -706,6 +712,9 @@ packages:
   '@types/cookie@0.6.0':
     resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
 
+  '@types/culori@4.0.0':
+    resolution: {integrity: sha512-aFljQwjb++sl6TAyEXeHTiK/fk9epZOQ+nMmadjnAvzZFIvNoQ0x8XQYfcOaRTBwmDUPUlghhZCJ66MTcqQAsg==}
+
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
 
@@ -962,6 +971,10 @@ packages:
     resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
     engines: {node: '>=4'}
     hasBin: true
+
+  culori@4.0.2:
+    resolution: {integrity: sha512-1+BhOB8ahCn4O0cep0Sh2l9KCOfOdY+BXJnKMHFFzDEouSr/el18QwXEMRlOj9UY5nCeA8UN3a/82rUWRBeyBw==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
   debug@4.4.1:
     resolution: {integrity: sha512-KcKCqiftBJcZr++7ykoDIEwSa3XWowTfNPo92BYxjXiyYEVrUQh2aLyhxBCwww+heortUFxEJYcRzosstTEBYQ==}
@@ -2538,6 +2551,8 @@ snapshots:
 
   '@types/cookie@0.6.0': {}
 
+  '@types/culori@4.0.0': {}
+
   '@types/debug@4.1.12':
     dependencies:
       '@types/ms': 2.1.0
@@ -2826,6 +2841,8 @@ snapshots:
       which: 2.0.2
 
   cssesc@3.0.0: {}
+
+  culori@4.0.2: {}
 
   debug@4.4.1:
     dependencies:
