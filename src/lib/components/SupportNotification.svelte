@@ -1,18 +1,26 @@
 <script lang="ts">
 	import { Button, buttonVariants } from '$lib/components/ui/button/index.js';
-	import { onMount, type Component } from 'svelte';
-	import { toast } from 'svelte-sonner';
+	import Title from '$lib/components/Title.svelte'
     import GitHubIcon from './custom-ui/GitHubIcon.svelte';
     console.log(typeof(GitHubIcon));
     
-	onMount(() => {
-		toast('Do you like this website?', {
-			description: "If you do, star it on GitHub. If you don't, let me know how to improve it!",
-            action: {
-                label: GitHubIcon as Component,
-                onClick: ()=> console.log('Ciao')
-            },
-            duration: 99999
-		});
-	});
+	interface Props {
+		title: string;
+	}
+	
+	let {
+		title
+	}:Props = $props();
 </script>
+
+<div class="prose">
+	<h5>
+		{title} Do you like <Title subtitle={false}/>?
+	</h5>
+	<div class="flex flex-row gap-3 items-center">
+		<article class="prose-sm">
+			If you do, give it a <b>star</b> on GitHub! 
+		</article>
+		<Button variant='outline'><GitHubIcon/></Button>
+	</div>
+</div>

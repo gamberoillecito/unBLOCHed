@@ -17,7 +17,8 @@
 	import Welcome from '$lib/components/Welcome.svelte';
 	import { preferences } from '$lib/preferences';
 	import { get } from 'svelte/store';
-	
+	import { toast } from 'svelte-sonner';
+	import SupportNotification from '$lib/components/SupportNotification.svelte'
 	
 	let showWelcomeAtStart= get(preferences).showWelcomeAtStart;	
 	let tutorialVisible = $state(false);
@@ -40,12 +41,16 @@
 		if (showWelcomeAtStart) {
 			welcomeMessageOpen = true;
 		}
+		toast(prova(), {duration: 99999});
 	});
 
 	const isDesktop = new MediaQuery("(min-width: 768px)");
 
 </script>
 
+{#snippet prova()}
+	<Title/>
+{/snippet}
 <svelte:window bind:innerWidth />
 
 <Welcome bind:open={welcomeMessageOpen}/>
