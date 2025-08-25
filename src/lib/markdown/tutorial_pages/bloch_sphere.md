@@ -1,0 +1,94 @@
+# What is the Bloch sphere?
+
+Quantum states can be described in different ways. The Bloch sphere is  one of them. In this tutorial we will understand which are the most common descriptions of quantum states. We will introduce, in order: the Dirac notation, the vector notation, the density matrix formalism and lastly the Bloch sphere representation.
+
+One way to describe quantum states is the Dirac notation, that we introduced in the previous lecture.
+
+Using this notation, the state is written as:
+
+$$ |\psi ⟩ = \alpha |0⟩ + \beta |1⟩ $$
+
+Where, as mentioned before, $\alpha$ and $\beta$ are complex numbers and $|\alpha|^2 + |\beta|^2 = 1$. 
+
+Another way of writing the same thing is by using a complex 2D vector. This is done in a very straightforward way: the first entry contains the coefficient $\alpha$, the second one contains $\beta$. 
+
+In formulas:
+
+$$ \ket\psi = \begin{pmatrix} \alpha \\ \beta  \end{pmatrix} $$
+
+
+Quantum states can be also described using a 2x2 Complex matrix. This matrix is called "density matrix" and is often denoted as $\rho$. The Matrix description can be easily obtained from the vectorial one by computing a the Column-Row product of the vector and its complex conjugate.
+
+For clarity it is useful to look at an example. The density matrix associated to the state $\ket \psi$ can be computed as:
+
+$$
+
+\rho = 
+
+\begin{bmatrix}
+
+\alpha \\
+
+\beta
+
+\end{bmatrix}
+
+\begin{bmatrix}
+
+\alpha^* & \beta^*
+
+\end{bmatrix}
+=
+\begin{bmatrix}
+
+|\alpha|^2 & \alpha\beta^* \\
+
+\alpha^*\beta & |\beta|^2
+
+\end{bmatrix}
+
+$$
+
+Finally, we get to the description that we are most interested in: the Bloch sphere representation. 
+
+This model provides an intuitive picture for visualizing the state of a single qubit as a point of a unit sphere (i.e. a sphere with radius equal to one).  This is done by mapping every **pure** state onto a point on the surface the sphere. **Mixed** states, on the other hand, are mapped to points *inside* the Bloch sphere.
+If you don't already know the difference between "pure" and "mixed" states you can just ignore it for now, we will come back to this later.
+
+Mathematically, instead of working with the complex numbers $\alpha$ and $\beta$, the Bloch sphere uses two **real parameters**:
+
+- $\theta \in [0,\pi]$ (polar angle)
+- $\phi \in [0, 2\pi]$ (azimuthal angle)
+  The reason of this choice is that they can be visualized as [spherical coordinates](https://en.wikipedia.org/wiki/Spherical_coordinate_system) on the unitary sphere.
+
+In simpler words, imagining the Bloch sphere as the Earth, $\theta$ tells you the latitude (so the North-South position) and $\phi$ the longitude.
+
+This description is possible because any quantum state:
+
+$$
+\ket \psi = \alpha \ket 0 + \beta \ket 1
+$$
+
+Can be written in terms of $\theta$ and $\phi$ as:
+
+$$
+|\psi\rangle = \cos\left(\frac{\theta}{2}\right)|0\rangle + e^{i\phi}\sin\left(\frac{\theta}{2}\right)|1\rangle
+$$
+
+Where we have written $\alpha$ and $\beta$ using $\theta$ and $\phi$ in the following way:
+
+$$
+\begin{align}
+\alpha &= \cos\left(\frac{\theta}{2}\right)\\
+\beta &= e^{i\phi} \sin\left(\frac{\theta}{2}\right)
+\end{align}
+$$
+  
+With this two formulas we can understand which is the role of $\theta$  and $\phi$ in determining the state of a qubit:
+
+- the polar angle $\theta$ controls the relative weight of $\ket 0$ and $\ket 1$, given by the modulus of $\alpha$ and $\beta$.
+	- If $\theta = 0$ then $|\psi\rangle = |0\rangle$ 
+	- If $\theta = \pi$ then $\ket \psi = \ket 1$
+  for intermediate values, the state is a superposition of the two basis states.
+- the azimutal angle $\phi$ is the phase difference between $\alpha$ and $\beta$.
+
+In the next lecture, you will develop a more in depth intuition their the role in the Bloch sphere representation.

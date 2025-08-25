@@ -1,0 +1,21 @@
+# What is a Qubit?
+
+A qubit (short for quantum bit) is the basic unit of quantum information.
+As classical bits are the minimal unit of information in classical computers, qubits have the same rule in quantum computers. In classical computers, there is very little you can do with a single bit (you can just flip it or leave it as is); with a single qubit, on the other hand, you can do much more and the goal of this website is to show you what this is.
+
+While a classical bit has only two possible states (0 or 1), a quantum bit can be in a superposition of both states at the same time. In the context of quantum information, the two states are typically denoted as $\ket 0$ and $\ket 1$. This way of writing quantum states is called "[Dirac Notation](https://en.wikipedia.org/wiki/Bra%E2%80%93ket_notation$0)".  It is common to call $\ket 0$ and $\ket 1$ "basis states"
+
+The meaning of the word "superposition" is easier to understand by looking at the mathematical definition of a quantum state.
+Mathematically, a qubit's state is represented as:
+
+$$
+|\psi ⟩ = \alpha |0⟩ + \beta |1⟩
+$$
+
+Where $\alpha$ and $\beta$ are complex numbers that respect the so-called **normalization condition:** $|\alpha|^2 + |\beta|^2 = 1$. They are often called "**Probability amplitudes**"
+
+An intuitive way of looking at this formula is that a quantum state $\ket\psi$ is a mixture of the two states $\ket 0$ and $\ket 1$ and the coefficients $\alpha$ and $\beta$ tell you the proportions in wich $\ket 0$ and $\ket 1$ are mixed.
+
+In the lecture about quantum states we will see some interactive examples to better understand this concept.
+
+Quantum bits can be encoded using different physical systems. Some examples are: photons, electrons and superconducting circuits.

@@ -1,0 +1,27 @@
+# Measuring a Qubit
+
+So far we have explored what are qubits and how they can be described. Now we will answer to a very important question: **what happens when we measure a quantum bit?**
+
+The short answer is that even tough a qubit state can be in infinitely many superpositions of $\ket 0$ and $\ket 1$, when you measure it, there are only two possible outcomes: either $\ket 0$ or $\ket 1$.
+
+Using a simple analogy, you can imagine a qubit as a sort of quantum coin. Before the toss, the coin it’s not simply heads or tail, it’s in a sort of mixture of both (a superposition of $\ket 0$ and $\ket 1$). But the moment you catch it (make a measurement), it settles into a definite result: either heads or tails ( $\ket 0$ or $\ket 1$).
+
+To answer the same question more in detail, we need a little bit of math. Let's start by considering the generic state:
+
+$$ |\psi ⟩ = \alpha |0⟩ + \beta |1⟩ $$
+
+When you perform a measurement on the qubit, the state $\ket \psi$ becomes, or more rigorously "collapses", in either one of the two basis states:  $\ket 0$ and $\ket 1$. These two states are the only possible measurement results.
+
+An extremely important feature of this process is that it is **probabilistic**. The probability of each outcome can be computed from the probability amplitudes $\alpha$ and $\beta$. This is done simply by taking the square of their complex modulus:
+
+- The probability of obtaining $\ket 0$ is $|\alpha|^2$
+- The probability of obtaining $\ket 1$ is $|\beta|^2$
+
+In the quantum coin analogy:
+- $|\alpha|^2$ is the probability of getting “tails”
+- $|\beta|^2$ is the probability of getting “heads”
+
+With this in mind, we can give a clearer explanation of the normalization condition $|\alpha|^2 + |\beta|^2 = 1$. This condition means that when measuring a qubit you can obtain either $\ket 0$ or $\ket 1$, without any other possibility.
+
+
+
