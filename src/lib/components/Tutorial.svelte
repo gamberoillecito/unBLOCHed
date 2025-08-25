@@ -1,14 +1,11 @@
 <script lang="ts">
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
-	import tutorial1 from '$lib/markdown/tutorial_pages/tutorial_1_en.md?raw';
-	import tutorial2 from '$lib/markdown/tutorial_pages/tutorial_2_en.md?raw';
-	import tutorial3 from '$lib/markdown/tutorial_pages/tutorial_3_en.md?raw';
-	import tutorial4 from '$lib/markdown/tutorial_pages/tutorial_4_en.md?raw';
 	import comingSoon from '$lib/markdown/tutorial_pages/coming_soon.md?raw';
 	
 	import ScrollArea from './ui/scroll-area/scroll-area.svelte';
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
+	import Section from './Section.svx';
 	const markedKatexOptions = {
 		throwOnError: false
 	};
@@ -43,10 +40,9 @@
 		<ScrollArea class="h-full w-full">
 			<article
 				class="prose dark:prose-invert max-h-full w-full px-6 py-4"
-				{@attach (p) => {
-					p.innerHTML = marked.parse(mdContent) as string;
-				}}
-			></article>
+			> 
+		</article>
+			<Section/>
 		</ScrollArea>
 	</Tabs.Content>
 {/snippet}
