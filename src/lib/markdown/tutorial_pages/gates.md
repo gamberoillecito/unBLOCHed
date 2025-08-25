@@ -1,0 +1,81 @@
+# What is a Quantum gate?
+
+Quantum gates are transformations that allow you to manipulate the state of a qubit. They are the building blocks of quantum computation, similarly to how logic gates are the basis of classical computation. In the classical world, there are only two possible operations we can do on a bit: 
+
+- Leave it as is, which is to say apply an *identity* gate
+- Flip it, i.e. apply the *not* gate, which transforms $0$ in $1$ and vice versa
+
+(Just as a side note, the common operations *and*, *or*, *xor*, etc. involve *two or more classical bits*, what we are interested in now is to understand what we can do with just **one** qubit).
+
+In the quantum world there are many more operations we can do with just a single qubit and, to understand and represent them, we need few more mathematical concepts.
+
+Mathematically, quantum gates are **linear operators** that can be described by [unitary matrices](https://en.wikipedia.org/wiki/Unitary_matrix). A matrix $U$ is unitary when it respects the following condition:$$ U U^\dagger = U^\dagger U = I $$Where $U^\dagger$ is the conjugate transpose $(U^T)^*$ and $I$ is the identity matrix.
+
+To calculate how a quantum state is transformed by a quantum gate you just need to multiply the vector by the matrix representing the gate. We will later see some examples.
+
+The most common quantum gates are the **Pauli operators**: $X$, $Y$, and $Z$. Their matrix representations are:
+
+$$
+\begin{align}
+ X = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}
+ &&
+ Y = \begin{bmatrix} 0 & -i \\ i & 0 \end{bmatrix}
+&&
+Z = \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}
+\end{align}
+$$
+
+Let’s see how they act on the computational basis states $\ket 0 = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$ and $\ket 1 = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$.  By performing the matrix-vector products you can verify that:
+
+- $X$ acts as a NOT gate: swaps $\ket 0$ with $\ket 1$ and $\ket 1$ with $\ket 0$.
+- $Y$ swaps $\ket 0$ and $\ket 1$ and applies a phase shift of $\pm i$. Namely, it transforms $\ket 0$ in $i\ket 1$ and $\ket 1$ in $-i \ket {0}$
+- $Z$ leaves $\ket 0$ untouched and and flips the sign of $\ket 1$. More percisely, $\ket 0$ remains $\ket 0$ and transforms $\ket 1$ in $- \ket 1$
+
+Mathematically this is written as:
+
+$$
+\begin{align}
+X \ket 0 &= \ket 1 && Y \ket 0 = i\ket 1 && Z \ket 0 = \ket 0 \\
+
+X \ket 1 &= \ket 0 && Y \ket 1 = -i\ket {0} && Z \ket 1 = -\ket 1
+\end{align}
+$$
+
+Also in this case, the Bloch sphere gives us a powerful tool to get an intuitive picture of what's going on. In fact, on the Bloch sphere, quantum gates corresponds to rotations of the Bloch vector.
+In the case of the Pauli gates:
+- $X$ applies a rotation of an angle $\pi$ around the $\hat x$-axis.
+- $Y$ applies a rotation of an angle $\pi$ around the $\hat y$-axis.
+- $Z$ applies a rotation of an angle $\pi$ around the $\hat z$-axis.
+
+To achieve **arbitrary rotations**, we use the rotation gates $R_x$, $R_y$, and $R_z$, defined as:
+
+$$
+\begin{aligned} R_x(\theta) &= \begin{bmatrix} \cos(\tfrac{\theta}{2}) & -i \sin(\tfrac{\theta}{2}) \\ -i \sin(\tfrac{\theta}{2}) & \cos(\tfrac{\theta}{2}) \end{bmatrix}, \\ R_y(\theta) &= \begin{bmatrix} \cos(\tfrac{\theta}{2}) & -\sin(\tfrac{\theta}{2}) \\ \sin(\tfrac{\theta}{2}) & \cos(\tfrac{\theta}{2}) \end{bmatrix}, \\ R_z(\theta) &= \begin{bmatrix} e^{-i\theta/2} & 0 \\ 0 & e^{i\theta/2} \end{bmatrix}. \end{aligned}
+$$
+
+These gates rotate the Bloch vector by an angle $\theta$ around the $x$, $y$, or $z$ axis respectively. You can define the rotation angle by clicking on the icon: "Icon(da sostituire)"
+
+Another fundamental gate is the **Hadamard gate**:
+
+$$H = \frac{1}{\sqrt 2}\begin{bmatrix} 1 & 1 \\ 1 & -1 \end{bmatrix}$$
+
+When acting on $\ket 0$ and $\ket 1$ it creates an equal superposition of $\ket 0$ and $\ket 1$ (i.e. with equal probability amplitudes $\alpha = \beta = 1 / \sqrt 2$):
+
+$$
+\begin{align}
+ H\ket 0 &= \tfrac{1}{\sqrt{2}}(\ket 0 + \ket 1) \\
+
+H \ket 1 &= \tfrac{1}{\sqrt{2}}(\ket 0 - \ket 1)
+\end{align}
+$$
+
+On the Bloch sphere, $H$ corresponds to a $\pi$-rotation around the axis lying halfway between $\hat{x}$ and $\hat{z}$. In other words, it maps the poles (basis states) to points on the equator (balanced superpositions).
+
+Finally, the **$U_3$ gate** is the most general single-qubit gate. It combines rotations around all three axes using three parameters: $\theta$, $\phi$, and $\lambda$.
+Their role is the follwoing:
+
+- $\theta$: rotation angle around the $x$ axis.
+- $\phi$: rotation angle around the $z$ axis.
+- $\lambda$: rotation angle around the $y$ axis.
+
+By adjusting these three parameters, any single-qubit unitary transformation can be represented as a $U_3$ gate. This makes $U_3$ the “universal” single-qubit gate.
