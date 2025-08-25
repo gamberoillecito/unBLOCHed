@@ -1,0 +1,66 @@
+# What is a mixed state?
+
+So far we have implicitly assumed that the quantum state of a qubit is known exactly, using phrases like "the qubit is in the state $\ket 0$".
+When the state of a qubit is known with complete certainty, we say that the qubit is in a **pure state**.
+
+However, in many realistic situations, we don’t know the state exactly. For example, imagine a qubit that has probability $p_0$ of being in $\ket{0}$ and a probability $p_1$ probability of being in $\ket{1}$. In this case, the qubit is not in a definite state but rather described probabilistically. Such states are called **mixed states**.
+
+It’s important not to confuse a **superposition** with a **mixture**. These are very different concepts!
+- A **superposition** is still a pure state, where we know the qubit's state exactly. For example:
+$$
+\ket{\psi} = \tfrac{1}{\sqrt{2}}(\ket{0} + \ket{1})
+$$
+- A **mixture** describes uncertainty between different states. For example a qubit that has 50% probability of being in $\ket 0$ and a 50% probability  probability of being in $\ket{1}$.
+
+To better highlight the difference between this two cases, we will look at their density matrix representation. This will also allow us to understand how the density matrix of a mixed state can be constructed.
+
+Let's start with the superposition state $\ket{\psi} = \tfrac{1}{\sqrt{2}}(\ket{0} + \ket{1})$. As we have discussed in the lecture about the different representations, its density matrix can be obtained as: 
+
+$$
+\rho_{\ket \psi} = \frac{1}{ 2}\begin{bmatrix} 1 \\1\end{bmatrix} \begin{bmatrix} 1 & 1\end{bmatrix} = \frac{1}{ 2}\begin{bmatrix} 1 & 1\\1 & 1\end{bmatrix}
+$$
+
+To get the density matrix of the mixed state in the previous example, we start by writing the density matrices corresponding to the pure states $\ket{0}$ and $\ket{1}$:
+
+$$
+\begin{align}
+\rho_0 &= \begin{bmatrix} 1 \\0\end{bmatrix} \begin{bmatrix} 1 & 0\end{bmatrix} = \begin{bmatrix} 1 & 0\\0 & 0\end{bmatrix}\\
+
+\rho_1 &= \begin{bmatrix} 0 \\1\end{bmatrix} \begin{bmatrix} 0 & 1\end{bmatrix} = \begin{bmatrix} 0 & 0\\0 & 1\end{bmatrix}
+\end{align}
+$$
+
+The density matrix of the mixed state $\rho$ is then obtained as the sum of the density matrices $\rho_0$ and $\rho_1$, weighted by the respective probabilities $p_0$ and $p_1$. Since in this case $p_0 = p_1 = 0.5$, the final density matrix is:
+
+$$
+\rho = p_0 \rho_0 +p_1 \rho_1 = \frac{1}{2} \begin{bmatrix}1 & 0\\0 & 1 \end{bmatrix}
+$$
+
+In general, a qubit that has the probability $p_i$ of being in the state $\rho_i$ is described by the density matrix:
+
+$$
+\rho = \sum_i p_i \rho_i
+$$
+In simple words, the density matrix of a mixed state is a sort of weighted average of density matrices. The density matrices used are the one of the states present in the mixture $\rho_i$, whereas the weights are their respective probabilities $p_i$.
+
+By comparing the two density matrices $\rho$ and $\rho_{\ket \psi}$, you can note this difference: the superposition retains **off-diagonal terms** (the $1$’s), while the mixture does not. Those off-diagonal terms carry information about quantum interference, which is lost in a classical probabilistic mixture.
+
+Let's now look to what happens when we visualize pure states and mixed states on the Bloch sphere. It turns out that there is a neat geometric way to see the distinction between a mixture and a superposition:
+
+- **Pure states** correspond to Bloch vectors that lie on the _surface_ of the sphere.
+- **Mixed states** correspond to Bloch vectors that end _inside_ the sphere.
+   
+You can test this by visualizing the Bloch vector associated with the density matrices $\rho$ and $\rho_{\ket \psi}$.
+
+To conclude we make two final notes about the density matrix formalism.
+
+The first note is about the math behind density matrices. It is important to note that not all complex 2x2 matrices are a valid density matrix. A valid density matrix $\rho$ must satisfy the following conditions:
+
+1. **Trace normalization**: $\rho$ has trace equal to one.
+2. **Positivity:** $\rho$ is a positive operator ($\bra \varphi \rho \ket \varphi \geq 0$ for any arbitrary state $\ket \varphi$).
+
+If you try to insert a matrix that doesn't fulfill this two conditions you will get an error.
+
+The second note is about the description of multi-qubit systems. In such systems, the density matrix formalism becomes especially powerful when describing **entangled states**.
+These are states where it is impossible to assign a single ket to each qubit individually, but is still possible to assign an individual density matrix.
+Entangled states are fundamental concepts in quantum information theory, but their description is outside from the scope of this notes. You will have the chance to better understand them during your quantum journey.
