@@ -12,13 +12,16 @@
 		unstyled: true,
 		classes: {
 			toast:
-				'flex flex-row border-1 gap-2 px-4 py-3 items-stretch justify-items-start shadow-sm rounded-md bg-card fg-card w-fit min-w-[300px] max-w-[500px] justify-between',
+				'flex flex-row border-1 gap-2 px-4 py-3 items-end justify-items-start shadow-sm rounded-md bg-card fg-card w-fit min-w-[200px] max-w-[500px] justify-between',
 			title: 'prose dark:prose-invert grow m-t-0',
 			description: 'prose-sm grow',
-			actionButton: `${buttonVariants.variants.variant.outline} size-fit p-1 col-span-1 translate-y-2 w-fit`,
-			icon: 'size-4 col-span-1 shrink self-start translate-y-2'
-		}
+			actionButton: `${buttonVariants.variants.variant.secondary} size-fit p-1 -translate-y-[1em] w-fit text-sm md:text-xs font-medium`,
+			icon: 'size-4 col-span-1 shrink self-start translate-y-[0.5em]',
+			closeButton: 'absolute top-0 left-0 size-6 p-auto  border-2 border-white'
+		}, 
+
 	}}
+	
 />
 
 <!-- CSS styles for katex to render formulas correctly -->

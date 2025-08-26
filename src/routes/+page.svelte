@@ -48,18 +48,19 @@
 			icon: GitHubIcon,
 			action: {
 				label: 'GitHub',
-				onClick: () => {}
+				onClick: () => {console.log('github');
+				}
 			},
 			description: 'Give it a star!',
 			duration: 99999
 		});
-		toast('Do you like unBLOCHed?', {
+		toast('Have you found any issue?', {
 			icon: GitHubIcon,
 			action: {
 				label: 'GitHub',
 				onClick: () => {}
 			},
-			description: 'Give it a star!',
+			description: 'Let me know!',
 			duration: 99999
 		});
 	});
