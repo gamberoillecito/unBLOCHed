@@ -17,10 +17,7 @@
 	import Welcome from '$lib/components/Welcome.svelte';
 	import { preferences } from '$lib/preferences';
 	import { get } from 'svelte/store';
-	import { toast } from 'svelte-sonner';
-	import SupportNotification from '$lib/components/SupportNotification.svelte';
-	import CustomToast from '$lib/components/custom-ui/CustomToast.svelte';
-	import GitHubIcon from '$lib/components/custom-ui/GitHubIcon.svelte';
+	import { scheduleNotifications } from '$lib/notifications';
 
 	let showWelcomeAtStart = get(preferences).showWelcomeAtStart;
 	let tutorialVisible = $state(false);
@@ -40,29 +37,12 @@
 		window.scrollY = 300;
 		window.MathfieldElement.soundsDirectory = null;
 		loaded = true;
+		// Show a welcome message respecting user preferences
 		if (showWelcomeAtStart) {
 			welcomeMessageOpen = true;
 		}
-
-		toast('Do you like unBLOCHed?', {
-			icon: GitHubIcon,
-			action: {
-				label: 'GitHub',
-				onClick: () => {console.log('github');
-				}
-			},
-			description: 'Give it a star!',
-			duration: 99999
-		});
-		toast('Have you found any issue?', {
-			icon: GitHubIcon,
-			action: {
-				label: 'GitHub',
-				onClick: () => {}
-			},
-			description: 'Let me know!',
-			duration: 99999
-		});
+		// Schedule notifications for later for the user not to bombard user with information at startup
+		scheduleNotifications();
 	});
 
 	const isDesktop = new MediaQuery('(min-width: 768px)');

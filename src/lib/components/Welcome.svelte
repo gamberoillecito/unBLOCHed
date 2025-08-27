@@ -38,7 +38,7 @@
     showWelcomeAtStart = get(preferences).showWelcomeAtStart ?? true;
   })
   $effect(()=> {
-    preferences.set({showWelcomeAtStart: showWelcomeAtStart});
+    preferences.update((x)=>{return {...x, showWelcomeAtStart: showWelcomeAtStart}});
   })
   
 </script>
