@@ -46,7 +46,8 @@
 	import { Switch } from '$lib/components/ui/switch/index';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import JoystickControls from './custom-ui/JoystickControls.svelte';
-	import LatexButton from './custom-ui/LatexButton.svelte';
+	import LatexButton from './custom-ui/Buttons/LatexButton.svelte';
+	import ApplyGateButton from './custom-ui/Buttons/ApplyGateButton.svelte';
 
 	const markedKatexOptions = {
 		throwOnError: false
@@ -125,8 +126,8 @@
 			document.body.removeChild(link);
 			toast.success('Download started', {
 				description: 'Check out your download folder',
-				position: 'bottom-right', 
-				closeButton: false, 
+				position: 'bottom-right',
+				closeButton: false
 			});
 		} else {
 			toast.error('Image data not available');
@@ -141,46 +142,20 @@
 	crossorigin="anonymous"
 /> -->
 
-<!-- Button that, when clicked, applies a gate -->
-
-{#snippet applyGateButton(gate: GateMatrix, disabled: boolean)}
-	<Tooltip.Provider>
-		<Tooltip.Root>
-			<LatexButton
-				onclick ={() => {
-					let initialDM = DM.clone();
-					DM.apply_gate(gate);
-					history.addElement(initialDM, DM, gate);
-
-					// Make the canvas react to show the user that the gate has been applied
-					let newClasses = 'animate-gate-applied';
-					canvasContainer.classList.add(newClasses);
-					setTimeout(() => {
-						canvasContainer.classList.remove(newClasses);
-					}, 300);
-				}}
-				label= {gate.label}
-				disabled={disabled || !gate.isConsistent}
-				variant={'default'}
-				tooltip={true}
-			/>
-			{#if isZero(gate.rotationAngle) || equal(gate.rotationAngle, multiply(2, pi))}
-				<Tooltip.Content class="bg-muted text-muted-foreground border-1"
-					>{@html marked.parse('Gate results in a $0$ or $2\\pi$ rotation')}</Tooltip.Content
-				>
-			{/if}
-		</Tooltip.Root>
-	</Tooltip.Provider>
-{/snippet}
-
 {#snippet gateButtonWithParams(gate: GateMatrix, disabled: boolean, withParams: boolean)}
 	{#if withParams}
 		<div class="flex gap-0">
-			{@render applyGateButton(gate, disabled)}
+			<ApplyGateButton
+				DM={DM} history={history} gate={gate} disabled={disabled}
+				canvasContainer={canvasContainer}
+			/>
 			<MatrixInfoInput matrix={gate}></MatrixInfoInput>
 		</div>
 	{:else}
-		{@render applyGateButton(gate, disabled)}
+		<ApplyGateButton
+			DM={DM} history={history} gate={gate} disabled={disabled}
+			canvasContainer={canvasContainer}
+		/>
 	{/if}
 {/snippet}
 
@@ -192,7 +167,7 @@
 				DM.setMatrixFromLatex(matrix.latexMat, matrix.latexMult);
 			}}
 			label={matrix.label}
-			disabled={disabled}
+			{disabled}
 		/>
 		<MatrixInfoInput {matrix}></MatrixInfoInput>
 	</div>
@@ -233,9 +208,9 @@
 		<!-- Canvas container -->
 		<div
 			bind:this={canvasContainer}
-			class=" relative m-2 h-fit shrink  shadow-sm @lg:h-auto @lg:w-[90%]"
+			class=" relative m-2 h-fit shrink shadow-sm @lg:h-auto @lg:w-[90%]"
 		>
-			<div class="aspect-square h-[85%] border-1 rounded-md">
+			<div class="aspect-square h-[85%] rounded-md border-1">
 				<Canvas>
 					<Scene
 						bind:getImage
