@@ -10,15 +10,16 @@
 <Toaster
 	toastOptions={{
 		unstyled: true,
+		class: "my-toaster",
 		classes: {
 			toast:
-				'flex flex-row border-1 gap-2 px-4 py-3 items-end justify-items-start shadow-sm rounded-md bg-card fg-card w-fit min-w-[200px] max-w-[500px] justify-between',
-			title: 'prose dark:prose-invert grow m-t-0',
-			description: 'prose-sm grow',
-			actionButton: `${buttonVariants.variants.variant.secondary} size-fit p-1 -translate-y-[1em] w-fit text-sm md:text-xs font-medium`,
+				'flex flex-row border-1 border-primary gap-2 px-4 py-2 h-fit items-end justify-items-start shadow-xl rounded-md bg-card fg-card w-fit w-xs max-w-[500px] justify-around',
+			title: 'prose dark:prose-invert grow m-t-0 font-semibold',
+			description: 'prose-sm grow font-light',
+			actionButton: `${buttonVariants.variants.variant.default} size-fit p-1 -translate-y-[1em] w-fit text-sm md:text-xs font-medium`,
 			icon: 'size-4 col-span-1 shrink self-start translate-y-[0.5em]',
 			closeButton:
-				'absolute top-0 right-0 size-6 md:size-4 flex items-center justify-center z-1  hover:opacity-50 border-b-2 border-l-2 border-foreground bg-card'
+				`my-close-button absolute top-0 right-0 size-6 md:size-4 flex items-center justify-center z-1 rounded-tr-md rounded-bl-md hover:opacity-50 border-b-2 border-l-2 border-primary!  bg-card`
 		}
 	}}
 	closeButton
@@ -68,4 +69,5 @@
 		background-color: inherit;
 		color: var(--color-foreground);
 	}
+
 </style>

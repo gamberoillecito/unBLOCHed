@@ -122,7 +122,11 @@
 			document.body.appendChild(link);
 			link.click();
 			document.body.removeChild(link);
-			toast.success('Download started');
+			toast.success('Download started', {
+				description: 'Check out your download folder',
+				position: 'bottom-right', 
+				closeButton: false, 
+			});
 		} else {
 			toast.error('Image data not available');
 		}
@@ -261,9 +265,9 @@
 		<!-- Canvas container -->
 		<div
 			bind:this={canvasContainer}
-			class=" relative m-2 h-fit shrink rounded-md shadow-sm @lg:h-auto @lg:w-[90%]"
+			class=" relative m-2 h-fit shrink  shadow-sm @lg:h-auto @lg:w-[90%]"
 		>
-			<div class="aspect-square h-[85%] border-1">
+			<div class="aspect-square h-[85%] border-1 rounded-md">
 				<Canvas>
 					<Scene
 						bind:getImage
