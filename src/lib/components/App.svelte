@@ -46,6 +46,7 @@
 	import { Switch } from '$lib/components/ui/switch/index';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import JoystickControls from './custom-ui/JoystickControls.svelte';
+	import LatexButton from './custom-ui/LatexButton.svelte';
 
 	const markedKatexOptions = {
 		throwOnError: false
@@ -140,46 +141,13 @@
 	crossorigin="anonymous"
 /> -->
 
-<!-- Generic button with an onclick action and a latex label -->
-{#snippet latexButton(
-	onclick: (arg: any) => void,
-	label: string,
-	disabled: boolean,
-	variant?: ButtonVariant,
-	tooltip: boolean = false
-)}
-	{@const btnClass = 'aspect-square h-10 min-w-10 rounded-none rounded-s-md'}
-	{#if !tooltip}
-		<Button
-			{variant}
-			class={btnClass}
-			aria-label="latex button"
-			{disabled}
-			{onclick}
-			{@attach (el: HTMLElement) => {
-				el.innerHTML = `<span class="pointer-events-none">${convertLatexToMarkup(label)}</span>`;
-			}}
-		></Button>
-	{:else}
-		<Tooltip.Trigger
-			class={btnClass + ' ' + buttonVariants({ variant: variant })}
-			aria-label="latex button"
-			{disabled}
-			{onclick}
-			{@attach (el: HTMLElement) => {
-				el.innerHTML = `<span class="pointer-events-none">${convertLatexToMarkup(label)}</span>`;
-			}}
-		></Tooltip.Trigger>
-	{/if}
-{/snippet}
-
 <!-- Button that, when clicked, applies a gate -->
 
 {#snippet applyGateButton(gate: GateMatrix, disabled: boolean)}
 	<Tooltip.Provider>
 		<Tooltip.Root>
-			{@render latexButton(
-				() => {
+			<LatexButton
+				onclick ={() => {
 					let initialDM = DM.clone();
 					DM.apply_gate(gate);
 					history.addElement(initialDM, DM, gate);
@@ -190,12 +158,12 @@
 					setTimeout(() => {
 						canvasContainer.classList.remove(newClasses);
 					}, 300);
-				},
-				gate.label,
-				disabled || !gate.isConsistent,
-				'default',
-				true
-			)}
+				}}
+				label= {gate.label}
+				disabled={disabled || !gate.isConsistent}
+				variant={'default'}
+				tooltip={true}
+			/>
 			{#if isZero(gate.rotationAngle) || equal(gate.rotationAngle, multiply(2, pi))}
 				<Tooltip.Content class="bg-muted text-muted-foreground border-1"
 					>{@html marked.parse('Gate results in a $0$ or $2\\pi$ rotation')}</Tooltip.Content
@@ -218,14 +186,14 @@
 
 {#snippet updateStateButton(matrix: DensityMatrix, disabled: boolean)}
 	<div class="flex gap-0">
-		{@render latexButton(
-			() => {
+		<LatexButton
+			onclick={() => {
 				history.addElement(DM, matrix);
 				DM.setMatrixFromLatex(matrix.latexMat, matrix.latexMult);
-			},
-			matrix.label,
-			disabled
-		)}
+			}}
+			label={matrix.label}
+			disabled={disabled}
+		/>
 		<MatrixInfoInput {matrix}></MatrixInfoInput>
 	</div>
 {/snippet}
