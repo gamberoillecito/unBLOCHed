@@ -6,6 +6,7 @@
 	import { isZero, equal, multiply, pi } from 'mathjs';
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
+	import { flashCanvas } from './buttonUtility';
 
 	const markedKatexOptions = {
 		throwOnError: false
@@ -32,12 +33,7 @@
 				DM.apply_gate(gate);
 				history.addElement(initialDM, DM, gate);
 
-				// Make the canvas react to show the user that the gate has been applied
-				let newClasses = 'animate-gate-applied';
-				canvasContainer.classList.add(newClasses);
-				setTimeout(() => {
-					canvasContainer.classList.remove(newClasses);
-				}, 300);
+				flashCanvas(canvasContainer);
 			}}
 			label={gate.label}
 			disabled={disabled || !gate.isConsistent}

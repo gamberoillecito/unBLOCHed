@@ -49,6 +49,7 @@
 	import LatexButton from './custom-ui/Buttons/LatexButton.svelte';
 	import ApplyGateButton from './custom-ui/Buttons/ApplyGateButton.svelte';
 	import GateButtonWithParams from './custom-ui/Buttons/GateButtonWithParams.svelte';
+	import UpdateStateButton from './custom-ui/Buttons/UpdateStateButton.svelte';
 
 	const markedKatexOptions = {
 		throwOnError: false
@@ -142,20 +143,6 @@
 	integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn"
 	crossorigin="anonymous"
 /> -->
-
-{#snippet updateStateButton(matrix: DensityMatrix, disabled: boolean)}
-	<div class="flex gap-0">
-		<LatexButton
-			onclick={() => {
-				history.addElement(DM, matrix);
-				DM.setMatrixFromLatex(matrix.latexMat, matrix.latexMult);
-			}}
-			label={matrix.label}
-			{disabled}
-		/>
-		<MatrixInfoInput {matrix}></MatrixInfoInput>
-	</div>
-{/snippet}
 
 <div
 	class="flex h-full w-full flex-col place-items-center content-evenly justify-start gap-2 p-1 @lg:flex-row @lg:place-items-center @lg:justify-center-safe"
@@ -282,7 +269,7 @@
 			<!-- Standard states -->
 			<div class="m-3 flex flex-wrap justify-center gap-2">
 				{#each predefinedStates as matrix}
-					{@render updateStateButton(matrix, false)}
+					<UpdateStateButton {matrix} {DM} disabled={false} {canvasContainer} {history} />
 				{/each}
 			</div>
 			<Separator class=""></Separator>
@@ -321,14 +308,14 @@
 					: 'hidden'} flex-wrap items-center justify-center gap-2 @lg:flex"
 			>
 				<DynamicMatrix FM={GM} instantUpdate={true}></DynamicMatrix>
-					<GateButtonWithParams
-						{DM}
-						{history}
-						{canvasContainer}
-						gate={GM}
-						disabled={!(DM.isConsistent && GM.isConsistent)}
-						withParams={true}
-					/>
+				<GateButtonWithParams
+					{DM}
+					{history}
+					{canvasContainer}
+					gate={GM}
+					disabled={!(DM.isConsistent && GM.isConsistent)}
+					withParams={true}
+				/>
 			</div>
 		</ScrollArea>
 	{:else}
