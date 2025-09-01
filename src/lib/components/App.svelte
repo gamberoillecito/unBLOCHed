@@ -11,7 +11,7 @@
 		print_mat
 	} from '$lib/components/Model.svelte';
 	import DynamicMatrix from './DynamicMatrix.svelte';
-	import { getContext, setContext, untrack } from 'svelte';
+	import { getContext, onMount, setContext, untrack } from 'svelte';
 	import {
 		type Complex,
 		create,
@@ -50,6 +50,7 @@
 	import ApplyGateButton from './custom-ui/Buttons/ApplyGateButton.svelte';
 	import GateButtonWithParams from './custom-ui/Buttons/GateButtonWithParams.svelte';
 	import UpdateStateButton from './custom-ui/Buttons/UpdateStateButton.svelte';
+	import { type TutorialPageProps } from '$lib/components/tutorial/tutorialUtils';
 
 	const markedKatexOptions = {
 		throwOnError: false
@@ -60,6 +61,11 @@
 		absTol: 1e-10
 	};
 	const math = create(all, config);
+
+	interface Props {
+		tutorialProps: TutorialPageProps;
+	}
+	let { tutorialProps = $bindable() }: Props = $props();
 
 	let joystickMode = $state(false);
 
@@ -135,6 +141,12 @@
 			toast.error('Image data not available');
 		}
 	}
+	
+	$effect(()=>{
+		tutorialProps.DM  = DM;
+		tutorialProps.canvasContainer = canvasContainer;
+		tutorialProps.history = history;
+	});
 </script>
 
 <!-- <link

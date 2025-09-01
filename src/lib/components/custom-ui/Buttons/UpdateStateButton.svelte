@@ -17,10 +17,10 @@
 		DM: DensityMatrix;
 		history: BlochHistory;
 		matrix: DensityMatrix;
-		disabled: boolean;
+		disabled?: boolean;
 		canvasContainer: HTMLDivElement;
 	}
-	let { DM, history, matrix, disabled, canvasContainer}: Props = $props();
+	let { DM, history, matrix, disabled = false, canvasContainer}: Props = $props();
 </script>
 
 <div class="flex gap-0">

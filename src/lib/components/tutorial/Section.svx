@@ -1,0 +1,66 @@
+<script lang="ts">
+	import { type sceneSettings } from '$lib/components/Scene.svelte';
+	import Scene from '$lib/components/Scene.svelte';
+
+	import {
+		DensityMatrix,
+		FakeDensityMatrix,
+		GateMatrix,
+		GatePath,
+		MatrixParam,
+		print_mat
+	} from '$lib/components/Model.svelte';
+	import DynamicMatrix from '$lib/components/DynamicMatrix.svelte';
+	import { getContext, setContext, untrack, onMount } from 'svelte';
+	import {
+		type Complex,
+		create,
+		all,
+		complex,
+		boolean,
+		mod as modulus,
+		compare,
+		pi,
+		isZero,
+		multiply,
+		equal
+	} from 'mathjs';
+	import MatrixInfoInput from '$lib/components///MatrixInfoInput.svelte';
+	import { BlochHistory } from '$lib/components//BlochHistory.svelte';
+	import { Separator } from '$lib/components/ui/separator/index.js';
+	import { convertLatexToMarkup } from 'mathlive';
+	import { Badge } from '$lib/components/ui/badge/index.js';
+	import Undo from '@lucide/svelte/icons/undo';
+	import Redo from '@lucide/svelte/icons/redo';
+	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
+	import { Canvas, type ThrelteContext } from '@threlte/core';
+	import Menu from '@lucide/svelte/icons/menu';
+	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+	import { toast } from 'svelte-sonner';
+	import ImageDown from '@lucide/svelte/icons/image-down';
+	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
+	import { marked } from 'marked';
+	import markedKatex from 'marked-katex-extension';
+	import { Switch } from '$lib/components/ui/switch/index';
+	import { Label } from '$lib/components/ui/label/index.js';
+	import JoystickControls from '$lib/components//custom-ui/JoystickControls.svelte';
+	import LatexButton from '$lib/components//custom-ui/Buttons/LatexButton.svelte';
+	import ApplyGateButton from '$lib/components//custom-ui/Buttons/ApplyGateButton.svelte';
+	import GateButtonWithParams from '$lib/components//custom-ui/Buttons/GateButtonWithParams.svelte';
+	import UpdateStateButton from '$lib/components//custom-ui/Buttons/UpdateStateButton.svelte';
+	import { Xgate, theta_param, ket0 } from '$lib/data/matrices';
+	
+	import { type TutorialPageProps } from '$lib/components/tutorial/tutorialUtils.ts'
+
+	let {
+		DM,
+		history,
+		canvasContainer
+	}: TutorialPageProps = $props();
+</script>
+
+# What is a Qubit?
+
+
+This is a $\LaTeX$ and `markdown` document where you can put <UpdateStateButton {DM} matrix={ket0} {canvasContainer} {history} disabled={false}/>

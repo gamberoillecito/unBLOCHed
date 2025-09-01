@@ -3,8 +3,8 @@
 	import CircleQuestionMark from '@lucide/svelte/icons/message-circle-question';
 	import * as Resizable from '$lib/components/ui/resizable/index.js';
 	import { Toggle } from '$lib/components/ui/toggle/index.js';
-	import Tutorial from '$lib/components/Tutorial.svelte';
-	import { createRawSnippet, onMount } from 'svelte';
+	import Tutorial from '$lib/components/tutorial/Tutorial.svelte';
+	import { createRawSnippet, onMount, setContext } from 'svelte';
 	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
 	import 'mathlive/static.css';
 	import SunIcon from '@lucide/svelte/icons/sun';
@@ -18,6 +18,7 @@
 	import { preferences } from '$lib/preferences';
 	import { get } from 'svelte/store';
 	import { scheduleNotifications } from '$lib/notifications';
+	import type { TutorialPageProps } from '$lib/components/tutorial/tutorialUtils';
 
 	let showWelcomeAtStart = get(preferences).showWelcomeAtStart;
 	let tutorialVisible = $state(false);
@@ -44,6 +45,8 @@
 		// Schedule notifications for later for the user not to bombard user with information at startup
 		scheduleNotifications();
 	});
+	
+	let tutorialProps = $state({}) as TutorialPageProps;
 
 	const isDesktop = new MediaQuery('(min-width: 768px)');
 </script>
@@ -107,14 +110,14 @@
 		<Resizable.PaneGroup direction="horizontal">
 			<Resizable.Pane minSize={resizablePanelMin}>
 				<div class="bg-background @container h-full min-h-0 w-full flex-1">
-					<App />
+					<App bind:tutorialProps />
 				</div>
 			</Resizable.Pane>
 			{#if tutorialVisible}
 				<Resizable.Handle withHandle />
 				<Resizable.Pane minSize={resizablePanelMin}>
 					<div class="bg-background @container h-full min-h-0 w-full flex-1 p-2">
-						<Tutorial />
+						<Tutorial tutorialProps={tutorialProps}/>
 					</div>
 				</Resizable.Pane>
 			{/if}

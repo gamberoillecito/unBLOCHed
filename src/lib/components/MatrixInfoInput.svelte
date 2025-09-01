@@ -20,7 +20,11 @@
 	let mainPopoverOpen = $state(false);
 	let secondaryPopoverOpen = $derived(mainPopoverOpen && !FM.isConsistent);
 	const popoversContext = getContext('popoversContext') as {preventOpening: boolean};
-	$effect(()=>{popoversContext.preventOpening = secondaryPopoverOpen})
+	$effect(()=>{
+		if (popoversContext) {
+			popoversContext.preventOpening = secondaryPopoverOpen;
+		}
+	})
 	// Initialize the mathfield to edit the matrix parameters
 	function paramAttachment(param: MatrixParam): Attachment {
 		return (element) => {

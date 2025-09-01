@@ -2,14 +2,20 @@
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import comingSoon from '$lib/markdown/tutorial_pages/coming_soon.md?raw';
 	
-	import ScrollArea from './ui/scroll-area/scroll-area.svelte';
+	import ScrollArea from '../ui/scroll-area/scroll-area.svelte';
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
 	import Section from './Section.svx';
+	import { type TutorialPageProps } from '$lib/components/tutorial/tutorialUtils';
 	const markedKatexOptions = {
 		throwOnError: false
 	};
 	marked.use(markedKatex(markedKatexOptions));
+
+	interface Props {
+		tutorialProps: TutorialPageProps;
+	}
+	let { tutorialProps }: Props = $props();
 
 	const tutorialList = [
 		{
@@ -33,6 +39,9 @@
 		// 	title: 'Gates'
 		// }
 	];
+
+	$inspect(tutorialProps)
+	
 </script>
 
 {#snippet tabContent(title: string, mdContent: string)}
@@ -42,7 +51,7 @@
 				class="prose dark:prose-invert max-h-full w-full px-6 py-4"
 			> 
 		</article>
-			<Section/>
+			<Section {...tutorialProps}/>
 		</ScrollArea>
 	</Tabs.Content>
 {/snippet}

@@ -5,8 +5,8 @@ import GitHubIcon from '$lib/components/custom-ui/GitHubIcon.svelte';
 
 const prefs = get(preferences).notifications;
 const CANCEL_THRESHOLD = 2;
-const TIMEOUT_ms = 1000 * 60 * 1.5;
-// const TIMEOUT_ms = 0;
+// const TIMEOUT_ms = 1000 * 60 * 1.5;
+const TIMEOUT_ms = 0;
 const DELAY_ms = 1000 * 5;
 const NOTIFICATION_DURATION_ms = 1000 * 10;
 

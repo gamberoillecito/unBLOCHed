@@ -8,7 +8,7 @@
 		new MatrixParam('phi', '\\pi/2', '\\phi', true),
 		new MatrixParam('lambda', '\\pi/2', '\\lambda', true),
 	];
-	const Xgate = new GateMatrix(
+	export const Xgate = new GateMatrix(
 		[
 			['0', '1'],
 			['1', '0']
@@ -16,7 +16,7 @@
 		'1',
 		'$$\\hat{X}$$'
 	);
-	const Ygate = new GateMatrix(
+	export const Ygate = new GateMatrix(
 		[
 			['0', '-i'],
 			['i', '0']
@@ -24,7 +24,7 @@
 		'1',
 		'\\hat{Y}'
 	);
-	const Zgate = new GateMatrix(
+	export const Zgate = new GateMatrix(
 		[
 			['1', '0'],
 			['0', '-1']
@@ -32,7 +32,7 @@
 		'1',
 		'\\hat{Z}'
 	);
-	const Hgate = new GateMatrix(
+	export const Hgate = new GateMatrix(
 		[
 			['1', '1'],
 			['1', '-1']
@@ -40,7 +40,7 @@
 		'\\frac{1}{\\sqrt{2}}',
 		'\\hat{H}'
 	);
-	const RZgate = new GateMatrix(
+	export const RZgate = new GateMatrix(
 		[
 			['e^{-i \\theta/2}', '0'],
 			['0', 'e^{i \\theta/2}']
@@ -49,7 +49,7 @@
 		'\\hat{R}_z',
 		theta_param.map((x) => x.clone())
 	);
-	const RXgate = new GateMatrix(
+	export const RXgate = new GateMatrix(
 		[
 			['\\cos(\\theta/2)', '-i \\sin(\\theta/2)'],
 			['-i \\sin(\\theta/2)', '\\cos(\\theta/2)']
@@ -58,7 +58,7 @@
 		'\\hat{R}_x',
 		theta_param.map((x) => x.clone())
 	);
-	const RYgate = new GateMatrix(
+	export const RYgate = new GateMatrix(
 		[
 			['\\cos(\\theta/2)', '-\\sin(\\theta/2)'],
 			['\\sin(\\theta/2)', '\\cos(\\theta/2)']
@@ -68,7 +68,7 @@
 		theta_param.map((x) => x.clone())
 	);
 	
-	const U3gate = new GateMatrix(
+	export const U3gate = new GateMatrix(
 		[
 			['\\cos(\\theta/2)', '-e^{i \\lambda} \\sin(\\theta/2)'],
 			['e^{i \\phi} \\sin(\\theta/2)', 'e^{i (\\phi + \\lambda)}\\cos(\\theta/2)']
@@ -78,7 +78,7 @@
 		theta_phi_lambdaa_param.map((x) => x.clone())
 	);
 
-	const ket0 = new DensityMatrix(
+	export const ket0 = new DensityMatrix(
 		[
 			['1', '0'],
 			['0', '0']
@@ -86,7 +86,7 @@
 		'1',
 		'|0\\rangle'
 	);
-	const ket1 = new DensityMatrix(
+	export const ket1 = new DensityMatrix(
 		[
 			['0', '0'],
 			['0', '1']
@@ -94,7 +94,7 @@
 		'1',
 		'|1\\rangle'
 	);
-	const ketPlus = new DensityMatrix(
+	export const ketPlus = new DensityMatrix(
 		[
 			['1', '1'],
 			['1', '1']
@@ -102,7 +102,7 @@
 		'\\frac{1}{2}',
 		'|+\\rangle'
 	);
-	const ketMinus = new DensityMatrix(
+	export const ketMinus = new DensityMatrix(
 		[
 			['1', '-1'],
 			['-1', '1']
@@ -110,7 +110,7 @@
 		'\\frac{1}{2}',
 		'|-\\rangle'
 	);
-	const ketI = new DensityMatrix(
+	export const ketI = new DensityMatrix(
 		[
 			['1', 'i'],
 			['-i', '1']
@@ -118,7 +118,7 @@
 		'\\frac{1}{2}',
 		'|i\\rangle'
 	);
-	const ketMinI = new DensityMatrix(
+	export const ketMinI = new DensityMatrix(
 		[
 			['1', '-i'],
 			['i', '1']
