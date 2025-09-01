@@ -48,6 +48,7 @@
 	import JoystickControls from './custom-ui/JoystickControls.svelte';
 	import LatexButton from './custom-ui/Buttons/LatexButton.svelte';
 	import ApplyGateButton from './custom-ui/Buttons/ApplyGateButton.svelte';
+	import GateButtonWithParams from './custom-ui/Buttons/GateButtonWithParams.svelte';
 
 	const markedKatexOptions = {
 		throwOnError: false
@@ -141,23 +142,6 @@
 	integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn"
 	crossorigin="anonymous"
 /> -->
-
-{#snippet gateButtonWithParams(gate: GateMatrix, disabled: boolean, withParams: boolean)}
-	{#if withParams}
-		<div class="flex gap-0">
-			<ApplyGateButton
-				DM={DM} history={history} gate={gate} disabled={disabled}
-				canvasContainer={canvasContainer}
-			/>
-			<MatrixInfoInput matrix={gate}></MatrixInfoInput>
-		</div>
-	{:else}
-		<ApplyGateButton
-			DM={DM} history={history} gate={gate} disabled={disabled}
-			canvasContainer={canvasContainer}
-		/>
-	{/if}
-{/snippet}
 
 {#snippet updateStateButton(matrix: DensityMatrix, disabled: boolean)}
 	<div class="flex gap-0">
@@ -306,11 +290,25 @@
 			<!-- Standard gates (no parameters) -->
 			<div class="m-3 flex flex-wrap justify-center gap-2 @lg:max-w-[400px]">
 				{#each predefinedGates.filter((g) => g.parameterArray.length === 0) as gate}
-					{@render gateButtonWithParams(gate, !DM.isConsistent, true)}
+					<GateButtonWithParams
+						{DM}
+						{history}
+						{canvasContainer}
+						{gate}
+						disabled={!DM.isConsistent}
+						withParams={true}
+					/>
 				{/each}
 				<!-- Standard gates (with parameters) -->
 				{#each predefinedGates.filter((g) => g.parameterArray.length !== 0) as gate}
-					{@render gateButtonWithParams(gate, !DM.isConsistent, true)}
+					<GateButtonWithParams
+						{DM}
+						{history}
+						{canvasContainer}
+						{gate}
+						disabled={!DM.isConsistent}
+						withParams={true}
+					/>
 				{/each}
 			</div>
 			<div class="m-auto flex min-h-0 w-fit shrink items-center space-x-1 p-2 @lg:hidden">
@@ -323,7 +321,14 @@
 					: 'hidden'} flex-wrap items-center justify-center gap-2 @lg:flex"
 			>
 				<DynamicMatrix FM={GM} instantUpdate={true}></DynamicMatrix>
-				{@render gateButtonWithParams(GM, !(DM.isConsistent && GM.isConsistent), true)}
+					<GateButtonWithParams
+						{DM}
+						{history}
+						{canvasContainer}
+						gate={GM}
+						disabled={!(DM.isConsistent && GM.isConsistent)}
+						withParams={true}
+					/>
 			</div>
 		</ScrollArea>
 	{:else}
