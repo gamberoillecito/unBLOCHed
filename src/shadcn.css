@@ -83,7 +83,7 @@
   --font-sans: AR One Sans, sans-serif;
   --font-serif: serif;
   --font-mono: Roboto Mono, monospace;
-  --radius: 0rem;
+  --radius: 0.25rem;
   --shadow-2xs: 0rem 0rem 0rem 0rem hsl(0 0% 0% / 0.00);
   --shadow-xs: 0rem 0rem 0rem 0rem hsl(0 0% 0% / 0.00);
   --shadow-sm: 0rem 0rem 0rem 0rem hsl(0 0% 0% / 0.00), 0rem 1px 2px -1px hsl(0 0% 0% / 0.00);
