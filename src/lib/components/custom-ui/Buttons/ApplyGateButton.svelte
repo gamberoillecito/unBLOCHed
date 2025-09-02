@@ -19,8 +19,9 @@
 		gate: GateMatrix;
 		disabled: boolean;
 		canvasContainer: HTMLDivElement;
+		secondaryButton?: boolean;
 	}
-	let { DM, history, gate, disabled, canvasContainer }: Props = $props();
+	let { DM, history, gate, disabled, canvasContainer, secondaryButton=true }: Props = $props();
 </script>
 
 <!-- Button that, when clicked, applies a gate -->
@@ -39,6 +40,7 @@
 			disabled={disabled || !gate.isConsistent}
 			variant={'default'}
 			tooltip={true}
+			round={secondaryButton ? 'left' : 'full'}
 		/>
 		{#if isZero(gate.rotationAngle) || equal(gate.rotationAngle, multiply(2, pi))}
 			<Tooltip.Content class="bg-muted text-muted-foreground border-1"

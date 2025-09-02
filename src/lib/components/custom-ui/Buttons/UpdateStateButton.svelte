@@ -19,8 +19,9 @@
 		matrix: DensityMatrix;
 		disabled?: boolean;
 		canvasContainer: HTMLDivElement;
+		secondaryButton?: boolean;
 	}
-	let { DM, history, matrix, disabled = false, canvasContainer}: Props = $props();
+	let { DM, history, matrix, disabled = false, canvasContainer, secondaryButton=true}: Props = $props();
 </script>
 
 <div class="flex gap-0">
@@ -32,6 +33,9 @@
         }}
         label={matrix.label}
         {disabled}
+		round={secondaryButton ? 'left' : 'full'}
     />
-    <MatrixInfoInput {matrix}></MatrixInfoInput>
+	{#if secondaryButton}
+		<MatrixInfoInput {matrix}></MatrixInfoInput>
+	{/if}
 </div>
