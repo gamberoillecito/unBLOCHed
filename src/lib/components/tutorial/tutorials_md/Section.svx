@@ -1,0 +1,32 @@
+---
+title: Test
+---
+
+<script lang="ts">
+	import {
+		DensityMatrix,
+		GateMatrix,
+	} from '$lib/components/Model.svelte';
+	import DynamicMatrix from '$lib/components/DynamicMatrix.svelte';
+	import { BlochHistory } from '$lib/components//BlochHistory.svelte';
+	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';
+	import LatexButton from '$lib/components//custom-ui/Buttons/LatexButton.svelte';
+	import ApplyGateButton from '$lib/components//custom-ui/Buttons/ApplyGateButton.svelte';
+	import GateButtonWithParams from '$lib/components//custom-ui/Buttons/GateButtonWithParams.svelte';
+	import UpdateStateButton from '$lib/components//custom-ui/Buttons/UpdateStateButton.svelte';
+	import * as matrices from '$lib/data/matrices';
+	
+	import { type TutorialPageProps } from '$lib/components/tutorial/tutorialUtils.ts'
+
+	let {
+		DM,
+		history,
+		canvasContainer
+	}: TutorialPageProps = $props();
+
+</script>
+
+# What is a Qubit?
+
+
+This is a $\LaTeX$ and `markdown` document where you can put <UpdateStateButton {DM} matrix={matrices.ket0} {canvasContainer} {history} disabled={false} secondaryButton={false}/>
