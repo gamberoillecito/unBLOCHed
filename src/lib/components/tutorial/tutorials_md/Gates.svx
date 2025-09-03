@@ -1,3 +1,24 @@
+<script lang="ts">
+	import {
+		DensityMatrix,
+		GateMatrix,
+	} from '$lib/components/Model.svelte';
+	import LatexButton from '$lib/components//custom-ui/Buttons/LatexButton.svelte';
+	import ApplyGateButton from '$lib/components//custom-ui/Buttons/ApplyGateButton.svelte';
+	import GateButtonWithParams from '$lib/components//custom-ui/Buttons/GateButtonWithParams.svelte';
+	import UpdateStateButton from '$lib/components//custom-ui/Buttons/UpdateStateButton.svelte';
+	import * as matrices from '$lib/data/matrices';
+	
+	import { type TutorialPageProps } from '$lib/components/tutorial/tutorialUtils.ts'
+
+	let {
+		DM,
+		history,
+		canvasContainer
+	}: TutorialPageProps = $props();
+
+</script>
+
 # What is a Quantum gate?
 
 Quantum gates are transformations that allow you to manipulate the state of a qubit. They are the building blocks of quantum computation, similarly to how logic gates are the basis of classical computation. In the classical world, there are only two possible operations we can do on a bit: 
@@ -33,8 +54,15 @@ $$
 Let's see how they act on the computational basis states $\ket 0 = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$ and $\ket 1 = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$.  By performing the matrix-vector products you can verify that:
 
 - $X$ acts as a NOT gate: swaps $\ket 0$ with $\ket 1$ and $\ket 1$ with $\ket 0$.
+Try it out yourself, begin by putting the state in
+<UpdateStateButton {DM} matrix={matrices.ket1} {canvasContainer} {history} disabled={false} secondaryButton={false}/>
+and then apply the 
+<ApplyGateButton {DM} gate={matrices.Xgate} {canvasContainer} {history} disabled={false} secondaryButton={false}/>
+gate a couple of times.
 - $Y$ swaps $\ket 0$ and $\ket 1$ and applies a phase shift of $\pm i$. Namely, it transforms $\ket 0$ in $i\ket 1$ and $\ket 1$ in $-i \ket {0}$
-- $Z$ leaves $\ket 0$ untouched and and flips the sign of $\ket 1$. More percisely, $\ket 0$ remains $\ket 0$ and transforms $\ket 1$ in $- \ket 1$
+Try it out yourself, begin by putting the state in <ApplyGateButton {DM} gate={matrices.Ygate} {canvasContainer} {history} disabled={false} secondaryButton={false}/>
+ and then apply the  <ApplyGateButton {DM} gate={matrices.Ygate} {canvasContainer} {history} disabled={false} secondaryButton={false}/> gate a couple of times. See how the effect on the states is similar to the one of the $X$ gate but the *path* is different. Keep reading to see what this *path* represents.
+- $Z$ leaves $\ket 0$ untouched and and flips the sign of $\ket 1$. More percisely, $\ket 0$ remains $\ket 0$ and transforms $\ket 1$ in $- \ket 1$.
 
 Mathematically this is written as:
 
@@ -46,7 +74,9 @@ X \ket 1 &= \ket 0 && Y \ket 1 = -i\ket {0} && Z \ket 1 = -\ket 1
 \end{aligned}
 $$
 
-Also in this case, the Bloch sphere gives us a powerful tool to get an intuitive picture of what's going on. In fact, on the Bloch sphere, quantum gates corresponds to rotations of the Bloch vector.
+Also in this case, the Bloch sphere gives us a powerful tool to get an intuitive picture of what's going on.
+In fact, on the Bloch sphere, quantum gates corresponds to rotations of the Bloch vector; now it should be clearer what the *paths* drawn on the sphere when a gate is applied represent.
+They are the *ideal* trace of the path followed by the tip of the Bloch vector while travelling from the initial to the final state.
 In the case of the Pauli gates:
 - $X$ applies a rotation of an angle $\pi$ around the $\hat x$-axis.
 - $Y$ applies a rotation of an angle $\pi$ around the $\hat y$-axis.

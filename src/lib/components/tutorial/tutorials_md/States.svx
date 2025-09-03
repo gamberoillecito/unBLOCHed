@@ -1,3 +1,23 @@
+<script lang="ts">
+	import {
+		DensityMatrix,
+		GateMatrix,
+	} from '$lib/components/Model.svelte';
+	import LatexButton from '$lib/components//custom-ui/Buttons/LatexButton.svelte';
+	import ApplyGateButton from '$lib/components//custom-ui/Buttons/ApplyGateButton.svelte';
+	import GateButtonWithParams from '$lib/components//custom-ui/Buttons/GateButtonWithParams.svelte';
+	import UpdateStateButton from '$lib/components//custom-ui/Buttons/UpdateStateButton.svelte';
+	import * as matrices from '$lib/data/matrices';
+	
+	import { type TutorialPageProps } from '$lib/components/tutorial/tutorialUtils.ts'
+
+	let {
+		DM,
+		history,
+		canvasContainer
+	}: TutorialPageProps = $props();
+
+</script>
 # Play with Quantum States
 
 In this lecture we will understand which are some of the most important quantum states and how they are represented on the Bloch sphere.
@@ -5,8 +25,9 @@ In this lecture we will understand which are some of the most important quantum 
 Let's start from the one that we have already encountered: $\ket 0$ and $\ket 1$.
 By clicking on the buttons you can see their representation on the Bloch's sphere:
 
-- $\ket 0$ is represented as the **north pole**.
-- $\ket 1$ is represented as the **south pole**.
+- $\ket 0$ is represented as the **north pole**. <UpdateStateButton {DM} matrix={matrices.ket0} {canvasContainer} {history} disabled={false} secondaryButton={false}/>
+- $\ket 1$ is represented as the **south pole**. <UpdateStateButton {DM} matrix={matrices.ket1} {canvasContainer} {history} disabled={false} secondaryButton={false}/>
+
   (Click on the buttons to visualize them.)
 
 Now, lets go on with four other fundamental states: $\ket + \ket - \ket{+i} \ket{-i}$.
