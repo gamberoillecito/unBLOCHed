@@ -69,7 +69,7 @@
 </script>
 
 {#snippet tabContent(title: string, TutorialContent: Component)}
-	<Tabs.Content value={title} class="bg-card mx-4 my-2 min-h-0 flex-1 rounded-xl border shadow-sm">
+	<Tabs.Content value={title} class="bg-card mx-4 my-2 min-h-0 flex-1 rounded-lg border shadow-sm">
 		<ScrollArea class="h-full w-full">
 			<article class="prose dark:prose-invert max-h-full w-full px-6 py-4">
 				<TutorialContent {...tutorialProps} />
