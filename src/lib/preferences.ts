@@ -12,5 +12,11 @@ export const preferences = persisted('preferences', {
         starOpened: false,
         //**How many times the notification that asks user to star the project has been cancelled */
         starCancelledTimes: 0,
+    },
+    tutorial: {
+        //**Whether the tutorial pane is open */
+        open: false,
+        //**Last opened chapter */
+        chapter: '',
     }
 })

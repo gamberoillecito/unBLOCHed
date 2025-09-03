@@ -21,7 +21,10 @@
 	import type { TutorialPageProps } from '$lib/components/tutorial/tutorialUtils';
 
 	let showWelcomeAtStart = get(preferences).showWelcomeAtStart;
-	let tutorialVisible = $state(false);
+	let tutorialVisible = $state(get(preferences).tutorial?.open ?? false);
+	$effect(() => {
+		preferences.update((x) => ({ ...x, tutorial: { ...x.tutorial, open: tutorialVisible } }));
+	});
 	let loaded = $state(false);
 
 	let innerWidth = $state(0);
@@ -45,7 +48,7 @@
 		// Schedule notifications for later for the user not to bombard user with information at startup
 		scheduleNotifications();
 	});
-	
+
 	let tutorialProps = $state({}) as TutorialPageProps;
 
 	const isDesktop = new MediaQuery('(min-width: 768px)');
@@ -117,7 +120,7 @@
 				<Resizable.Handle withHandle />
 				<Resizable.Pane minSize={resizablePanelMin}>
 					<div class="bg-background @container h-full min-h-0 w-full flex-1 p-2">
-						<Tutorial tutorialProps={tutorialProps}/>
+						<Tutorial {tutorialProps} />
 					</div>
 				</Resizable.Pane>
 			{/if}
