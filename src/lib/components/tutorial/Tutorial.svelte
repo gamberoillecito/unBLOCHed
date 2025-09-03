@@ -1,11 +1,15 @@
 <script lang="ts">
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
-	import comingSoon from '$lib/markdown/tutorial_pages/coming_soon.md?raw';
 
 	import ScrollArea from '../ui/scroll-area/scroll-area.svelte';
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
 	import Section from './tutorials_md/Section.svx';
+	import QubitsTutorial from './tutorials_md/Qubits.svx';
+	import StatesTutorial from './tutorials_md/States.svx';
+	import GatesTutorial from './tutorials_md/Gates.svx';
+	import MStatesTutorial from './tutorials_md/MixedStates.svx';
+	import MeasureTutorial from './tutorials_md/Measure.svx';
 	import { type TutorialPageProps } from '$lib/components/tutorial/tutorialUtils';
 	import type { Component } from 'svelte';
 	const markedKatexOptions = {
@@ -13,7 +17,6 @@
 	};
 	marked.use(markedKatex(markedKatexOptions));
 
-	const modules = import.meta.glob('./tutorials_md/*.svx');
 	let components: Component[] = [];
 	interface Props {
 		tutorialProps: TutorialPageProps;
@@ -22,9 +25,25 @@
 
 	const tutorialList = [
 		{
-			mdContent: comingSoon,
-			title: 'Almost ready'
-		}
+			content: QubitsTutorial,
+			title: 'Qubits'
+		},
+		{
+			content: StatesTutorial,
+			title: 'States'
+		},
+		{
+			content: GatesTutorial,
+			title: 'Gates'
+		},
+		{
+			content: MStatesTutorial,
+			title: 'Mixed States'
+		},
+		{
+			content: MeasureTutorial,
+			title: 'Measures'
+		},
 		// {
 		// 	mdContent: tutorial1,
 		// 	title: 'Qubits'
@@ -47,11 +66,11 @@
 	let mio = $derived(components[0]);
 </script>
 
-{#snippet tabContent(title: string, mdContent: string)}
+{#snippet tabContent(title: string, TutorialContent: Component)}
 	<Tabs.Content value={title} class="bg-card mx-4 my-2 min-h-0 flex-1 rounded-xl border shadow-sm">
 		<ScrollArea class="h-full w-full">
 			<article class="prose dark:prose-invert max-h-full w-full px-6 py-4">
-				<Section {...tutorialProps} />
+				<TutorialContent {...tutorialProps} />
 			</article>
 		</ScrollArea>
 	</Tabs.Content>
@@ -64,6 +83,6 @@
 		{/each}
 	</Tabs.List>
 	{#each tutorialList as tut}
-		{@render tabContent(tut.title, tut.mdContent)}
+		{@render tabContent(tut.title, tut.content)}
 	{/each}
 </Tabs.Root>

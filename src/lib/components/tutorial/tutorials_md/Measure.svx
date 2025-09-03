@@ -8,7 +8,9 @@ Using a simple analogy, you can imagine a qubit as a sort of quantum coin. Befor
 
 To answer the same question more in detail, we need a little bit of math. Let's start by considering the generic state:
 
-$$ |\psi ⟩ = \alpha |0⟩ + \beta |1⟩ $$
+$$
+|\psi \rangle = \alpha |0\rangle + \beta |1\rangle
+$$
 
 When you perform a measurement on the qubit, the state $\ket \psi$ becomes, or more rigorously "collapses", in either one of the two basis states:  $\ket 0$ and $\ket 1$. These two states are the only possible measurement results.
 

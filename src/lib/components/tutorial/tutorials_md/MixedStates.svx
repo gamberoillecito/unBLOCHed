@@ -23,11 +23,11 @@ $$
 To get the density matrix of the mixed state in the previous example, we start by writing the density matrices corresponding to the pure states $\ket{0}$ and $\ket{1}$:
 
 $$
-\begin{align}
+\begin{aligned}
 \rho_0 &= \begin{bmatrix} 1 \\0\end{bmatrix} \begin{bmatrix} 1 & 0\end{bmatrix} = \begin{bmatrix} 1 & 0\\0 & 0\end{bmatrix}\\
 
 \rho_1 &= \begin{bmatrix} 0 \\1\end{bmatrix} \begin{bmatrix} 0 & 1\end{bmatrix} = \begin{bmatrix} 0 & 0\\0 & 1\end{bmatrix}
-\end{align}
+\end{aligned}
 $$
 
 The density matrix of the mixed state $\rho$ is then obtained as the sum of the density matrices $\rho_0$ and $\rho_1$, weighted by the respective probabilities $p_0$ and $p_1$. Since in this case $p_0 = p_1 = 0.5$, the final density matrix is:

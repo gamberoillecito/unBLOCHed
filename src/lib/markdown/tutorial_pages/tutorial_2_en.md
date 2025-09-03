@@ -4,7 +4,7 @@ Quantum states can be described in different ways.
 One way is to use the Dirac notation, that we introduced in the previous lecture.
 
 Using this notation, the state is written as:
-$$ |\psi ⟩ = \alpha |0⟩ + \beta |1⟩ $$
+$$ |\psi \rangle = \alpha |0\rangle + \beta |1\rangle $$
 Where $\alpha$ and $\beta$ are complex numbers and $|\alpha|^2 + |\beta|^2 = 1$. 
 
 Another way of writing the same thing is by using a complex 2D vector. This is done in a very straightforward way: the first entry contains the coefficient $\alpha$, the second one contains $\beta$. 

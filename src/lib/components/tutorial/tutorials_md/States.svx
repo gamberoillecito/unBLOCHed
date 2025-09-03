@@ -13,12 +13,12 @@ Now, lets go on with four other fundamental states: $\ket + \ket - \ket{+i} \ket
 Their Dirac representation is:
 
 $$
-\begin{align}
+\begin{aligned}
 \ket{+} &= \tfrac{1}{\sqrt{2}}(\ket{0} + \ket{1})  &
 \ket{+i} &= \tfrac{1}{\sqrt{2}}(\ket{0} + i\ket{1})  \\
 \ket{-} &= \tfrac{1}{\sqrt{2}}(\ket{0} - \ket{1}) &
 \ket{-i} &= \tfrac{1}{\sqrt{2}}(\ket{0} - i\ket{1})
-\end{align}
+\end{aligned}
 $$
 
 Note that they are equal superposition of the basis states $\ket 0$ and $\ket 1$. This means that, going back to the previous lecture, $|\alpha|^2 = |\beta|^2 = 1/2$.

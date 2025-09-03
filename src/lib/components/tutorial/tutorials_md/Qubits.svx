@@ -9,7 +9,7 @@ The meaning of the word "superposition" is easier to understand by looking at th
 Mathematically, a qubit's state is represented as:
 
 $$
-|\psi ⟩ = \alpha |0⟩ + \beta |1⟩
+|\psi \rangle = \alpha |0\rangle + \beta |1\rangle
 $$
 
 Where $\alpha$ and $\beta$ are complex numbers that respect the so-called **normalization condition:** $|\alpha|^2 + |\beta|^2 = 1$. They are often called "**Probability amplitudes**"

@@ -9,23 +9,28 @@ Quantum gates are transformations that allow you to manipulate the state of a qu
 
 In the quantum world there are many more operations we can do with just a single qubit and, to understand and represent them, we need few more mathematical concepts.
 
-Mathematically, quantum gates are **linear operators** that can be described by [unitary matrices](https://en.wikipedia.org/wiki/Unitary_matrix). A matrix $U$ is unitary when it respects the following condition:$$ U U^\dagger = U^\dagger U = I $$Where $U^\dagger$ is the conjugate transpose $(U^T)^*$ and $I$ is the identity matrix.
+Mathematically, quantum gates are **linear operators** that can be described by [unitary matrices](https://en.wikipedia.org/wiki/Unitary_matrix). A matrix $U$ is unitary when it respects the following condition:
+$$
+U U^\dagger = U^\dagger U = I
+$$
+
+Where $U^\dagger$ is the conjugate transpose $(U^T)^*$ and $I$ is the identity matrix.
 
 To calculate how a quantum state is transformed by a quantum gate you just need to multiply the vector by the matrix representing the gate. We will later see some examples.
 
 The most common quantum gates are the **Pauli operators**: $X$, $Y$, and $Z$. Their matrix representations are:
 
 $$
-\begin{align}
+\begin{aligned}
  X = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}
  &&
  Y = \begin{bmatrix} 0 & -i \\ i & 0 \end{bmatrix}
 &&
 Z = \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}
-\end{align}
+\end{aligned}
 $$
 
-Let’s see how they act on the computational basis states $\ket 0 = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$ and $\ket 1 = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$.  By performing the matrix-vector products you can verify that:
+Let's see how they act on the computational basis states $\ket 0 = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$ and $\ket 1 = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$.  By performing the matrix-vector products you can verify that:
 
 - $X$ acts as a NOT gate: swaps $\ket 0$ with $\ket 1$ and $\ket 1$ with $\ket 0$.
 - $Y$ swaps $\ket 0$ and $\ket 1$ and applies a phase shift of $\pm i$. Namely, it transforms $\ket 0$ in $i\ket 1$ and $\ket 1$ in $-i \ket {0}$
@@ -34,11 +39,11 @@ Let’s see how they act on the computational basis states $\ket 0 = \begin{bmat
 Mathematically this is written as:
 
 $$
-\begin{align}
+\begin{aligned}
 X \ket 0 &= \ket 1 && Y \ket 0 = i\ket 1 && Z \ket 0 = \ket 0 \\
 
 X \ket 1 &= \ket 0 && Y \ket 1 = -i\ket {0} && Z \ket 1 = -\ket 1
-\end{align}
+\end{aligned}
 $$
 
 Also in this case, the Bloch sphere gives us a powerful tool to get an intuitive picture of what's going on. In fact, on the Bloch sphere, quantum gates corresponds to rotations of the Bloch vector.
@@ -62,11 +67,11 @@ $$H = \frac{1}{\sqrt 2}\begin{bmatrix} 1 & 1 \\ 1 & -1 \end{bmatrix}$$
 When acting on $\ket 0$ and $\ket 1$ it creates an equal superposition of $\ket 0$ and $\ket 1$ (i.e. with equal probability amplitudes $\alpha = \beta = 1 / \sqrt 2$):
 
 $$
-\begin{align}
+\begin{aligned}
  H\ket 0 &= \tfrac{1}{\sqrt{2}}(\ket 0 + \ket 1) \\
 
 H \ket 1 &= \tfrac{1}{\sqrt{2}}(\ket 0 - \ket 1)
-\end{align}
+\end{aligned}
 $$
 
 On the Bloch sphere, $H$ corresponds to a $\pi$-rotation around the axis lying halfway between $\hat{x}$ and $\hat{z}$. In other words, it maps the poles (basis states) to points on the equator (balanced superpositions).

@@ -8,7 +8,7 @@ This way of writing quantum states is called "[Dirac Notation](https://en.wikipe
 
 The meaning of the word "superposition" is easier to understand by looking at the mathematical definition of a quantum state.
 Mathematically, a qubit's state is represented as:
-$$ |\psi ⟩ = \alpha |0⟩ + \beta |1⟩ $$
+$$ |\psi \rangle = \alpha |0\rangle + \beta |1\rangle $$
 Where $\alpha$ and $\beta$ are complex numbers and $|\alpha|^2 + |\beta|^2 = 1$. They are often called "**Probability amplitudes**"
 
 An intuitive way of looking at this formula is that a quantum state $\ket\psi$ is a mixture of the two states $\ket 0$ and $\ket 1$ and the coefficients $\alpha$ and $\beta$ tell you the proportions in wich $\ket 0$ and $\ket 1$ are mixed.

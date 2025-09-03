@@ -30,3 +30,7 @@ title: Test
 
 
 This is a $\LaTeX$ and `markdown` document where you can put <UpdateStateButton {DM} matrix={matrices.ket0} {canvasContainer} {history} disabled={false} secondaryButton={false}/>
+
+$$
+\ket\psi = \begin{pmatrix} \alpha \\ \beta  \end{pmatrix}
+$$
