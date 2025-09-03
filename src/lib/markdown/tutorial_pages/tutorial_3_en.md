@@ -1,5 +1,5 @@
 # Play with Quantum States
-In this lecture we will understand which are some of the most important quantum states and how they are represented on the Bloch sphere.
+In this chapter we will understand which are some of the most important quantum states and how they are represented on the Bloch sphere.
 
 Let's start from the one that we have already encountered: $\ket 0$ and $\ket 1$.
 By clicking on the buttons you can see their representation on the Bloch's sphere:

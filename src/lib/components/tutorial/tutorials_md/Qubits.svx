@@ -16,6 +16,6 @@ Where $\alpha$ and $\beta$ are complex numbers that respect the so-called **norm
 
 An intuitive way of looking at this formula is that a quantum state $\ket\psi$ is a mixture of the two states $\ket 0$ and $\ket 1$ and the coefficients $\alpha$ and $\beta$ tell you the proportions in wich $\ket 0$ and $\ket 1$ are mixed.
 
-In the lecture about quantum states we will see some interactive examples to better understand this concept.
+In the chapter about quantum states we will see some interactive examples to better understand this concept.
 
 Quantum bits can be encoded using different physical systems. Some examples are: photons, electrons and superconducting circuits.

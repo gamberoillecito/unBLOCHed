@@ -1,7 +1,7 @@
 # What is the Bloch sphere?
 
 Quantum states can be described in different ways.
-One way is to use the Dirac notation, that we introduced in the previous lecture.
+One way is to use the Dirac notation, that we introduced in the previous chapter.
 
 Using this notation, the state is written as:
 $$ |\psi \rangle = \alpha |0\rangle + \beta |1\rangle $$
@@ -58,4 +58,4 @@ $$|\psi\rangle = \cos\left(\frac{\theta}{2}\right)|0\rangle + e^{i\phi}\sin\left
 
 We can than identify $\alpha = \cos\left(\frac{\theta}{2}\right)$ and $\beta = e^{i\phi} \sin\left(\frac{\theta}{2}\right)$. With this choice, for any value of $\theta$ and $\phi$ we get valid probability amplitudes, that fulfill: $|\alpha|^2 + |\beta|^2 = 1$.
 
-In the next lecture, you will develop a more in depth intuition their the role in the Bloch sphere representation.
+In the next chapter, you will develop a more in depth intuition their the role in the Bloch sphere representation.

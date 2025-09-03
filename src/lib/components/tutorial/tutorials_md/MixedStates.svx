@@ -14,7 +14,7 @@ $$
 
 To better highlight the difference between this two cases, we will look at their density matrix representation. This will also allow us to understand how the density matrix of a mixed state can be constructed.
 
-Let's start with the superposition state $\ket{\psi} = \tfrac{1}{\sqrt{2}}(\ket{0} + \ket{1})$. As we have discussed in the lecture about the different representations, its density matrix can be obtained as: 
+Let's start with the superposition state $\ket{\psi} = \tfrac{1}{\sqrt{2}}(\ket{0} + \ket{1})$. As we have discussed in the chapter about the different representations, its density matrix can be obtained as: 
 
 $$
 \rho_{\ket \psi} = \frac{1}{ 2}\begin{bmatrix} 1 \\1\end{bmatrix} \begin{bmatrix} 1 & 1\end{bmatrix} = \frac{1}{ 2}\begin{bmatrix} 1 & 1\\1 & 1\end{bmatrix}

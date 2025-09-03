@@ -2,7 +2,7 @@
 
 Quantum states can be described in different ways. The Bloch sphere is  one of them. In this tutorial we will understand which are the most common descriptions of quantum states. We will introduce, in order: the Dirac notation, the vector notation, the density matrix formalism and lastly the Bloch sphere representation.
 
-One way to describe quantum states is the Dirac notation, that we introduced in the previous lecture.
+One way to describe quantum states is the Dirac notation, that we introduced in the previous chapter.
 
 Using this notation, the state is written as:
 
@@ -91,4 +91,4 @@ With this two formulas we can understand which is the role of $\theta$  and $\ph
   for intermediate values, the state is a superposition of the two basis states.
 - the azimutal angle $\phi$ is the phase difference between $\alpha$ and $\beta$.
 
-In the next lecture, you will develop a more in depth intuition their the role in the Bloch sphere representation.
+In the next chapter, you will develop a more in depth intuition their the role in the Bloch sphere representation.
