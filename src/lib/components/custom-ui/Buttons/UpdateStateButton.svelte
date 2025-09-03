@@ -3,7 +3,6 @@
 	import { BlochHistory } from '$lib/components/BlochHistory.svelte';
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
-	import ApplyGateButton from './ApplyGateButton.svelte';
 	import MatrixInfoInput from '$lib/components/MatrixInfoInput.svelte';
     import LatexButton from './LatexButton.svelte';
 	import { flashCanvas } from './buttonUtility';
@@ -24,7 +23,7 @@
 	let { DM, history, matrix, disabled = false, canvasContainer, secondaryButton=true}: Props = $props();
 </script>
 
-<div class="flex gap-0">
+<div class="inline-flex gap-0 w-fit">
     <LatexButton
         onclick={() => {
             history.addElement(DM, matrix);
