@@ -55,7 +55,7 @@ Let's see how they act on the computational basis states $\ket 0 = \begin{bmatri
 
 - $X$ acts as a NOT gate: swaps $\ket 0$ with $\ket 1$ and $\ket 1$ with $\ket 0$.
 Try it out yourself, begin by putting the state in
-<UpdateStateButton {DM} matrix={matrices.ket1} {canvasContainer} {history} disabled={false} secondaryButton={false}/>
+<UpdateStateButton {DM} matrix={matrices.ket1} {canvasContainer} {history} disabled={false} secondaryButton={false} size={'small'}/>
 and then apply the 
 <ApplyGateButton {DM} gate={matrices.Xgate} {canvasContainer} {history} disabled={false} secondaryButton={false}/>
 gate a couple of times.

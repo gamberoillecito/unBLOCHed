@@ -21,14 +21,20 @@
 	import type { TutorialPageProps } from '$lib/components/tutorial/tutorialUtils';
 
 	let showWelcomeAtStart = get(preferences).showWelcomeAtStart;
+	// Get user preferences regarding the state of the sidebar with the tutorial and keep them 
+	// up to date every time the tutorial is opened or closed so that when the user comes back
+	// will find the tutorial in the same state as they left it
 	let tutorialVisible = $state(get(preferences).tutorial?.open ?? false);
 	$effect(() => {
 		preferences.update((x) => ({ ...x, tutorial: { ...x.tutorial, open: tutorialVisible } }));
 	});
+
+	/**Wether the page has fully loaded*/
 	let loaded = $state(false);
 
 	let innerWidth = $state(0);
 
+	/**Minimum width of the tutorial panel*/
 	let resizablePanelMin = $derived(Math.ceil((300 / innerWidth) * 100));
 
 	let welcomeMessageOpen = $state(false);

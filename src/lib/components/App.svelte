@@ -41,8 +41,6 @@
 	import { toast } from 'svelte-sonner';
 	import ImageDown from '@lucide/svelte/icons/image-down';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
-	import { marked } from 'marked';
-	import markedKatex from 'marked-katex-extension';
 	import { Switch } from '$lib/components/ui/switch/index';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import JoystickControls from './custom-ui/JoystickControls.svelte';
@@ -51,12 +49,6 @@
 	import GateButtonWithParams from './custom-ui/Buttons/GateButtonWithParams.svelte';
 	import UpdateStateButton from './custom-ui/Buttons/UpdateStateButton.svelte';
 	import { type TutorialPageProps } from '$lib/components/tutorial/tutorialUtils';
-
-	const markedKatexOptions = {
-		throwOnError: false
-	};
-	marked.use(markedKatex(markedKatexOptions));
-
 	const config = {
 		absTol: 1e-10
 	};
@@ -307,6 +299,7 @@
 						{gate}
 						disabled={!DM.isConsistent}
 						withParams={true}
+						size='small'
 					/>
 				{/each}
 			</div>
@@ -327,6 +320,7 @@
 					gate={GM}
 					disabled={!(DM.isConsistent && GM.isConsistent)}
 					withParams={true}
+					size='default'
 				/>
 			</div>
 		</ScrollArea>
@@ -335,4 +329,3 @@
 	{/if}
 </div>
 
-<!-- <p {@attach (p)=> {p.innerHTML = marked.parse('# Marked in browser\n\nRendered by **marked**. $x/3$') as string}}></p> -->
