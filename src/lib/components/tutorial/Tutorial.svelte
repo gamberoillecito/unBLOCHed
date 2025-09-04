@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 
-	import ScrollArea from '../ui/scroll-area/scroll-area.svelte';
+	import { ScrollArea } from '$lib/components/ui/scroll-area/index';
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
 	import Section from './tutorials_md/Section.svx';
@@ -14,6 +14,7 @@
 	import type { Component } from 'svelte';
 	import { preferences } from '$lib/preferences';
 	import { get } from 'svelte/store';
+	import Button from '../ui/button/button.svelte';
 	const markedKatexOptions = {
 		throwOnError: false
 	};
@@ -65,12 +66,37 @@
 		// }
 	];
 
-	let currentChapter = $state(prefs?.chapter !== '' ? prefs?.chapter : tutorialList[0].title);
+	let currentChapter = $state(prefs?.chapter !== undefined ? prefs?.chapter : tutorialList[0].title);
 </script>
 
 {#snippet tabContent(title: string, TutorialContent: Component)}
 	<Tabs.Content value={title} class="bg-card mx-4 my-2 min-h-0 flex-1 rounded-lg border shadow-sm">
-		<ScrollArea class="h-full w-full">
+		<ScrollArea
+			class="h-full w-full"
+			{@attach (el: HTMLElement) => {
+				/** Element that contains the scrollable text*/
+				let viewport = el.querySelector('[data-slot="scroll-area-viewport"]');
+				if (title === prefs?.chapter) {
+
+					/** Wait a couple of seconds and then scroll to the last reading position*/
+					setTimeout(() => {
+						viewport?.scrollTo({
+							left: 0,
+							top: prefs?.lastScrollTop ?? 0,
+							behavior: 'smooth'
+						});
+					}, 1000);
+				}
+				setTimeout(() => {
+					viewport?.addEventListener('scroll', () => {
+						preferences.update((x) => ({
+							...x,
+							tutorial: { ...x.tutorial, lastScrollTop: viewport?.scrollTop }
+						}));
+					});
+				}, 5000);
+			}}
+		>
 			<article class="prose dark:prose-invert max-h-full w-full px-6 py-4">
 				<TutorialContent {...tutorialProps} />
 			</article>

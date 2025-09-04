@@ -18,15 +18,24 @@
 		disabled: boolean;
 		canvasContainer: HTMLDivElement;
 		withParams: boolean;
+		size?: 'default' | 'small';
 	}
-	let { DM, history, gate, disabled, canvasContainer, withParams }: Props = $props();
+	let {
+		DM,
+		history,
+		gate,
+		disabled,
+		canvasContainer,
+		withParams,
+		size = 'default'
+	}: Props = $props();
 </script>
 
 {#if withParams}
 	<div class="flex gap-0">
-		<ApplyGateButton {DM} {history} {gate} {disabled} {canvasContainer} />
-		<MatrixInfoInput matrix={gate}></MatrixInfoInput>
+		<ApplyGateButton {DM} {history} {gate} {disabled} {canvasContainer} {size} />
+		<MatrixInfoInput matrix={gate} {size}></MatrixInfoInput>
 	</div>
 {:else}
-	<ApplyGateButton {DM} {history} {gate} {disabled} {canvasContainer} />
+	<ApplyGateButton {DM} {history} {gate} {disabled} {canvasContainer} {size} />
 {/if}

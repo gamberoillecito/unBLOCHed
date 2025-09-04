@@ -13,9 +13,10 @@
 	import ErrorPopover from '$lib/components/custom-ui/ErrorPopover.svelte';
 	interface Props {
 		matrix: FancyMatrix;
+		size?: 'default' | 'small';
 	}
 
-	let { matrix }: Props = $props();
+	let { matrix, size="default" }: Props = $props();
 	let FM: FancyMatrix = matrix;
 	let mainPopoverOpen = $state(false);
 	let secondaryPopoverOpen = $derived(mainPopoverOpen && !FM.isConsistent);
@@ -58,7 +59,7 @@
 	<!-- The trigger is itself a button but with a different style. Take the style from the button styles and apply to it -->
 	<Popover.Trigger
 		aria-label={FM.parameterArray.length === 0 ? 'info' : 'edit'}
-		class={`m-0 h-10 w-6 rounded-none rounded-e-md ${buttonVariants.variants.variant.outline}`}
+		class={`m-0 ${size === 'small' ? 'h-[2rem]' : 'h-10'} w-6 rounded-none rounded-e-md ${buttonVariants.variants.variant.outline}`}
 	>
 		{#if FM.parameterArray.length === 0}
 			<Info class="m-auto size-4" />

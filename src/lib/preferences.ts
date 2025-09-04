@@ -17,6 +17,8 @@ export const preferences = persisted('preferences', {
         //**Whether the tutorial pane is open */
         open: false,
         //**Last opened chapter */
-        chapter: '',
+        chapter: undefined as string | undefined,
+        /**Last scroll position */
+        lastScrollTop: 0,
     }
 })
