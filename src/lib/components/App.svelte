@@ -32,7 +32,7 @@
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import Undo from '@lucide/svelte/icons/undo';
 	import Redo from '@lucide/svelte/icons/redo';
-	import { predefinedGates, predefinedStates, theta_param } from '$lib/data/matrices';
+	import { predefinedGates, predefinedStates, theta_param, ketPlus } from '$lib/data/matrices';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import { Canvas, type ThrelteContext } from '@threlte/core';
 	import Menu from '@lucide/svelte/icons/menu';
@@ -61,16 +61,8 @@
 
 	let joystickMode = $state(false);
 
-	let DM = $state(
-		new DensityMatrix(
-			[
-				['1/2', '1/2'],
-				['1/2', '1/2']
-			],
-			'1',
-			'\\rho'
-		)
-	);
+	let DM = $state(ketPlus.clone());
+	DM.label = '\\rho'
 	let fakeDM = $state(new FakeDensityMatrix());
 	let popoversContext = $state({
 		preventOpening: false

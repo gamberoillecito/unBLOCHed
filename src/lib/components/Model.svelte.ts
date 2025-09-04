@@ -272,6 +272,9 @@ export class FancyMatrix {
     get label(): string {
         return this._label;
     }
+    set label(val: string) {
+        this._label = val
+    }
     
     get labelWParams(): string {
         return this._labelWParams;
