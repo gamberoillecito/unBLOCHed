@@ -17,7 +17,9 @@
 		canvasContainer
 	}: TutorialPageProps = $props();
 
+	const buttonSize = 'small';
 </script>
+
 # Play with Quantum States
 
 In this chapter we will understand which are some of the most important quantum states and how they are represented on the Bloch sphere.
@@ -25,8 +27,8 @@ In this chapter we will understand which are some of the most important quantum 
 Let's start from the one that we have already encountered: $\ket 0$ and $\ket 1$.
 By clicking on the buttons you can see their representation on the Bloch's sphere:
 
-- $\ket 0$ is represented as the **north pole**. <UpdateStateButton {DM} matrix={matrices.ket0} {canvasContainer} {history} disabled={false} secondaryButton={false}/>
-- $\ket 1$ is represented as the **south pole**. <UpdateStateButton {DM} matrix={matrices.ket1} {canvasContainer} {history} disabled={false} secondaryButton={false}/>
+- $\ket 0$ is represented as the **north pole**. <UpdateStateButton {DM} matrix={matrices.ket0} {canvasContainer} {history} disabled={false} secondaryButton={false} size={buttonSize}/>
+- $\ket 1$ is represented as the **south pole**. <UpdateStateButton {DM} matrix={matrices.ket1} {canvasContainer} {history} disabled={false} secondaryButton={false} size={buttonSize}/>
 
   (Click on the buttons to visualize them.)
 
@@ -46,4 +48,4 @@ Note that they are equal superposition of the basis states $\ket 0$ and $\ket 1$
 
 Click on them to see their representation on the Bloch's Sphere!
 
-You will discover that  that all four lie on the equator of the Bloch sphere.
+You will discover that that all four lie on the equator of the Bloch sphere.

@@ -76,13 +76,13 @@
 			{@attach (el: HTMLElement) => {
 				/** Element that contains the scrollable text*/
 				let viewport = el.querySelector('[data-slot="scroll-area-viewport"]');
-				if (title === prefs.chapter) {
+				if (title === prefs?.chapter) {
 
 					/** Wait a couple of seconds and then scroll to the last reading position*/
 					setTimeout(() => {
 						viewport?.scrollTo({
 							left: 0,
-							top: prefs.lastScrollTop,
+							top: prefs?.lastScrollTop,
 							behavior: 'smooth'
 						});
 					}, 1000);

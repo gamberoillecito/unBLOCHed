@@ -17,6 +17,7 @@
 		canvasContainer
 	}: TutorialPageProps = $props();
 
+	const buttonSize = 'small';
 </script>
 
 # What is a Quantum gate?
@@ -54,14 +55,14 @@ $$
 Let's see how they act on the computational basis states $\ket 0 = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$ and $\ket 1 = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$.  By performing the matrix-vector products you can verify that:
 
 - $X$ acts as a NOT gate: swaps $\ket 0$ with $\ket 1$ and $\ket 1$ with $\ket 0$.
-Try it out yourself, begin by putting the state in
-<UpdateStateButton {DM} matrix={matrices.ket1} {canvasContainer} {history} disabled={false} secondaryButton={false} size={'small'}/>
-and then apply the 
-<ApplyGateButton {DM} gate={matrices.Xgate} {canvasContainer} {history} disabled={false} secondaryButton={false}/>
+Try it out yourself, begin by putting the state in <UpdateStateButton {DM} matrix={matrices.ket1} {canvasContainer} {history} disabled={false} secondaryButton={false} size={buttonSize}/>
+and then apply the <ApplyGateButton {DM} gate={matrices.Xgate} {canvasContainer} {history} disabled={false} secondaryButton={false} size={buttonSize}/>
 gate a couple of times.
 - $Y$ swaps $\ket 0$ and $\ket 1$ and applies a phase shift of $\pm i$. Namely, it transforms $\ket 0$ in $i\ket 1$ and $\ket 1$ in $-i \ket {0}$
-Try it out yourself, begin by putting the state in <ApplyGateButton {DM} gate={matrices.Ygate} {canvasContainer} {history} disabled={false} secondaryButton={false}/>
- and then apply the  <ApplyGateButton {DM} gate={matrices.Ygate} {canvasContainer} {history} disabled={false} secondaryButton={false}/> gate a couple of times. See how the effect on the states is similar to the one of the $X$ gate but the *path* is different. Keep reading to see what this *path* represents.
+Try it out yourself, begin by putting the state in <UpdateStateButton {DM} matrix={matrices.ket1} {canvasContainer} {history} disabled={false} secondaryButton={false} size={buttonSize}/>
+and then apply the <ApplyGateButton {DM} gate={matrices.Ygate} {canvasContainer} {history} disabled={false} secondaryButton={false} size={buttonSize}></ApplyGateButton>
+gate a couple of times.
+See how the effect on the states is similar to the one of the $X$ gate but the *path* is different. Keep reading to see what this *path* represents.
 - $Z$ leaves $\ket 0$ untouched and and flips the sign of $\ket 1$. More percisely, $\ket 0$ remains $\ket 0$ and transforms $\ket 1$ in $- \ket 1$.
 
 Mathematically this is written as:
