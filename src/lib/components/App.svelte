@@ -299,7 +299,6 @@
 						{gate}
 						disabled={!DM.isConsistent}
 						withParams={true}
-						size='small'
 					/>
 				{/each}
 			</div>
@@ -320,7 +319,6 @@
 					gate={GM}
 					disabled={!(DM.isConsistent && GM.isConsistent)}
 					withParams={true}
-					size='default'
 				/>
 			</div>
 		</ScrollArea>

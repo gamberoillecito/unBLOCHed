@@ -18,5 +18,7 @@ export const preferences = persisted('preferences', {
         open: false,
         //**Last opened chapter */
         chapter: '',
+        /**Last scroll position */
+        lastScrollTop: 0,
     }
 })
