@@ -20,7 +20,7 @@
 	import { scheduleNotifications } from '$lib/notifications';
 	import type { TutorialPageProps } from '$lib/components/tutorial/tutorialUtils';
 
-	let showWelcomeAtStart = get(preferences).showWelcomeAtStart;
+	let showWelcomeAtStart = get(preferences).showWelcomeAtStart ?? true;
 	// Get user preferences regarding the state of the sidebar with the tutorial and keep them 
 	// up to date every time the tutorial is opened or closed so that when the user comes back
 	// will find the tutorial in the same state as they left it
@@ -116,7 +116,7 @@
 			</p>
 		</div>
 	{:else}
-		<Resizable.PaneGroup direction="horizontal">
+		<Resizable.PaneGroup direction="horizontal" autoSaveId={'tutorialPane'}>
 			<Resizable.Pane minSize={resizablePanelMin}>
 				<div class="bg-background @container h-full min-h-0 w-full flex-1">
 					<App bind:tutorialProps />
