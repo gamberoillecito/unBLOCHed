@@ -66,7 +66,7 @@
 		// }
 	];
 
-	let currentChapter = $state(prefs?.chapter !== '' ? prefs?.chapter : tutorialList[0].title);
+	let currentChapter = $state(prefs?.chapter !== undefined ? prefs?.chapter : tutorialList[0].title);
 </script>
 
 {#snippet tabContent(title: string, TutorialContent: Component)}
@@ -82,7 +82,7 @@
 					setTimeout(() => {
 						viewport?.scrollTo({
 							left: 0,
-							top: prefs?.lastScrollTop,
+							top: prefs?.lastScrollTop ?? 0,
 							behavior: 'smooth'
 						});
 					}, 1000);
