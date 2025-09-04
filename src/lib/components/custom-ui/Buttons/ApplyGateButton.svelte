@@ -22,12 +22,20 @@
 		secondaryButton?: boolean;
 		size: 'default' | 'small';
 	}
-	let { DM, history, gate, disabled, canvasContainer, secondaryButton=true, size='default' }: Props = $props();
+	let {
+		DM,
+		history,
+		gate,
+		disabled,
+		canvasContainer,
+		secondaryButton = true,
+		size = 'default'
+	}: Props = $props();
 </script>
 
 <!-- Button that, when clicked, applies a gate -->
 
-<Tooltip.Provider>
+<Tooltip.Provider delayDuration={0}>
 	<Tooltip.Root>
 		<LatexButton
 			onclick={() => {
@@ -45,7 +53,7 @@
 			{size}
 		/>
 		{#if isZero(gate.rotationAngle) || equal(gate.rotationAngle, multiply(2, pi))}
-			<Tooltip.Content class="bg-muted text-muted-foreground border-1"
+			<Tooltip.Content  class="bg-muted text-muted-foreground border-1"
 				>{@html marked.parse('Gate results in a $0$ or $2\\pi$ rotation')}</Tooltip.Content
 			>
 		{/if}
