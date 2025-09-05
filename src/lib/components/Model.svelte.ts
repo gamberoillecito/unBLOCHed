@@ -406,10 +406,10 @@ export class DensityMatrix extends FancyMatrix {
                 //         continue
                 //     }
                 // }
-                console.log(math.typeOf(v));
-                console.log(math.largerEq(v.re, 0));
+                // console.log(math.typeOf(v));
+                // console.log(math.largerEq(v.re, 0));
                 
-                console.log(v)
+                // console.log(v)
                 return new MatrixValidity(false, 'Not a positive operator')
                 
                 

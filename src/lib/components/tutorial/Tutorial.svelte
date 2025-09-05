@@ -11,7 +11,7 @@
 	import MStatesTutorial from './tutorials_md/MixedStates.svx';
 	import MeasureTutorial from './tutorials_md/Measure.svx';
 	import { type TutorialPageProps } from '$lib/components/tutorial/tutorialUtils';
-	import type { Component } from 'svelte';
+	import { onMount, type Component } from 'svelte';
 	import { preferences } from '$lib/preferences';
 	import { get } from 'svelte/store';
 	import Button from '../ui/button/button.svelte';
@@ -22,7 +22,6 @@
 
 	const prefs = get(preferences).tutorial;
 
-	let components: Component[] = [];
 	interface Props {
 		tutorialProps: TutorialPageProps;
 	}
@@ -65,8 +64,20 @@
 		// 	title: 'Gates'
 		// }
 	];
-
-	let currentChapter = $state(prefs?.chapter !== undefined ? prefs?.chapter : tutorialList[0].title);
+	onMount(()=>{
+		if (!prefs.chapter) {
+			preferences.update((x) => ({ ...x, tutorial: { ...x.tutorial, chapter: tutorialList[0].title } }));
+		}
+		if (!prefs.lastScrollTop) {
+			preferences.update((x) => ({ ...x, tutorial: { ...x.tutorial, lastScrollTop: 0} }));
+		}
+		if (!prefs.open) {
+			preferences.update((x) => ({ ...x, tutorial: { ...x.tutorial, open: false} }));
+		}
+	})
+	let currentChapter = $state(
+		prefs?.chapter !== undefined ? prefs?.chapter : tutorialList[0].title
+	);
 </script>
 
 {#snippet tabContent(title: string, TutorialContent: Component)}
@@ -77,7 +88,6 @@
 				/** Element that contains the scrollable text*/
 				let viewport = el.querySelector('[data-slot="scroll-area-viewport"]');
 				if (title === prefs?.chapter) {
-
 					/** Wait a couple of seconds and then scroll to the last reading position*/
 					setTimeout(() => {
 						viewport?.scrollTo({
