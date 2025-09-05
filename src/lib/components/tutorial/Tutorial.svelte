@@ -14,7 +14,13 @@
 	import { onMount, type Component } from 'svelte';
 	import { preferences } from '$lib/preferences';
 	import { get } from 'svelte/store';
-	import Button from '../ui/button/button.svelte';
+	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';
+	import Switch from '../ui/switch/switch.svelte';
+	import Label from '../ui/label/label.svelte';
+	import Bookmark from '@lucide/svelte/icons/bookmark';
+	import Toggle from '../ui/toggle/toggle.svelte';
+	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
+
 	const markedKatexOptions = {
 		throwOnError: false
 	};
@@ -64,20 +70,26 @@
 		// 	title: 'Gates'
 		// }
 	];
-	onMount(()=>{
+	onMount(() => {
 		if (!prefs.chapter) {
-			preferences.update((x) => ({ ...x, tutorial: { ...x.tutorial, chapter: tutorialList[0].title } }));
+			preferences.update((x) => ({
+				...x,
+				tutorial: { ...x.tutorial, chapter: tutorialList[0].title }
+			}));
 		}
 		if (!prefs.lastScrollTop) {
-			preferences.update((x) => ({ ...x, tutorial: { ...x.tutorial, lastScrollTop: 0} }));
+			preferences.update((x) => ({ ...x, tutorial: { ...x.tutorial, lastScrollTop: 0 } }));
 		}
 		if (!prefs.open) {
-			preferences.update((x) => ({ ...x, tutorial: { ...x.tutorial, open: false} }));
+			preferences.update((x) => ({ ...x, tutorial: { ...x.tutorial, open: false } }));
 		}
-	})
+	});
 	let currentChapter = $state(
 		prefs?.chapter !== undefined ? prefs?.chapter : tutorialList[0].title
 	);
+
+	let rememberReadingPos = $state(true);
+	$inspect(rememberReadingPos);
 </script>
 
 {#snippet tabContent(title: string, TutorialContent: Component)}
@@ -113,20 +125,44 @@
 		</ScrollArea>
 	</Tabs.Content>
 {/snippet}
-
-<Tabs.Root
-	bind:value={currentChapter}
-	class="flex h-full min-h-0 flex-col items-center"
-	onValueChange={() => {
-		preferences.update((x) => ({ ...x, tutorial: { ...x.tutorial, chapter: currentChapter } }));
-	}}
->
-	<Tabs.List>
+<div class="relative h-full w-full">
+	<Tabs.Root
+		bind:value={currentChapter}
+		class="flex h-full min-h-0 flex-col items-center"
+		onValueChange={() => {
+			preferences.update((x) => ({ ...x, tutorial: { ...x.tutorial, chapter: currentChapter } }));
+		}}
+	>
+		<Tabs.List>
+			{#each tutorialList as tut}
+				<Tabs.Trigger value={tut.title}>{tut.title}</Tabs.Trigger>
+			{/each}
+		</Tabs.List>
 		{#each tutorialList as tut}
-			<Tabs.Trigger value={tut.title}>{tut.title}</Tabs.Trigger>
+			{@render tabContent(tut.title, tut.content)}
 		{/each}
-	</Tabs.List>
-	{#each tutorialList as tut}
-		{@render tabContent(tut.title, tut.content)}
-	{/each}
-</Tabs.Root>
+	</Tabs.Root>
+
+	<div class="absolute top-0 left-0">
+		<Tooltip.Provider>
+			<Tooltip.Root delayDuration={1200} >
+				<Tooltip.Trigger>
+					<button
+						type="button"
+						class="relative flex h-[2.5rem] w-[3rem] items-center justify-center focus:outline-none"
+						aria-pressed={rememberReadingPos}
+						onclick={() => (rememberReadingPos = !rememberReadingPos)}
+						aria-label="remember last reading position"
+					>
+						<Bookmark
+							class="absolute top-1 left-1 m-auto size-6 transition-colors duration-150
+                {rememberReadingPos ? 'fill-foreground ' : ''}
+                stroke-foreground hover:scale-105"
+						/>
+					</button>
+				</Tooltip.Trigger>
+				<Tooltip.Content class="bg-card text-card-foreground">Remember reading position</Tooltip.Content>
+			</Tooltip.Root>
+		</Tooltip.Provider>
+	</div>
+</div>
