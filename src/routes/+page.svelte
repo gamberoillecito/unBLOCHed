@@ -68,7 +68,7 @@
 <div class="flex h-svh flex-col overflow-hidden">
 	<!-- Header -->
 	<div
-		class="bg-foreground flex w-[100%] flex-row-reverse items-center justify-between p-2 px-6 text-center text-xl text-(--background) lg:flex-row lg:text-left lg:text-2xl"
+		class="bg-foreground flex w-[100%] flex-row-reverse items-center justify-between p-2 px-6 text-center text-xl text-(--background) md:flex-row md:text-left md:text-2xl"
 	>
 		<Button onclick={toggleMode} variant="secondary" size="sm" class="group scale-80 md:scale-100">
 			<MoonIcon
@@ -99,7 +99,7 @@
 		<Toggle
 			variant="outline"
 			bind:pressed={tutorialVisible}
-			class="hidden lg:flex {loaded ? '' : 'opacity-0'}"
+			class="{tutorialVisible ? '' : 'hidden'} md:flex {loaded ? '' : 'opacity-0'}"
 		>
 			<CircleQuestionMark />
 			Tutorial
