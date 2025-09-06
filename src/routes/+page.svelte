@@ -99,7 +99,7 @@
 		<Toggle
 			variant="outline"
 			bind:pressed={tutorialVisible}
-			class="{tutorialVisible ? '' : 'hidden'} md:flex {loaded ? '' : 'opacity-0'}"
+			class="{tutorialVisible ? 'max-md:order-first' : 'hidden'}  md:flex {loaded ? '' : 'opacity-0'}"
 		>
 			<CircleQuestionMark />
 			Tutorial
