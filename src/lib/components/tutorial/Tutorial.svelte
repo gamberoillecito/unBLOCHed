@@ -53,22 +53,6 @@
 			content: MeasureTutorial,
 			title: 'Measures'
 		}
-		// {
-		// 	mdContent: tutorial1,
-		// 	title: 'Qubits'
-		// },
-		// {
-		// 	mdContent: tutorial2,
-		// 	title: 'Bloch Sphere'
-		// },
-		// {
-		// 	mdContent: tutorial3,
-		// 	title: 'States'
-		// },
-		// {
-		// 	mdContent: tutorial4,
-		// 	title: 'Gates'
-		// }
 	];
 	onMount(() => {
 		if (!prefs.chapter) {
@@ -83,13 +67,25 @@
 		if (!prefs.open) {
 			preferences.update((x) => ({ ...x, tutorial: { ...x.tutorial, open: false } }));
 		}
+		if (!prefs.rememberReadingPosition) {
+			preferences.update((x) => ({
+				...x,
+				tutorial: { ...x.tutorial, rememberReadingPosition: true }
+			}));
+		}
 	});
 	let currentChapter = $state(
 		prefs?.chapter !== undefined ? prefs?.chapter : tutorialList[0].title
 	);
 
-	let rememberReadingPos = $state(true);
+	let rememberReadingPos = $state(prefs.rememberReadingPosition);
 	$inspect(rememberReadingPos);
+	$effect(() => {
+		preferences.update((x) => ({
+			...x,
+			tutorial: { ...x.tutorial, rememberReadingPosition: rememberReadingPos }
+		}));
+	});
 </script>
 
 {#snippet tabContent(title: string, TutorialContent: Component)}
@@ -101,13 +97,16 @@
 				let viewport = el.querySelector('[data-slot="scroll-area-viewport"]');
 				if (title === prefs?.chapter) {
 					/** Wait a couple of seconds and then scroll to the last reading position*/
-					setTimeout(() => {
-						viewport?.scrollTo({
-							left: 0,
-							top: prefs?.lastScrollTop ?? 0,
-							behavior: 'smooth'
-						});
-					}, 1000);
+					
+					if (prefs?.rememberReadingPosition ?? true) {
+						setTimeout(() => {
+							viewport?.scrollTo({
+								left: 0,
+								top: prefs?.lastScrollTop ?? 0,
+								behavior: 'smooth'
+							});
+						}, 1000);
+					}
 				}
 				setTimeout(() => {
 					viewport?.addEventListener('scroll', () => {
@@ -145,7 +144,7 @@
 
 	<div class="absolute top-0 left-0">
 		<Tooltip.Provider>
-			<Tooltip.Root delayDuration={1200} >
+			<Tooltip.Root delayDuration={1200}>
 				<Tooltip.Trigger>
 					<button
 						type="button"
@@ -161,7 +160,9 @@
 						/>
 					</button>
 				</Tooltip.Trigger>
-				<Tooltip.Content class="bg-card text-card-foreground">Remember reading position</Tooltip.Content>
+				<Tooltip.Content class="bg-card text-card-foreground" side="top"
+					>Remember reading position</Tooltip.Content
+				>
 			</Tooltip.Root>
 		</Tooltip.Provider>
 	</div>
