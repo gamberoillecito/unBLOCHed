@@ -4,6 +4,9 @@ import { toast } from 'svelte-sonner';
 import GitHubIcon from '$lib/components/custom-ui/GitHubIcon.svelte';
 
 const prefs = get(preferences).notifications;
+if (!prefs) {
+    preferences.update((x) => ({ ...x, notifications: { starOpened: false, starCancelledTimes: 0, issuesOpened: false, issuesCancelledTimes: 0 } }));
+}
 const CANCEL_THRESHOLD = 2;
 const TIMEOUT_ms = 1000 * 60 * 1.5;
 // const TIMEOUT_ms = 0;
