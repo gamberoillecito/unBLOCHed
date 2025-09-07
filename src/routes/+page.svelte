@@ -19,6 +19,7 @@
 	import { get } from 'svelte/store';
 	import { scheduleNotifications } from '$lib/notifications';
 	import type { TutorialPageProps } from '$lib/components/tutorial/tutorialUtils';
+	import Shrimp from '@lucide/svelte/icons/shrimp';
 
 	let showWelcomeAtStart = get(preferences).showWelcomeAtStart ?? true;
 	// Get user preferences regarding the state of the sidebar with the tutorial and keep them 
@@ -88,12 +89,19 @@
 			</Toggle> -->
 			<Button
 				variant="ghost"
-				onclick={() => {
+				size="default"
+				onclick={(e:Event) => {
 					welcomeMessageOpen = !welcomeMessageOpen;
 				}}
 				aria-label="info about website"
+				class="group scale-80 md:scale-100 hover:bg-white/0"
 			>
-				<Info />
+			<Info
+				class="h-[1.2rem] w-[1.2rem]  scale-100 rotate-0 !transition-all delay-3000 duration-500 group-hover:scale-0 group-hover:-rotate-180"
+			/>
+			<Shrimp
+				class="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-180 stroke-background !transition-all delay-3000 duration-500 group-hover:scale-100 group-hover:rotate-0"
+			/>
 			</Button>
 		</div>
 		<Toggle
