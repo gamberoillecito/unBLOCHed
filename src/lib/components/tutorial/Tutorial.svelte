@@ -6,6 +6,7 @@
 	import markedKatex from 'marked-katex-extension';
 	import Section from './tutorials_md/Section.svx';
 	import QubitsTutorial from './tutorials_md/Qubits.svx';
+	import BlochSphereTutorial from './tutorials_md/BlochSphere.svx';
 	import StatesTutorial from './tutorials_md/States.svx';
 	import GatesTutorial from './tutorials_md/Gates.svx';
 	import MStatesTutorial from './tutorials_md/MixedStates.svx';
@@ -20,6 +21,7 @@
 	import Bookmark from '@lucide/svelte/icons/bookmark';
 	import Toggle from '../ui/toggle/toggle.svelte';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
+	import BlochSphere from '../BlochSphere.svelte';
 
 	const markedKatexOptions = {
 		throwOnError: false
@@ -40,6 +42,10 @@
 		{
 			content: StatesTutorial,
 			title: 'States'
+		},
+		{
+			content: BlochSphereTutorial,
+			title: 'BlochSphere'
 		},
 		{
 			content: GatesTutorial,
