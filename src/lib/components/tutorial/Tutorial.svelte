@@ -130,7 +130,7 @@
 		</ScrollArea>
 	</Tabs.Content>
 {/snippet}
-<div class="relative h-full w-full">
+<div class="relative h-full w-full @container">
 	<Tabs.Root
 		bind:value={currentChapter}
 		class="flex h-full min-h-0 flex-col items-center"
@@ -154,7 +154,7 @@
 				<Tooltip.Trigger>
 					<button
 						type="button"
-						class="relative flex h-[2.5rem] w-[3rem] items-center justify-center focus:outline-none"
+						class="relative h-[2.5rem] w-[3rem] items-center justify-center focus:outline-none flex @max-[600px]:hidden"
 						aria-pressed={rememberReadingPos}
 						onclick={() => (rememberReadingPos = !rememberReadingPos)}
 						aria-label="remember last reading position"
