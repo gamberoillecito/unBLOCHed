@@ -27,9 +27,3 @@ I have a lot more features planned for the simulator and would be happy to hear 
 - [ ] **Time evolution**: I plan on adding a way to simulate the time evolution of the Bloch sphere according to some model (e.g. Bloch-Redfield). This would allow user to press "Play" to see how the Bloch vector would evolve as time passes.
 - [ ] **Noise**: I would like to allow the implementation of some sort of noise on the state.
 - [ ] **Measurement**: I would like to add a simple feature that allows to see the probabilities of a projective measurement given a basis.
-
-## Contributors
- 
-Thanks to all the people that helped build this project!
-
-<img width="48%" alt="image" src="https://contrib.nn.ci/api?repo=gamberoillecito/unBLOCHed" />
