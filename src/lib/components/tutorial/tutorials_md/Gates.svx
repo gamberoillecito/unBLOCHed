@@ -8,6 +8,7 @@
 	import GateButtonWithParams from '$lib/components//custom-ui/Buttons/GateButtonWithParams.svelte';
 	import UpdateStateButton from '$lib/components//custom-ui/Buttons/UpdateStateButton.svelte';
 	import * as matrices from '$lib/data/matrices';
+	import SquarePen from '@lucide/svelte/icons/square-pen';
 	
 	import { type TutorialPageProps } from '$lib/components/tutorial/tutorialUtils.ts'
 
@@ -89,7 +90,7 @@ $$
 \begin{aligned} R_x(\theta) &= \begin{bmatrix} \cos(\tfrac{\theta}{2}) & -i \sin(\tfrac{\theta}{2}) \\ -i \sin(\tfrac{\theta}{2}) & \cos(\tfrac{\theta}{2}) \end{bmatrix}, \\ R_y(\theta) &= \begin{bmatrix} \cos(\tfrac{\theta}{2}) & -\sin(\tfrac{\theta}{2}) \\ \sin(\tfrac{\theta}{2}) & \cos(\tfrac{\theta}{2}) \end{bmatrix}, \\ R_z(\theta) &= \begin{bmatrix} e^{-i\theta/2} & 0 \\ 0 & e^{i\theta/2} \end{bmatrix}. \end{aligned}
 $$
 
-These gates rotate the Bloch vector by an angle $\theta$ around the $x$, $y$, or $z$ axis respectively. You can define the rotation angle by clicking on the icon: "Icon(da sostituire)"
+These gates rotate the Bloch vector by an angle $\theta$ around the $x$, $y$ or $z$ axis respectively. You can define the rotation angle by clicking on the button with the following icon: <SquarePen class="inline size-6" />
 
 Another fundamental gate is the **Hadamard gate**:
 

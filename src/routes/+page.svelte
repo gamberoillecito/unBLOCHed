@@ -19,6 +19,7 @@
 	import { get } from 'svelte/store';
 	import { scheduleNotifications } from '$lib/notifications';
 	import type { TutorialPageProps } from '$lib/components/tutorial/tutorialUtils';
+	import Shrimp from '@lucide/svelte/icons/shrimp';
 
 	let showWelcomeAtStart = get(preferences).showWelcomeAtStart ?? true;
 	// Get user preferences regarding the state of the sidebar with the tutorial and keep them 
@@ -68,7 +69,7 @@
 <div class="flex h-svh flex-col overflow-hidden">
 	<!-- Header -->
 	<div
-		class="bg-foreground flex w-[100%] flex-row-reverse items-center justify-between p-2 px-6 text-center text-xl text-(--background) lg:flex-row lg:text-left lg:text-2xl"
+		class="bg-foreground flex w-[100%] flex-row-reverse items-center justify-between p-2 px-6 text-center text-xl text-(--background) md:flex-row md:text-left md:text-2xl"
 	>
 		<Button onclick={toggleMode} variant="secondary" size="sm" class="group scale-80 md:scale-100">
 			<MoonIcon
@@ -88,18 +89,25 @@
 			</Toggle> -->
 			<Button
 				variant="ghost"
-				onclick={() => {
+				size="default"
+				onclick={(e:Event) => {
 					welcomeMessageOpen = !welcomeMessageOpen;
 				}}
 				aria-label="info about website"
+				class="group scale-80 md:scale-100 hover:bg-white/0"
 			>
-				<Info />
+			<Info
+				class="h-[1.2rem] w-[1.2rem]  scale-100 rotate-0 !transition-all delay-3000 duration-500 group-hover:scale-0 group-hover:-rotate-180"
+			/>
+			<Shrimp
+				class="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-180 stroke-background !transition-all delay-3000 duration-500 group-hover:scale-100 group-hover:rotate-0"
+			/>
 			</Button>
 		</div>
 		<Toggle
 			variant="outline"
 			bind:pressed={tutorialVisible}
-			class="hidden lg:flex {loaded ? '' : 'opacity-0'}"
+			class="{tutorialVisible ? 'max-md:order-first' : 'hidden'}  md:flex {loaded ? '' : 'opacity-0'}"
 		>
 			<CircleQuestionMark />
 			Tutorial

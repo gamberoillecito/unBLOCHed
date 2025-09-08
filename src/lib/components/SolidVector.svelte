@@ -1,13 +1,4 @@
-<script lang="ts" module>
-	// export interface Prop {
-	//   length: number;
-	//   pointToLookAt: [number, number, number];
-	//   phase?: number;
-	// }
-</script>
-
 <script lang="ts">
-	import { getContext } from 'svelte';
 	import { T } from '@threlte/core';
 	import { Group, Color, type HSL } from 'three';
 	import { Outlines } from '@threlte/extras';

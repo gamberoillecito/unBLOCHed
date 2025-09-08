@@ -62,7 +62,7 @@
 	let joystickMode = $state(false);
 
 	let DM = $state(ketPlus.clone());
-	DM.label = '\\rho'
+	DM.label = '\\rho';
 	let fakeDM = $state(new FakeDensityMatrix());
 	let popoversContext = $state({
 		preventOpening: false
@@ -125,9 +125,9 @@
 			toast.error('Image data not available');
 		}
 	}
-	
-	$effect(()=>{
-		tutorialProps.DM  = DM;
+
+	$effect(() => {
+		tutorialProps.DM = DM;
 		tutorialProps.canvasContainer = canvasContainer;
 		tutorialProps.history = history;
 	});
@@ -173,11 +173,8 @@
 			</Button>
 		</div>
 		<!-- Canvas container -->
-		<div
-			bind:this={canvasContainer}
-			class=" relative m-2 h-fit shrink shadow-sm @lg:h-auto @lg:w-[90%]"
-		>
-			<div class="aspect-square h-[85%] rounded-md border-1">
+		<div class=" relative m-2 h-fit shrink shadow-sm @lg:h-auto @lg:w-[90%]">
+			<div class="aspect-square h-[85%] rounded-md border-1" bind:this={canvasContainer}>
 				<Canvas>
 					<Scene
 						bind:getImage
@@ -234,7 +231,7 @@
 	</div>
 	<!-- Buttons and matrices -->
 	{#if !joystickMode}
-		<ScrollArea class="min-h-0 shrink p-2 @lg:min-h-auto" type="auto">
+		<ScrollArea class="min-h-0 shrink p-2 @lg:min-h-auto" type="scroll">
 			<div class="flex flex-col items-center">
 				<h4 class="w-fit self-start">Density Matrix</h4>
 				<DynamicMatrix
@@ -318,4 +315,3 @@
 		<JoystickControls DM={fakeDM} bind:joystickMode />
 	{/if}
 </div>
-

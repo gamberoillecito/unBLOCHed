@@ -1,32 +1,13 @@
 <script lang="ts">
 	import { Canvas, useThrelte, useTask } from '@threlte/core';
 	import { T } from '@threlte/core';
-	import {
-		interactivity,
-		OrbitControls,
-		SVG,
-		Billboard,
-		Gizmo,
-		type GizmoOptions,
-		Text
-	} from '@threlte/extras';
+	import { OrbitControls, SVG, Billboard, Gizmo, Text } from '@threlte/extras';
 	// import { ContactShadows, Float, Grid, OrbitControls } from '@threlte/extras'
 	import BlochSphere from './BlochSphere.svelte';
 	import { boolean, complex, number, sign, type Complex } from 'mathjs';
 	import SolidVector from './SolidVector.svelte';
 	import Path from './Path.svelte';
-	import {
-		ArrowHelper,
-		AxesHelper,
-		Camera,
-		DoubleSide,
-		Fog,
-		Mesh,
-		PerspectiveCamera,
-		Scene,
-		WebGLRenderer,
-		Color
-	} from 'three';
+	import { PerspectiveCamera, Color } from 'three';
 	import { generateGradient } from 'typescript-color-gradient';
 	import type { DensityMatrix, GatePath } from './Model.svelte';
 	import AngleArc from './AngleArc.svelte';

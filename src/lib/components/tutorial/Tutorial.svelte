@@ -6,15 +6,23 @@
 	import markedKatex from 'marked-katex-extension';
 	import Section from './tutorials_md/Section.svx';
 	import QubitsTutorial from './tutorials_md/Qubits.svx';
+	import BlochSphereTutorial from './tutorials_md/BlochSphere.svx';
 	import StatesTutorial from './tutorials_md/States.svx';
 	import GatesTutorial from './tutorials_md/Gates.svx';
 	import MStatesTutorial from './tutorials_md/MixedStates.svx';
 	import MeasureTutorial from './tutorials_md/Measure.svx';
 	import { type TutorialPageProps } from '$lib/components/tutorial/tutorialUtils';
-	import type { Component } from 'svelte';
+	import { onMount, type Component } from 'svelte';
 	import { preferences } from '$lib/preferences';
 	import { get } from 'svelte/store';
-	import Button from '../ui/button/button.svelte';
+	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';
+	import Switch from '../ui/switch/switch.svelte';
+	import Label from '../ui/label/label.svelte';
+	import Bookmark from '@lucide/svelte/icons/bookmark';
+	import Toggle from '../ui/toggle/toggle.svelte';
+	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
+	import BlochSphere from '../BlochSphere.svelte';
+
 	const markedKatexOptions = {
 		throwOnError: false
 	};
@@ -22,7 +30,6 @@
 
 	const prefs = get(preferences).tutorial;
 
-	let components: Component[] = [];
 	interface Props {
 		tutorialProps: TutorialPageProps;
 	}
@@ -37,6 +44,10 @@
 			title: 'States'
 		},
 		{
+			content: BlochSphereTutorial,
+			title: 'BlochSphere'
+		},
+		{
 			content: GatesTutorial,
 			title: 'Gates'
 		},
@@ -48,25 +59,39 @@
 			content: MeasureTutorial,
 			title: 'Measures'
 		}
-		// {
-		// 	mdContent: tutorial1,
-		// 	title: 'Qubits'
-		// },
-		// {
-		// 	mdContent: tutorial2,
-		// 	title: 'Bloch Sphere'
-		// },
-		// {
-		// 	mdContent: tutorial3,
-		// 	title: 'States'
-		// },
-		// {
-		// 	mdContent: tutorial4,
-		// 	title: 'Gates'
-		// }
 	];
+	onMount(() => {
+		if (!prefs.chapter) {
+			preferences.update((x) => ({
+				...x,
+				tutorial: { ...x.tutorial, chapter: tutorialList[0].title }
+			}));
+		}
+		if (!prefs.lastScrollTop) {
+			preferences.update((x) => ({ ...x, tutorial: { ...x.tutorial, lastScrollTop: 0 } }));
+		}
+		if (!prefs.open) {
+			preferences.update((x) => ({ ...x, tutorial: { ...x.tutorial, open: false } }));
+		}
+		if (!prefs.rememberReadingPosition) {
+			preferences.update((x) => ({
+				...x,
+				tutorial: { ...x.tutorial, rememberReadingPosition: true }
+			}));
+		}
+	});
+	let currentChapter = $state(
+		prefs?.chapter !== undefined ? prefs?.chapter : tutorialList[0].title
+	);
 
-	let currentChapter = $state(prefs?.chapter !== undefined ? prefs?.chapter : tutorialList[0].title);
+	let rememberReadingPos = $state(prefs.rememberReadingPosition);
+	$inspect(rememberReadingPos);
+	$effect(() => {
+		preferences.update((x) => ({
+			...x,
+			tutorial: { ...x.tutorial, rememberReadingPosition: rememberReadingPos }
+		}));
+	});
 </script>
 
 {#snippet tabContent(title: string, TutorialContent: Component)}
@@ -77,15 +102,17 @@
 				/** Element that contains the scrollable text*/
 				let viewport = el.querySelector('[data-slot="scroll-area-viewport"]');
 				if (title === prefs?.chapter) {
-
 					/** Wait a couple of seconds and then scroll to the last reading position*/
-					setTimeout(() => {
-						viewport?.scrollTo({
-							left: 0,
-							top: prefs?.lastScrollTop ?? 0,
-							behavior: 'smooth'
-						});
-					}, 1000);
+					
+					if (prefs?.rememberReadingPosition ?? true) {
+						setTimeout(() => {
+							viewport?.scrollTo({
+								left: 0,
+								top: prefs?.lastScrollTop ?? 0,
+								behavior: 'smooth'
+							});
+						}, 1000);
+					}
 				}
 				setTimeout(() => {
 					viewport?.addEventListener('scroll', () => {
@@ -103,20 +130,46 @@
 		</ScrollArea>
 	</Tabs.Content>
 {/snippet}
-
-<Tabs.Root
-	bind:value={currentChapter}
-	class="flex h-full min-h-0 flex-col items-center"
-	onValueChange={() => {
-		preferences.update((x) => ({ ...x, tutorial: { ...x.tutorial, chapter: currentChapter } }));
-	}}
->
-	<Tabs.List>
+<div class="relative h-full w-full @container">
+	<Tabs.Root
+		bind:value={currentChapter}
+		class="flex h-full min-h-0 flex-col items-center"
+		onValueChange={() => {
+			preferences.update((x) => ({ ...x, tutorial: { ...x.tutorial, chapter: currentChapter } }));
+		}}
+	>
+		<Tabs.List>
+			{#each tutorialList as tut}
+				<Tabs.Trigger value={tut.title}>{tut.title}</Tabs.Trigger>
+			{/each}
+		</Tabs.List>
 		{#each tutorialList as tut}
-			<Tabs.Trigger value={tut.title}>{tut.title}</Tabs.Trigger>
+			{@render tabContent(tut.title, tut.content)}
 		{/each}
-	</Tabs.List>
-	{#each tutorialList as tut}
-		{@render tabContent(tut.title, tut.content)}
-	{/each}
-</Tabs.Root>
+	</Tabs.Root>
+
+	<div class="absolute top-0 left-0">
+		<Tooltip.Provider>
+			<Tooltip.Root delayDuration={1200}>
+				<Tooltip.Trigger>
+					<button
+						type="button"
+						class="relative h-[2.5rem] w-[3rem] items-center justify-center focus:outline-none flex @max-[600px]:hidden"
+						aria-pressed={rememberReadingPos}
+						onclick={() => (rememberReadingPos = !rememberReadingPos)}
+						aria-label="remember last reading position"
+					>
+						<Bookmark
+							class="absolute top-1 left-1 m-auto size-6 transition-colors duration-150
+                {rememberReadingPos ? 'fill-foreground ' : ''}
+                stroke-foreground hover:scale-105"
+						/>
+					</button>
+				</Tooltip.Trigger>
+				<Tooltip.Content class="bg-card text-card-foreground" side="top"
+					>Remember reading position</Tooltip.Content
+				>
+			</Tooltip.Root>
+		</Tooltip.Provider>
+	</div>
+</div>

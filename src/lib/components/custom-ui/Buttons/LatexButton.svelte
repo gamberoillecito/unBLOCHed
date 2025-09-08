@@ -27,8 +27,6 @@
 		round = 'left',
 		size = 'default'
 	}: Props = $props();
-	console.log(size);
-	
 
 	const btnClass = `p-auto aspect-square ${size === 'small' ? 'w-[2rem] h-[2rem] ' : 'h-10 min-w-10 '} rounded-none ${round === 'left' ? 'rounded-s-md' : round === 'right' ? 'rounded-r-md' : round === 'full' ? '!rounded-md' : ''}`;
 	const labelSpanClasses = "pointer-events-none flex flex-row items-center"

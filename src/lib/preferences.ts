@@ -20,5 +20,6 @@ export const preferences = persisted('preferences', {
         chapter: undefined as string | undefined,
         /**Last scroll position */
         lastScrollTop: 0,
+        rememberReadingPosition: true as boolean | undefined,
     }
 })

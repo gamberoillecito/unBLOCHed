@@ -6,15 +6,19 @@ One way to describe quantum states is the Dirac notation, that we introduced in 
 
 Using this notation, the state is written as:
 
-$$ |\psi \rangle = \alpha |0\rangle + \beta |1\rangle $$
+$$
+|\psi \rangle = \alpha |0\rangle + \beta |1\rangle
+$$
 
-Where, as mentioned before, $\alpha$ and $\beta$ are complex numbers and $|\alpha|^2 + |\beta|^2 = 1$. 
+Where, as mentioned before, $\alpha$ and $\beta$ are complex numbers and $|\alpha|^2 + |\beta|^2 = 1$.
 
 Another way of writing the same thing is by using a complex 2D vector. This is done in a very straightforward way: the first entry contains the coefficient $\alpha$, the second one contains $\beta$. 
 
 In formulas:
 
-$$ \ket\psi = \begin{pmatrix} \alpha \\ \beta  \end{pmatrix} $$
+$$
+\ket\psi = \begin{pmatrix} \alpha \\ \beta \end{pmatrix}
+$$
 
 
 Quantum states can be also described using a 2x2 Complex matrix. This matrix is called "density matrix" and is often denoted as $\rho$. The Matrix description can be easily obtained from the vectorial one by computing a the Column-Row product of the vector and its complex conjugate.
@@ -23,7 +27,7 @@ For clarity it is useful to look at an example. The density matrix associated to
 
 $$
 
-\rho = 
+\rho =
 
 \begin{bmatrix}
 
@@ -49,7 +53,7 @@ $$
 
 $$
 
-Finally, we get to the description that we are most interested in: the Bloch sphere representation. 
+Finally, we get to the description that we are most interested in: the Bloch sphere representation.
 
 This model provides an intuitive picture for visualizing the state of a single qubit as a point of a unit sphere (i.e. a sphere with radius equal to one).  This is done by mapping every **pure** state onto a point on the surface the sphere. **Mixed** states, on the other hand, are mapped to points *inside* the Bloch sphere.
 If you don't already know the difference between "pure" and "mixed" states you can just ignore it for now, we will come back to this later.

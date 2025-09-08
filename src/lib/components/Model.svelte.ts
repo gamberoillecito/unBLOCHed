@@ -363,6 +363,18 @@ export class DensityMatrix extends FancyMatrix {
         return (phi + 2 * Math.PI) % (2 * Math.PI);
     }
 
+    // According to Nielsen-Chuang page 100
+    isPureState(matrix: ComplexMat2x2 | null = null): boolean {
+
+        let mat = math.matrix(matrix ?? this._mat);
+        let TrRhoSquared = math.trace(math.multiply(mat, mat)) as unknown as Complex;
+        if (math.compare(TrRhoSquared.re, 1) == 1){
+            return false;
+        }
+        return true;
+        
+    }
+
     // Validation perfomed according to Theorem 2.5 Nielsen-Chuang
     // Added also check to see if it is Hermitian but I'm not sure it is needed (
     // although without this check the matrix rho =[[1,0], [1,0]] results valid)
@@ -392,32 +404,12 @@ export class DensityMatrix extends FancyMatrix {
                     }
                 }
 
-                // If complex, the imaginary part should be 0
-                // if (typeOf(v) == 'Complex'){
-                //     if (compare(v.im, 0) == 0) {
-                //         console.log(`${v} is a complex`);
-                //         continue;
-                //     }
-                // }
-                // else if (typeOf(v) == 'number') {
-                //     if (compare(v, 1) != 1 && isPositive(v as unknown as number)) {
-                //         console.log(`${v} is a number`);
-                        
-                //         continue
-                //     }
-                // }
-                console.log(math.typeOf(v));
-                console.log(math.largerEq(v.re, 0));
-                
-                console.log(v)
                 return new MatrixValidity(false, 'Not a positive operator')
-                
-                
                 
             }
 
             // (1) Unitary trace
-            let Tr = math.trace(math.multiply(mat, mat)) as unknown as Complex ;
+            let Tr = math.trace(mat) as unknown as Complex ;
             
             if (!math.isZero(Tr.im)) {
                 console.log(Tr);
@@ -429,7 +421,7 @@ export class DensityMatrix extends FancyMatrix {
             }
 
             if (math.compare(Tr.re, 1) == 1){
-                return new MatrixValidity(false, `$\\operatorname{Tr}[\\rho^2] > 1$`)
+                return new MatrixValidity(false, `$\\operatorname{tr}[\\rho] \\neq 1$`)
             }
 
 

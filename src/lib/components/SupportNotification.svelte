@@ -2,7 +2,6 @@
 	import { Button, buttonVariants } from '$lib/components/ui/button/index.js';
 	import Title from '$lib/components/Title.svelte'
     import GitHubIcon from './custom-ui/GitHubIcon.svelte';
-    console.log(typeof(GitHubIcon));
     
 	interface Props {
 		title: string;
