@@ -131,7 +131,7 @@
 		position.x={ARC_RADIUS * 1.2 * Math.cos(phi / 2)}
 		position.z={ARC_RADIUS * 1.2 * Math.sin(phi / 2)}
 	>
-		<SVG src={`/${mode.current}/phi.svg`} scale={0.0001} position={[-0.04, 0, 0]} />
+		<SVG src={`${base}/${mode.current}/phi.svg`} scale={0.0001} position={[-0.04, 0, 0]} />
 	</Billboard>
 {/if}
 
