@@ -1,7 +1,3 @@
----
-title: Test
----
-
 <script lang="ts">
 	import {
 		DensityMatrix,
