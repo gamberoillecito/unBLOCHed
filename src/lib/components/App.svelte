@@ -231,7 +231,7 @@
 	</div>
 	<!-- Buttons and matrices -->
 	{#if !joystickMode}
-		<ScrollArea class="min-h-0 shrink p-2 @lg:min-h-auto" type="auto">
+		<ScrollArea class="min-h-0 shrink p-2 @lg:min-h-auto" type="scroll">
 			<div class="flex flex-col items-center">
 				<h4 class="w-fit self-start">Density Matrix</h4>
 				<DynamicMatrix
