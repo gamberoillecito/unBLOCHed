@@ -1,9 +1,11 @@
 # un**BLOCH**ed - Bloch sphere simulator
 
+<img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.17087795.svg" />
+
 I created this website during my last year of the Master's degree in Quantum Engineering as a way to learn more on the topic and about web-developement. 
 
-<img width="48%" alt="image" src="https://github.com/user-attachments/assets/32c0f059-6c1c-4133-a90b-ee427b48e633" />
-<img width="48%"  alt="floorp_tJ5qx5463K" src="https://github.com/user-attachments/assets/46476b5e-d62b-49c9-be21-bcd50081415c" />
+<img width="45%" alt="image" src="https://github.com/user-attachments/assets/32c0f059-6c1c-4133-a90b-ee427b48e633" />
+<img width="45%"  alt="floorp_tJ5qx5463K" src="https://github.com/user-attachments/assets/46476b5e-d62b-49c9-be21-bcd50081415c" />
 
 
 The goal of the website is to give users a quick and easy way to "skecth" some ideas without needing to code, while allowing them as much flexibility as possible.
@@ -27,3 +29,4 @@ I have a lot more features planned for the simulator and would be happy to hear 
 - [ ] **Time evolution**: I plan on adding a way to simulate the time evolution of the Bloch sphere according to some model (e.g. Bloch-Redfield). This would allow user to press "Play" to see how the Bloch vector would evolve as time passes.
 - [ ] **Noise**: I would like to allow the implementation of some sort of noise on the state.
 - [ ] **Measurement**: I would like to add a simple feature that allows to see the probabilities of a projective measurement given a basis.
+
