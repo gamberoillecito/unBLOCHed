@@ -25,6 +25,7 @@
 		multiply,
 		equal
 	} from 'mathjs';
+	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import MatrixInfoInput from './MatrixInfoInput.svelte';
 	import { BlochHistory } from './BlochHistory.svelte';
 	import { Separator } from '$lib/components/ui/separator/index.js';
@@ -49,6 +50,10 @@
 	import GateButtonWithParams from './custom-ui/Buttons/GateButtonWithParams.svelte';
 	import UpdateStateButton from './custom-ui/Buttons/UpdateStateButton.svelte';
 	import { type TutorialPageProps } from '$lib/components/tutorial/tutorialUtils';
+	import DialogDrawer from './custom-ui/DialogDrawer.svelte';
+	import { copy } from 'svelte-copy';
+	import Copy from '@lucide/svelte/icons/copy';
+	import { marked } from 'marked';
 	const config = {
 		absTol: 1e-10
 	};
@@ -90,10 +95,8 @@
 		displayStateLabels: true
 	});
 
-	let imageData = $state() as string;
-	let requestImage = $state(false);
-
 	let transparentBackground = $state(false);
+	let showWatermark = $state(true);
 
 	let canvasContainer = $state() as HTMLDivElement;
 	/**Function to download image from the canvas*/
@@ -130,6 +133,16 @@
 		tutorialProps.DM = DM;
 		tutorialProps.canvasContainer = canvasContainer;
 		tutorialProps.history = history;
+	});
+
+	// Show a popover when the user disables the watermark to ask for a citation
+	let watermarkDialogOpen = $state(false);
+	$effect(() => {
+		if (showWatermark) {
+			return;
+		}
+
+		watermarkDialogOpen = true;
 	});
 </script>
 
@@ -213,6 +226,9 @@
 						<DropdownMenu.SubContent>
 							<DropdownMenu.CheckboxItem bind:checked={transparentBackground} closeOnSelect={false}>
 								Transparent Background
+							</DropdownMenu.CheckboxItem>
+							<DropdownMenu.CheckboxItem bind:checked={showWatermark} closeOnSelect={false}>
+								Watermark
 							</DropdownMenu.CheckboxItem>
 							<DropdownMenu.Separator />
 							<DropdownMenu.Item onclick={() => saveImage(getImage, !transparentBackground)}>
@@ -315,3 +331,56 @@
 		<JoystickControls DM={fakeDM} bind:joystickMode />
 	{/if}
 </div>
+
+{#snippet copyText(text: string)}
+	<button use:copy={text}>
+		<p
+			class="items-top bg-muted text-muted-foreground inline-flex gap-2 rounded-[0.4rem] px-2 font-mono break-all shadow hover:brightness-110"
+		>
+			{text}
+			<Copy class="mt-1 size-3" />
+		</p>
+	</button>
+{/snippet}
+
+<AlertDialog.Root bind:open={watermarkDialogOpen}>
+	<AlertDialog.Content
+		class="z-99999"
+		onCloseAutoFocus={(e) => {
+			e.preventDefault();
+		}}
+	>
+		<AlertDialog.Header>
+			<AlertDialog.Title>The watermark helps others find this website</AlertDialog.Title>
+			<AlertDialog.Description class="prose-sm dark:prose-invert">
+				If you want to remove it, please include a reference to it in one of the following ways:
+				<ul>
+					<li>
+						Link to the website: <br />
+						{@render copyText('https://gamberoillecito.github.io/unBLOCHed/')}
+					</li>
+					<li>
+						Link to the GitHub repository:<br />
+						{@render copyText('https://github.com/gamberoillecito/unBLOCHed/')}
+					</li>
+					<li>DOI: <br /> {@render copyText('https://doi.org/10.5281/zenodo.17087795')}</li>
+				</ul>
+			</AlertDialog.Description>
+		</AlertDialog.Header>
+		<AlertDialog.Footer>
+			<AlertDialog.Cancel
+				onclick={() => {
+					showWatermark = false;
+					saveImage(getImage, !transparentBackground);
+				}}>Remove it and download</AlertDialog.Cancel
+			>
+			<AlertDialog.Action
+				onclick={() => {
+					showWatermark = true;
+					saveImage(getImage, !transparentBackground);
+					watermarkDialogOpen = false;
+				}}>Keep it and download</AlertDialog.Action
+			>
+		</AlertDialog.Footer>
+	</AlertDialog.Content>
+</AlertDialog.Root>

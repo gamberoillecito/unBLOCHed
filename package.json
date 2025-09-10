@@ -41,6 +41,7 @@
 		"remark-math": "3",
 		"svelte": "^5.33.13",
 		"svelte-check": "^4.2.1",
+		"svelte-copy": "^2.0.0",
 		"svelte-sonner": "^1.0.5",
 		"tailwind-merge": "^3.3.1",
 		"tailwind-variants": "^1.0.0",
