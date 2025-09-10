@@ -3,6 +3,7 @@ import {
     type Complex,
     create,
     all,
+    complex,
 } from 'mathjs'
 
 const config = {
@@ -598,3 +599,28 @@ export class GatePath {
     }
 }
 
+export class StateVector {
+    _latexValue: string;
+    _value: [Complex, Complex];
+    _ce: ComputeEngine;
+
+    constructor() {
+        this._latexValue = $state('');
+        this._value = $state([complex(0), complex(0)]);
+        this._ce = new ComputeEngine();
+    }
+
+    get latexValue() {
+        return this._latexValue;
+    }
+    
+    get value() {
+        return this._value;
+    }
+
+    setVectorFromLatex(latex: string){
+        console.log(
+            this._ce.parse(latex)
+        );
+    }
+}

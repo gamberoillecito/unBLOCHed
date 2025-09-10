@@ -3,13 +3,15 @@
 	import type { MathfieldElement } from 'mathlive';
 	import type { Attachment } from 'svelte/attachments';
 	import { getContext } from 'svelte';
-	import { FancyMatrix } from './Model.svelte';
+	import { FancyMatrix, StateVector } from './Model.svelte';
 	import ErrorPopover from './custom-ui/ErrorPopover.svelte';
 	import ApplyUndoButton from './custom-ui/Buttons/ApplyUndoButton.svelte';
+    import { ComputeEngine } from '@cortex-js/compute-engine';
 
+    const ce = new ComputeEngine();
 	const popoversContext = getContext('popoversContext') as { preventOpening: boolean };
     
-	const initialValue = 'x';
+	const initialValue = '\\begin{pmatrix} 1 \\\\ 1\\end{pmatrix}';
 	let updateVectorButton: HTMLElement | null = $state(null);
 	let updateVectorButtonEnabled: boolean = $state(false);
 	// Initial latex value to be set inside the MathfieldElement
@@ -27,18 +29,20 @@
 		[]
 	);
 
-	function parseMatrixField(mf: MathfieldElement): [string[][], string] {
-		let matrix: string[][] = [];
-		for (let i = 0; i < 2; i++) {
-			matrix.push([]);
-			for (let j = 0; j < 2; j++) {
-				let promptValue = mf.getPromptValue(`m${i}${j}`);
-				matrix[i].push(promptValue);
-			}
-		}
-		let mult = mf.getPromptValue('mult');
-		return [matrix, mult];
-	}
+    let DV = new StateVector();
+
+	// function parseMatrixField(mf: MathfieldElement): [string[][], string] {
+	// 	let matrix: string[][] = [];
+	// 	for (let i = 0; i < 2; i++) {
+	// 		matrix.push([]);
+	// 		for (let j = 0; j < 2; j++) {
+	// 			let promptValue = mf.getPromptValue(`m${i}${j}`);
+	// 			matrix[i].push(promptValue);
+	// 		}
+	// 	}
+	// 	let mult = mf.getPromptValue('mult');
+	// 	return [matrix, mult];
+	// }
 
 	const mfAttachment: Attachment = (element) => {
 		let mf = element as MathfieldElement;
@@ -56,18 +60,18 @@
 			// event listener. Don't be tempted to put it in a separate function
 			// otherwise this effect will not work anymore
 
-			for (let i = 0; i < 2; i++) {
-				for (let j = 0; j < 2; j++) {
-					let newValue: string = FM.latexMat[i][j];
-					let currentValue = mf.getPromptValue(`m${i}${j}`);
-					if (newValue != currentValue) {
-						mf.setPromptValue(`m${i}${j}`, newValue, { silenceNotifications: true });
-					}
-				}
-			}
-			if (FM.latexMult != mf.getPromptValue('mult')) {
-				mf.setPromptValue(`mult`, FM.latexMult, { silenceNotifications: true });
-			}
+			// for (let i = 0; i < 2; i++) {
+			// 	for (let j = 0; j < 2; j++) {
+			// 		let newValue: string = FM.latexMat[i][j];
+			// 		let currentValue = mf.getPromptValue(`m${i}${j}`);
+			// 		if (newValue != currentValue) {
+			// 			mf.setPromptValue(`m${i}${j}`, newValue, { silenceNotifications: true });
+			// 		}
+			// 	}
+			// }
+			// if (FM.latexMult != mf.getPromptValue('mult')) {
+			// 	mf.setPromptValue(`mult`, FM.latexMult, { silenceNotifications: true });
+			// }
 			updateVectorButtonEnabled = false;
 			undoChangesButtonEnabled = false;
 		});
@@ -79,21 +83,23 @@
 		 */
 		mf.addEventListener('input', (ev) => {
 			// Generate a matrix starting from latex and validate it
-			let parsed = parseMatrixField(mf);
-			let res = FM.validateMatrix(FM.generateMatrixFromLatex(...parsed));
+			// let parsed = parseMatrixField(mf);
+			// let res = FM.validateMatrix(FM.generateMatrixFromLatex(...parsed));
 			// updateMatrixButtonEnabled = res.isValid;
-			FM.userMessage = res.message;
+			// FM.userMessage = res.message;
 
-			if (instantUpdate && res.isValid) {
-				// Save the state previous to updating for the callback function
-				let oldFM = FM.clone();
-				FM.setMatrixFromLatex(...parsed);
 
-				// CHECK
-				// if (res.isValid && onChangeCallback !== undefined) {
-				//     onChangeCallback(FM.clone(), oldFM, onChangeArguments );
-				// }
-			}
+            DV._latexValue =mf.value;
+			// if (instantUpdate && res.isValid) {
+			// 	// Save the state previous to updating for the callback function
+			// 	let oldFM = FM.clone();
+			// 	FM.setMatrixFromLatex(...parsed);
+
+			// 	// CHECK
+			// 	// if (res.isValid && onChangeCallback !== undefined) {
+			// 	//     onChangeCallback(FM.clone(), oldFM, onChangeArguments );
+			// 	// }
+			// }
 			// if the displayed value is different with respect to
 			// one actually in the Fancy matrix we have to set the matrix
 			// as invalid (user wouldn't know the real value)
@@ -114,21 +120,21 @@
 		});
 
 		// Prevent the user from leavin math mode (it happens for example when pressing ESC)
-		mf.addEventListener('mode-change', (ev) => {
-			ev.preventDefault();
-		});
+		// mf.addEventListener('mode-change', (ev) => {
+		// 	ev.preventDefault();
+		// });
 
 		// Update the FancyMatrix when the button is pressed
 		updateVectorButton?.addEventListener('click', () => {
 			// Update all the latex fields with the new value
 			// TODO : optimize to avoid useless overrides
-			let parsed = parseMatrixField(mf);
+			// let parsed = parseMatrixField(mf);
 			// Save the state previous to updating for the callback function
 			let oldFM = FM.clone();
-			let res = FM.setMatrixFromLatex(...parsed);
-			FM.isConsistent = res.isValid;
+			// let res = FM.setMatrixFromLatex(...parsed);
+			// FM.isConsistent = res.isValid;
 			// If the update was successful call the onChangeCallback function
-            // TODO
+            // CHECK
 			// if (res.isValid && onChangeCallback !== undefined) {
 			// 	onChangeCallback(FM.clone(), oldFM, onChangeArguments);
 			// }
@@ -157,7 +163,7 @@
 		popoverContent={FM.userMessage}
 	>
 		{#snippet trigger()}
-            <math-field {@attach mfAttachment} readonly aria-label="matrix input"></math-field>
+            <math-field {@attach mfAttachment} aria-label="matrix input"></math-field>
 		{/snippet}
 	</ErrorPopover>
 	<!-- Buttons that needs to be disabled if instantUpdate is true -->
@@ -170,6 +176,6 @@
 		/>
 	{/if}
 	<!-- <MatrixParameterInput matrix={FM} ></MatrixParameterInput> -->
-	<!-- <p> {FM.userMessage} </p> -->
+	<p> {DV.setVectorFromLatex(DV.latexValue)} </p>
 </div>
 

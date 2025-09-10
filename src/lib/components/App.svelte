@@ -49,6 +49,7 @@
 	import GateButtonWithParams from './custom-ui/Buttons/GateButtonWithParams.svelte';
 	import UpdateStateButton from './custom-ui/Buttons/UpdateStateButton.svelte';
 	import { type TutorialPageProps } from '$lib/components/tutorial/tutorialUtils';
+	import DynamicStateVector from './DynamicStateVector.svelte';
 	const config = {
 		absTol: 1e-10
 	};
@@ -309,6 +310,7 @@
 					disabled={!(DM.isConsistent && GM.isConsistent)}
 					withParams={true}
 				/>
+				<DynamicStateVector />
 			</div>
 		</ScrollArea>
 	{:else}
