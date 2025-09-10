@@ -14,6 +14,7 @@
     import { marked } from 'marked';
     import markedKatex from 'marked-katex-extension';
 	import ErrorPopover from "./custom-ui/ErrorPopover.svelte";
+	import ApplyUndoButton from './custom-ui/Buttons/ApplyUndoButton.svelte';
 	interface Props {
         FM: FancyMatrix;
         instantUpdate: boolean;
@@ -197,27 +198,9 @@
 
     </ErrorPopover>
     <!-- Buttons that needs to be disabled if instantUpdate is true -->
-    <div class={`${instantUpdate ? 'hidden ':''} flex flex-col @xl:flex-row align-middle gap-2 content-center justify-around m-auto`} > 
-        
-        <Button class="size-6 rounded-sm bg-(--approve) hover:bg-(--approve) dark:bg-(--approve) hover:opacity-75" variant="outline"
-            bind:ref={updateMatrixButton} 
-            disabled={!updateMatrixButtonEnabled}
-            name="apply changes"
-            aria-label="apply changes"
-        >
-            <!-- <Save /> -->
-            <Save class="size-4 stroke-(--approve-foreground)"/>
-        </Button>
-        <Button class="size-6 rounded-sm" variant="destructive"
-            bind:ref={undoChangesButton} 
-            disabled={!undoChangesButtonEnabled}
-            name="restore"
-            aria-label="restore"
-        >
-            <!-- <Trash />-->
-            <Eraser class=" size-4"/>
-        </Button>
-    </div>
+    {#if !instantUpdate}
+        <ApplyUndoButton bind:undoChangesButton={undoChangesButton} bind:updateButton={updateMatrixButton} updateButtonEnabled={updateMatrixButtonEnabled} undoChangesButtonEnabled={undoChangesButtonEnabled}/>
+    {/if}
     <!-- <MatrixParameterInput matrix={FM} ></MatrixParameterInput> -->
     <!-- <p> {FM.userMessage} </p> -->
 </div>
