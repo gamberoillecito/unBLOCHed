@@ -92,11 +92,11 @@
 	let settings3DScene: sceneSettings = $state({
 		displayAngles: true,
 		displayPaths: true,
-		displayStateLabels: true
+		displayStateLabels: true,
+		displayWatermark: true,
 	});
 
 	let transparentBackground = $state(false);
-	let showWatermark = $state(true);
 
 	let canvasContainer = $state() as HTMLDivElement;
 	/**Function to download image from the canvas*/
@@ -138,12 +138,17 @@
 	// Show a popover when the user disables the watermark to ask for a citation
 	let watermarkDialogOpen = $state(false);
 	$effect(() => {
-		if (showWatermark) {
+		if (settings3DScene.displayWatermark) {
 			return;
 		}
 
 		watermarkDialogOpen = true;
 	});
+
+	//**The element of the scene menu that opens the "Download Image" submenu*/
+	let SceneMenuDownloadTrigger = $state() as HTMLElement;
+	let SceneMenuDownloadOpen = $state(false);
+	$inspect(SceneMenuDownloadTrigger);
 </script>
 
 <!-- <link
@@ -221,13 +226,20 @@
 					>
 					<DropdownMenu.Separator></DropdownMenu.Separator>
 
-					<DropdownMenu.Sub>
-						<DropdownMenu.SubTrigger>Export Image</DropdownMenu.SubTrigger>
-						<DropdownMenu.SubContent>
+					<DropdownMenu.Sub bind:open={SceneMenuDownloadOpen}>
+						<DropdownMenu.SubTrigger
+							{@attach (e) => {
+								SceneMenuDownloadTrigger = e;
+							}}
+							>Export Image</DropdownMenu.SubTrigger
+						>
+						<DropdownMenu.SubContent
+						
+						>
 							<DropdownMenu.CheckboxItem bind:checked={transparentBackground} closeOnSelect={false}>
 								Transparent Background
 							</DropdownMenu.CheckboxItem>
-							<DropdownMenu.CheckboxItem bind:checked={showWatermark} closeOnSelect={false}>
+							<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayWatermark} closeOnSelect={false}>
 								Watermark
 							</DropdownMenu.CheckboxItem>
 							<DropdownMenu.Separator />
@@ -348,6 +360,7 @@
 		class="z-99999"
 		onCloseAutoFocus={(e) => {
 			e.preventDefault();
+			SceneMenuDownloadTrigger?.focus();
 		}}
 	>
 		<AlertDialog.Header>
@@ -370,16 +383,16 @@
 		<AlertDialog.Footer>
 			<AlertDialog.Cancel
 				onclick={() => {
-					showWatermark = false;
-					saveImage(getImage, !transparentBackground);
-				}}>Remove it and download</AlertDialog.Cancel
+					settings3DScene.displayWatermark = false;
+					SceneMenuDownloadOpen = true;
+				}}>Remove</AlertDialog.Cancel
 			>
 			<AlertDialog.Action
 				onclick={() => {
-					showWatermark = true;
-					saveImage(getImage, !transparentBackground);
+					settings3DScene.displayWatermark = true;
+					SceneMenuDownloadOpen = true;
 					watermarkDialogOpen = false;
-				}}>Keep it and download</AlertDialog.Action
+				}}>Keep</AlertDialog.Action
 			>
 		</AlertDialog.Footer>
 	</AlertDialog.Content>

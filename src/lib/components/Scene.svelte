@@ -21,6 +21,7 @@
 		displayAngles: boolean;
 		displayStateLabels: boolean;
 		displayPaths: boolean;
+		displayWatermark: boolean;
 	};
 	interface Props {
 		DM: DensityMatrix;
@@ -99,6 +100,7 @@
 		return data;
 	}
 
+	const watermark = 'https://gamberoillecito.github.io/unBLOCHed/';
 	getImage = downloadImage;
 </script>
 
@@ -123,15 +125,17 @@
 			edges={{ scale: 20 }}
 		/>
 	</OrbitControls>
-	<Text
-		position={[0.6, -0.6, -10]}
-		anchorX="right"
-		color="gray"
-		text="unBLOCHed"
-		anchorY="baseline"
-		textAlign="right"
-		scale={0.4}
-	/>
+	{#if settings.displayWatermark}
+		<Text
+			position={[0.62, -0.62, -10]}
+			anchorX="right"
+			color="gray"
+			text={watermark}
+			anchorY="baseline"
+			textAlign="right"
+			scale={0.35}
+		/>
+	{/if}
 </T.PerspectiveCamera>
 {#if settings.displayPaths}
 	{#each history.list as historyEl, idx}
