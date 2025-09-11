@@ -602,6 +602,8 @@ export class GatePath {
 export class StateVector {
     _latexValue: string;
     _value: [Complex, Complex];
+    _latexMult: string;
+    _mult: string
     _ce: ComputeEngine;
 
     constructor() {
@@ -620,7 +622,7 @@ export class StateVector {
 
     setVectorFromLatex(latex: string){
         console.log(
-            this._ce.parse(latex)
+            this._ce.parse(latex).N().toString()
         );
     }
 }

@@ -11,7 +11,8 @@
     const ce = new ComputeEngine();
 	const popoversContext = getContext('popoversContext') as { preventOpening: boolean };
     
-	const initialValue = '\\begin{pmatrix} 1 \\\\ 1\\end{pmatrix}';
+    let DV = new StateVector();
+	const initialValue = `\\placeholder[mult]{${DV.latexValue[0]}}\\begin{pmatrix} \\placeholder[v0]{1} \\\\ \\placeholder[v1]{${DV.latexValue[1]}}\\end{pmatrix}`;
 	let updateVectorButton: HTMLElement | null = $state(null);
 	let updateVectorButtonEnabled: boolean = $state(false);
 	// Initial latex value to be set inside the MathfieldElement
@@ -29,7 +30,6 @@
 		[]
 	);
 
-    let DV = new StateVector();
 
 	// function parseMatrixField(mf: MathfieldElement): [string[][], string] {
 	// 	let matrix: string[][] = [];
