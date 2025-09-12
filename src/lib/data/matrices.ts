@@ -84,7 +84,7 @@
 			['0', '0']
 		],
 		'1',
-		'|0\\rangle'
+		'\rho_{|0\\rangle}'
 	);
 	export const ket1 = new DensityMatrix(
 		[
@@ -92,7 +92,7 @@
 			['0', '1']
 		],
 		'1',
-		'|1\\rangle'
+		'\rho_{|1\\rangle}'
 	);
 	export const ketPlus = new DensityMatrix(
 		[
@@ -100,7 +100,7 @@
 			['1', '1']
 		],
 		'\\frac{1}{2}',
-		'|+\\rangle'
+		'\rho_{|+\\rangle}'
 	);
 	export const ketMinus = new DensityMatrix(
 		[
@@ -108,7 +108,7 @@
 			['-1', '1']
 		],
 		'\\frac{1}{2}',
-		'|-\\rangle'
+		'\rho_{|-\\rangle}'
 	);
 	export const ketI = new DensityMatrix(
 		[
@@ -116,7 +116,7 @@
 			['-i', '1']
 		],
 		'\\frac{1}{2}',
-		'|i\\rangle'
+		'\rho_{|i\\rangle}'
 	);
 	export const ketMinI = new DensityMatrix(
 		[
@@ -124,7 +124,7 @@
 			['i', '1']
 		],
 		'\\frac{1}{2}',
-		'|-i\\rangle'
+		'\rho_{|-i\\rangle}'
 	);
 	export const predefinedGates = [Xgate, Ygate, Zgate, Hgate, RXgate, RYgate, RZgate, U3gate];
 	export const predefinedStates = [ket0, ket1, ketPlus, ketMinus, ketI, ketMinI];
