@@ -709,4 +709,25 @@ export class StateVector extends FancyMatrix {
         let DM = math.multiply(vec, math.transpose(vec));
         return newComplexMat2x2([DM.get([0, 0]), DM.get([0, 1]), DM.get([1, 0]), DM.get([1, 1])]) as ComplexMat2x2;
     }
+
+    validateMatrix(newMat: ComplexMat2x2): MatrixValidity {
+        let preliminary_validation = super.validateMatrix(newMat);
+        if (!preliminary_validation.isValid) {
+            return preliminary_validation;
+        }
+        console.log(newMat); // Use newMat instead of this._mat
+
+        // Calculate totalProb correctly from the state vector
+        let totalProb = 0;
+        for (let i = 0; i < this._nRows; i++) {
+            totalProb += math.add(
+                math.square(newMat[i][0].re),
+                math.square(newMat[i][0].im)
+            );
+        }
+        console.log(totalProb);
+
+        let valid = math.equal(totalProb, 1) as boolean;
+        return new MatrixValidity(valid, valid ? '' : 'State vector must be normalized')
+    }
 }
