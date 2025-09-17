@@ -31,10 +31,35 @@
 
 	let updateMatrixButton: HTMLElement | null = $state(null);
 	let updateMatrixButtonEnabled: boolean = $state(false);
+
+	function generateLatexString(FM: FancyMatrix) {
+		let base = `${FM.label} = \\placeholder[mult]{${FM.latexMult}}\\begin{bmatrix}`;
+		for (let i = 0; i < FM.nRows; i++) {
+			for (let j = 0; j < FM.nCols; j++) {
+				base += `\\placeholder[m${i}${j}]{${FM.latexMat[i][j]}}`;
+				if (j < FM.nCols - 1) {
+					base += ` & `;
+				}
+			}
+			
+			if (i < FM.nRows - 1) {
+				base += ` \\\\ `;
+			}
+		}
+		// console.log(base);
+		return base;
+		
+	}
+
 	// Initial latex value to be set inside the MathfieldElement
-	let initialValue = `${FM.label} = \\placeholder[mult]{${FM.latexMult}}\\begin{bmatrix}\\placeholder[m00]{${FM.latexMat[0][0]}} & \\placeholder[m01]{${FM.latexMat[0][1]}}\\\\ \\placeholder[m10]{${FM.latexMat[1][0]}} & \\placeholder[m11]{${FM.latexMat[1][1]}}\\end{bmatrix}`;
+	let initialValue = generateLatexString(FM);
+	// let initialValue = `${FM.label} = \\placeholder[mult]{${FM.latexMult}}\\begin{bmatrix}\\placeholder[m00]{${FM.latexMat[0][0]}} & \\placeholder[m01]{${FM.latexMat[0][1]}}\\\\ \\placeholder[m10]{${FM.latexMat[1][0]}} & \\placeholder[m11]{${FM.latexMat[1][1]}}\\end{bmatrix}`;
 	let undoChangesButton: HTMLElement | null = $state(null);
 	let undoChangesButtonEnabled: boolean = $state(false);
+	console.log(initialValue);
+	console.log(generateLatexString(FM));
+	
+	
 
 	const popoversContext = getContext('popoversContext') as { preventOpening: boolean };
 
@@ -52,9 +77,9 @@
 	 */
 	function parseMatrixField(mf: MathfieldElement): [string[][], string] {
 		let matrix: string[][] = [];
-		for (let i = 0; i < 2; i++) {
+		for (let i = 0; i < FM.nRows; i++) {
 			matrix.push([]);
-			for (let j = 0; j < 2; j++) {
+			for (let j = 0; j < FM.nCols; j++) {
 				let promptValue = mf.getPromptValue(`m${i}${j}`);
 				matrix[i].push(promptValue);
 			}
@@ -81,8 +106,8 @@
 			// event listener. Don't be tempted to put it in a separate function
 			// otherwise this effect will not work anymore
 
-			for (let i = 0; i < 2; i++) {
-				for (let j = 0; j < 2; j++) {
+			for (let i = 0; i < FM.nRows; i++) {
+				for (let j = 0; j < FM.nCols; j++) {
 					let newValue: string = FM.latexMat[i][j];
 					let currentValue = mf.getPromptValue(`m${i}${j}`);
 					if (newValue != currentValue) {
@@ -158,8 +183,8 @@
 		// and substitutes it with the actual latex value of the
 		// FancyMatrix
 		undoChangesButton?.addEventListener('click', () => {
-			for (let i = 0; i < 2; i++) {
-				for (let j = 0; j < 2; j++) {
+			for (let i = 0; i < FM.nRows; i++) {
+				for (let j = 0; j < FM.nCols; j++) {
 					let newValue: string = FM.latexMat[i][j];
 					mf.setPromptValue(`m${i}${j}`, newValue, {});
 				}

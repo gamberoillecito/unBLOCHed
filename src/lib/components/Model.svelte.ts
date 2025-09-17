@@ -10,7 +10,8 @@ const config = {
     absTol: 1e-10,
 }
 const math = create(all, config)
-export type ComplexMat2x2 = [[Complex, Complex], [Complex, Complex]];
+// export type ComplexMat2x2 = [[Complex, Complex], [Complex, Complex]];
+export type ComplexMat2x2 = Array<Array<Complex>>
 
 
 class MatrixValidity {
@@ -73,16 +74,21 @@ export class FancyMatrix {
     protected _parameter_array: MatrixParam[];
     protected _label: string;
     protected _labelWParams: string;
+    protected _nRows: number;
+    protected _nCols: number;
+    
     isConsistent: boolean; // Set by the "view" to specify to others that this matrix is not consistent with what is on display
     userMessage: string | null; // Any message for the user concerning this matrix
     ce: ComputeEngine;
 
-    constructor(latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[] = [], mat?: ComplexMat2x2) {
+    constructor(latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[] = [], mat?: ComplexMat2x2, nRows: number = 2, nCols: number = 2) {
         this.ce = new ComputeEngine();
         this._label = label;
         this.isConsistent = $state(true);
         this.userMessage = $state(null);
         this._parameter_array = parameters;
+        this._nRows = nRows;
+        this._nCols = nCols;
         for (let p of this._parameter_array) {
             this.ce.box(p.name).value = p.latexValue;
         }
@@ -149,8 +155,8 @@ export class FancyMatrix {
             // If the value of a matrix element I have to invalidate the
             // multiplier and apply it to each element
             this._latexMult = '1';
-            for (let i = 0; i < 2; i++) {
-                for (let j = 0; j < 2; j++) {
+            for (let i = 0; i < this._nRows; i++) {
+                for (let j = 0; j < this._nCols; j++) {
                     let newElement = newMat[i][j];
                     // Do not update if value is unchanged
                     if (math.equal(newElement, this._mat[i][j])) {
@@ -185,8 +191,8 @@ export class FancyMatrix {
         let newMat = this.generateMatrixFromLatex(newLatexMat, mult);
         let res = this.validateMatrix(newMat);
         if (res.isValid) {
-            for (let i = 0; i < 2; i++) {
-                for (let j = 0; j < 2; j++) {
+            for (let i = 0; i < this._nRows; i++) {
+                for (let j = 0; j < this._nCols; j++) {
                     this._mat[i][j] = newMat[i][j]
                     this._latexMat[i][j] = newLatexMat[i][j];
                 }
@@ -217,8 +223,10 @@ export class FancyMatrix {
 
         let eval_mult = this.ce.parse(mult).N();
         let computedMult = math.complex(eval_mult.re, eval_mult.im);
-        for (let i = 0; i < 2; i++) {
-            for (let j = 0; j < 2; j++) {
+        for (let i = 0; i < this._nRows; i++) {
+            for (let j = 0; j < this._nCols; j++) {
+                // console.log(`(${i}, ${j}) -> ${newMat[i][j]}`);
+
                 newMat[i][j] = math.multiply(newMat[i][j], computedMult) as Complex;
             }
         }
@@ -226,8 +234,8 @@ export class FancyMatrix {
     }
 
     validateMatrix(newMat: ComplexMat2x2): MatrixValidity {
-        for (let i = 0; i < 2; i++) {
-            for (let j = 0; j < 2; j++) {
+        for (let i = 0; i < this._nRows; i++) {
+            for (let j = 0; j < this._nCols; j++) {
                 let el = newMat[i][j]
 
                 if (
@@ -278,6 +286,15 @@ export class FancyMatrix {
     get labelWParams(): string {
         return this._labelWParams;
     }
+
+    get nRows() {
+        return this._nRows;
+    }
+
+    get nCols() {
+        return this._nCols;
+    }
+
     protected T(): ComplexMat2x2 {
         /**
          * Returns the Transpose of mat
@@ -599,30 +616,44 @@ export class GatePath {
     }
 }
 
-export class StateVector {
-    _latexValue: string;
-    _value: [Complex, Complex];
-    _latexMult: string;
-    _mult: string
-    _ce: ComputeEngine;
+// export class StateVector {
+//     _latexValue: string;
+//     _value: [Complex, Complex];
+//     _latexMult: string;
+//     _mult: string
+//     _ce: ComputeEngine;
 
-    constructor() {
-        this._latexValue = $state('');
-        this._value = $state([complex(0), complex(0)]);
-        this._ce = new ComputeEngine();
+//     constructor() {
+//         this._latexValue = $state('');
+//         this._value = $state([complex(0), complex(0)]);
+//         this._ce = new ComputeEngine();
+//     }
+
+//     get latexValue() {
+//         return this._latexValue;
+//     }
+
+//     get value() {
+//         return this._value;
+//     }
+
+//     setVectorFromLatex(latex: string) {
+//         console.log(
+//             this._ce.parse(latex).N().toString()
+//         );
+//     }
+// }
+
+export class StateVector extends FancyMatrix {
+    constructor(latexMat: string[][], latexMult: string, label: string, params: MatrixParam[] = [], mat?: ComplexMat2x2) {
+        super(latexMat, latexMult, label, params, mat, 2, 1);
     }
 
-    get latexValue() {
-        return this._latexValue;
-    }
-    
-    get value() {
-        return this._value;
+    protected fallbackLatexMat(): string[][] {
+        return [['1'], ['0']];
     }
 
-    setVectorFromLatex(latex: string){
-        console.log(
-            this._ce.parse(latex).N().toString()
-        );
+    convertToDM() {
+        
     }
 }

@@ -8,7 +8,10 @@
 		GateMatrix,
 		GatePath,
 		MatrixParam,
-		print_mat
+		print_mat,
+
+		StateVector
+
 	} from '$lib/components/Model.svelte';
 	import DynamicMatrix from './DynamicMatrix.svelte';
 	import { getContext, onMount, setContext, untrack } from 'svelte';
@@ -132,6 +135,8 @@
 		tutorialProps.canvasContainer = canvasContainer;
 		tutorialProps.history = history;
 	});
+
+	let DV = new StateVector([['1'], ['0']], '1', 'v');
 </script>
 
 <!-- <link
@@ -310,7 +315,7 @@
 					disabled={!(DM.isConsistent && GM.isConsistent)}
 					withParams={true}
 				/>
-				<DynamicStateVector />
+				<DynamicMatrix FM={DV} instantUpdate={false} />
 			</div>
 		</ScrollArea>
 	{:else}
