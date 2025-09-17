@@ -74,6 +74,8 @@ export class FancyMatrix {
     protected _parameter_array: MatrixParam[];
     protected _label: string;
     protected _labelWParams: string;
+    //** Equal to _label bydefault, can be set by children classes to something else e.g. rho(|0>) for DensityMatrix */
+    protected _extendedLabel: string;
     protected _nRows: number;
     protected _nCols: number;
     
@@ -136,7 +138,9 @@ export class FancyMatrix {
                 }
             }
             this._labelWParams += ')';
+            
         }
+        this._extendedLabel = this.labelWParams;
 
     }
     // Fallback values to set the matrix in case something breaks when initializing the class
@@ -283,6 +287,14 @@ export class FancyMatrix {
         this._label = val
     }
 
+    get extendedLabel(): string {
+        return this._extendedLabel;
+    }
+    set extendedLabel(val: string) {
+        this._extendedLabel = val
+    }
+
+
     get labelWParams(): string {
         return this._labelWParams;
     }
@@ -319,10 +331,13 @@ export class FancyMatrix {
         this._label = FM._label;
         this._latexMat = FM.latexMat;
         this._latexMult = FM.latexMult;
+        this._extendedLabel = FM._extendedLabel;
         this._mat = FM.mat;
         this._parameter_array = FM.parameterArray;
         this.isConsistent = FM.isConsistent;
         this.userMessage = FM.userMessage;
+        this._labelWParams = FM.labelWParams;
+        this.ce = FM.ce;
     }
 
 }
@@ -340,6 +355,7 @@ export class DensityMatrix extends FancyMatrix {
 
     constructor(latexMat: string[][], latexMult: string, label: string, params: MatrixParam[] = [], mat?: ComplexMat2x2) {
         super(latexMat, latexMult, label, params, mat);
+        this._extendedLabel = `\\rho^{${label}}`;
         this.#a = $derived(this._mat[0][0]);
         this.#b = $derived(this._mat[1][0]);
         this.#c = $derived(this._mat[0][1]);

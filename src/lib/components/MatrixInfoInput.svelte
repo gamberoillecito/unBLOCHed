@@ -79,7 +79,7 @@
 					<math-field
 						readonly
 						{@attach (mf: MathfieldElement) => {
-							mf.value = `${FM.labelWParams} = {${FM.latexMult == '1' ? '' : FM.latexMult}}\\begin{bmatrix}{${FM.latexMat[0][0]}} & {${FM.latexMat[0][1]}}\\\\ {${FM.latexMat[1][0]}} & {${FM.latexMat[1][1]}}\\end{bmatrix}`;
+							mf.value = `${FM.extendedLabel} = {${FM.latexMult == '1' ? '' : FM.latexMult}}\\begin{bmatrix}{${FM.latexMat[0][0]}} & {${FM.latexMat[0][1]}}\\\\ {${FM.latexMat[1][0]}} & {${FM.latexMat[1][1]}}\\end{bmatrix}`;
 						}}
 					></math-field>
 				{/snippet}

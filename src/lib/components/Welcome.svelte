@@ -1,9 +1,8 @@
 <script lang="ts">
-    import { marked } from 'marked';
-	import markedKatex from 'marked-katex-extension';
-	import * as Drawer from "$lib/components/ui/drawer/index.js";
-	import { MediaQuery } from "svelte/reactivity";
+  import { marked } from 'marked';
 	import * as Dialog from "$lib/components/ui/dialog/index.js";
+	import * as Drawer from "$lib/components/ui/drawer/index.js";
+	import markedKatex from 'marked-katex-extension';
 	import { Button, buttonVariants } from "$lib/components/ui/button/index.js";
 	import Title from '$lib/components/Title.svelte';
   import welcomemd from '$lib/markdown/welcome_en.md?raw';
@@ -16,6 +15,7 @@
 	import Label from './ui/label/label.svelte';
 	import { onMount } from 'svelte';
 	import GitHubIcon from './custom-ui/GitHubIcon.svelte';
+	import DialogDrawer from './custom-ui/DialogDrawer.svelte';
 	const markedKatexOptions = {
 		throwOnError: false,
 	};
@@ -29,7 +29,6 @@
   } : Props = $props();
 	marked.use(markedKatex(markedKatexOptions));
 
-	const isDesktop = new MediaQuery("(min-width: 768px)");
   
   const DESCRIPTION = "This website allows you to experiment with a 'real' Bloch sphere and learn more about Quantum"
   let showWelcomeAtStart = $state(true);
@@ -62,9 +61,8 @@
       </Button>
 {/snippet}
 
-{#if isDesktop.current}
-  <Dialog.Root bind:open>
-    <Dialog.Content class="sm:max-w-[600px] sm:max-h-[70%] z-10000">
+<DialogDrawer bind:open>
+  {#snippet dialogContent()}
       <Dialog.Header>
         <Dialog.Title class="font-light">Welcome to <Title subtitle={false}/>!</Dialog.Title>
         <Dialog.Description>
@@ -79,12 +77,8 @@
           <Checkbox id="showWelcomeMessage" bind:checked={showWelcomeAtStart}/>
           <Label for="showWelcomeMessage">Show this popup next time</Label>
       </Dialog.Footer>
-    </Dialog.Content>
-    
-  </Dialog.Root>
-{:else}
-  <Drawer.Root bind:open>
-    <Drawer.Content class="pb-4 px-2 z-10000 max-h-[90%]">
+  {/snippet}
+  {#snippet drawerContent()}
       <Alert.Root variant="destructive" class="mx-auto py-4 max-w-[95%]">
         <MonitorSmartphone/>
         <Alert.Title>
@@ -103,6 +97,5 @@
     <Drawer.Footer>
     {@render githubButton()}
     </Drawer.Footer>
-    </Drawer.Content>
-  </Drawer.Root>
-{/if}
+  {/snippet}
+</DialogDrawer>
