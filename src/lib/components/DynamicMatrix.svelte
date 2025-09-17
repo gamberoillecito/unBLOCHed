@@ -18,7 +18,7 @@
 	interface Props {
 		FM: FancyMatrix;
 		instantUpdate: boolean;
-		onChangeCallback?: (FM: FancyMatrix, oldFM: FancyMatrix, args: any) => void;
+		onChangeCallback?: (FM: FancyMatrix, oldFM: FancyMatrix, ...args: any[]) => void;
 		onChangeArguments?: any;
 	}
 
@@ -32,8 +32,6 @@
 	let updateMatrixButton: HTMLElement | null = $state(null);
 	let updateMatrixButtonEnabled: boolean = $state(false);
 
-
-
 	// Initial latex value to be set inside the MathfieldElement
 	let initialValue = FM.generateLatexString();
 	// let initialValue = `${FM.label} = \\placeholder[mult]{${FM.latexMult}}\\begin{bmatrix}\\placeholder[m00]{${FM.latexMat[0][0]}} & \\placeholder[m01]{${FM.latexMat[0][1]}}\\\\ \\placeholder[m10]{${FM.latexMat[1][0]}} & \\placeholder[m11]{${FM.latexMat[1][1]}}\\end{bmatrix}`;
@@ -41,8 +39,6 @@
 	let undoChangesButtonEnabled: boolean = $state(false);
 	console.log(initialValue);
 	console.log(FM.generateLatexString());
-	
-	
 
 	const popoversContext = getContext('popoversContext') as { preventOpening: boolean };
 
@@ -123,7 +119,7 @@
 				FM.setMatrixFromLatex(...parsed);
 
 				if (res.isValid && onChangeCallback !== undefined) {
-					onChangeCallback(FM.clone(), oldFM, onChangeArguments);
+					onChangeCallback(FM.clone(), oldFM, ...onChangeArguments);
 				}
 			}
 			// if the displayed value is different with respect to

@@ -704,7 +704,9 @@ export class StateVector extends FancyMatrix {
         return [['1'], ['0']];
     }
 
-    convertToDM() {
-
+    getDM() {
+        let vec = math.matrix(this._mat);
+        let DM = math.multiply(vec, math.transpose(vec));
+        return newComplexMat2x2([DM.get([0, 0]), DM.get([0, 1]), DM.get([1, 0]), DM.get([1, 1])]) as ComplexMat2x2;
     }
 }

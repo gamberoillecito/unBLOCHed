@@ -5,6 +5,7 @@
 	import {
 		DensityMatrix,
 		FakeDensityMatrix,
+		FancyMatrix,
 		GateMatrix,
 		GatePath,
 		MatrixParam,
@@ -137,7 +138,7 @@
 		tutorialProps.history = history;
 	});
 
-	let DV = new StateVector([['1'], ['0']], '1', 'v');
+	let SV = new StateVector([['1'], ['0']], '1', 'v');
 
 	// Show a popover when the user disables the watermark to ask for a citation
 	let watermarkDialogOpen = $state(false);
@@ -341,7 +342,17 @@
 					disabled={!(DM.isConsistent && GM.isConsistent)}
 					withParams={true}
 				/>
-				<DynamicMatrix FM={DV} instantUpdate={false} />
+				<DynamicMatrix
+					FM={SV}
+					instantUpdate={false}
+					onChangeCallback={(SV, oldSV, args: {history: BlochHistory, DM: DensityMatrix}) => {
+						let newMatrix = (SV as StateVector).getDM();
+						let oldDM = args.DM.clone();
+						args.DM.setMatrixValue(newMatrix);
+						args.history.addElement(oldDM, args.DM);
+					}}
+					onChangeArguments={{ history, DM }}
+				/>
 			</div>
 		</ScrollArea>
 	{:else}
