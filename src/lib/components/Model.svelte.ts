@@ -301,10 +301,13 @@ export class FancyMatrix {
         this._label = FM._label;
         this._latexMat = FM.latexMat;
         this._latexMult = FM.latexMult;
+        this._extendedLabel = FM._extendedLabel;
         this._mat = FM.mat;
         this._parameter_array = FM.parameterArray;
         this.isConsistent = FM.isConsistent;
         this.userMessage = FM.userMessage;
+        this._labelWParams = FM.labelWParams;
+        this.ce = FM.ce;
     }
 
 }
