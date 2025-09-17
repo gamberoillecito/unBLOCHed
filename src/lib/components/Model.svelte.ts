@@ -78,7 +78,7 @@ export class FancyMatrix {
     protected _extendedLabel: string;
     protected _nRows: number;
     protected _nCols: number;
-    
+
     isConsistent: boolean; // Set by the "view" to specify to others that this matrix is not consistent with what is on display
     userMessage: string | null; // Any message for the user concerning this matrix
     ce: ComputeEngine;
@@ -138,14 +138,17 @@ export class FancyMatrix {
                 }
             }
             this._labelWParams += ')';
-            
+
         }
         this._extendedLabel = this.labelWParams;
 
     }
     // Fallback values to set the matrix in case something breaks when initializing the class
     protected fallbackLatexMat(): string[][] {
-        return [['0', '0'], ['0', '0']];
+        // Create an nRows x nCols matrix filled with "0"
+        return Array.from({ length: this._nRows }, () =>
+            Array.from({ length: this._nCols }, () => '0')
+        );
     }
     protected fallbackLatexMult(): string {
         return '1';
@@ -338,6 +341,38 @@ export class FancyMatrix {
         this.userMessage = FM.userMessage;
         this._labelWParams = FM.labelWParams;
         this.ce = FM.ce;
+    }
+
+    generateLatexString(readOnly = false) {
+        // returns the appropriate value depending on wheter the
+        // generated latex should give a readonly field or a field with placeholders
+        // v is the value to display and name is the name of the placeholder
+        function valueFormatter(v: string, name: string) {
+            if (readOnly) {
+                return v;
+            }
+            return `\\placeholder[${name}]{${v}}`
+        }
+        let base = `${this.label} = `
+        let multString = (readOnly && this.latexMult == '1') ? '' : `${valueFormatter(this.latexMult, 'mult')}`;
+        base += multString;
+        base += ` \\begin{bmatrix}`;
+        for (let i = 0; i < this.nRows; i++) {
+            for (let j = 0; j < this.nCols; j++) {
+                base += `${valueFormatter(this.latexMat[i][j], `m${i}${j}`)}`;
+                if (j < this.nCols - 1) {
+                    base += ` & `;
+                }
+            }
+
+            if (i < this.nRows - 1) {
+                base += ` \\\\ `;
+            }
+        }
+        base += '\\end{bmatrix}'
+        console.log(base);
+        return base;
+
     }
 
 }
@@ -670,6 +705,6 @@ export class StateVector extends FancyMatrix {
     }
 
     convertToDM() {
-        
+
     }
 }
