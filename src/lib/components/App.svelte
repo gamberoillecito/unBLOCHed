@@ -272,6 +272,8 @@
 					instantUpdate={false}
 					onChangeCallback={(FM, oldFM, history: BlochHistory) => {
 						history.addElement(oldFM as DensityMatrix, FM as DensityMatrix);
+						// console.log((FM as DensityMatrix).stateVector);
+						
 					}}
 					onChangeArguments={history}
 				></DynamicMatrix>

@@ -10,9 +10,10 @@ const config = {
     absTol: 1e-10,
 }
 const math = create(all, config)
-// export type ComplexMat2x2 = [[Complex, Complex], [Complex, Complex]];
-export type ComplexMat2x2 = Array<Array<Complex>>
-
+// export type ComplexMat2x2<2,2> = [[Complex, Complex], [Complex, Complex]];
+// export type ComplexMat2x2<2,2> = Array<Array<Complex>>
+type ComplexMatRxC<R extends number, C extends number > = Complex[][] & { length: R;[index: number]: { length: C; } };
+type ComplexMat = Complex[][];
 
 class MatrixValidity {
     isValid: boolean;
@@ -23,24 +24,24 @@ class MatrixValidity {
         this.message = message
     }
 }
-export function print_mat(mat: ComplexMat2x2) {
+export function print_mat(mat: ComplexMatRxC<2, 2>) {
     console.log(`[${mat[0][0]}, ${mat[0][1]},\n${mat[1][0]}, ${mat[1][1]}]`)
 }
 
-function dagger(mat: ComplexMat2x2 | math.Matrix) {
+function dagger(mat: ComplexMat | math.Matrix) {
     return math.conj(math.transpose(mat))
 }
 
 /**
  * Creates a new 2x2 complex matrix from a flat array of 4 entries.
  * @param entries An array of 4 numbers, strings, or Complex values.
- * @returns A ComplexMat2x2 or null if the input is invalid.
+ * @returns A ComplexMat2x2<2,2> or null if the input is invalid.
  */
-function newComplexMat2x2(entries: (string | Complex | number)[]): ComplexMat2x2 | null {
+function newComplexMat2x2(entries: (string | Complex | number)[]): ComplexMatRxC<2, 2> | null {
     if (!Array.isArray(entries) || entries.length !== 4) {
         return null;
     }
-    let mat: ComplexMat2x2 = [
+    let mat: ComplexMatRxC<2, 2> = [
         [math.complex(entries[0]), math.complex(entries[1])],
         [math.complex(entries[2]), math.complex(entries[3])]
     ];
@@ -69,7 +70,7 @@ export class MatrixParam {
 // of a 2x2 matrix for bidirectional syncing with DynamicMatrix.svelte
 export class FancyMatrix {
     protected _latexMult: string; // Latex multiplier in front of the matrix
-    protected _mat: ComplexMat2x2; // The "math" matrix for calculations
+    protected _mat: ComplexMat; // The "math" matrix for calculations
     protected _latexMat: (string)[][]; // The latex version of the matrix elements for display
     protected _parameter_array: MatrixParam[];
     protected _label: string;
@@ -83,7 +84,7 @@ export class FancyMatrix {
     userMessage: string | null; // Any message for the user concerning this matrix
     ce: ComputeEngine;
 
-    constructor(latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[] = [], mat?: ComplexMat2x2, nRows: number = 2, nCols: number = 2) {
+    constructor(latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[] = [], mat?: ComplexMat, nRows: number = 2, nCols: number = 2) {
         this.ce = new ComputeEngine();
         this._label = label;
         this.isConsistent = $state(true);
@@ -116,10 +117,10 @@ export class FancyMatrix {
             generatedMatrix = this.generateMatrixFromLatex(latexMat, latexMult);
             console.error(`${this.label}: The provided parameters would result in an invalid matrix: ${res.message}`);
         }
-        // If a mat (ComplexMat2x2) was passed as a parameter we trust the caller and use it as this._mat
+        // If a mat (ComplexMat2x2<2,2>) was passed as a parameter we trust the caller and use it as this._mat
         // This feature is used by the clone function to create an instance of the class with exactly the same values
         // It prevents the check on latexMat in cases where we truncated the values and this would result in an invalid matrix
-        this._mat = $state(mat ? mat.map(row => row.map(x => math.complex(x))) as ComplexMat2x2 : generatedMatrix);
+        this._mat = $state(mat ? mat.map(row => row.map(x => math.complex(x))) as ComplexMat : generatedMatrix);
 
         this._latexMult = latexMult;
         // I use map because I want to "loose" the reference from the original passed value
@@ -155,7 +156,7 @@ export class FancyMatrix {
     }
 
     // Updates _mat if it is a new valid matrix
-    setMatrixValue(newMat: ComplexMat2x2): MatrixValidity {
+    setMatrixValue(newMat: ComplexMat): MatrixValidity {
         let res = this.validateMatrix(newMat);
 
         if (res.isValid) {
@@ -179,7 +180,7 @@ export class FancyMatrix {
 
     // Update element i,j to value and reflect the changes in the latex
     setValue(value: Complex, i: number, j: number): MatrixValidity {
-        let newMat = this._mat.map(row => row.map(el => math.clone(el))) as ComplexMat2x2;
+        let newMat = this._mat.map(row => row.map(el => math.clone(el))) as ComplexMat;
 
         newMat[i][j] = value;
         return this.setMatrixValue(newMat);
@@ -212,7 +213,7 @@ export class FancyMatrix {
 
     // Given a matrix of latex strings and a latex multiplier, returns the corresponding
     // "math" matrix
-    generateMatrixFromLatex(newLatexMat: (string)[][], mult: string): ComplexMat2x2 {
+    generateMatrixFromLatex(newLatexMat: (string)[][], mult: string): ComplexMat {
 
         let newMat = newLatexMat.map((row) => row.map((el) => {
 
@@ -226,7 +227,7 @@ export class FancyMatrix {
 
             return math.complex(converted.re, converted.im);
         }
-        )) as ComplexMat2x2;
+        )) as ComplexMat;
 
         let eval_mult = this.ce.parse(mult).N();
         let computedMult = math.complex(eval_mult.re, eval_mult.im);
@@ -240,7 +241,7 @@ export class FancyMatrix {
         return newMat;
     }
 
-    validateMatrix(newMat: ComplexMat2x2): MatrixValidity {
+    validateMatrix(newMat: ComplexMat): MatrixValidity {
         for (let i = 0; i < this._nRows; i++) {
             for (let j = 0; j < this._nCols; j++) {
                 let el = newMat[i][j]
@@ -310,7 +311,7 @@ export class FancyMatrix {
         return this._nCols;
     }
 
-    protected T(): ComplexMat2x2 {
+    protected T(): ComplexMat {
         /**
          * Returns the Transpose of mat
          */
@@ -322,7 +323,7 @@ export class FancyMatrix {
         // I have to reconstruct a latex matrix without any approximation
         // let completeLateMat = this._mat.map(row => row.map( x => x.toString()))
         // constructor(latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[] = []){
-        let cl = new (this.constructor as new (latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[], mat?: ComplexMat2x2) => this)(this._latexMat, this._latexMult, this.label, this._parameter_array, this._mat);
+        let cl = new (this.constructor as new (latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[], mat?: ComplexMat) => this)(this._latexMat, this._latexMult, this.label, this._parameter_array, this._mat);
         cl.isConsistent = this.isConsistent;
         cl.userMessage = this.userMessage;
         return cl;
@@ -388,7 +389,7 @@ export class DensityMatrix extends FancyMatrix {
     // notation in the rest of the code
     // #blochV: [number, number, number];
 
-    constructor(latexMat: string[][], latexMult: string, label: string, params: MatrixParam[] = [], mat?: ComplexMat2x2) {
+    constructor(latexMat: string[][], latexMult: string, label: string, params: MatrixParam[] = [], mat?: ComplexMatRxC<2, 2>) {
         super(latexMat, latexMult, label, params, mat);
         this._extendedLabel = `\\rho^{${label}}`;
         this.#a = $derived(this._mat[0][0]);
@@ -417,7 +418,7 @@ export class DensityMatrix extends FancyMatrix {
         // for the fact that threejs uses a different notation
         // This **should** allow us to forget about the different
         // notation in the rest of the code
-        let paulis: ComplexMat2x2[] = [pauliX!, pauliZ!, pauliY!];
+        let paulis: ComplexMatRxC<2, 2>[] = [pauliX!, pauliZ!, pauliY!];
         let blochV = [];
         for (let p of paulis) {
             blochV.push(math.trace(math.multiply(this._mat, p)));
@@ -431,7 +432,7 @@ export class DensityMatrix extends FancyMatrix {
     }
 
     // According to Nielsen-Chuang page 100
-    isPureState(matrix: ComplexMat2x2 | null = null): boolean {
+    isPureState(matrix: ComplexMatRxC<2, 2> | null = null): boolean {
 
         let mat = math.matrix(matrix ?? this._mat);
         let TrRhoSquared = math.trace(math.multiply(mat, mat)) as unknown as Complex;
@@ -446,7 +447,7 @@ export class DensityMatrix extends FancyMatrix {
     // Added also check to see if it is Hermitian but I'm not sure it is needed (
     // although without this check the matrix rho =[[1,0], [1,0]] results valid)
     // https://mathworld.wolfram.com/PositiveDefiniteMatrix.html
-    validateMatrix(newMat: ComplexMat2x2): MatrixValidity {
+    validateMatrix(newMat: ComplexMatRxC<2, 2>): MatrixValidity {
         let preliminary_validation = super.validateMatrix(newMat);
         if (preliminary_validation.isValid) {
             // Convert the matrix to mathjs object to
@@ -512,10 +513,10 @@ export class DensityMatrix extends FancyMatrix {
 
     // Applies the given gate to the DensityMatrix
     apply_gate(GM: GateMatrix) {
-        // this._mat = matmul(gate_mat, matmul(this._mat, gate_mat.T())) as ComplexMat2x2;
+        // this._mat = matmul(gate_mat, matmul(this._mat, gate_mat.T())) as ComplexMat2x2<2,2>;
         let gate_mat = GM.mat
         let gate_dag = dagger(gate_mat)
-        let newMat = math.multiply(gate_mat, math.multiply(this._mat, gate_dag)) as ComplexMat2x2;
+        let newMat = math.multiply(gate_mat, math.multiply(this._mat, gate_dag)) as ComplexMatRxC<2, 2>;
         let res = this.setMatrixValue(newMat);
 
     }
@@ -523,6 +524,15 @@ export class DensityMatrix extends FancyMatrix {
     L() {
         return math.sqrt(this.blochV[0] ^ 2 + this.blochV[1] ^ 2 + this.blochV[2] ^ 2)
     }
+
+    // get stateVector() {
+    //     if (this.isPureState()) {
+    //         let coeff0 = math.cos(math.divide(this.theta, 2));
+    //         let coeff1 = math.multiply(math.pow(math.e, math.multiply(math.i, this.phi)), math.sin(math.divide(this.theta, 2)))
+    //         return [[coeff0], [coeff1]]
+    //     } 
+    //     return null
+    // }
 }
 
 export class FakeDensityMatrix extends DensityMatrix {
@@ -585,14 +595,14 @@ export class FakeDensityMatrix extends DensityMatrix {
 }
 
 export class GateMatrix extends FancyMatrix {
-    constructor(latexMat: string[][], latexMult: string, label: string, params: MatrixParam[] = [], mat?: ComplexMat2x2) {
+    constructor(latexMat: string[][], latexMult: string, label: string, params: MatrixParam[] = [], mat?: ComplexMatRxC<2, 2>) {
         super(latexMat, latexMult, label, params, mat);
     }
     protected fallbackLatexMat(): string[][] {
         return [['1', '0'], ['0', '1']];
     }
 
-    validateMatrix(newMat: ComplexMat2x2): MatrixValidity {
+    validateMatrix(newMat: ComplexMatRxC<2, 2>): MatrixValidity {
         let preliminary_validation = super.validateMatrix(newMat);
         if (!preliminary_validation.isValid) {
             return preliminary_validation;
@@ -628,7 +638,7 @@ export class GateMatrix extends FancyMatrix {
         // for the fact that threejs uses a different notation
         // This **should** allow us to forget about the different
         // notation in the rest of the code
-        let paulis: ComplexMat2x2[] = [pauliX!, pauliZ!, pauliY!];
+        let paulis: ComplexMatRxC<2, 2>[] = [pauliX!, pauliZ!, pauliY!];
 
         let O = math.matrix(this._mat);
         let e_ia = math.complex(math.sqrt(math.det(O)));
@@ -667,36 +677,8 @@ export class GatePath {
     }
 }
 
-// export class StateVector {
-//     _latexValue: string;
-//     _value: [Complex, Complex];
-//     _latexMult: string;
-//     _mult: string
-//     _ce: ComputeEngine;
-
-//     constructor() {
-//         this._latexValue = $state('');
-//         this._value = $state([complex(0), complex(0)]);
-//         this._ce = new ComputeEngine();
-//     }
-
-//     get latexValue() {
-//         return this._latexValue;
-//     }
-
-//     get value() {
-//         return this._value;
-//     }
-
-//     setVectorFromLatex(latex: string) {
-//         console.log(
-//             this._ce.parse(latex).N().toString()
-//         );
-//     }
-// }
-
 export class StateVector extends FancyMatrix {
-    constructor(latexMat: string[][], latexMult: string, label: string, params: MatrixParam[] = [], mat?: ComplexMat2x2) {
+    constructor(latexMat: string[][], latexMult: string, label: string, params: MatrixParam[] = [], mat?: ComplexMatRxC<2, 2>) {
         super(latexMat, latexMult, label, params, mat, 2, 1);
     }
 
@@ -707,10 +689,11 @@ export class StateVector extends FancyMatrix {
     getDM() {
         let vec = math.matrix(this._mat);
         let DM = math.multiply(vec, math.transpose(vec));
-        return newComplexMat2x2([DM.get([0, 0]), DM.get([0, 1]), DM.get([1, 0]), DM.get([1, 1])]) as ComplexMat2x2;
+        return newComplexMat2x2([DM.get([0, 0]), DM.get([0, 1]), DM.get([1, 0]), DM.get([1, 1])]) as ComplexMatRxC<2, 2>;
     }
 
-    validateMatrix(newMat: ComplexMat2x2): MatrixValidity {
+    // Nielsen Chuang chapter 1.2
+    validateMatrix(newMat: ComplexMatRxC<1, 2>): MatrixValidity {
         let preliminary_validation = super.validateMatrix(newMat);
         if (!preliminary_validation.isValid) {
             return preliminary_validation;
