@@ -368,7 +368,7 @@ export class DensityMatrix extends FancyMatrix {
 
         let mat = math.matrix(matrix ?? this._mat);
         let TrRhoSquared = math.trace(math.multiply(mat, mat)) as unknown as Complex;
-        if (math.compare(TrRhoSquared.re, 1) == 1){
+        if (math.smaller(TrRhoSquared.re, 1)){
             return false;
         }
         return true;
@@ -568,6 +568,10 @@ export class GateMatrix extends FancyMatrix {
         e_ia.im *= -1;
 
         let theta = this.rotationAngle;
+        
+        if(math.isZero(theta)){
+          return null;
+        }
 
         let rotVect: number[] = [];
         for (let p of paulis) {
@@ -575,7 +579,7 @@ export class GateMatrix extends FancyMatrix {
             let den = math.multiply(math.complex('2i'), math.sin(theta/2)) as Complex;
             // den2 is an attempt at simplify the denominator by substituting the value of theta (done by wolfram:
             // https://www.wolframalpha.com/input?i=sin%28%282*acos%28exp%28-i+alpha%29+*+B%2F2%29%29%2F2%29)
-            let den2 = math.sqrt(math.subtract(1, math.complex(math.multiply(1/4, math.exp(2) as number, e_ia, math.trace(O)/2) as Complex)) as Complex)
+            // let den2 = math.sqrt(math.subtract(1, math.complex(math.multiply(1/4, math.exp(2) as number, e_ia, math.trace(O)/2) as Complex)) as Complex)
             rotVect.push(math.divide(num, den) as number);
         }
         
