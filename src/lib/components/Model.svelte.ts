@@ -538,18 +538,19 @@ export class DensityMatrix extends FancyMatrix {
         }
 
         // Calculate eigendecomposition
-        const eigVec = math.eigs(math.matrix(this._mat)).eigenvectors;
-        console.log(eigVec);
         
-        // Find index of eigenvalue closest to 1
-        const eigVec1 = eigVec.filter(e => math.equal(1, e.value))
-        if (eigVec1.length !== 1) {
-            return null
-        }
-        // Extract the corresponding eigenvector
-        const eigVecRow = eigVec1[0].vector.valueOf() as number[]
+        const theta = math.acos(this.blochV[1]) as number;
+        return [
+            [math.complex(math.cos(theta/2))],
+            [math.complex(
+                math.multiply(
+                    math.sin(theta / 2),
+                    math.exp(
+                        math.multiply(math.i, this.phi)
+                    )
+                )
+            )]]
 
-        return [[math.complex(eigVecRow[0])], [math.complex(eigVecRow[1])]];
     }
     
     private updateSV() {
@@ -753,10 +754,11 @@ export class StateVector extends FancyMatrix {
         // Calculate totalProb correctly from the state vector
         let totalProb = 0;
         for (let i = 0; i < this._nRows; i++) {
-            totalProb += math.add(
-                math.square(newMat[i][0].re),
-                math.square(newMat[i][0].im)
-            );
+            // totalProb += math.add(
+            //     math.square(newMat[i][0].re),
+            //     math.square(newMat[i][0].im)
+            // );
+            totalProb += math.square(newMat[i][0].toPolar().r)
         }
 
         let valid = math.equal(totalProb, 1) as boolean;
