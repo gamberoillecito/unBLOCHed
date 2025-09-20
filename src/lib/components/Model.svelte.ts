@@ -542,27 +542,16 @@ export class DensityMatrix extends FancyMatrix {
         console.log(eigVec);
         
         // Find index of eigenvalue closest to 1
-        let maxEigVal = -1;
-        
-        for (let i = 0; i < 2; i++) {
-            if (math.equal(1, eigVec[i].vector)) {
-                maxEigVal = i;
-                break;
-            }
-        }
-
-        if (maxEigVal === -1) {
-            console.error('No eigenvalue');
+        const eigVec1 = eigVec.filter(e => math.equal(1, e.value))
+        if (eigVec1.length !== 1) {
+            return null
         }
         // Extract the corresponding eigenvector
-        // Note: eigenvectors are stored as columns in the eigenvectors matrix
-        
-        console.log(eigVec.filter(e => math.equal(1, e.value))[0].vector.valueOf());
-        
-        const eigVecRow = eigVec.filter(e => math.equal(1, e.value))[0].vector.valueOf() as number[]
+        const eigVecRow = eigVec1[0].vector.valueOf() as number[]
 
         return [[math.complex(eigVecRow[0])], [math.complex(eigVecRow[1])]];
     }
+    
     private updateSV() {
 
         const v = this.getStateVector()

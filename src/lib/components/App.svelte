@@ -139,7 +139,6 @@
 	});
 
 	let SV = DM.SV;
-	
 
 	// Show a popover when the user disables the watermark to ask for a citation
 	let watermarkDialogOpen = $state(false);
@@ -154,15 +153,33 @@
 	//**The element of the scene menu that opens the "Download Image" submenu*/
 	let SceneMenuDownloadTrigger = $state() as HTMLElement;
 	let SceneMenuDownloadOpen = $state(false);
-
 </script>
 
-<!-- <link
-	rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
-	integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn"
-	crossorigin="anonymous"
-/> -->
+{#snippet StateVectorInput()}
+	<div class="relative">
+		<DynamicMatrix
+			FM={SV}
+			instantUpdate={false}
+			onChangeCallback={(SV, oldSV, args: { history: BlochHistory; DM: DensityMatrix }) => {
+				let newMatrix = (SV as StateVector).getDM();
+				let oldDM = args.DM.clone();
+				args.DM.setMatrixValue(newMatrix);
+				args.history.addElement(oldDM, args.DM);
+			}}
+			onChangeArguments={{ history, DM }}
+		/>
+		{#if DM.getStateVector() === null}
+			<div
+				class="bg-background/80 absolute inset-0 z-10 flex items-center justify-center rounded-md border p-4 text-center backdrop-blur-sm"
+				title="The current density matrix represents a mixed state, which cannot be described by a single state vector."
+			>
+				<p class="text-muted-foreground text-xs">
+					Mixed states cannot be represented by a state vector.
+				</p>
+			</div>
+		{/if}
+	</div>
+{/snippet}
 
 <div
 	class="flex h-full w-full flex-col place-items-center content-evenly justify-start gap-2 p-1 @lg:flex-row @lg:place-items-center @lg:justify-center-safe"
@@ -266,32 +283,24 @@
 	<!-- Buttons and matrices -->
 	{#if !joystickMode}
 		<ScrollArea class="min-h-0 shrink p-2 @lg:min-h-auto" type="scroll">
-			<div class="flex flex-col items-center">
-				<h4 class="w-fit self-start">Density Matrix</h4>
-				<DynamicMatrix
-					FM={DM}
-					instantUpdate={false}
-					onChangeCallback={(FM, oldFM, history: BlochHistory) => {
-						history.addElement(oldFM as DensityMatrix, FM as DensityMatrix);
-						// console.log((FM as DensityMatrix).stateVector);
-						
-					}}
-					onChangeArguments={history}
-				></DynamicMatrix>
-				{#if false}
-					<textarea style="height: 300px; width: 400px">
-						{`DM = \n[${DM.mat[0][0]}, ${DM.mat[0][1]}] \n[${DM.mat[1][0]}, ${DM.mat[1][1]}]
-				
-				Phase = ${DM.phi}
-				
-				DM latex = \n ${DM.latexMult} \n[${DM.latexMat[0][0]}, ${DM.latexMat[0][1]}] \n[${DM.latexMat[1][0]}, ${DM.latexMat[1][1]}]
-				
-				GM = \n[${GM.mat[0][0]}, ${GM.mat[0][1]}] \n[${GM.mat[1][0]}, ${GM.mat[1][1]}]
-				
-				GM latex = \n ${GM.latexMult} \n[${GM.latexMat[0][0]}, ${GM.latexMat[0][1]}] \n[${GM.latexMat[1][0]}, ${GM.latexMat[1][1]}]
-					`}
-					</textarea>
-				{/if}
+			<div class="flex flex-row gap-2">
+				<div class="flex flex-col items-center">
+					<h4 class="w-fit self-start">Density Matrix</h4>
+					<DynamicMatrix
+						FM={DM}
+						instantUpdate={false}
+						onChangeCallback={(FM, oldFM, history: BlochHistory) => {
+							history.addElement(oldFM as DensityMatrix, FM as DensityMatrix);
+							// console.log((FM as DensityMatrix).stateVector);
+						}}
+						onChangeArguments={history}
+					></DynamicMatrix>
+				</div>
+				<Separator orientation="vertical" class="h-full"/> 
+				<div class="flex flex-col items-center">
+					<h4 class="w-fit self-start">State Vector</h4>
+					{@render StateVectorInput()}
+				</div>
 			</div>
 			<Separator class=""></Separator>
 			<h4>States</h4>
@@ -344,17 +353,6 @@
 					gate={GM}
 					disabled={!(DM.isConsistent && GM.isConsistent)}
 					withParams={true}
-				/>
-				<DynamicMatrix
-					FM={SV}
-					instantUpdate={false}
-					onChangeCallback={(SV, oldSV, args: {history: BlochHistory, DM: DensityMatrix}) => {
-						let newMatrix = (SV as StateVector).getDM();
-						let oldDM = args.DM.clone();
-						args.DM.setMatrixValue(newMatrix);
-						args.history.addElement(oldDM, args.DM);
-					}}
-					onChangeArguments={{ history, DM }}
 				/>
 			</div>
 		</ScrollArea>
