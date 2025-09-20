@@ -37,8 +37,6 @@
 	// let initialValue = `${FM.label} = \\placeholder[mult]{${FM.latexMult}}\\begin{bmatrix}\\placeholder[m00]{${FM.latexMat[0][0]}} & \\placeholder[m01]{${FM.latexMat[0][1]}}\\\\ \\placeholder[m10]{${FM.latexMat[1][0]}} & \\placeholder[m11]{${FM.latexMat[1][1]}}\\end{bmatrix}`;
 	let undoChangesButton: HTMLElement | null = $state(null);
 	let undoChangesButtonEnabled: boolean = $state(false);
-	console.log(initialValue);
-	console.log(FM.generateLatexString());
 
 	const popoversContext = getContext('popoversContext') as { preventOpening: boolean };
 

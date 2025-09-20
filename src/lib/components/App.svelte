@@ -138,7 +138,8 @@
 		tutorialProps.history = history;
 	});
 
-	let SV = new StateVector([['1'], ['0']], '1', 'v');
+	let SV = DM.SV;
+	
 
 	// Show a popover when the user disables the watermark to ask for a citation
 	let watermarkDialogOpen = $state(false);
@@ -153,7 +154,7 @@
 	//**The element of the scene menu that opens the "Download Image" submenu*/
 	let SceneMenuDownloadTrigger = $state() as HTMLElement;
 	let SceneMenuDownloadOpen = $state(false);
-	$inspect(SceneMenuDownloadTrigger);
+
 </script>
 
 <!-- <link

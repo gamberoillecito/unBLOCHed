@@ -5,6 +5,7 @@ import {
     all,
     complex,
 } from 'mathjs'
+import { mul } from 'three/tsl';
 
 const config = {
     absTol: 1e-10,
@@ -12,7 +13,7 @@ const config = {
 const math = create(all, config)
 // export type ComplexMat2x2<2,2> = [[Complex, Complex], [Complex, Complex]];
 // export type ComplexMat2x2<2,2> = Array<Array<Complex>>
-type ComplexMatRxC<R extends number, C extends number > = Complex[][] & { length: R;[index: number]: { length: C; } };
+type ComplexMatRxC<R extends number, C extends number> = Complex[][] & { length: R;[index: number]: { length: C; } };
 type ComplexMat = Complex[][];
 
 class MatrixValidity {
@@ -371,7 +372,6 @@ export class FancyMatrix {
             }
         }
         base += '\\end{bmatrix}'
-        console.log(base);
         return base;
 
     }
@@ -383,6 +383,7 @@ export class DensityMatrix extends FancyMatrix {
     #b: Complex;
     #c: Complex;
     #d: Complex;
+    _SV: StateVector;
     // Note that the values of y and z are swapped to account
     // for the fact that threejs uses a different notation
     // This **should** allow us to forget about the different
@@ -396,7 +397,8 @@ export class DensityMatrix extends FancyMatrix {
         this.#b = $derived(this._mat[1][0]);
         this.#c = $derived(this._mat[0][1]);
         this.#d = $derived(this._mat[1][1]);
-
+        // this._SV = new StateVector(this._stateVector!.map(x => x.map(y => `${y}`)), '1', 'v')
+        this._SV = new StateVector([['0'], ['1']], '1', 'v');
 
         //     this.#blochV= $derived([
         //     2*this.#b.re,
@@ -480,8 +482,8 @@ export class DensityMatrix extends FancyMatrix {
             let Tr = math.trace(mat) as unknown as Complex;
 
             if (!math.isZero(Tr.im)) {
-                console.log(Tr);
-                console.log(math.typeOf(Tr));
+                // console.log(Tr);
+                // console.log(math.typeOf(Tr));
 
 
                 console.error(`The matrix has imaginary trace ${Tr}, this should be caught by the other checks`)
@@ -525,14 +527,65 @@ export class DensityMatrix extends FancyMatrix {
         return math.sqrt(this.blochV[0] ^ 2 + this.blochV[1] ^ 2 + this.blochV[2] ^ 2)
     }
 
-    // get stateVector() {
-    //     if (this.isPureState()) {
-    //         let coeff0 = math.cos(math.divide(this.theta, 2));
-    //         let coeff1 = math.multiply(math.pow(math.e, math.multiply(math.i, this.phi)), math.sin(math.divide(this.theta, 2)))
-    //         return [[coeff0], [coeff1]]
-    //     } 
-    //     return null
-    // }
+    get SV() {
+        return this._SV;
+    }
+
+    getStateVector(): ComplexMatRxC<2, 1> | null {
+        // First check if it's a pure state
+        if (!this.isPureState()) {
+            return null; // Can't get a state vector from a mixed state
+        }
+
+        // Calculate eigendecomposition
+        const eigVec = math.eigs(math.matrix(this._mat)).eigenvectors;
+        console.log(eigVec);
+        
+        // Find index of eigenvalue closest to 1
+        let maxEigVal = -1;
+        
+        for (let i = 0; i < 2; i++) {
+            if (math.equal(1, eigVec[i].vector)) {
+                maxEigVal = i;
+                break;
+            }
+        }
+
+        if (maxEigVal === -1) {
+            console.error('No eigenvalue');
+        }
+        // Extract the corresponding eigenvector
+        // Note: eigenvectors are stored as columns in the eigenvectors matrix
+        
+        console.log(eigVec.filter(e => math.equal(1, e.value))[0].vector.valueOf());
+        
+        const eigVecRow = eigVec.filter(e => math.equal(1, e.value))[0].vector.valueOf() as number[]
+
+        return [[math.complex(eigVecRow[0])], [math.complex(eigVecRow[1])]];
+    }
+    private updateSV() {
+
+        const v = this.getStateVector()
+        if (v != null) {
+            console.log('updating');
+            this._SV.setMatrixValue(v)
+        }
+    }
+    setMatrixFromLatex(newLatexMat: (string)[][], mult: string): MatrixValidity {
+        const res = super.setMatrixFromLatex(newLatexMat, mult);
+        if (res.isValid) {
+            this.updateSV();
+        }
+        return res
+
+    }
+    setMatrixValue(newMat: ComplexMat): MatrixValidity {
+        const res = super.setMatrixValue(newMat);
+        if (res.isValid) {
+            this.updateSV();
+        }
+        return res
+    }
 }
 
 export class FakeDensityMatrix extends DensityMatrix {
@@ -678,27 +731,35 @@ export class GatePath {
 }
 
 export class StateVector extends FancyMatrix {
-    constructor(latexMat: string[][], latexMult: string, label: string, params: MatrixParam[] = [], mat?: ComplexMatRxC<2, 2>) {
+    constructor(latexMat: string[][], latexMult: string, label: string, params: MatrixParam[] = [], mat?: ComplexMatRxC<2, 1>) {
         super(latexMat, latexMult, label, params, mat, 2, 1);
     }
 
     protected fallbackLatexMat(): string[][] {
         return [['1'], ['0']];
     }
+    
+    setMatrixValue(newMat: ComplexMat): MatrixValidity {
+        const res = super.setMatrixValue(newMat);
+        console.log(newMat);
+        
+        console.log(res);
+        
+        return res
+    }
 
     getDM() {
         let vec = math.matrix(this._mat);
         let DM = math.multiply(vec, math.transpose(vec));
-        return newComplexMat2x2([DM.get([0, 0]), DM.get([0, 1]), DM.get([1, 0]), DM.get([1, 1])]) as ComplexMatRxC<2, 2>;
+        return newComplexMat2x2([DM.get([0, 0]), DM.get([0, 1]), DM.get([1, 0]), DM.get([1, 1])]) as ComplexMatRxC<2, 1>;
     }
 
     // Nielsen Chuang chapter 1.2
-    validateMatrix(newMat: ComplexMatRxC<1, 2>): MatrixValidity {
+    validateMatrix(newMat: ComplexMatRxC<2, 1>): MatrixValidity {
         let preliminary_validation = super.validateMatrix(newMat);
         if (!preliminary_validation.isValid) {
             return preliminary_validation;
         }
-        console.log(newMat); // Use newMat instead of this._mat
 
         // Calculate totalProb correctly from the state vector
         let totalProb = 0;
@@ -708,9 +769,9 @@ export class StateVector extends FancyMatrix {
                 math.square(newMat[i][0].im)
             );
         }
-        console.log(totalProb);
 
         let valid = math.equal(totalProb, 1) as boolean;
         return new MatrixValidity(valid, valid ? '' : 'State vector must be normalized')
     }
+
 }
