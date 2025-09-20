@@ -57,6 +57,7 @@
 	import Copy from '@lucide/svelte/icons/copy';
 	import { marked } from 'marked';
 	import DynamicStateVector from './DynamicStateVector.svelte';
+	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	const config = {
 		absTol: 1e-10
 	};
@@ -181,6 +182,18 @@
 	</div>
 {/snippet}
 
+{#snippet DynamicMatrixInput()}
+	<DynamicMatrix
+		FM={DM}
+		instantUpdate={false}
+		onChangeCallback={(FM, oldFM, history: BlochHistory) => {
+			history.addElement(oldFM as DensityMatrix, FM as DensityMatrix);
+			// console.log((FM as DensityMatrix).stateVector);
+		}}
+		onChangeArguments={history}
+	></DynamicMatrix>
+{/snippet}
+
 <div
 	class="flex h-full w-full flex-col place-items-center content-evenly justify-start gap-2 p-1 @lg:flex-row @lg:place-items-center @lg:justify-center-safe"
 >
@@ -283,20 +296,20 @@
 	<!-- Buttons and matrices -->
 	{#if !joystickMode}
 		<ScrollArea class="min-h-0 shrink p-2 @lg:min-h-auto" type="scroll">
-			<div class="flex flex-row gap-2">
+			<Tabs.Root value="dm" class="max-w-[400px] @2xl:hidden">
+				<Tabs.List>
+					<Tabs.Trigger value="dm">Density Matrix</Tabs.Trigger>
+					<Tabs.Trigger value="dv">State Vector</Tabs.Trigger>
+				</Tabs.List>
+				<Tabs.Content value="dm">{@render DynamicMatrixInput()}</Tabs.Content>
+				<Tabs.Content value="dv">{@render StateVectorInput()}</Tabs.Content>
+			</Tabs.Root>
+			<div class="hidden flex-row gap-2 @2xl:flex">
 				<div class="flex flex-col items-center">
 					<h4 class="w-fit self-start">Density Matrix</h4>
-					<DynamicMatrix
-						FM={DM}
-						instantUpdate={false}
-						onChangeCallback={(FM, oldFM, history: BlochHistory) => {
-							history.addElement(oldFM as DensityMatrix, FM as DensityMatrix);
-							// console.log((FM as DensityMatrix).stateVector);
-						}}
-						onChangeArguments={history}
-					></DynamicMatrix>
+					{@render DynamicMatrixInput()}
 				</div>
-				<Separator orientation="vertical" class="h-full"/> 
+				<Separator orientation="vertical" class="h-full" />
 				<div class="flex flex-col items-center">
 					<h4 class="w-fit self-start">State Vector</h4>
 					{@render StateVectorInput()}
