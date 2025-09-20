@@ -35,7 +35,13 @@
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import Undo from '@lucide/svelte/icons/undo';
 	import Redo from '@lucide/svelte/icons/redo';
-	import { predefinedGates, predefinedStates, theta_param, ketPlus } from '$lib/data/matrices';
+	import {
+		predefinedGates,
+		predefinedStates,
+		theta_param,
+		ketPlus,
+		ketI
+	} from '$lib/data/matrices';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import { Canvas, type ThrelteContext } from '@threlte/core';
 	import Menu from '@lucide/svelte/icons/menu';
@@ -58,6 +64,8 @@
 	import { marked } from 'marked';
 	import DynamicStateVector from './DynamicStateVector.svelte';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
+	import { MediaQuery } from 'svelte/reactivity';
+
 	const config = {
 		absTol: 1e-10
 	};
@@ -154,6 +162,8 @@
 	//**The element of the scene menu that opens the "Download Image" submenu*/
 	let SceneMenuDownloadTrigger = $state() as HTMLElement;
 	let SceneMenuDownloadOpen = $state(false);
+
+	let screen2xl = new MediaQuery('min-width: 42rem')
 </script>
 
 {#snippet StateVectorInput()}
@@ -296,6 +306,9 @@
 	<!-- Buttons and matrices -->
 	{#if !joystickMode}
 		<ScrollArea class="min-h-0 shrink p-2 @lg:min-h-auto" type="scroll">
+			<!-- We need both the svelte media query with the if and the tailwind @2xl: because svelte hides the error banner
+			 of the not-visible input and tailwind is more responsive when the website loads -->
+			{#if !screen2xl.current}
 			<Tabs.Root value="dm" class="max-w-[400px] @2xl:hidden">
 				<Tabs.List>
 					<Tabs.Trigger value="dm">Density Matrix</Tabs.Trigger>
@@ -304,6 +317,7 @@
 				<Tabs.Content value="dm">{@render DynamicMatrixInput()}</Tabs.Content>
 				<Tabs.Content value="dv">{@render StateVectorInput()}</Tabs.Content>
 			</Tabs.Root>
+			{:else}
 			<div class="hidden flex-row gap-2 @2xl:flex">
 				<div class="flex flex-col items-center">
 					<h4 class="w-fit self-start">Density Matrix</h4>
@@ -315,6 +329,7 @@
 					{@render StateVectorInput()}
 				</div>
 			</div>
+			{/if}
 			<Separator class=""></Separator>
 			<h4>States</h4>
 			<!-- Standard states -->
