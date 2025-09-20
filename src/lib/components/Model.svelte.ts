@@ -490,7 +490,7 @@ export class DensityMatrix extends FancyMatrix {
                 return new MatrixValidity(false, 'Negative eigenvalues, please report this to the developer')
             }
 
-            if (math.compare(Tr.re, 1) == 1) {
+            if (!math.equal(Tr.re, 1)) {
                 return new MatrixValidity(false, `$\\operatorname{tr}[\\rho] \\neq 1$`)
             }
 
