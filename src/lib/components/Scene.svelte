@@ -100,7 +100,7 @@
 		return data;
 	}
 
-	const watermark = 'https://gamberoillecito.github.io/unBLOCHed/';
+	const watermark = 'unBLOCHed.xyz';
 	getImage = downloadImage;
 </script>
 

@@ -398,7 +398,15 @@ export class DensityMatrix extends FancyMatrix {
         this.#c = $derived(this._mat[0][1]);
         this.#d = $derived(this._mat[1][1]);
         // Create new state vector with the truncated latex display
-        this._SV = new StateVector(this.getStateVector()!.map(row => row.map(x => math.round(x, 2).toString())), '1', '|\\psi\\rangle', undefined, this.getStateVector() as ComplexMatRxC<2, 1>);
+        let sv = this.getStateVector()
+        // //////// //
+        // WARNING: //
+        // //////// //
+        // A bit of an hack necessary when creating a new DM which represents a mixed state (e.g. done when adding
+        // a mixed state to the history). If the state is mixed then the associated state vector defaults to |0>.
+        // I think this is better than having to deal with `null` StateVectors inside DensityMatrix since we
+        // are making sure that when the state is mixed the StateVector display is hidden
+        this._SV = new StateVector(sv ? sv.map(row => row.map(x => math.round(x, 2).toString())): [['1'], ['0']], '1', '|\\psi\\rangle', undefined, this.getStateVector() as ComplexMatRxC<2, 1>);
     }
 
     protected fallbackLatexMat(): string[][] {

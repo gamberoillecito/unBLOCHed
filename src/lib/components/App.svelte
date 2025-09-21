@@ -163,11 +163,13 @@
 	let SceneMenuDownloadTrigger = $state() as HTMLElement;
 	let SceneMenuDownloadOpen = $state(false);
 
-	let screen2xl = new MediaQuery('min-width: 42rem')
+	let screen2xl = new MediaQuery('min-width: 42rem');
 </script>
 
 {#snippet StateVectorInput()}
-	<div class="relative">
+	<div class="relative w-fit h-fit m-1">
+		<div class={DM.getStateVector() == null ? 'opacity-0' : ''}>
+
 		<DynamicMatrix
 			FM={SV}
 			instantUpdate={false}
@@ -175,20 +177,18 @@
 				let newMatrix = (SV as StateVector).getDM();
 				let oldDM = args.DM.clone();
 				args.DM.setMatrixValue(newMatrix);
-				args.history.addElement(oldDM, args.DM);
+				// args.history.addElement(oldDM, args.DM);
 			}}
 			onChangeArguments={{ history, DM }}
 		/>
-		{#if DM.getStateVector() === null}
-			<div
-				class="bg-background/80 absolute inset-0 z-10 flex items-center justify-center rounded-md border p-4 text-center backdrop-blur-sm"
-				title="The current density matrix represents a mixed state, which cannot be described by a single state vector."
-			>
-				<p class="text-muted-foreground text-xs">
-					Mixed states cannot be represented by a state vector.
-				</p>
-			</div>
-		{/if}
+		</div>
+		<div
+			class={`${DM.getStateVector() != null ? 'opacity-0' : ''} bg-muted pointer-events-none absolute w-full h-full top-0 left-0 z-10 flex items-center justify-center rounded-md border p-1 text-center backdrop-blur-sm`}
+		>
+			<p class="text-muted-foreground text-xs">
+				Mixed states cannot be represented by a state vector.
+			</p>
+		</div>
 	</div>
 {/snippet}
 
@@ -309,26 +309,26 @@
 			<!-- We need both the svelte media query with the if and the tailwind @2xl: because svelte hides the error popover
 			 of the not-visible input and tailwind is more responsive when the website loads -->
 			{#if !screen2xl.current}
-			<Tabs.Root value="dm" class="max-w-[400px] @2xl:hidden items-center">
-				<Tabs.List>
-					<Tabs.Trigger value="dm">Density Matrix</Tabs.Trigger>
-					<Tabs.Trigger value="dv">State Vector</Tabs.Trigger>
-				</Tabs.List>
-				<Tabs.Content value="dm">{@render DynamicMatrixInput()}</Tabs.Content>
-				<Tabs.Content value="dv">{@render StateVectorInput()}</Tabs.Content>
-			</Tabs.Root>
+				<Tabs.Root value="dm" class="max-w-[400px] items-center @2xl:hidden">
+					<Tabs.List>
+						<Tabs.Trigger value="dm">Density Matrix</Tabs.Trigger>
+						<Tabs.Trigger value="dv">State Vector</Tabs.Trigger>
+					</Tabs.List>
+					<Tabs.Content value="dm">{@render DynamicMatrixInput()}</Tabs.Content>
+					<Tabs.Content value="dv">{@render StateVectorInput()}</Tabs.Content>
+				</Tabs.Root>
 			{:else}
-			<div class="hidden flex-row gap-2 @2xl:flex justify-center">
-				<div class="flex flex-col items-center">
-					<h4 class="w-fit self-start">Density Matrix</h4>
-					{@render DynamicMatrixInput()}
+				<div class="hidden flex-row justify-center gap-2 @2xl:flex">
+					<div class="flex flex-col items-center">
+						<h4 class="w-fit self-start">Density Matrix</h4>
+						{@render DynamicMatrixInput()}
+					</div>
+					<Separator orientation="vertical" class="h-full" />
+					<div class="flex flex-col items-center">
+						<h4 class="w-fit self-start">State Vector</h4>
+						{@render StateVectorInput()}
+					</div>
 				</div>
-				<Separator orientation="vertical" class="h-full" />
-				<div class="flex flex-col items-center">
-					<h4 class="w-fit self-start">State Vector</h4>
-					{@render StateVectorInput()}
-				</div>
-			</div>
 			{/if}
 			<Separator class=""></Separator>
 			<h4>States</h4>
@@ -415,7 +415,7 @@
 				<ul>
 					<li>
 						Link to the website: <br />
-						{@render copyText('https://gamberoillecito.github.io/unBLOCHed/')}
+						{@render copyText('https://unBLOCHed.xyz')}
 					</li>
 					<li>
 						Link to the GitHub repository:<br />
