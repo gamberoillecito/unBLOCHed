@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { FancyMatrix } from './Model.svelte';
+	import { DensityMatrix, FancyMatrix } from './Model.svelte';
 	import { type Attachment } from 'svelte/attachments';
 	import { type MathfieldElement } from 'mathlive';
 	import { getContext } from 'svelte';
@@ -79,7 +79,12 @@
 					<math-field
 						readonly
 						{@attach (mf: MathfieldElement) => {
-							mf.value = FM.generateLatexString(true);
+							let stateV = ''
+							if (FM instanceof DensityMatrix) {
+								stateV = '\\quad ' + (FM as DensityMatrix).SV.generateLatexString(true);
+								
+							}
+							mf.value = FM.generateLatexString(true) + stateV;
 						}}
 					></math-field>
 				{/snippet}
