@@ -133,7 +133,11 @@
 			// Listen for presses on the ENTER key and respond as if the user clicked the
 			// updateMatrixButton
 			if ((ev as InputEvent).inputType === 'insertLineBreak') {
-				updateMatrixButton?.click();
+				ev.preventDefault();
+
+				if (updateMatrixButtonEnabled) {
+					updateMatrixButton?.click();
+				}
 			}
 		});
 
