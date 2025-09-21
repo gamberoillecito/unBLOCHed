@@ -19,7 +19,7 @@
 	} = $props();
 </script>
 
-<div class={`m-auto flex flex-col content-center justify-around gap-2 align-middle @xl:flex-row`}>
+<div class={`my-1 ml-2 flex flex-col content-center justify-around gap-2 align-middle `}>
 	<Button
 		class="size-6 rounded-sm bg-(--approve) hover:bg-(--approve) hover:opacity-75 dark:bg-(--approve)"
 		variant="outline"

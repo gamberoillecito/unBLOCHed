@@ -544,7 +544,10 @@ export class DensityMatrix extends FancyMatrix {
                     )
                 )]]
         }
+        
         else if (method == 'eigen') {
+            // This method is the one adopted by Qiskit
+            // https://github.com/Qiskit/qiskit/blob/stable/2.1/qiskit/quantum_info/states/densitymatrix.py#L808
 
             // Calculate eigendecomposition
             const eigVec = math.eigs(math.matrix(this._mat)).eigenvectors;

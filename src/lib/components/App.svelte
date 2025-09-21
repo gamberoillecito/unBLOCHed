@@ -309,7 +309,7 @@
 			<!-- We need both the svelte media query with the if and the tailwind @2xl: because svelte hides the error popover
 			 of the not-visible input and tailwind is more responsive when the website loads -->
 			{#if !screen2xl.current}
-			<Tabs.Root value="dm" class="max-w-[400px] @2xl:hidden">
+			<Tabs.Root value="dm" class="max-w-[400px] @2xl:hidden items-center">
 				<Tabs.List>
 					<Tabs.Trigger value="dm">Density Matrix</Tabs.Trigger>
 					<Tabs.Trigger value="dv">State Vector</Tabs.Trigger>
@@ -318,7 +318,7 @@
 				<Tabs.Content value="dv">{@render StateVectorInput()}</Tabs.Content>
 			</Tabs.Root>
 			{:else}
-			<div class="hidden flex-row gap-2 @2xl:flex">
+			<div class="hidden flex-row gap-2 @2xl:flex justify-center">
 				<div class="flex flex-col items-center">
 					<h4 class="w-fit self-start">Density Matrix</h4>
 					{@render DynamicMatrixInput()}
@@ -341,7 +341,7 @@
 			<Separator class=""></Separator>
 			<h4>Gates</h4>
 			<!-- Standard gates (no parameters) -->
-			<div class="m-3 flex flex-wrap justify-center gap-2 @lg:max-w-[400px]">
+			<div class="m-3 mx-auto flex flex-wrap justify-center gap-2 @lg:max-w-[400px]">
 				{#each predefinedGates.filter((g) => g.parameterArray.length === 0) as gate}
 					<GateButtonWithParams
 						{DM}
