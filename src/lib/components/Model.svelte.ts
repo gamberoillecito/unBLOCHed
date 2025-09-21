@@ -531,28 +531,51 @@ export class DensityMatrix extends FancyMatrix {
         return this._SV;
     }
 
-    getStateVector(): ComplexMatRxC<2, 1> | null {
+    getStateVector(method: 'angles' | 'eigen' = 'eigen'): ComplexMatRxC<2, 1> | null {
         // First check if it's a pure state
         if (!this.isPureState()) {
             return null; // Can't get a state vector from a mixed state
         }
 
-        // Calculate eigendecomposition
-        
-        const theta = math.acos(this.blochV[1]) as number;
-        return [
-            [math.complex(math.cos(theta/2))],
-            [math.complex(
-                math.multiply(
-                    math.sin(theta / 2),
-                    math.exp(
-                        math.multiply(math.i, this.phi)
+        if (method == 'angles') {
+            const theta = math.acos(this.blochV[1]) as number;
+            return [
+                [math.complex(math.cos(theta / 2))],
+                [math.complex(
+                    math.multiply(
+                        math.sin(theta / 2),
+                        math.exp(
+                            math.multiply(math.i, this.phi)
+                        )
                     )
-                )
-            )]]
+                )]]
+        }
+        else if (method == 'eigen') {
+
+            // Calculate eigendecomposition
+            const eigVec = math.eigs(math.matrix(this._mat)).eigenvectors;
+            console.log(eigVec);
+
+            // Find index of eigenvalue closest to 1
+            const eigVec1 = eigVec.filter(e => math.equal(1, e.value))
+            if (eigVec1.length !== 1) {
+                return null
+            }
+            // Extract the corresponding eigenvector
+            const eigVecRow = eigVec1[0].vector;
+            const norm = math.norm(eigVecRow);
+            // Normalize the eigenvector
+            const eigVecRowNorm = math.divide(eigVecRow, norm).valueOf() as number[]
+            
+            return [[math.complex(eigVecRowNorm[0])], [math.complex(eigVecRowNorm[1])]];
+        }
+        else {
+            console.error('Invalid method');
+            return null;
+        }
 
     }
-    
+
     private updateSV() {
 
         const v = this.getStateVector()
@@ -728,13 +751,13 @@ export class StateVector extends FancyMatrix {
     protected fallbackLatexMat(): string[][] {
         return [['1'], ['0']];
     }
-    
+
     setMatrixValue(newMat: ComplexMat): MatrixValidity {
         const res = super.setMatrixValue(newMat);
         console.log(newMat);
-        
+
         console.log(res);
-        
+
         return res
     }
 
