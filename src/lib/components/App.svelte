@@ -79,7 +79,7 @@
 	let joystickMode = $state(false);
 
 	let DM = $state(ketPlus.clone());
-	DM.label = '\\rho';
+	DM.extendedLabel = '\\rho';
 	let fakeDM = $state(new FakeDensityMatrix());
 	let popoversContext = $state({
 		preventOpening: false

@@ -355,7 +355,7 @@ export class FancyMatrix {
             }
             return `\\placeholder[${name}]{${v}}`
         }
-        let base = `${this.label} = `
+        let base = `${this.extendedLabel} = `
         let multString = (readOnly && this.latexMult == '1') ? '' : `${valueFormatter(this.latexMult, 'mult')}`;
         base += multString;
         base += ` \\begin{bmatrix}`;
