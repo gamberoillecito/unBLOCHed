@@ -584,7 +584,6 @@ export class DensityMatrix extends FancyMatrix {
 
         const v = this.getStateVector()
         if (v != null) {
-            console.log('updating');
             this._SV.setMatrixValue(v)
         }
     }
@@ -754,15 +753,6 @@ export class StateVector extends FancyMatrix {
 
     protected fallbackLatexMat(): string[][] {
         return [['1'], ['0']];
-    }
-
-    setMatrixValue(newMat: ComplexMat): MatrixValidity {
-        const res = super.setMatrixValue(newMat);
-        console.log(newMat);
-
-        console.log(res);
-
-        return res
     }
 
     getDM() {
