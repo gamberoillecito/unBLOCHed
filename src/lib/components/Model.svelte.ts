@@ -548,7 +548,6 @@ export class DensityMatrix extends FancyMatrix {
 
             // Calculate eigendecomposition
             const eigVec = math.eigs(math.matrix(this._mat)).eigenvectors;
-            console.log(eigVec);
 
             // Find index of eigenvalue closest to 1
             const eigVec1 = eigVec.filter(e => math.equal(1, e.value))
