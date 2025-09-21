@@ -397,14 +397,8 @@ export class DensityMatrix extends FancyMatrix {
         this.#b = $derived(this._mat[1][0]);
         this.#c = $derived(this._mat[0][1]);
         this.#d = $derived(this._mat[1][1]);
-        // this._SV = new StateVector(this._stateVector!.map(x => x.map(y => `${y}`)), '1', 'v')
-        this._SV = new StateVector([['0'], ['1']], '1', 'v');
-
-        //     this.#blochV= $derived([
-        //     2*this.#b.re,
-        //     2*this.#a.re - 1,
-        //     2*this.#b.im
-        // ])
+        // Create new state vector with the truncated latex display
+        this._SV = new StateVector(this.getStateVector()!.map(row => row.map(x => math.round(x, 2).toString())), '1', '|\\psi\\rangle', undefined, this.getStateVector() as ComplexMatRxC<2, 1>);
     }
 
     protected fallbackLatexMat(): string[][] {
@@ -566,7 +560,7 @@ export class DensityMatrix extends FancyMatrix {
             const norm = math.norm(eigVecRow);
             // Normalize the eigenvector
             const eigVecRowNorm = math.divide(eigVecRow, norm).valueOf() as number[]
-            
+
             return [[math.complex(eigVecRowNorm[0])], [math.complex(eigVecRowNorm[1])]];
         }
         else {
