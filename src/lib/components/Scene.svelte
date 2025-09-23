@@ -16,6 +16,7 @@
 	import { mode } from 'mode-watcher';
 	import { base } from '$app/paths';
 	import * as culori from 'culori';
+	import { objectDirection } from 'three/tsl';
 
 	export type sceneSettings = {
 		displayAngles: boolean;
@@ -119,7 +120,8 @@
 		<Gizmo
 			animated={true}
 			y={{ label: 'Z' }}
-			z={{ label: 'Y' }}
+			nz={{ label: 'Y', opacity: 100, scale: 0.7, line: true }}
+			z={{ label: '', scale: 0.45, line: false }}
 			size={80}
 			resolution={128}
 			edges={{ scale: 20 }}
