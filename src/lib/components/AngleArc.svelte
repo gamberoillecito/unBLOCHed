@@ -8,7 +8,7 @@
 		Matrix4,
 		LineBasicMaterial,
 		LineDashedMaterial,
-		Material,
+		Material
 	} from 'three';
 	import { Billboard, SVG } from '@threlte/extras';
 	import { mode } from 'mode-watcher';
@@ -64,7 +64,7 @@
 		return new Line(geometry, material).computeLineDistances();
 	}
 
-	let blochVector = $derived(new Vector3(...vector).normalize()); // Replace with your Bloch vector
+	let blochVector = $derived(new Vector3(...vector).normalize());
 	let theta = $derived(Math.acos(blochVector.y));
 	let phi = $derived(
 		blochVector.z >= 0
@@ -72,7 +72,7 @@
 			: Math.atan2(blochVector.z, blochVector.x) + 2 * Math.PI
 	);
 	let arcTheta = $derived(createArc(ARC_RADIUS, 0, theta, arc_material));
-	let arcPhi = $derived(createArc(ARC_RADIUS, 0, phi, arc_material));
+	let arcPhi = $derived(createArc(ARC_RADIUS, 0, phi - 2 * Math.PI, arc_material));
 	$effect(() => {
 		arcTheta.rotation.y = -phi;
 		arcPhi.rotation.x = -Math.PI / 2;
@@ -128,8 +128,8 @@
 {#if phi > THRESHOLD_ANGLE}
 	<Billboard
 		follow={true}
-		position.x={ARC_RADIUS * 1.2 * Math.cos(phi / 2)}
-		position.z={ARC_RADIUS * 1.2 * Math.sin(phi / 2)}
+		position.x={-ARC_RADIUS * 1.4 * Math.cos(phi / 2)}
+		position.z={-ARC_RADIUS * 1.4 * Math.sin(phi / 2)}
 	>
 		<SVG src={`/${mode.current}/phi.svg`} scale={0.0001} position={[-0.04, 0, 0]} />
 	</Billboard>
