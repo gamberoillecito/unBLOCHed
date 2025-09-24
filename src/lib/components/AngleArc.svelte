@@ -102,7 +102,7 @@
 
 	// Operations needed to correctly place the label for the theta angle
 	const rotAxis = $derived(
-		Xaxis.clone().applyMatrix4(new Matrix4().makeRotationAxis(Zaxis, Math.PI / 2 - phi))
+		Xaxis.clone().applyMatrix4(new Matrix4().makeRotationAxis(Zaxis, Math.PI / 2 + phi))
 	);
 	const rotationMatrix = $derived(new Matrix4().makeRotationAxis(rotAxis, -theta / 2));
 	let midTheta = $derived(
@@ -113,7 +113,7 @@
 	);
 </script>
 
-<!-- <T.Line is={arcPhi}></T.Line> -->
+<T.Line is={arcPhi}></T.Line>
 <T.Line is={arcTheta}> </T.Line>
 
 <!-- Line from the origin towards the x axis -->
