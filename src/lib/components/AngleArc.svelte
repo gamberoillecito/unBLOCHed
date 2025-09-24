@@ -72,7 +72,8 @@
 			: Math.atan2(blochVector.z, blochVector.x) + 2 * Math.PI
 	);
 	let arcTheta = $derived(createArc(ARC_RADIUS, 0, theta, arc_material));
-	let arcPhi = $derived(createArc(ARC_RADIUS, 0, phi - 2 * Math.PI, arc_material));
+	let arcPhi = $derived(createArc(ARC_RADIUS, 0, phi === 0 ? 0 : phi - 2 * Math.PI, arc_material));
+	$inspect(phi);
 	$effect(() => {
 		arcTheta.rotation.y = -phi;
 		arcPhi.rotation.x = -Math.PI / 2;
