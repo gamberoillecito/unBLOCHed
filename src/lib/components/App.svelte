@@ -309,8 +309,9 @@
 		<ScrollArea class="min-h-0 shrink p-2 @lg:min-h-auto" type="scroll">
 			<!-- We need both the svelte media query with the if and the tailwind @2xl: because svelte hides the error popover
 			 of the not-visible input and tailwind is more responsive when the website loads -->
-			{#if !screen2xl.current}
-				<Tabs.Root value="dm" class="max-w-[400px] items-center @2xl:hidden">
+			{#if true}
+				<!-- <Tabs.Root value="dm" class="max-w-[400px] items-center @2xl:hidden"> -->
+				<Tabs.Root value="dm" class="max-w-[400px] items-center ">
 					<Tabs.List>
 						<Tabs.Trigger value="dm">Density Matrix</Tabs.Trigger>
 						<Tabs.Trigger value="dv">State Vector</Tabs.Trigger>
