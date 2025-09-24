@@ -148,6 +148,7 @@
 	});
 
 	let SV = DM.SV;
+	SV.extendedLabel = '|\\psi\\rangle'
 
 	// Show a popover when the user disables the watermark to ask for a citation
 	let watermarkDialogOpen = $state(false);

@@ -406,7 +406,7 @@ export class DensityMatrix extends FancyMatrix {
         // a mixed state to the history). If the state is mixed then the associated state vector defaults to |0>.
         // I think this is better than having to deal with `null` StateVectors inside DensityMatrix since we
         // are making sure that when the state is mixed the StateVector display is hidden
-        this._SV = new StateVector(sv ? sv.map(row => row.map(x => math.round(x, 2).toString())): [['1'], ['0']], '1', '|\\psi\\rangle', undefined, this.getStateVector() as ComplexMatRxC<2, 1>);
+        this._SV = new StateVector(sv ? sv.map(row => row.map(x => math.round(x, 2).toString())): [['1'], ['0']], '1', this.label, undefined, this.getStateVector() as ComplexMatRxC<2, 1>);
     }
 
     protected fallbackLatexMat(): string[][] {
