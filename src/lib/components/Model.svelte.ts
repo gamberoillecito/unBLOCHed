@@ -502,6 +502,11 @@ export class DensityMatrix extends FancyMatrix {
         return preliminary_validation
     }
 
+    copy(FM: this): void {
+        super.copy(FM);
+        this.updateSV();
+    }
+
     get a() {
         return this.#a;
     }
