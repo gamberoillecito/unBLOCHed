@@ -32,7 +32,7 @@ const points = [];
 // Compute the points along the arc traced by the vector
 for (let i = 0; i <= numPoints; i++) {
     const t = i / numPoints; 
-    const interpolatedAngle = t * angle; 
+    const interpolatedAngle = -t * angle; 
     const rotationMatrix = new Matrix4().makeRotationAxis(axis, interpolatedAngle);
     
     // Apply the rotation to the initial vector to keep track of consecutive movements

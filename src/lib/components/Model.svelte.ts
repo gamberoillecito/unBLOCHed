@@ -698,7 +698,8 @@ export class GateMatrix extends FancyMatrix {
 
         let argAcos = math.multiply(e_ia, math.divide(math.trace(O), 2)) as Complex;
         let theta = math.multiply(math.acos(argAcos), 2) as number;
-
+        console.log(theta);
+        
         return theta;
     }
 
