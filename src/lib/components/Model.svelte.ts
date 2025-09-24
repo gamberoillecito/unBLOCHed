@@ -422,7 +422,7 @@ export class DensityMatrix extends FancyMatrix {
         // for the fact that threejs uses a different notation
         // This **should** allow us to forget about the different
         // notation in the rest of the code
-        let paulis: ComplexMatRxC<2, 2>[] = [pauliX!, pauliZ!, pauliY!];
+        let paulis: ComplexMatRxC<2, 2>[] = [pauliX!, pauliY!, pauliZ!];
         let blochV = [];
         for (let p of paulis) {
             blochV.push(math.trace(math.multiply(this._mat, p)));
@@ -545,7 +545,7 @@ export class DensityMatrix extends FancyMatrix {
         }
 
         if (method == 'angles') {
-            const theta = math.acos(this.blochV[1]) as number;
+            const theta = math.acos(this.blochV[2]) as number;
             return [
                 [math.complex(math.cos(theta / 2))],
                 [math.complex(
@@ -663,7 +663,7 @@ export class FakeDensityMatrix extends DensityMatrix {
         const x = this.length * Math.sin(this.theta) * Math.cos(this.phi);
         const y = this.length * Math.sin(this.theta) * Math.sin(this.phi);
         const z = this.length * Math.cos(this.theta);
-        return [x, z, y];
+        return [x, y, z];
     }
 
 }
@@ -712,7 +712,7 @@ export class GateMatrix extends FancyMatrix {
         // for the fact that threejs uses a different notation
         // This **should** allow us to forget about the different
         // notation in the rest of the code
-        let paulis: ComplexMatRxC<2, 2>[] = [pauliX!, pauliZ!, pauliY!];
+        let paulis: ComplexMatRxC<2, 2>[] = [pauliX!, pauliY!, pauliZ!];
 
         let O = math.matrix(this._mat);
         let e_ia = math.complex(math.sqrt(math.det(O)));

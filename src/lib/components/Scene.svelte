@@ -7,7 +7,7 @@
 	import { boolean, complex, number, sign, type Complex } from 'mathjs';
 	import SolidVector from './SolidVector.svelte';
 	import Path from './Path.svelte';
-	import { PerspectiveCamera, Color } from 'three';
+	import { PerspectiveCamera, Color, Object3D } from 'three';
 	import { generateGradient } from 'typescript-color-gradient';
 	import type { DensityMatrix, GatePath } from './Model.svelte';
 	import AngleArc from './AngleArc.svelte';
@@ -57,6 +57,7 @@
 		'#ff00bf',
 		'#ff0018'
 	];
+	Object3D.DEFAULT_UP.set(0, 0, 1);
 	let pathGradient = generateGradient(colors_hex, MAX_PATH_COLORS);
 	const { renderer, scene, renderStage, autoRenderTask, canvas } = useThrelte();
 	let camera = $state() as PerspectiveCamera;
@@ -119,9 +120,6 @@
 	<OrbitControls enableDamping enablePan={false} dampingFactor={0.2}>
 		<Gizmo
 			animated={true}
-			y={{ label: 'Z' }}
-			nz={{ label: 'Y', opacity: 100, scale: 0.7, line: true }}
-			z={{ label: '', scale: 0.45, line: false }}
 			size={80}
 			resolution={128}
 			edges={{ scale: 20 }}
