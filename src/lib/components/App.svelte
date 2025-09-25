@@ -65,6 +65,8 @@
 	import DynamicStateVector from './DynamicStateVector.svelte';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import { MediaQuery } from 'svelte/reactivity';
+	import Palette from '@lucide/svelte/icons/palette';
+	import ColorPicker from 'svelte-awesome-color-picker';
 
 	const config = {
 		absTol: 1e-10
@@ -148,7 +150,7 @@
 	});
 
 	let SV = DM.SV;
-	SV.extendedLabel = '|\\psi\\rangle'
+	SV.extendedLabel = '|\\psi\\rangle';
 
 	// Show a popover when the user disables the watermark to ask for a citation
 	let watermarkDialogOpen = $state(false);
@@ -165,26 +167,26 @@
 	let SceneMenuDownloadOpen = $state(false);
 
 	let screen2xl = new MediaQuery('min-width: 42rem');
+	let colorPickerOpen = $state(false);
 </script>
 
 {#snippet StateVectorInput()}
-	<div class="relative w-fit h-fit m-1">
+	<div class="relative m-1 h-fit w-fit">
 		<div class={DM.getStateVector() == null ? 'opacity-0' : ''}>
-
-		<DynamicMatrix
-			FM={SV}
-			instantUpdate={false}
-			onChangeCallback={(SV, oldSV, args: { history: BlochHistory; DM: DensityMatrix }) => {
-				let newMatrix = (SV as StateVector).getDM();
-				let oldDM = args.DM.clone();
-				args.DM.setMatrixValue(newMatrix);
-				// args.history.addElement(oldDM, args.DM);
-			}}
-			onChangeArguments={{ history, DM }}
-		/>
+			<DynamicMatrix
+				FM={SV}
+				instantUpdate={false}
+				onChangeCallback={(SV, oldSV, args: { history: BlochHistory; DM: DensityMatrix }) => {
+					let newMatrix = (SV as StateVector).getDM();
+					let oldDM = args.DM.clone();
+					args.DM.setMatrixValue(newMatrix);
+					// args.history.addElement(oldDM, args.DM);
+				}}
+				onChangeArguments={{ history, DM }}
+			/>
 		</div>
 		<div
-			class={`${DM.getStateVector() != null ? 'opacity-0' : ''} bg-muted pointer-events-none absolute w-full h-full top-0 left-0 z-10 flex items-center justify-center rounded-md border p-1 text-center backdrop-blur-sm`}
+			class={`${DM.getStateVector() != null ? 'opacity-0' : ''} bg-muted pointer-events-none absolute top-0 left-0 z-10 flex h-full w-full items-center justify-center rounded-md border p-1 text-center backdrop-blur-sm`}
 		>
 			<p class="text-muted-foreground text-xs">
 				Mixed states cannot be represented by a state vector.
@@ -271,6 +273,19 @@
 					<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayStateLabels}
 						>Show Labels</DropdownMenu.CheckboxItem
 					>
+					<DropdownMenu.Separator></DropdownMenu.Separator>
+					<DropdownMenu.Sub>
+						<DropdownMenu.SubTrigger>Vector Color</DropdownMenu.SubTrigger>
+						<DropdownMenu.SubContent>
+							<DropdownMenu.Item closeOnSelect={false}><Undo />Restore Default</DropdownMenu.Item>
+							<DropdownMenu.Sub>
+								<DropdownMenu.SubTrigger><Palette /> Pick a Color</DropdownMenu.SubTrigger>
+								<DropdownMenu.SubContent>
+									<ColorPicker isDialog={false} isOpen={true} --cp-border-color="none" />
+								</DropdownMenu.SubContent>
+							</DropdownMenu.Sub>
+						</DropdownMenu.SubContent>
+					</DropdownMenu.Sub>
 					<DropdownMenu.Separator></DropdownMenu.Separator>
 
 					<DropdownMenu.Sub bind:open={SceneMenuDownloadOpen}>

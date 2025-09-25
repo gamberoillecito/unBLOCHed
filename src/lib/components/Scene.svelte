@@ -57,7 +57,9 @@
 		'#ff00bf',
 		'#ff0018'
 	];
+	// Set Z as the "up" direction
 	Object3D.DEFAULT_UP.set(0, 0, 1);
+
 	let pathGradient = generateGradient(colors_hex, MAX_PATH_COLORS);
 	const { renderer, scene, renderStage, autoRenderTask, canvas } = useThrelte();
 	let camera = $state() as PerspectiveCamera;
@@ -127,13 +129,13 @@
 	</OrbitControls>
 	{#if settings.displayWatermark}
 		<Text
-			position={[0.62, -0.62, -10]}
+			position={[0.62, -0.58, -10]}
 			anchorX="right"
 			color="gray"
 			text={watermark}
 			anchorY="baseline"
 			textAlign="right"
-			scale={0.35}
+			scale={0.45}
 		/>
 	{/if}
 </T.PerspectiveCamera>
