@@ -107,7 +107,8 @@
 		displayAngles: true,
 		displayPaths: true,
 		displayStateLabels: true,
-		displayWatermark: true
+		displayWatermark: true,
+		vectorColor: null
 	});
 
 	let transparentBackground = $state(false);
@@ -277,11 +278,21 @@
 					<DropdownMenu.Sub>
 						<DropdownMenu.SubTrigger>Vector Color</DropdownMenu.SubTrigger>
 						<DropdownMenu.SubContent>
-							<DropdownMenu.Item closeOnSelect={false}><Undo />Restore Default</DropdownMenu.Item>
+							<DropdownMenu.Item
+								closeOnSelect={false}
+								onclick={() => {
+									settings3DScene.vectorColor = null;
+								}}><Undo />Restore Default</DropdownMenu.Item
+							>
 							<DropdownMenu.Sub>
 								<DropdownMenu.SubTrigger><Palette /> Pick a Color</DropdownMenu.SubTrigger>
 								<DropdownMenu.SubContent>
-									<ColorPicker isDialog={false} isOpen={true} --cp-border-color="none" />
+									<ColorPicker
+										bind:hex={settings3DScene.vectorColor}
+										isDialog={false}
+										isOpen={true}
+										--cp-border-color="none"
+									/>
 								</DropdownMenu.SubContent>
 							</DropdownMenu.Sub>
 						</DropdownMenu.SubContent>

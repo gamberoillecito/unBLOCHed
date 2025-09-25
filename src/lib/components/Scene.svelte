@@ -23,6 +23,7 @@
 		displayStateLabels: boolean;
 		displayPaths: boolean;
 		displayWatermark: boolean;
+		vectorColor: string | null;
 	};
 	interface Props {
 		DM: DensityMatrix;
@@ -171,7 +172,7 @@
 {/if}
 
 <BlochSphere></BlochSphere>
-<SolidVector {DM}></SolidVector>
+<SolidVector {DM} vectorColor={settings.vectorColor}></SolidVector>
 {#if settings.displayAngles}
 	<AngleArc vector={DM.blochV}></AngleArc>
 {/if}

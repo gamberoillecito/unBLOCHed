@@ -9,9 +9,10 @@
 	// let {length= 1, pointToLookAt, phase = 0}: Prop = $props();
 	interface Props {
 		DM: DensityMatrix;
+		vectorColor: string | null;
 	}
 
-	let { DM }: Props = $props();
+	let { DM , vectorColor}: Props = $props();
 
 
 	let length = $derived(Math.sqrt(DM.blochV[0] ** 2 + DM.blochV[1] ** 2 + DM.blochV[2] ** 2));
@@ -33,7 +34,12 @@
 		hsl.l = 0.8 - hsl.l;
 		darkCol.setHSL(hsl.h, hsl.s+0.2, hsl.l);	
 
-		color = mode.current === "light" ? lightCol : darkCol;
+		if (vectorColor == null){
+			color = mode.current === "light" ? lightCol : darkCol;
+		}
+		else {
+			color = new Color(vectorColor);
+		}
 		
 	})
 
