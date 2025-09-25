@@ -40,6 +40,7 @@
 		"prettier-plugin-tailwindcss": "^0.6.11",
 		"remark-math": "3",
 		"svelte": "^5.33.13",
+		"svelte-awesome-color-picker": "^4.0.2",
 		"svelte-check": "^4.2.1",
 		"svelte-copy": "^2.0.0",
 		"svelte-sonner": "^1.0.5",
