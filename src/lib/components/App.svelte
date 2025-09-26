@@ -291,7 +291,15 @@
 										bind:hex={settings3DScene.vectorColor}
 										isDialog={false}
 										isOpen={true}
+										isTextInput={true}
+										isAlpha={false}
+										textInputModes={['hex', 'rgb']}
 										--cp-border-color="none"
+										--cp-bg-color="none"
+										--cp-text-color="var(--foreground)"
+										--cp-input-color="var(--muted)"
+										--cp-button-hover-color="var(--input)"
+										--focus-color="var(--foreground)"
 									/>
 								</DropdownMenu.SubContent>
 							</DropdownMenu.Sub>
