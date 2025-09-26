@@ -14,7 +14,7 @@
 
 	let {
         path,
-		pathColor: pathColor,
+		pathColor = $bindable(),
 		previousPosition=false,
     }: Props = $props();
 

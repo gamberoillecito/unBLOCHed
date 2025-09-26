@@ -3,13 +3,18 @@
 	import Palette from '@lucide/svelte/icons/palette';
 	import ColorPicker from 'svelte-awesome-color-picker';
 	import Undo from '@lucide/svelte/icons/undo';
+	import Circle from '@lucide/svelte/icons/circle';
 	interface Props {
 		hexBindColor: string | null;
+		title?: string;
 	}
-    let { hexBindColor = $bindable()} = $props();
+	let { hexBindColor = $bindable(), title = undefined } = $props();
 </script>
 
 <DropdownMenu.SubContent>
+	{#if title}
+		<DropdownMenu.Label>{title}</DropdownMenu.Label>
+	{/if}
 	<DropdownMenu.Item
 		closeOnSelect={false}
 		onclick={() => {
@@ -17,7 +22,12 @@
 		}}><Undo />Restore Default</DropdownMenu.Item
 	>
 	<DropdownMenu.Sub>
-		<DropdownMenu.SubTrigger><Palette /> Pick a Color</DropdownMenu.SubTrigger>
+		<DropdownMenu.SubTrigger
+			><Palette /> Pick a Color {#if hexBindColor}<Circle
+					style={`fill: ${hexBindColor}; stroke: lch(from ${hexBindColor} calc(100 - l) 0 0)`}
+				/>
+			{/if}</DropdownMenu.SubTrigger
+		>
 		<DropdownMenu.SubContent>
 			<ColorPicker
 				bind:hex={hexBindColor}

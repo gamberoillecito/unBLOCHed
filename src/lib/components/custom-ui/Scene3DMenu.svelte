@@ -75,7 +75,7 @@
 		</DropdownMenu.Sub>
 		<DropdownMenu.Sub>
 			<DropdownMenu.SubTrigger>Path Color</DropdownMenu.SubTrigger>
-			<ColorPickerSubmenu bind:hexBindColor={settings3DScene.vectorColor}/>
+			<ColorPickerSubmenu bind:hexBindColor={settings3DScene.pathColor} title="Applied to next path"/>
 		</DropdownMenu.Sub>
 		<DropdownMenu.Separator></DropdownMenu.Separator>
 

@@ -104,7 +104,8 @@
 		displayPaths: true,
 		displayStateLabels: true,
 		displayWatermark: true,
-		vectorColor: null
+		vectorColor: null,
+		pathColor: null,
 	});
 
 	let transparentBackground = $state(false);

@@ -16,7 +16,6 @@
 	import { mode } from 'mode-watcher';
 	import { base } from '$app/paths';
 	import * as culori from 'culori';
-	import { objectDirection } from 'three/tsl';
 
 	export type sceneSettings = {
 		displayAngles: boolean;
@@ -24,6 +23,7 @@
 		displayPaths: boolean;
 		displayWatermark: boolean;
 		vectorColor: string | null;
+		pathColor: string | null;
 	};
 	interface Props {
 		DM: DensityMatrix;
@@ -121,12 +121,7 @@
 	}}
 >
 	<OrbitControls enableDamping enablePan={false} dampingFactor={0.2}>
-		<Gizmo
-			animated={true}
-			size={80}
-			resolution={128}
-			edges={{ scale: 20 }}
-		/>
+		<Gizmo animated={true} size={80} resolution={128} edges={{ scale: 20 }} />
 	</OrbitControls>
 	{#if settings.displayWatermark}
 		<Text
@@ -145,7 +140,7 @@
 		{#if historyEl.path && historyEl.pathVisible && !joystickMode}
 			<Path
 				path={historyEl.path}
-				pathColor={pathGradient[idx % MAX_PATH_COLORS]}
+				pathColor={settings.pathColor ?? pathGradient[idx % MAX_PATH_COLORS]}
 				previousPosition={idx === history.list.length - 1 && SHOW_PATH_HELPERS}
 			></Path>
 		{/if}
