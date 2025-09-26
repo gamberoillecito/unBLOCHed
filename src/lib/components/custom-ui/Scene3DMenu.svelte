@@ -2,12 +2,10 @@
 	import { type sceneSettings } from '$lib/components/Scene.svelte';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import Menu from '@lucide/svelte/icons/menu';
-	import Undo from '@lucide/svelte/icons/undo';
 	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';
-	import Palette from '@lucide/svelte/icons/palette';
-	import ColorPicker from 'svelte-awesome-color-picker';
 	import ImageDown from '@lucide/svelte/icons/image-down';
 	import { toast } from 'svelte-sonner';
+	import ColorPickerSubmenu from './ColorPickerSubmenu.svelte';
 
 	interface Props {
 		settings3DScene: sceneSettings;
@@ -73,33 +71,11 @@
 		<DropdownMenu.Separator></DropdownMenu.Separator>
 		<DropdownMenu.Sub>
 			<DropdownMenu.SubTrigger>Vector Color</DropdownMenu.SubTrigger>
-			<DropdownMenu.SubContent>
-				<DropdownMenu.Item
-					closeOnSelect={false}
-					onclick={() => {
-						settings3DScene.vectorColor = null;
-					}}><Undo />Restore Default</DropdownMenu.Item
-				>
-				<DropdownMenu.Sub>
-					<DropdownMenu.SubTrigger><Palette /> Pick a Color</DropdownMenu.SubTrigger>
-					<DropdownMenu.SubContent>
-						<ColorPicker
-							bind:hex={settings3DScene.vectorColor}
-							isDialog={false}
-							isOpen={true}
-							isTextInput={true}
-							isAlpha={false}
-							textInputModes={['hex', 'rgb']}
-							--cp-border-color="none"
-							--cp-bg-color="none"
-							--cp-text-color="var(--foreground)"
-							--cp-input-color="var(--muted)"
-							--cp-button-hover-color="var(--input)"
-							--focus-color="var(--foreground)"
-						/>
-					</DropdownMenu.SubContent>
-				</DropdownMenu.Sub>
-			</DropdownMenu.SubContent>
+			<ColorPickerSubmenu bind:hexBindColor={settings3DScene.vectorColor}/>
+		</DropdownMenu.Sub>
+		<DropdownMenu.Sub>
+			<DropdownMenu.SubTrigger>Path Color</DropdownMenu.SubTrigger>
+			<ColorPickerSubmenu bind:hexBindColor={settings3DScene.vectorColor}/>
 		</DropdownMenu.Sub>
 		<DropdownMenu.Separator></DropdownMenu.Separator>
 
