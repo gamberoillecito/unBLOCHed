@@ -227,7 +227,7 @@
 			
 			<Scene3DMenu
 				{SceneMenuDownloadOpen}
-				{settings3DScene}
+				bind:settings3DScene = {settings3DScene}
 				{getImage}
 				{SceneMenuDownloadTrigger}
 				{transparentBackground}

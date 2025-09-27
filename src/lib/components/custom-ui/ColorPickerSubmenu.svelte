@@ -17,6 +17,7 @@
 	{/if}
 	<DropdownMenu.Item
 		closeOnSelect={false}
+		disabled={hexBindColor === null}
 		onclick={() => {
 			hexBindColor = null;
 		}}><Undo />Restore Default</DropdownMenu.Item

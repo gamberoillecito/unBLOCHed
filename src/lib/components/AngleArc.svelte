@@ -76,7 +76,6 @@
 	);
 	let arcTheta = $derived(createArc(ARC_RADIUS, 0, theta, arc_material));
 	let arcPhi = $derived(createArc(ARC_RADIUS, Math.PI / 2, phi + Math.PI / 2, arc_material));
-	$inspect(phi);
 	$effect(() => {
 		arcPhi.rotation.x = -Math.PI;
 		arcTheta.rotation.y = +phi;

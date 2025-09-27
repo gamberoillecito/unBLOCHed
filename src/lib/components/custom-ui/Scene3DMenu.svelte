@@ -16,7 +16,7 @@
 	}
 
 	let {
-		settings3DScene,
+		settings3DScene = $bindable(),
 		SceneMenuDownloadOpen = $bindable(),
 		SceneMenuDownloadTrigger = $bindable(),
 		transparentBackground = $bindable(),
@@ -59,23 +59,27 @@
 		<Menu />
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content>
-		<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayAngles}
+		<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayAngles} closeOnSelect={false}
 			>Show Angles</DropdownMenu.CheckboxItem
 		>
-		<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayPaths}
+		<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayPaths} closeOnSelect={false}
 			>Show Paths</DropdownMenu.CheckboxItem
 		>
-		<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayStateLabels}
-			>Show Labels</DropdownMenu.CheckboxItem
+		<DropdownMenu.CheckboxItem
+			bind:checked={settings3DScene.displayStateLabels}
+			closeOnSelect={false}>Show Labels</DropdownMenu.CheckboxItem
 		>
 		<DropdownMenu.Separator></DropdownMenu.Separator>
 		<DropdownMenu.Sub>
 			<DropdownMenu.SubTrigger>Vector Color</DropdownMenu.SubTrigger>
-			<ColorPickerSubmenu bind:hexBindColor={settings3DScene.vectorColor}/>
+			<ColorPickerSubmenu bind:hexBindColor={settings3DScene.vectorColor} />
 		</DropdownMenu.Sub>
 		<DropdownMenu.Sub>
 			<DropdownMenu.SubTrigger>Path Color</DropdownMenu.SubTrigger>
-			<ColorPickerSubmenu bind:hexBindColor={settings3DScene.pathColor} title="Applied to next path"/>
+			<ColorPickerSubmenu
+				bind:hexBindColor={settings3DScene.pathColor}
+				title="Applied to next path"
+			/>
 		</DropdownMenu.Sub>
 		<DropdownMenu.Separator></DropdownMenu.Separator>
 
