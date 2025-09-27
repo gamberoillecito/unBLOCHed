@@ -36,8 +36,8 @@ importers:
         specifier: ^14.8.1
         version: 14.8.1
       mathlive:
-        specifier: ^0.107.0
-        version: 0.107.0
+        specifier: file:./packages/mathlive
+        version: file:packages/mathlive
       rehype-katex:
         specifier: ^7.0.1
         version: 7.0.1
@@ -1467,8 +1467,8 @@ packages:
     engines: {node: '>= 18'}
     hasBin: true
 
-  mathlive@0.107.0:
-    resolution: {integrity: sha512-mi6iwBZc/2hi3ui5MedGu/L3XU1dwKWhdwMRZ2CtdSsxwVbRm1WDHKQssczjwxBb7Ae59kL5AMrZnF1XNPY67Q==}
+  mathlive@file:packages/mathlive:
+    resolution: {directory: packages/mathlive, type: directory}
 
   mdsvex@0.12.6:
     resolution: {integrity: sha512-pupx2gzWh3hDtm/iDW4WuCpljmyHbHi34r7ktOqpPGvyiM4MyfNgdJ3qMizXdgCErmvYC9Nn/qyjePy+4ss9Wg==}
@@ -3441,7 +3441,7 @@ snapshots:
       tiny-emitter: 2.1.0
       typed-function: 4.2.1
 
-  mathlive@0.107.0:
+  mathlive@file:packages/mathlive:
     dependencies:
       '@cortex-js/compute-engine': 0.29.1
 
