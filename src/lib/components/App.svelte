@@ -10,6 +10,7 @@
 		GatePath,
 		MatrixParam,
 		print_mat,
+		print_vec,
 		StateVector
 	} from '$lib/components/Model.svelte';
 	import DynamicMatrix from './DynamicMatrix.svelte';
@@ -139,6 +140,12 @@
 	let SceneMenuDownloadOpen = $state(false);
 
 	let screen2xl = new MediaQuery('min-width: 42rem');
+	$effect(()=>{
+		console.log(SV.isConsistent);
+		
+    	console.log(`[${SV.latexMat[0][0]},\n${SV.latexMat[1][0]}]`)
+		print_vec(SV.mat)
+	})
 </script>
 
 {#snippet StateVectorInput()}
@@ -286,7 +293,7 @@
 						{history}
 						{canvasContainer}
 						{gate}
-						disabled={!DM.isConsistent}
+						disabled={!(DM.isConsistent && SV.isConsistent)}
 						withParams={true}
 					/>
 				{/each}
@@ -297,7 +304,7 @@
 						{history}
 						{canvasContainer}
 						{gate}
-						disabled={!DM.isConsistent}
+						disabled={!(DM.isConsistent && SV.isConsistent)}
 						withParams={true}
 					/>
 				{/each}
@@ -317,7 +324,7 @@
 					{history}
 					{canvasContainer}
 					gate={GM}
-					disabled={!(DM.isConsistent && GM.isConsistent)}
+					disabled={!(DM.isConsistent && GM.isConsistent && SV.isConsistent)}
 					withParams={true}
 				/>
 			</div>
