@@ -45,7 +45,7 @@
 		},
 		{
 			content: BlochSphereTutorial,
-			title: 'BlochSphere'
+			title: 'Bloch Sphere'
 		},
 		{
 			content: GatesTutorial,
