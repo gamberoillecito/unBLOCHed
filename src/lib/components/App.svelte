@@ -5,10 +5,12 @@
 	import {
 		DensityMatrix,
 		FakeDensityMatrix,
+		FancyMatrix,
 		GateMatrix,
 		GatePath,
 		MatrixParam,
-		print_mat
+		print_mat,
+		StateVector
 	} from '$lib/components/Model.svelte';
 	import DynamicMatrix from './DynamicMatrix.svelte';
 	import { getContext, onMount, setContext, untrack } from 'svelte';
@@ -25,6 +27,7 @@
 		multiply,
 		equal
 	} from 'mathjs';
+	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import MatrixInfoInput from './MatrixInfoInput.svelte';
 	import { BlochHistory } from './BlochHistory.svelte';
 	import { Separator } from '$lib/components/ui/separator/index.js';
@@ -32,14 +35,17 @@
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import Undo from '@lucide/svelte/icons/undo';
 	import Redo from '@lucide/svelte/icons/redo';
-	import { predefinedGates, predefinedStates, theta_param, ketPlus } from '$lib/data/matrices';
+	import {
+		predefinedGates,
+		predefinedStates,
+		theta_param,
+		ketPlus,
+		ketI
+	} from '$lib/data/matrices';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import { Canvas, type ThrelteContext } from '@threlte/core';
-	import Menu from '@lucide/svelte/icons/menu';
 	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { toast } from 'svelte-sonner';
-	import ImageDown from '@lucide/svelte/icons/image-down';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import { Switch } from '$lib/components/ui/switch/index';
 	import { Label } from '$lib/components/ui/label/index.js';
@@ -49,6 +55,15 @@
 	import GateButtonWithParams from './custom-ui/Buttons/GateButtonWithParams.svelte';
 	import UpdateStateButton from './custom-ui/Buttons/UpdateStateButton.svelte';
 	import { type TutorialPageProps } from '$lib/components/tutorial/tutorialUtils';
+	import DialogDrawer from './custom-ui/DialogDrawer.svelte';
+	import { copy } from 'svelte-copy';
+	import Copy from '@lucide/svelte/icons/copy';
+	import { marked } from 'marked';
+	import DynamicStateVector from './DynamicStateVector.svelte';
+	import * as Tabs from '$lib/components/ui/tabs/index.js';
+	import { MediaQuery } from 'svelte/reactivity';
+	import Scene3DMenu from './custom-ui/Scene3DMenu.svelte';
+
 	const config = {
 		absTol: 1e-10
 	};
@@ -62,7 +77,7 @@
 	let joystickMode = $state(false);
 
 	let DM = $state(ketPlus.clone());
-	DM.label = '\\rho';
+	DM.extendedLabel = '\\rho';
 	let fakeDM = $state(new FakeDensityMatrix());
 	let popoversContext = $state({
 		preventOpening: false
@@ -87,11 +102,11 @@
 	let settings3DScene: sceneSettings = $state({
 		displayAngles: true,
 		displayPaths: true,
-		displayStateLabels: true
+		displayStateLabels: true,
+		displayWatermark: true,
+		vectorColor: null,
+		pathColor: null,
 	});
-
-	let imageData = $state() as string;
-	let requestImage = $state(false);
 
 	let transparentBackground = $state(false);
 
@@ -100,45 +115,68 @@
 	let getImage = $state() as (withBackground?: boolean) => string;
 	let customGateVisible = $state(false);
 
-	function saveImage(
-		getImage: (withBackground?: boolean) => string,
-		withBackground: boolean = true
-	) {
-		if (getImage) {
-			let imgData = getImage(withBackground);
-			// Create a temporary link element
-			const link = document.createElement('a');
-			link.href = imgData;
-			const bgSuffix = withBackground ? '-bg' : 'nobg';
-			link.download = `bloch-sphere-${bgSuffix}-${new Date().toISOString().replace(/:/g, '-')}.png`;
-
-			// Trigger download
-			document.body.appendChild(link);
-			link.click();
-			document.body.removeChild(link);
-			toast.success('Download started', {
-				description: 'Check out your download folder',
-				position: 'bottom-right',
-				closeButton: false
-			});
-		} else {
-			toast.error('Image data not available');
-		}
-	}
-
 	$effect(() => {
 		tutorialProps.DM = DM;
 		tutorialProps.canvasContainer = canvasContainer;
 		tutorialProps.history = history;
 	});
+
+	let SV = DM.SV;
+	SV.extendedLabel = '|\\psi\\rangle';
+
+	// Show a popover when the user disables the watermark to ask for a citation
+	let watermarkDialogOpen = $state(false);
+	$effect(() => {
+		if (settings3DScene.displayWatermark) {
+			return;
+		}
+
+		watermarkDialogOpen = true;
+	});
+
+	//**The element of the scene menu that opens the "Download Image" submenu*/
+	let SceneMenuDownloadTrigger = $state() as HTMLElement;
+	let SceneMenuDownloadOpen = $state(false);
+
+	let screen2xl = new MediaQuery('min-width: 42rem');
 </script>
 
-<!-- <link
-	rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
-	integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn"
-	crossorigin="anonymous"
-/> -->
+{#snippet StateVectorInput()}
+	<div class="relative m-1 h-fit w-fit">
+		<div class={DM.getStateVector() == null ? 'opacity-0' : ''}>
+			<DynamicMatrix
+				FM={SV}
+				instantUpdate={false}
+				onChangeCallback={(SV, oldSV, args: { history: BlochHistory; DM: DensityMatrix }) => {
+					let newMatrix = (SV as StateVector).getDM();
+					let oldDM = args.DM.clone();
+					args.DM.setMatrixValue(newMatrix);
+					// args.history.addElement(oldDM, args.DM);
+				}}
+				onChangeArguments={{ history, DM }}
+			/>
+		</div>
+		<div
+			class={`${DM.getStateVector() != null ? 'opacity-0' : ''} bg-muted pointer-events-none absolute top-0 left-0 z-10 flex h-full w-full items-center justify-center rounded-md border p-1 text-center backdrop-blur-sm`}
+		>
+			<p class="text-muted-foreground text-xs">
+				Mixed states cannot be represented by a state vector.
+			</p>
+		</div>
+	</div>
+{/snippet}
+
+{#snippet DynamicMatrixInput()}
+	<DynamicMatrix
+		FM={DM}
+		instantUpdate={false}
+		onChangeCallback={(FM, oldFM, history: BlochHistory) => {
+			history.addElement(oldFM as DensityMatrix, FM as DensityMatrix);
+			// console.log((FM as DensityMatrix).stateVector);
+		}}
+		onChangeArguments={history}
+	></DynamicMatrix>
+{/snippet}
 
 <div
 	class="flex h-full w-full flex-col place-items-center content-evenly justify-start gap-2 p-1 @lg:flex-row @lg:place-items-center @lg:justify-center-safe"
@@ -186,42 +224,15 @@
 					></Scene>
 				</Canvas>
 			</div>
+			
+			<Scene3DMenu
+				{SceneMenuDownloadOpen}
+				bind:settings3DScene = {settings3DScene}
+				{getImage}
+				{SceneMenuDownloadTrigger}
+				{transparentBackground}
+			/>
 
-			<DropdownMenu.Root>
-				<DropdownMenu.Trigger
-					name="menu"
-					aria-label="menu"
-					class="absolute top-[0] right-0 z-[9999] p-2 ${buttonVariants.variants.variant
-						.secondary} "
-				>
-					<Menu />
-				</DropdownMenu.Trigger>
-				<DropdownMenu.Content>
-					<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayAngles}
-						>Show Angles</DropdownMenu.CheckboxItem
-					>
-					<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayPaths}
-						>Show Paths</DropdownMenu.CheckboxItem
-					>
-					<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayStateLabels}
-						>Show Labels</DropdownMenu.CheckboxItem
-					>
-					<DropdownMenu.Separator></DropdownMenu.Separator>
-
-					<DropdownMenu.Sub>
-						<DropdownMenu.SubTrigger>Export Image</DropdownMenu.SubTrigger>
-						<DropdownMenu.SubContent>
-							<DropdownMenu.CheckboxItem bind:checked={transparentBackground} closeOnSelect={false}>
-								Transparent Background
-							</DropdownMenu.CheckboxItem>
-							<DropdownMenu.Separator />
-							<DropdownMenu.Item onclick={() => saveImage(getImage, !transparentBackground)}>
-								<ImageDown /> Download
-							</DropdownMenu.Item>
-						</DropdownMenu.SubContent>
-					</DropdownMenu.Sub>
-				</DropdownMenu.Content>
-			</DropdownMenu.Root>
 			<!-- Toggle to switch between normal and joystick mode -->
 			<div class="m-auto flex min-h-0 w-fit shrink items-center space-x-1 p-2">
 				<Switch id="current-mode" bind:checked={joystickMode} />
@@ -232,31 +243,31 @@
 	<!-- Buttons and matrices -->
 	{#if !joystickMode}
 		<ScrollArea class="min-h-0 shrink p-2 @lg:min-h-auto" type="scroll">
-			<div class="flex flex-col items-center">
-				<h4 class="w-fit self-start">Density Matrix</h4>
-				<DynamicMatrix
-					FM={DM}
-					instantUpdate={false}
-					onChangeCallback={(FM, oldFM, history: BlochHistory) => {
-						history.addElement(oldFM as DensityMatrix, FM as DensityMatrix);
-					}}
-					onChangeArguments={history}
-				></DynamicMatrix>
-				{#if false}
-					<textarea style="height: 300px; width: 400px">
-						{`DM = \n[${DM.mat[0][0]}, ${DM.mat[0][1]}] \n[${DM.mat[1][0]}, ${DM.mat[1][1]}]
-				
-				Phase = ${DM.phi}
-				
-				DM latex = \n ${DM.latexMult} \n[${DM.latexMat[0][0]}, ${DM.latexMat[0][1]}] \n[${DM.latexMat[1][0]}, ${DM.latexMat[1][1]}]
-				
-				GM = \n[${GM.mat[0][0]}, ${GM.mat[0][1]}] \n[${GM.mat[1][0]}, ${GM.mat[1][1]}]
-				
-				GM latex = \n ${GM.latexMult} \n[${GM.latexMat[0][0]}, ${GM.latexMat[0][1]}] \n[${GM.latexMat[1][0]}, ${GM.latexMat[1][1]}]
-					`}
-					</textarea>
-				{/if}
-			</div>
+			<!-- We need both the svelte media query with the if and the tailwind @2xl: because svelte hides the error popover
+			 of the not-visible input and tailwind is more responsive when the website loads -->
+			{#if true}
+				<!-- <Tabs.Root value="dm" class="max-w-[400px] items-center @2xl:hidden"> -->
+				<Tabs.Root value="dm" class="max-w-[400px] items-center ">
+					<Tabs.List>
+						<Tabs.Trigger value="dm">Density Matrix</Tabs.Trigger>
+						<Tabs.Trigger value="dv">State Vector</Tabs.Trigger>
+					</Tabs.List>
+					<Tabs.Content value="dm">{@render DynamicMatrixInput()}</Tabs.Content>
+					<Tabs.Content value="dv">{@render StateVectorInput()}</Tabs.Content>
+				</Tabs.Root>
+			{:else}
+				<div class="hidden flex-row justify-center gap-2 @2xl:flex">
+					<div class="flex flex-col items-center">
+						<h4 class="w-fit self-start">Density Matrix</h4>
+						{@render DynamicMatrixInput()}
+					</div>
+					<Separator orientation="vertical" class="h-full" />
+					<div class="flex flex-col items-center">
+						<h4 class="w-fit self-start">State Vector</h4>
+						{@render StateVectorInput()}
+					</div>
+				</div>
+			{/if}
 			<Separator class=""></Separator>
 			<h4>States</h4>
 			<!-- Standard states -->
@@ -268,7 +279,7 @@
 			<Separator class=""></Separator>
 			<h4>Gates</h4>
 			<!-- Standard gates (no parameters) -->
-			<div class="m-3 flex flex-wrap justify-center gap-2 @lg:max-w-[400px]">
+			<div class="m-3 mx-auto flex flex-wrap justify-center gap-2 @lg:max-w-[400px]">
 				{#each predefinedGates.filter((g) => g.parameterArray.length === 0) as gate}
 					<GateButtonWithParams
 						{DM}
@@ -315,3 +326,57 @@
 		<JoystickControls DM={fakeDM} bind:joystickMode />
 	{/if}
 </div>
+
+{#snippet copyText(text: string)}
+	<button use:copy={text}>
+		<p
+			class="items-top bg-muted text-muted-foreground inline-flex gap-2 rounded-[0.4rem] px-2 font-mono break-all shadow hover:brightness-110"
+		>
+			{text}
+			<Copy class="mt-1 size-3" />
+		</p>
+	</button>
+{/snippet}
+
+<AlertDialog.Root bind:open={watermarkDialogOpen}>
+	<AlertDialog.Content
+		class="z-99999"
+		onCloseAutoFocus={(e) => {
+			e.preventDefault();
+			SceneMenuDownloadTrigger?.focus();
+		}}
+	>
+		<AlertDialog.Header>
+			<AlertDialog.Title>The watermark helps others find this website</AlertDialog.Title>
+			<AlertDialog.Description class="prose-sm dark:prose-invert">
+				If you want to remove it, please include a reference to it in one of the following ways:
+				<ul>
+					<li>
+						Link to the website: <br />
+						{@render copyText('https://unBLOCHed.xyz')}
+					</li>
+					<li>
+						Link to the GitHub repository:<br />
+						{@render copyText('https://github.com/gamberoillecito/unBLOCHed/')}
+					</li>
+					<li>DOI: <br /> {@render copyText('https://doi.org/10.5281/zenodo.17087795')}</li>
+				</ul>
+			</AlertDialog.Description>
+		</AlertDialog.Header>
+		<AlertDialog.Footer>
+			<AlertDialog.Cancel
+				onclick={() => {
+					settings3DScene.displayWatermark = false;
+					SceneMenuDownloadOpen = true;
+				}}>Remove</AlertDialog.Cancel
+			>
+			<AlertDialog.Action
+				onclick={() => {
+					settings3DScene.displayWatermark = true;
+					SceneMenuDownloadOpen = true;
+					watermarkDialogOpen = false;
+				}}>Keep</AlertDialog.Action
+			>
+		</AlertDialog.Footer>
+	</AlertDialog.Content>
+</AlertDialog.Root>

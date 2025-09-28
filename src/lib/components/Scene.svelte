@@ -7,7 +7,7 @@
 	import { boolean, complex, number, sign, type Complex } from 'mathjs';
 	import SolidVector from './SolidVector.svelte';
 	import Path from './Path.svelte';
-	import { PerspectiveCamera, Color } from 'three';
+	import { PerspectiveCamera, Color, Object3D } from 'three';
 	import { generateGradient } from 'typescript-color-gradient';
 	import type { DensityMatrix, GatePath } from './Model.svelte';
 	import AngleArc from './AngleArc.svelte';
@@ -21,6 +21,9 @@
 		displayAngles: boolean;
 		displayStateLabels: boolean;
 		displayPaths: boolean;
+		displayWatermark: boolean;
+		vectorColor: string | null;
+		pathColor: string | null;
 	};
 	interface Props {
 		DM: DensityMatrix;
@@ -55,6 +58,9 @@
 		'#ff00bf',
 		'#ff0018'
 	];
+	// Set Z as the "up" direction
+	Object3D.DEFAULT_UP.set(0, 0, 1);
+
 	let pathGradient = generateGradient(colors_hex, MAX_PATH_COLORS);
 	const { renderer, scene, renderStage, autoRenderTask, canvas } = useThrelte();
 	let camera = $state() as PerspectiveCamera;
@@ -99,6 +105,7 @@
 		return data;
 	}
 
+	const watermark = 'unBLOCHed.xyz';
 	getImage = downloadImage;
 </script>
 
@@ -114,31 +121,26 @@
 	}}
 >
 	<OrbitControls enableDamping enablePan={false} dampingFactor={0.2}>
-		<Gizmo
-			animated={true}
-			y={{ label: 'Z' }}
-			z={{ label: 'Y' }}
-			size={80}
-			resolution={128}
-			edges={{ scale: 20 }}
-		/>
+		<Gizmo animated={true} size={80} resolution={128} edges={{ scale: 20 }} />
 	</OrbitControls>
-	<Text
-		position={[0.6, -0.6, -10]}
-		anchorX="right"
-		color="gray"
-		text="unBLOCHed"
-		anchorY="baseline"
-		textAlign="right"
-		scale={0.4}
-	/>
+	{#if settings.displayWatermark}
+		<Text
+			position={[0.62, -0.58, -10]}
+			anchorX="right"
+			color="gray"
+			text={watermark}
+			anchorY="baseline"
+			textAlign="right"
+			scale={0.45}
+		/>
+	{/if}
 </T.PerspectiveCamera>
 {#if settings.displayPaths}
 	{#each history.list as historyEl, idx}
 		{#if historyEl.path && historyEl.pathVisible && !joystickMode}
 			<Path
 				path={historyEl.path}
-				pathColor={pathGradient[idx % MAX_PATH_COLORS]}
+				pathColor={settings.pathColor ?? pathGradient[idx % MAX_PATH_COLORS]}
 				previousPosition={idx === history.list.length - 1 && SHOW_PATH_HELPERS}
 			></Path>
 		{/if}
@@ -165,7 +167,7 @@
 {/if}
 
 <BlochSphere></BlochSphere>
-<SolidVector {DM}></SolidVector>
+<SolidVector {DM} vectorColor={settings.vectorColor}></SolidVector>
 {#if settings.displayAngles}
 	<AngleArc vector={DM.blochV}></AngleArc>
 {/if}

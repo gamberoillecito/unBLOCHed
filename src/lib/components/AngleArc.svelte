@@ -9,6 +9,9 @@
 		LineBasicMaterial,
 		LineDashedMaterial,
 		Material,
+
+		AxesHelper
+
 	} from 'three';
 	import { Billboard, SVG } from '@threlte/extras';
 	import { mode } from 'mode-watcher';
@@ -23,8 +26,8 @@
 	// Example usage
 	const origin = new Vector3(0, 0, 0);
 	const Xaxis = new Vector3(1, 0, 0);
-	const Yaxis = new Vector3(0, 0, 1);
-	const Zaxis = new Vector3(0, 1, 0);
+	const Yaxis = new Vector3(0, 1, 0);
+	const Zaxis = new Vector3(0, 0, 1);
 
 	const ARC_RADIUS = 0.2; // Radius of the arcs
 	const LINE_RADIUS = 1; // Radius at which the lines connected to the arcs should end
@@ -64,26 +67,28 @@
 		return new Line(geometry, material).computeLineDistances();
 	}
 
-	let blochVector = $derived(new Vector3(...vector).normalize()); // Replace with your Bloch vector
-	let theta = $derived(Math.acos(blochVector.y));
+	let blochVector = $derived(new Vector3(...vector).normalize());
+	let theta = $derived(Math.acos(blochVector.z));
 	let phi = $derived(
-		blochVector.z >= 0
-			? Math.atan2(blochVector.z, blochVector.x)
-			: Math.atan2(blochVector.z, blochVector.x) + 2 * Math.PI
+		blochVector.y >= 0
+			? Math.atan2(blochVector.y, blochVector.x)
+			: Math.atan2(blochVector.y, blochVector.x) + 2 * Math.PI
 	);
 	let arcTheta = $derived(createArc(ARC_RADIUS, 0, theta, arc_material));
-	let arcPhi = $derived(createArc(ARC_RADIUS, 0, phi, arc_material));
+	let arcPhi = $derived(createArc(ARC_RADIUS, Math.PI / 2, phi + Math.PI / 2, arc_material));
 	$effect(() => {
-		arcTheta.rotation.y = -phi;
-		arcPhi.rotation.x = -Math.PI / 2;
-		arcPhi.rotation.z = -Math.PI / 2;
+		arcPhi.rotation.x = -Math.PI;
+		arcTheta.rotation.y = +phi;
+		// arcTheta.rotation.z = -Math.PI/2 
+		// arcTheta.rotation.y = -Math.PI/2;
+		arcTheta.rotation.x = Math.PI/2
 	});
 
 	// Coordinates of the point on the equatorial plane that lays below the Bloch vector
 	// at distance RADIUS from the origin
-	let BVProjectionAtRADIUS: Vector3 = $derived(blochVector.clone().setComponent(1, 0));
+	let BVProjectionAtRADIUS: Vector3 = $derived(blochVector.clone().setComponent(2, 0));
 
-	//  Line from the origin towards the z axis
+	//  Line from the origin towards the x axis
 	let XLine = $derived(createSegment(origin, Xaxis.clone().setLength(LINE_RADIUS), dash_material));
 	// Line from the origin towards the z axis
 	let ZLine = $derived(createSegment(origin, Zaxis.clone().setLength(LINE_RADIUS), dash_material));
@@ -96,7 +101,7 @@
 
 	// Operations needed to correctly place the label for the theta angle
 	const rotAxis = $derived(
-		Xaxis.clone().applyMatrix4(new Matrix4().makeRotationAxis(Zaxis, Math.PI / 2 - phi))
+		Xaxis.clone().applyMatrix4(new Matrix4().makeRotationAxis(Zaxis, Math.PI / 2 + phi))
 	);
 	const rotationMatrix = $derived(new Matrix4().makeRotationAxis(rotAxis, -theta / 2));
 	let midTheta = $derived(
@@ -108,7 +113,7 @@
 </script>
 
 <T.Line is={arcPhi}></T.Line>
-<T.Line is={arcTheta}></T.Line>
+<T.Line is={arcTheta}> </T.Line>
 
 <!-- Line from the origin towards the x axis -->
 <T is={XLine}></T>
@@ -128,15 +133,15 @@
 {#if phi > THRESHOLD_ANGLE}
 	<Billboard
 		follow={true}
-		position.x={ARC_RADIUS * 1.2 * Math.cos(phi / 2)}
-		position.z={ARC_RADIUS * 1.2 * Math.sin(phi / 2)}
+		position.x={ARC_RADIUS * 1.4 * Math.cos(phi / 2)}
+		position.y={ARC_RADIUS * 1.4 * Math.sin(phi / 2)}
 	>
 		<SVG src={`${base}/${mode.current}/phi.svg`} scale={0.0001} position={[-0.04, 0, 0]} />
 	</Billboard>
 {/if}
 
 {#if theta > THRESHOLD_ANGLE}
-	<Billboard follow={true} position.y={midTheta.y} position.x={midTheta.x} position.z={midTheta.z}>
+	<Billboard follow={true} position.z={midTheta.z} position.x={midTheta.x} position.y={midTheta.y}>
 		<SVG src={`${base}/${mode.current}/theta.svg`} scale={0.0001} position={[-0.02, 0, 0]} />
 	</Billboard>
 {/if}

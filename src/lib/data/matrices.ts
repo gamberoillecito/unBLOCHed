@@ -112,16 +112,16 @@
 	);
 	export const ketI = new DensityMatrix(
 		[
-			['1', 'i'],
-			['-i', '1']
+			['1', '-i'],
+			['i', '1']
 		],
 		'\\frac{1}{2}',
 		'|i\\rangle'
 	);
 	export const ketMinI = new DensityMatrix(
 		[
-			['1', '-i'],
-			['i', '1']
+			['1', 'i'],
+			['-i', '1']
 		],
 		'\\frac{1}{2}',
 		'|-i\\rangle'

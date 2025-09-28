@@ -85,7 +85,6 @@
 	);
 
 	let rememberReadingPos = $state(prefs.rememberReadingPosition);
-	$inspect(rememberReadingPos);
 	$effect(() => {
 		preferences.update((x) => ({
 			...x,
