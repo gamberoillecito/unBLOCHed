@@ -167,11 +167,12 @@
 			for (let i = 0; i < FM.nRows; i++) {
 				for (let j = 0; j < FM.nCols; j++) {
 					let newValue: string = FM.latexMat[i][j];
-					mf.setPromptValue(`m${i}${j}`, newValue, {});
+					mf.setPromptValue(`m${i}${j}`, newValue, {silenceNotifications: true});
 				}
 			}
-			mf.setPromptValue(`mult`, FM.latexMult, {});
+			mf.setPromptValue(`mult`, FM.latexMult, { silenceNotifications: true });
 			FM.isConsistent = true;
+			undoChangesButtonEnabled = false;
 		});
 
 		return () => {};

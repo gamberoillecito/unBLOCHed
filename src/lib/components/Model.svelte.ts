@@ -28,6 +28,9 @@ class MatrixValidity {
 export function print_mat(mat: ComplexMatRxC<2, 2>) {
     console.log(`[${mat[0][0]}, ${mat[0][1]},\n${mat[1][0]}, ${mat[1][1]}]`)
 }
+export function print_vec(mat: ComplexMat) {
+    console.log(`[${mat[0][0]},\n${mat[1][0]}]`)
+}
 
 function dagger(mat: ComplexMat | math.Matrix) {
     return math.conj(math.transpose(mat))
