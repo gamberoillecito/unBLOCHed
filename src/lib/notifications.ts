@@ -77,7 +77,7 @@ function scheduleIssueNotification() {
                         preferences.update((x) => ({ ...x, notifications: { ...x.notifications, issuesOpened: true } }));
                     }
                 },
-                description: 'Report it on GitHub!',
+                description: 'Report them on GitHub!',
                 duration: NOTIFICATION_DURATION_ms,
                 onDismiss: () =>
                     preferences.update((x) => ({ ...x, notifications: { ...x.notifications, issuesCancelledTimes: x.notifications.issuesCancelledTimes + 1 } }))
