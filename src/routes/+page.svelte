@@ -22,7 +22,7 @@
 	import Shrimp from '@lucide/svelte/icons/shrimp';
 
 	let showWelcomeAtStart = get(preferences).showWelcomeAtStart ?? true;
-	// Get user preferences regarding the state of the sidebar with the tutorial and keep them 
+	// Get user preferences regarding the state of the sidebar with the tutorial and keep them
 	// up to date every time the tutorial is opened or closed so that when the user comes back
 	// will find the tutorial in the same state as they left it
 	let tutorialVisible = $state(get(preferences).tutorial?.open ?? false);
@@ -47,6 +47,63 @@
 	onMount(() => {
 		window.scrollY = 300;
 		window.MathfieldElement.soundsDirectory = null;
+		window.mathVirtualKeyboard.layouts = {
+			label: 'Basic',
+			rows: [
+				['[undo]', '[redo]'],
+				[
+					'[7]',
+					'[8]',
+					'[9]',
+					'[+]',
+					{ label: '[separator]', width: 0.5 },
+					'\\theta',
+					'\\alpha',
+					'\\varphi',
+					'\\pi',
+					'e',
+					'i'
+				],
+				[
+					'[4]',
+					'[5]',
+					'[6]',
+					'[-]',
+					{ label: '[separator]', width: 0.5 },
+					'[(]',
+					'[)]',
+					'\\sqrt{#0}',
+					{ latex: '\\frac{#@}{#?}', class: 'small' },
+					'#@^{#?}',
+					'e^{i#0}'
+				],
+				[
+					'[1]',
+					'[2]',
+					'[3]',
+					'\\cdot',
+					{ label: '[separator]', width: 0.5 },
+					'[',
+					']',
+
+					'[separator]',
+					'[separator]',
+					{ label: '[backspace]', width: 2 }
+				],
+				[
+					{ label: '[0]', width: 2 },
+					'[.]',
+					'/',
+					{ label: '[separator]', width: 0.5 },
+					'\\lbrace',
+					'\\rbrace',
+					'[separator]',
+					'[separator]',
+					'[left]',
+					'[right]'
+				]
+			]
+		};
 		loaded = true;
 		// Show a welcome message respecting user preferences
 		if (showWelcomeAtStart) {
@@ -90,24 +147,26 @@
 			<Button
 				variant="ghost"
 				size="default"
-				onclick={(e:Event) => {
+				onclick={(e: Event) => {
 					welcomeMessageOpen = !welcomeMessageOpen;
 				}}
 				aria-label="info about website"
-				class="group scale-80 md:scale-100 hover:bg-white/0"
+				class="group scale-80 hover:bg-white/0 md:scale-100"
 			>
-			<Info
-				class="h-[1.2rem] w-[1.2rem]  scale-100 rotate-0 !transition-all delay-3000 duration-500 group-hover:scale-0 group-hover:-rotate-180"
-			/>
-			<Shrimp
-				class="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-180 stroke-background !transition-all delay-3000 duration-500 group-hover:scale-100 group-hover:rotate-0"
-			/>
+				<Info
+					class="h-[1.2rem] w-[1.2rem]  scale-100 rotate-0 !transition-all delay-3000 duration-500 group-hover:scale-0 group-hover:-rotate-180"
+				/>
+				<Shrimp
+					class="stroke-background absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-180 !transition-all delay-3000 duration-500 group-hover:scale-100 group-hover:rotate-0"
+				/>
 			</Button>
 		</div>
 		<Toggle
 			variant="outline"
 			bind:pressed={tutorialVisible}
-			class="{tutorialVisible ? 'max-md:order-first' : 'hidden'}  md:flex {loaded ? '' : 'opacity-0'}"
+			class="{tutorialVisible ? 'max-md:order-first' : 'hidden'}  md:flex {loaded
+				? ''
+				: 'opacity-0'}"
 		>
 			<CircleQuestionMark />
 			Tutorial
