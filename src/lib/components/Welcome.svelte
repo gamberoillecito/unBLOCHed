@@ -78,15 +78,14 @@
 	{/snippet}
 	{#snippet drawerContent()}
 		<Drawer.Header class="text-left">
-			<Drawer.Title class="font-light">Welcome to <Title subtitle={false} />!</Drawer.Title>
+			<Drawer.Title class="font-light text-xl">Welcome to <Title subtitle={false} />!</Drawer.Title>
 			<Drawer.Description>
 				{DESCRIPTION}
-				<Alert.Root variant="default" class="mx-auto mt-4 max-w-[95%]">
+				<Alert.Root variant="warning" class="mx-auto mt-4 max-w-[95%]">
 					<MonitorSmartphone />
-					<Alert.Title>Small screens</Alert.Title>
 					<Alert.Description>
 						The tutorial panel is not available on smaller screens.
-            Open the website on a PC for the full list of features!
+            Visit this website on your PC for a better experience
 					</Alert.Description>
 				</Alert.Root>
 			</Drawer.Description>
