@@ -128,4 +128,48 @@ export const U3gate = new GateMatrix(
 		'|-i\\rangle'
 	);
 	export const predefinedGates = [Xgate, Ygate, Zgate, Hgate, RXgate, RYgate, RZgate, U3gate];
-	export const predefinedStates = [ket0, ket1, ketPlus, ketMinus, ketI, ketMinI];
+export const predefinedStates = [ket0, ket1, ketPlus, ketMinus, ketI, ketMinI];
+	
+function randomPointInUnitBall(): [number, number, number] {
+	let x: number, y: number, z: number, s: number;
+	do {
+		x = Math.random() * 2 - 1;
+		y = Math.random() * 2 - 1;
+		z = Math.random() * 2 - 1;
+		s = x * x + y * y + z * z;
+	} while (s === 0 || s > 1);
+
+	// Normalize to unit sphere
+	const scale = Math.cbrt(Math.random()) / Math.sqrt(s);
+	return [x * scale, y * scale, z * scale];
+}
+
+function randomPointOnUnitSphere(): [number, number, number] {
+	const u = Math.random();
+	const v = Math.random();
+	const theta = 2 * Math.PI * u;
+	const phi = Math.acos(2 * v - 1);
+	const x = Math.sin(phi) * Math.cos(theta);
+	const y = Math.sin(phi) * Math.sin(theta);
+	const z = Math.cos(phi);
+	return [x, y, z];
+}
+
+export function randomDensityMatrix(isPure = false): DensityMatrix {
+	const [x, y, z] = isPure ? randomPointOnUnitSphere() : randomPointInUnitBall();
+
+	const mat: [[Complex, Complex], [Complex, Complex]] = [
+		[complex((1 + z) / 2, 0), complex(x / 2, -y / 2)],
+		[complex(x / 2, y / 2), complex((1 - z) / 2, 0)]
+	];
+
+	// Create dummy latex values, since we are providing the math matrix directly.
+	const latexMat = [
+		['', ''],
+		['', '']
+	];
+	const dm = new DensityMatrix(latexMat, '1', 'ρ_rand', [], mat);
+	// also update latex from the matrix
+	dm.setMatrixValue(mat);
+	return dm;
+}

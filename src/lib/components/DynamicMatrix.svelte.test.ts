@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { DensityMatrix, FancyMatrix, type ComplexMat2x2<2, 2 > <2, 2 > } from "./Model.svelte";
+import { DensityMatrix, FancyMatrix, type ComplexMatRxC } from "./Model.svelte";
 import { complex } from "mathjs";
 
 test('FancyMatrix', () => {
@@ -19,7 +19,7 @@ test('FancyMatrix', () => {
     expect(res.isValid).toBe(false);
 
     // Check validation and setting of matrix from value
-    let expectedValueMat = [[complex(1), complex('i')], [complex(1), complex(0)]] as ComplexMat2x2<2, 2> < 2, 2 >;
+    let expectedValueMat = [[complex(1), complex('i')], [complex(1), complex(0)]] as ComplexMatRxC<2, 2>;
     res = FM.setMatrixValue(expectedValueMat);
     expect(res.isValid).toBe(true)
 
@@ -46,7 +46,7 @@ test('DensityMatrix', () => {
     expect(FM.latexMat[0][0]).toBe('1')
 
     // // Check validation and setting of matrix from value
-    // let expectedValueMat = [[complex(1), complex('i')], [complex(1), complex(0)]] as ComplexMat2x2<2,2><2,2>;
+    // let expectedValueMat = [[complex(1), complex('i')], [complex(1), complex(0)]] as ComplexMatRxC<2,2>;
     // res = FM.setMatrixValue(expectedValueMat);
     // expect(res.isValid).toBe(true)
 

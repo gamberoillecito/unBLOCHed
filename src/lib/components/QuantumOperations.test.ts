@@ -1,5 +1,5 @@
 import { test, expect, describe, vi } from 'vitest';
-import { DensityMatrix, GateMatrix, type ComplexMat2x2, MatrixParam } from './Model.svelte';
+import { DensityMatrix, GateMatrix, type ComplexMat, type ComplexMatRxC, MatrixParam } from './Model.svelte';
 import {
 	Hgate,
 	Zgate,
@@ -108,7 +108,7 @@ describe('Quantum Gate Operations', () => {
 				'1',
 				'ψ'
 			);
-			const originalMat = state.mat.map((row) => row.map((el) => complex(el))) as ComplexMat2x2;
+			const originalMat = state.mat.map((row) => row.map((el) => complex(el))) as ComplexMatRxC<2, 2>;
 
 			const iGate = new GateMatrix(
 				[
@@ -317,8 +317,8 @@ describe('Quantum Gate Operations', () => {
 			if (xAxis && yAxis && zAxis) {
 				// X gate should rotate around x-axis
 				expect(Math.abs(xAxis[0])).toBeGreaterThan(0.9);
-				// Z gate should rotate around z-axis (index 1 due to coordinate swap)
-				expect(Math.abs(zAxis[1])).toBeGreaterThan(0.9);
+				// Z gate should rotate around z-axis 
+				expect(Math.abs(zAxis[2])).toBeGreaterThan(0.9);
 			}
 		});
 	});
@@ -333,14 +333,14 @@ describe('Bloch Vector Operations', () => {
 					['1', '0'],
 					['0', '0']
 				],
-				expectedBloch: [0, 1, 0]
+				expectedBloch: [0, 0 ,1]
 			}, // |0⟩
 			{
 				state: [
 					['0', '0'],
 					['0', '1']
 				],
-				expectedBloch: [0, -1, 0]
+				expectedBloch: [0, 0, -1]
 			}, // |1⟩
 			{
 				state: [
@@ -511,7 +511,7 @@ describe('Quantum State Properties', () => {
 			'1',
 			'mixed'
 		);
-		const result = mixedDM.validateMatrix(mixedDM.mat);
+		const result = mixedDM.validateMatrix(mixedDM.mat as ComplexMatRxC<2, 2>);
 		expect(result.isValid).toBe(true);
 
 		// Test pure state (eigenvalues should be [0, 1])
@@ -523,7 +523,7 @@ describe('Quantum State Properties', () => {
 			'1',
 			'pure'
 		);
-		const pureResult = pureDM.validateMatrix(pureDM.mat);
+		const pureResult = pureDM.validateMatrix(pureDM.mat as ComplexMatRxC<2, 2>);
 		expect(pureResult.isValid).toBe(true);
 	});
 });

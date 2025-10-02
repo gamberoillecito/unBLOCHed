@@ -7,7 +7,8 @@ import {
 	MatrixParam,
 	GatePath,
 	print_mat,
-	type ComplexMat2x2
+	type ComplexMat,
+	type ComplexMatRxC
 } from './Model.svelte';
 import { complex, identity, multiply, conj, transpose, equal } from 'mathjs';
 
@@ -65,7 +66,7 @@ describe('FancyMatrix', () => {
 	});
 
 	test('should validate matrix correctly', () => {
-		const validMat: ComplexMat2x2 = [
+		const validMat: ComplexMatRxC<2,2> = [
 			[complex(1), complex(0)],
 			[complex(0), complex(1)]
 		];
@@ -91,7 +92,7 @@ describe('FancyMatrix', () => {
 			'1',
 			'test'
 		);
-		const invalidMat: ComplexMat2x2 = [
+		const invalidMat: ComplexMatRxC<2,2>  = [
 			[complex(Infinity), complex(0)],
 			[complex(0), complex(1)]
 		];
@@ -110,7 +111,7 @@ describe('FancyMatrix', () => {
 			'1',
 			'test'
 		);
-		const newMat: ComplexMat2x2 = [
+		const newMat: ComplexMatRxC<2,2>  = [
 			[complex(1), complex(2)],
 			[complex(3), complex(4)]
 		];
@@ -208,7 +209,7 @@ describe('DensityMatrix', () => {
 			'1',
 			'ρ'
 		);
-		const validResult = dm.validateMatrix(dm.mat);
+		const validResult = dm.validateMatrix(dm.mat as ComplexMatRxC<2, 2>);
 
 		expect(validResult.isValid).toBe(true);
 	});
@@ -222,7 +223,7 @@ describe('DensityMatrix', () => {
 			'1',
 			'ρ'
 		);
-		const invalidMat: ComplexMat2x2 = [
+		const invalidMat: ComplexMatRxC<2,2>  = [
 			[complex(2), complex(0)],
 			[complex(0), complex(0)]
 		];
@@ -240,7 +241,7 @@ describe('DensityMatrix', () => {
 			'1',
 			'ρ'
 		);
-		const nonHermitian: ComplexMat2x2 = [
+		const nonHermitian: ComplexMatRxC<2,2>  = [
 			[complex(0.5), complex(1)],
 			[complex(0), complex(0.5)]
 		];
@@ -262,8 +263,8 @@ describe('DensityMatrix', () => {
 		const blochV = dm.blochV;
 
 		expect(blochV[0]).toBeCloseTo(0); // x
-		expect(blochV[1]).toBeCloseTo(1); // z (swapped with y in code)
-		expect(blochV[2]).toBeCloseTo(0); // y (swapped with z in code)
+		expect(blochV[1]).toBeCloseTo(0); // y 
+		expect(blochV[2]).toBeCloseTo(1); // z 
 	});
 
 	test('should calculate Bloch vector correctly for |1⟩ state', () => {
@@ -278,8 +279,8 @@ describe('DensityMatrix', () => {
 		const blochV = dm.blochV;
 
 		expect(blochV[0]).toBeCloseTo(0); // x
-		expect(blochV[1]).toBeCloseTo(-1); // z
-		expect(blochV[2]).toBeCloseTo(0); // y
+		expect(blochV[1]).toBeCloseTo(0); // y
+		expect(blochV[2]).toBeCloseTo(-1); // z
 	});
 
 	test('should detect pure state correctly', () => {
@@ -346,8 +347,8 @@ describe('FakeDensityMatrix', () => {
 		const blochV = fdm.blochV;
 
 		expect(blochV[0]).toBeCloseTo(0); // x
-		expect(blochV[1]).toBeCloseTo(1); // z
-		expect(blochV[2]).toBeCloseTo(0); // y
+		expect(blochV[1]).toBeCloseTo(0); // y
+		expect(blochV[2]).toBeCloseTo(1); // z
 	});
 
 	test('should handle phi modulo 2π correctly', () => {
@@ -400,7 +401,7 @@ describe('GateMatrix', () => {
 			'1',
 			'X'
 		);
-		const result = xGate.validateMatrix(xGate.mat);
+		const result = xGate.validateMatrix(xGate.mat as ComplexMatRxC<2, 2>);
 
 		expect(result.isValid).toBe(true);
 	});
@@ -414,7 +415,7 @@ describe('GateMatrix', () => {
 			'1',
 			'test'
 		);
-		const nonUnitary: ComplexMat2x2 = [
+		const nonUnitary: ComplexMatRxC<2,2>  = [
 			[complex(2), complex(0)],
 			[complex(0), complex(1)]
 		];
@@ -520,7 +521,7 @@ describe('GatePath', () => {
 
 describe('Utility Functions', () => {
 	test('print_mat should not throw', () => {
-		const mat: ComplexMat2x2 = [
+		const mat: ComplexMatRxC<2,2>  = [
 			[complex(1), complex(0)],
 			[complex(0), complex(1)]
 		];
@@ -540,7 +541,7 @@ describe('Integration Tests', () => {
 			'1',
 			'ρ'
 		);
-		expect(dm.blochV[1]).toBeCloseTo(1); // z-component = 1
+		expect(dm.blochV[2]).toBeCloseTo(1); // z-component = 1
 
 		// Apply X gate (bit flip)
 		const xGate = new GateMatrix(
@@ -552,11 +553,11 @@ describe('Integration Tests', () => {
 			'X'
 		);
 		dm.apply_gate(xGate);
-		expect(dm.blochV[1]).toBeCloseTo(-1); // now z-component = -1
+		expect(dm.blochV[2]).toBeCloseTo(-1); // now z-component = -1
 
 		// Apply X gate again (should return to original)
 		dm.apply_gate(xGate);
-		expect(dm.blochV[1]).toBeCloseTo(1); // back to z-component = 1
+		expect(dm.blochV[2]).toBeCloseTo(1); // back to z-component = 1
 	});
 
 	test('should handle Hadamard gate on |0⟩ state', () => {

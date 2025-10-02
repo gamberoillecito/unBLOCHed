@@ -13,8 +13,8 @@ const config = {
 const math = create(all, config)
 // export type ComplexMat2x2<2,2> = [[Complex, Complex], [Complex, Complex]];
 // export type ComplexMat2x2<2,2> = Array<Array<Complex>>
-type ComplexMatRxC<R extends number, C extends number> = Complex[][] & { length: R;[index: number]: { length: C; } };
-type ComplexMat = Complex[][];
+export type ComplexMatRxC<R extends number, C extends number> = Complex[][] & { length: R;[index: number]: { length: C; } };
+export type ComplexMat = Complex[][];
 
 class MatrixValidity {
     isValid: boolean;

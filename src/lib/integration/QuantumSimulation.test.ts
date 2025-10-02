@@ -3,7 +3,8 @@ import {
 	DensityMatrix,
 	GateMatrix,
 	FakeDensityMatrix,
-	MatrixParam
+	MatrixParam,
+	type ComplexMatRxC
 } from '../components/Model.svelte';
 import { Xgate, Ygate, Zgate, Hgate, RZgate, randomDensityMatrix, RYgate } from '../data/matrices';
 import { BlockNode, complex } from 'mathjs';
@@ -26,22 +27,22 @@ describe('Quantum Simulation Integration Tests', () => {
 				'1',
 				'ψ'
 			);
-			expect(state.blochV[1]).toBeCloseTo(1); // z-component = 1 for |0⟩
+			expect(state.blochV[2]).toBeCloseTo(1); // z-component = 1 for |0⟩
 
 			// Apply Hadamard gate: |0⟩ → (|0⟩ + |1⟩)/√2
 			state.apply_gate(Hgate);
 			expect(state.blochV[0]).toBeCloseTo(1, 1); // x-component = 1 for |+⟩
-			expect(state.blochV[1]).toBeCloseTo(0, 5); // z-component = 0 for |+⟩
+			expect(state.blochV[2]).toBeCloseTo(0, 5); // z-component = 0 for |+⟩
 
 			// Apply X gate: |+⟩ → |+⟩ (no change for superposition along x-axis)
 			state.apply_gate(Xgate);
 			expect(state.blochV[0]).toBeCloseTo(1, 1); // Still on x-axis
-			expect(state.blochV[1]).toBeCloseTo(0, 5); // z-component = 0 for |+⟩
+			expect(state.blochV[2]).toBeCloseTo(0, 5); // z-component = 0 for |+⟩
 
 			// Apply Hadamard again: should give |0⟩
 			state.apply_gate(Hgate);
 
-			expect(state.blochV[1]).toBeCloseTo(1, 1); // z-component = 1 for |0⟩
+			expect(state.blochV[2]).toBeCloseTo(1, 1); // z-component = 1 for |0⟩
 		});
 
 		test('should handle quantum teleportation-like gate sequence', () => {
@@ -57,7 +58,7 @@ describe('Quantum Simulation Integration Tests', () => {
 			// The state should have evolved through the circuit
 			expect(state.blochV).not.toEqual(initialBloch);
 			// State should still be valid
-			const validation = state.validateMatrix(state.mat);
+			const validation = state.validateMatrix(state.mat as ComplexMatRxC<2,2>);
 			expect(validation.isValid).toBe(true);
 		});
 
@@ -158,10 +159,10 @@ describe('Quantum Simulation Integration Tests', () => {
 			}
 
 			// At θ=0 and θ=2π, should be similar (accounting for global phase)
-			expect(Math.abs(blochVectors[0][1])).toBeCloseTo(Math.abs(blochVectors[5][1]), 1);
+			expect(Math.abs(blochVectors[0][2])).toBeCloseTo(Math.abs(blochVectors[5][2]), 1);
 
 			// At θ=π, should have opposite z-component (phase flip)
-			expect(blochVectors[3][1]).toBeCloseTo(blochVectors[0][1], 1);
+			expect(blochVectors[3][2]).toBeCloseTo(blochVectors[0][2], 1);
 		});
 
 		test('should handle adiabatic evolution simulation', () => {
@@ -251,7 +252,7 @@ describe('Quantum Simulation Integration Tests', () => {
 			}
 
 			// State evolution should preserve unitarity
-			const validation = state.validateMatrix(state.mat);
+			const validation = state.validateMatrix(state.mat as ComplexMatRxC<2, 2>);
 			expect(validation.isValid).toBe(true);
 		});
 	});
@@ -382,7 +383,7 @@ describe('Quantum Simulation Integration Tests', () => {
 			const currentTrace = dm.mat[0][0].re + dm.mat[1][1].re;
 			expect(currentTrace).toBeCloseTo(originalTrace);
 
-			const validation = dm.validateMatrix(dm.mat);
+			const validation = dm.validateMatrix(dm.mat as ComplexMatRxC<2, 2>);
 			expect(validation.isValid).toBe(true);
 		});
 	});
