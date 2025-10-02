@@ -1,5 +1,8 @@
 node_modules
 .VSCodeCounter
+.zed
+.claude
+
 # Output
 .output
 .vercel

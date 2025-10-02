@@ -409,7 +409,7 @@ export class DensityMatrix extends FancyMatrix {
         // a mixed state to the history). If the state is mixed then the associated state vector defaults to |0>.
         // I think this is better than having to deal with `null` StateVectors inside DensityMatrix since we
         // are making sure that when the state is mixed the StateVector display is hidden
-        this._SV = new StateVector(sv ? sv.map(row => row.map(x => math.round(x, 2).toString())): [['1'], ['0']], '1', this.label, undefined, this.getStateVector() as ComplexMatRxC<2, 1>);
+        this._SV = new StateVector(sv ? sv.map(row => row.map(x => math.round(x, 2).toString())) : [['1'], ['0']], '1', this.label, undefined, this.getStateVector() as ComplexMatRxC<2, 1>);
     }
 
     protected fallbackLatexMat(): string[][] {
@@ -443,7 +443,7 @@ export class DensityMatrix extends FancyMatrix {
 
         let mat = math.matrix(matrix ?? this._mat);
         let TrRhoSquared = math.trace(math.multiply(mat, mat)) as unknown as Complex;
-        if (math.compare(TrRhoSquared.re, 1) == 1) {
+        if (math.smaller(TrRhoSquared.re, 1)){
             return false;
         }
         return true;
@@ -560,7 +560,7 @@ export class DensityMatrix extends FancyMatrix {
                     )
                 )]]
         }
-        
+
         else if (method == 'eigen') {
             // This method is the one adopted by Qiskit
             // https://github.com/Qiskit/qiskit/blob/stable/2.1/qiskit/quantum_info/states/densitymatrix.py#L808
@@ -701,7 +701,7 @@ export class GateMatrix extends FancyMatrix {
 
         let argAcos = math.multiply(e_ia, math.divide(math.trace(O), 2)) as Complex;
         let theta = math.multiply(math.acos(argAcos), 2) as number;
-        
+
         return theta;
     }
 
@@ -722,6 +722,10 @@ export class GateMatrix extends FancyMatrix {
         e_ia.im *= -1;
 
         let theta = this.rotationAngle;
+
+        if (math.isZero(theta)) {
+            return null;
+        }
 
         let rotVect: number[] = [];
         for (let p of paulis) {

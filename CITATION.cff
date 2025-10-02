@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Bertelli"
+  given-names: "Giacomo"
+title: "unBLOCHed - Bloch Sphere Simulator"
+doi: 10.5281/zenodo.17087795
+date-released: 2025-09-09
+url: "https://github.com/gamberoillecito/unBLOCHed"
