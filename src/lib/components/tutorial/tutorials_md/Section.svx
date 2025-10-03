@@ -1,8 +1,6 @@
 <script lang="ts">
-	import {
-		DensityMatrix,
-		GateMatrix,
-	} from '$lib/model/Model.svelte';
+	import { DensityMatrix } from '$lib/model/DensityMatrix.svelte.ts';
+	import {GateMatrix} from '$lib/model/GateMatrix.svelte.ts'
 	import DynamicMatrix from '$lib/components/DynamicMatrix.svelte';
 	import { BlochHistory } from '$lib/components//BlochHistory.svelte';
 	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';

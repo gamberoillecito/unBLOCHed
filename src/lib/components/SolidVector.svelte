@@ -3,17 +3,17 @@
 	import { Group, Color, type HSL } from 'three';
 	import { Outlines } from '@threlte/extras';
 	import { generateGradient } from 'typescript-color-gradient';
-	import type { DensityMatrix } from '$lib/model/Model.svelte';
-	import { mode } from "mode-watcher";
-	
+
+	import type { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
+	import { mode } from 'mode-watcher';
+
 	// let {length= 1, pointToLookAt, phase = 0}: Prop = $props();
 	interface Props {
 		DM: DensityMatrix;
 		vectorColor: string | null;
 	}
 
-	let { DM , vectorColor}: Props = $props();
-
+	let { DM, vectorColor }: Props = $props();
 
 	let length = $derived(Math.sqrt(DM.blochV[0] ** 2 + DM.blochV[1] ** 2 + DM.blochV[2] ** 2));
 
@@ -25,23 +25,21 @@
 		100
 	);
 	let color = $state() as Color;
-	$effect(()=>{
-		let colorIdx = Math.floor(((gradientArray.length) * DM.phi) / (2 * Math.PI));
+	$effect(() => {
+		let colorIdx = Math.floor((gradientArray.length * DM.phi) / (2 * Math.PI));
 		let lightCol = new Color(gradientArray[colorIdx]);
 		let darkCol = lightCol.clone();
 		let hsl = {} as HSL;
-		lightCol.getHSL(hsl)
+		lightCol.getHSL(hsl);
 		hsl.l = 0.8 - hsl.l;
-		darkCol.setHSL(hsl.h, hsl.s+0.2, hsl.l);	
+		darkCol.setHSL(hsl.h, hsl.s + 0.2, hsl.l);
 
-		if (vectorColor == null){
-			color = mode.current === "light" ? lightCol : darkCol;
-		}
-		else {
+		if (vectorColor == null) {
+			color = mode.current === 'light' ? lightCol : darkCol;
+		} else {
 			color = new Color(vectorColor);
 		}
-		
-	})
+	});
 
 	let body_length = $derived(length - HEAD_LEN * length ** 0.5);
 	let scaled_head_length = $derived(HEAD_LEN * length ** 0.5);

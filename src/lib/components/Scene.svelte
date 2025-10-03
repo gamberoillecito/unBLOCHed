@@ -9,7 +9,8 @@
 	import Path from './Path.svelte';
 	import { PerspectiveCamera, Color, Object3D } from 'three';
 	import { generateGradient } from 'typescript-color-gradient';
-	import type { DensityMatrix, GatePath } from '$lib/model/Model.svelte';
+	import type { GatePath } from '$lib/model/ModelUtility.svelte';
+	import type { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
 	import AngleArc from './AngleArc.svelte';
 	import { getContext, onMount } from 'svelte';
 	import type { BlochHistory } from './BlochHistory.svelte';

@@ -1,5 +1,10 @@
 import { test, expect, describe, vi, beforeEach } from 'vitest';
-import { FancyMatrix, DensityMatrix, MatrixParam } from $lib / model / Model.svelte';
+import {
+	MatrixParam,
+	type ComplexMatRxC
+} from '$lib/model/ModelUtility.svelte';
+import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
+import { FancyMatrix } from '$lib/model/FancyMatrix.svelte';
 
 // Mock Svelte features
 vi.mock('svelte', () => ({

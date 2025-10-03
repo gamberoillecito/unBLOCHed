@@ -1,5 +1,6 @@
 <script lang="ts">
-	import type { DensityMatrix, GateMatrix } from '$lib/model/Model.svelte';
+	import type { GateMatrix } from '$lib/model/GateMatrix.svelte';
+	import type { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import { BlochHistory } from '$lib/components/BlochHistory.svelte';
 	import LatexButton from './LatexButton.svelte';

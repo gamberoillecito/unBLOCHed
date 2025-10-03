@@ -1,5 +1,7 @@
 import { test, expect, describe, vi } from 'vitest';
-import { DensityMatrix, GateMatrix, type ComplexMat, type ComplexMatRxC, MatrixParam } from $lib / model / Model.svelte';
+import { type ComplexMatRxC, MatrixParam } from '$lib/model/ModelUtility.svelte';
+import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
+import { GateMatrix } from '$lib/model/GateMatrix.svelte';
 import {
 	Hgate,
 	Zgate,
@@ -9,7 +11,7 @@ import {
 	RXgate,
 	RYgate,
 	randomDensityMatrix
-} from '../data/matrices';
+} from '../../data/matrices';
 import { complex, equal } from 'mathjs';
 
 // Mock Svelte stores

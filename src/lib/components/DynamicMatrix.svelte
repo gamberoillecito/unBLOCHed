@@ -3,7 +3,9 @@
 	import 'mathlive';
 	import type { MathfieldElement } from 'mathlive';
 	import { getContext } from 'svelte';
-	import { FancyMatrix, DensityMatrix, MatrixParam, print_mat } from '$lib/model/Model.svelte';
+	import { MatrixParam, print_mat } from '$lib/model/ModelUtility.svelte';
+	import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
+	import { FancyMatrix } from '$lib/model/FancyMatrix.svelte';
 	import { deepEqual } from 'mathjs';
 	import MatrixParameterInput from './MatrixInfoInput.svelte';
 	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';
@@ -167,7 +169,7 @@
 			for (let i = 0; i < FM.nRows; i++) {
 				for (let j = 0; j < FM.nCols; j++) {
 					let newValue: string = FM.latexMat[i][j];
-					mf.setPromptValue(`m${i}${j}`, newValue, {silenceNotifications: true});
+					mf.setPromptValue(`m${i}${j}`, newValue, { silenceNotifications: true });
 				}
 			}
 			mf.setPromptValue(`mult`, FM.latexMult, { silenceNotifications: true });

@@ -1,11 +1,10 @@
 import { test, expect, describe, vi } from 'vitest';
 import {
-	DensityMatrix,
-	GateMatrix,
-	FakeDensityMatrix,
 	MatrixParam,
 	type ComplexMatRxC
-} from $lib / model / Model.svelte';
+} from '$lib/model/ModelUtility.svelte';
+import { DensityMatrix, FakeDensityMatrix } from '$lib/model/DensityMatrix.svelte';
+import { GateMatrix } from '$lib/model/GateMatrix.svelte';
 import { Xgate, Ygate, Zgate, Hgate, RZgate, randomDensityMatrix, RYgate } from '../data/matrices';
 import { BlockNode, complex } from 'mathjs';
 

@@ -2,17 +2,12 @@
 	import { type sceneSettings } from './Scene.svelte';
 	import Scene from './Scene.svelte';
 
-	import {
-		DensityMatrix,
-		FakeDensityMatrix,
-		FancyMatrix,
-		GateMatrix,
-		GatePath,
-		MatrixParam,
-		print_mat,
-		print_vec,
-		StateVector
-	} from '$lib/model/Model.svelte';
+	import { GatePath, MatrixParam, print_mat, print_vec } from '$lib/model/ModelUtility.svelte';
+	import { StateVector } from '$lib/model/StateVector.svelte';
+	import { GateMatrix } from '$lib/model/GateMatrix.svelte';
+	import { FakeDensityMatrix } from '$lib/model/DensityMatrix.svelte';
+	import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
+	import { FancyMatrix } from '$lib/model/FancyMatrix.svelte';
 	import DynamicMatrix from './DynamicMatrix.svelte';
 	import { getContext, onMount, setContext, untrack } from 'svelte';
 	import {
@@ -105,7 +100,7 @@
 		displayStateLabels: true,
 		displayWatermark: true,
 		vectorColor: null,
-		pathColor: null,
+		pathColor: null
 	});
 
 	let transparentBackground = $state(false);
@@ -139,12 +134,12 @@
 	let SceneMenuDownloadOpen = $state(false);
 
 	let screen2xl = new MediaQuery('min-width: 42rem');
-	$effect(()=>{
+	$effect(() => {
 		console.log(SV.isConsistent);
-		
-    	console.log(`[${SV.latexMat[0][0]},\n${SV.latexMat[1][0]}]`)
-		print_vec(SV.mat)
-	})
+
+		console.log(`[${SV.latexMat[0][0]},\n${SV.latexMat[1][0]}]`);
+		print_vec(SV.mat);
+	});
 </script>
 
 {#snippet StateVectorInput()}

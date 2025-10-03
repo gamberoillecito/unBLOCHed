@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { DensityMatrix, FancyMatrix, MatrixParam } from '$lib/model/Model.svelte';
+	import { MatrixParam } from '$lib/model/ModelUtility.svelte';
+	import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
+	import { FancyMatrix } from '$lib/model/FancyMatrix.svelte';
 	import { type Attachment } from 'svelte/attachments';
 	import { type MathfieldElement } from 'mathlive';
 	import { getContext } from 'svelte';

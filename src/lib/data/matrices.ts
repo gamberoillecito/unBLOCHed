@@ -1,4 +1,6 @@
-import { GateMatrix, DensityMatrix, MatrixParam } from '$lib/model/Model.svelte';
+import { MatrixParam } from '$lib/model/ModelUtility.svelte';
+import { GateMatrix } from '$lib/model/GateMatrix.svelte';
+import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
 import { complex, type Complex } from 'mathjs';
 
 export let theta_param = [new MatrixParam('theta', '\\pi/2', '\\theta', true)];

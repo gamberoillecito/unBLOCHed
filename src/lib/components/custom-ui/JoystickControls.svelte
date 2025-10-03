@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { FakeDensityMatrix } from '$lib/model/Model.svelte';
+	import type { FakeDensityMatrix } from '$lib/model/DensityMatrix.svelte';
 	import { convertLatexToMarkup } from 'mathlive';
 	import Hand from '@lucide/svelte/icons/hand';
 	import MoveUp from '@lucide/svelte/icons/move-up';
@@ -33,52 +33,52 @@
 	let rafId: number | null = null;
 
 	function scheduleApply() {
-	    if (rafScheduled) return;
-	    rafScheduled = true;
-	    rafId = requestAnimationFrame(() => {
-	        rafScheduled = false;
-	        rafId = null;
-	        // apply accumulated movement once per frame
-	        if (pendingDx !== 0 || pendingDy !== 0) {
-	            applyDelta(pendingDx, pendingDy);
-	            pendingDx = 0;
-	            pendingDy = 0;
-	        }
-	    });
+		if (rafScheduled) return;
+		rafScheduled = true;
+		rafId = requestAnimationFrame(() => {
+			rafScheduled = false;
+			rafId = null;
+			// apply accumulated movement once per frame
+			if (pendingDx !== 0 || pendingDy !== 0) {
+				applyDelta(pendingDx, pendingDy);
+				pendingDx = 0;
+				pendingDy = 0;
+			}
+		});
 	}
 
 	// replace moveDrag with incremental accumulation + RAF scheduling
 	function moveDrag(x: number, y: number) {
-	    if (!isDragging) return;
-	    // accumulate incremental deltas, update last positions for next event
-	    const dx = x - lastX;
-	    const dy = y - lastY;
-	    pendingDx += dx;
-	    pendingDy += dy;
-	    lastX = x;
-	    lastY = y;
-	    scheduleApply();
+		if (!isDragging) return;
+		// accumulate incremental deltas, update last positions for next event
+		const dx = x - lastX;
+		const dy = y - lastY;
+		pendingDx += dx;
+		pendingDy += dy;
+		lastX = x;
+		lastY = y;
+		scheduleApply();
 	}
 
 	function endDrag() {
-	    isDragging = false;
-	    // flush pending and cancel RAF
-	    if (rafId !== null) {
-	        cancelAnimationFrame(rafId);
-	        rafId = null;
-	        rafScheduled = false;
-	    }
-	    // apply any remaining small delta immediately
-	    if (pendingDx !== 0 || pendingDy !== 0) {
-	        applyDelta(pendingDx, pendingDy);
-	        pendingDx = 0;
-	        pendingDy = 0;
-	    }
-	    // remove listeners
-	    window.removeEventListener('mousemove', onWindowMouseMove);
-	    window.removeEventListener('mouseup', onWindowMouseUp);
-	    window.removeEventListener('touchmove', onWindowTouchMove);
-	    window.removeEventListener('touchend', onWindowTouchEnd);
+		isDragging = false;
+		// flush pending and cancel RAF
+		if (rafId !== null) {
+			cancelAnimationFrame(rafId);
+			rafId = null;
+			rafScheduled = false;
+		}
+		// apply any remaining small delta immediately
+		if (pendingDx !== 0 || pendingDy !== 0) {
+			applyDelta(pendingDx, pendingDy);
+			pendingDx = 0;
+			pendingDy = 0;
+		}
+		// remove listeners
+		window.removeEventListener('mousemove', onWindowMouseMove);
+		window.removeEventListener('mouseup', onWindowMouseUp);
+		window.removeEventListener('touchmove', onWindowTouchMove);
+		window.removeEventListener('touchend', onWindowTouchEnd);
 	}
 
 	// mouse handlers (wrap the unified functions)
@@ -184,33 +184,33 @@
 
 	// helper used elsewhere in file (kept, no change)
 	function applyDelta(dx: number, dy: number) {
-	    const thetaStep = 0.01;
-	    const phiStep = 0.01;
-	    DM.theta = DM.theta - dy * thetaStep;
-	    DM.phi = (DM.phi + dx * phiStep) % (2 * Math.PI);
+		const thetaStep = 0.01;
+		const phiStep = 0.01;
+		DM.theta = DM.theta - dy * thetaStep;
+		DM.phi = (DM.phi + dx * phiStep) % (2 * Math.PI);
 	}
 
 	function startDrag(x: number, y: number) {
-    // initialize dragging state and RAF batching
-    isDragging = true;
-    lastX = x;
-    lastY = y;
+		// initialize dragging state and RAF batching
+		isDragging = true;
+		lastX = x;
+		lastY = y;
 
-    // reset any pending accumulated movement so we start fresh
-    pendingDx = 0;
-    pendingDy = 0;
-    if (rafId !== null) {
-        cancelAnimationFrame(rafId);
-        rafId = null;
-        rafScheduled = false;
-    }
+		// reset any pending accumulated movement so we start fresh
+		pendingDx = 0;
+		pendingDy = 0;
+		if (rafId !== null) {
+			cancelAnimationFrame(rafId);
+			rafId = null;
+			rafScheduled = false;
+		}
 
-    // add global listeners (mouse + touch)
-    window.addEventListener('mousemove', onWindowMouseMove);
-    window.addEventListener('mouseup', onWindowMouseUp);
-    window.addEventListener('touchmove', onWindowTouchMove, { passive: false });
-    window.addEventListener('touchend', onWindowTouchEnd);
-}
+		// add global listeners (mouse + touch)
+		window.addEventListener('mousemove', onWindowMouseMove);
+		window.addEventListener('mouseup', onWindowMouseUp);
+		window.addEventListener('touchmove', onWindowTouchMove, { passive: false });
+		window.addEventListener('touchend', onWindowTouchEnd);
+	}
 </script>
 
 <div class="flex flex-col items-center gap-2">

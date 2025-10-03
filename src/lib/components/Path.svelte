@@ -1,7 +1,7 @@
 <script lang="ts">
     import { T } from '@threlte/core'
     import { MathUtils, Color, EllipseCurve, BufferGeometry, Group, Vector3, Line, AxesHelper, ArrowHelper, Matrix4, LineBasicMaterial } from 'three';
-	import type { GatePath } from '$lib/model/Model.svelte';
+	import type { GatePath } from '$lib/model/ModelUtility.svelte';
 	import { color } from 'three/src/nodes/TSL.js';
 	import { Matrix } from 'mathjs';
 	import { Line2, LineGeometry, LineMaterial } from 'three/examples/jsm/Addons.js';

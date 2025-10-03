@@ -1,8 +1,6 @@
 <script lang="ts">
-	import {
-		DensityMatrix,
-		GateMatrix,
-	} from '$lib/model/Model.svelte';
+	import { DensityMatrix } from '$lib/model/DensityMatrix.svelte.ts';
+	import {GateMatrix} from '$lib/model/GateMatrix.svelte.ts'
 	import LatexButton from '$lib/components//custom-ui/Buttons/LatexButton.svelte';
 	import ApplyGateButton from '$lib/components//custom-ui/Buttons/ApplyGateButton.svelte';
 	import GateButtonWithParams from '$lib/components//custom-ui/Buttons/GateButtonWithParams.svelte';
