@@ -53,6 +53,7 @@
 	import { type TutorialPageProps } from '$lib/components/tutorial/tutorialUtils';
 	import DialogDrawer from './custom-ui/DialogDrawer.svelte';
 	import { copy } from 'svelte-copy';
+	import Check from '@lucide/svelte/icons/check';
 	import Copy from '@lucide/svelte/icons/copy';
 	import { marked } from 'marked';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
@@ -332,17 +333,20 @@
 </div>
 
 {#snippet copyText(text: string)}
-	<button use:copy={text}>
-		<p
-			class="items-top bg-muted text-muted-foreground inline-flex gap-2 rounded-[0.4rem] px-2 font-mono break-all shadow hover:brightness-110"
+	<button use:copy={text} >
+		<article
+			class="group relative items-top bg-muted text-muted-foreground inline-flex gap-2 rounded-[0.4rem] px-2 font-mono break-all shadow hover:brightness-110 active:scale-[99.5%] transition-all transi"
 		>
+			<Copy class="mt-1 size-3 flex group-active:hidden transition-discrete" />
+			<Check class="mt-1 size-3 hidden group-active:flex transition-discrete " />
 			{text}
-			<Copy class="mt-1 size-3" />
-		</p>
+
+	</article>
 	</button>
 {/snippet}
 
-<AlertDialog.Root bind:open={watermarkDialogOpen}>
+<AlertDialog.Root open={true}>
+<!-- <AlertDialog.Root bind:open={watermarkDialogOpen}> -->
 	<AlertDialog.Content
 		class="z-99999"
 		onCloseAutoFocus={(e) => {
