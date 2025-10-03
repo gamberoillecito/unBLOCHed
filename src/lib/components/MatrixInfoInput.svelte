@@ -57,6 +57,33 @@
 	}
 </script>
 
+<!--
+@component
+Renders a popover button that allows viewing and editing the parameters of a `FancyMatrix` object. It displays an "info" icon for non-parameterized matrices and an "edit" icon for those with editable parameters.
+
+**Props:**
+- `matrix: FancyMatrix`
+  The reactive `FancyMatrix` instance to be displayed and edited.
+
+- `size?: 'default' | 'small'` (default: `'default'`)
+  The size of the trigger button.
+
+**Usage:**
+Pass a reactive `FancyMatrix` instance to the `matrix` prop. The component will automatically generate the appropriate UI for viewing or editing its parameters.
+
+```svelte
+<script lang="ts">
+  import MatrixInfoInput from './MatrixInfoInput.svelte';
+  import { GateMatrix } from '$lib/model/GateMatrix.svelte';
+
+  // Create a reactive instance of a matrix with parameters
+  let hadamardGate = $state(new GateMatrix('H'));
+</script>
+
+<MatrixInfoInput matrix={hadamardGate} />
+```
+-->
+
 <Popover.Root bind:open={mainPopoverOpen}>
 	<!-- The trigger is itself a button but with a different style. Take the style from the button styles and apply to it -->
 	<Popover.Trigger

@@ -110,6 +110,64 @@
 	getImage = downloadImage;
 </script>
 
+<!--
+@component
+Renders the main 3D scene, orchestrating the display of the Bloch sphere, the primary state vector, historical paths, angle arcs, and other visual elements. This component is intended to be placed inside a Threlte `<Canvas>`.
+
+**Props:**
+- `DM: DensityMatrix`
+  The primary reactive `DensityMatrix` to be visualized.
+
+- `history: BlochHistory`
+  A `BlochHistory` object used to render the paths of state evolution.
+
+- `POI: DensityMatrix[]`
+  An array of `DensityMatrix` objects to display as labeled "Points of Interest".
+
+- `settings: sceneSettings`
+  A reactive object with flags to toggle the visibility of scene elements like angles, paths, and labels.
+
+- `getImage: (withBackground?: boolean) => string`
+  A bindable function that allows a parent to capture a screenshot of the scene.
+
+- `joystickMode: boolean`
+  A flag to switch to a second rendering mode that uses a `FakeDensityMatrix`
+
+**Usage:**
+This component contains the entire scene logic and should be placed inside a Threlte `<Canvas>`.
+
+```svelte
+<script lang="ts">
+  import Scene from './Scene.svelte';
+  import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
+  import { BlochHistory } from '$lib/model/BlochHistory.svelte';
+  import type { sceneSettings } from './Scene.svelte';
+
+  // Define reactive state for the scene
+  let dm = $state(new DensityMatrix());
+  let history = $state(new BlochHistory());
+  let settings: sceneSettings = $state({
+    displayAngles: true,
+    displayPaths: true,
+    displayStateLabels: true,
+    displayWatermark: true,
+    vectorColor: null,
+    pathColor: null
+  });
+  let takeScreenshot: () => string;
+</script>
+
+<Scene
+  DM={dm}
+  {history}
+  POI={[]}
+  {settings}
+  bind:getImage={takeScreenshot}
+  joystickMode={false}
+/>
+```
+-->
+
 <T.DirectionalLight intensity={3} position.x={5} position.y={10} castgetContext(matrixContext) />
 <T.AmbientLight intensity={0.5} />
 <T.PerspectiveCamera

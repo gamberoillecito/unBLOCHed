@@ -112,6 +112,26 @@
 	);
 </script>
 
+<!--
+@component
+Renders the `θ` (theta) and `φ` (phi) angle arcs for a Bloch vector.
+
+**Props:**
+- `vector: [number, number, number]` - The reactive 3D Bloch vector.
+
+**Usage:**
+Place inside a Threlte `<Canvas>` and pass the vector.
+
+```svelte
+<script lang="ts">
+  import AngleArc from './AngleArc.svelte';
+  let blochVector: [number, number, number] = $state([0.5, 0.5, 0.707]);
+</script>
+
+<AngleArc vector={blochVector} />
+```
+-->
+
 <T.Line is={arcPhi}></T.Line>
 <T.Line is={arcTheta}> </T.Line>
 

@@ -50,6 +50,36 @@
 	});
 </script>
 
+<!--
+@component
+Renders a 3D arrow representing the Bloch vector from a given `DensityMatrix`. The arrow's length, direction, and color are derived dynamically from the matrix properties.
+
+**Props:**
+- `DM: DensityMatrix`
+  The reactive `DensityMatrix` object. The component uses its `blochV` for direction and length, and `phi` for color calculation.
+
+- `vectorColor: string | null` (optional)
+  Overrides the default dynamic color. If `null`, color is based on the `phi` angle. If a color string (e.g., `'#ff0000'`) is provided, that color is used instead.
+
+**Usage:**
+Place the component inside a Threlte `<Canvas>` and pass the reactive `DM` prop.
+
+```svelte
+<script lang="ts">
+  import { Canvas } from '@threlte/core';
+  import SolidVector from './SolidVector.svelte';
+  import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
+
+  // Create a reactive DensityMatrix instance
+  let dm = $state(new DensityMatrix());
+  // The vector will update automatically when dm.blochV changes.
+</script>
+
+  <SolidVector {DM} vectorColor={null} />
+
+```
+-->
+
 <!-- The outlines of the vector (applied to the single parts) -->
 {#snippet outline()}
 	<Outlines color="black" thickness={8} screenspace={true} />

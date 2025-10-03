@@ -181,6 +181,53 @@
 	};
 </script>
 
+<!--
+@component
+A reactive matrix input component using `math-field` for displaying and editing `FancyMatrix` objects. It handles real-time validation, user input, and state updates.
+
+**Props:**
+- `FM: FancyMatrix`
+  The reactive `FancyMatrix` instance to be displayed and edited.
+
+- `instantUpdate: boolean`
+  If `true`, the matrix updates on every valid input. If `false`, an "Apply" button must be clicked to commit changes.
+
+- `onChangeCallback?: (newFM: FancyMatrix, oldFM: FancyMatrix, ...args: any[]) => void`
+  An optional callback function that fires after a successful matrix update. It receives the new matrix, the old matrix, and any additional arguments. Notice that `newFM` and `oldFM` are provided automatically by the component and the the value of the matrix after and before the update, respectively.
+
+- `onChangeArguments?: any`
+  Optional arguments to be passed to the `onChangeCallback` after the `newFM` and `oldFM` parameters.
+
+**Usage:**
+The component can be configured for manual or instant updates.
+
+```svelte
+<script lang="ts">
+  import DynamicMatrix from './DynamicMatrix.svelte';
+  import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
+  import { BlochHistory } from '$lib/model/BlochHistory.svelte';
+
+  let dm = $state(new DensityMatrix());
+  let history = $state(new BlochHistory());
+
+  function handleUpdate(newMatrix, oldMatrix, history) {
+    // Add the change to the history log
+    history.addElement(oldMatrix, newMatrix);
+  }
+</script>
+
+// Manual updates
+<DynamicMatrix
+	FM={dm}
+	instantUpdate={false}
+	onChangeCallback={handleUpdate}
+	onChangeArguments={history}
+/>
+
+// Instant updates
+<DynamicMatrix FM={dm} instantUpdate={true} />
+``` -->
+
 <div class="flex">
 	<ErrorPopover
 		isOpen={!FM.isConsistent && FM.userMessage != '' && !popoversContext.preventOpening}

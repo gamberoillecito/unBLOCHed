@@ -52,6 +52,43 @@ const material = new LineMaterial({
 material.linewidth = 3;
 </script>
 
+<!--
+@component
+Renders a 3D arc representing the path a Bloch vector takes when a quantum gate is applied. It visualizes the rotation of the vector around a specific axis.
+
+**Props:**
+- `path: GatePath`
+  A reactive `GatePath` object containing the `startingPoint`, `axis`, and `angle` of rotation.
+
+- `pathColor: Color | string`
+  The color of the rendered arc path.
+
+- `previousPosition: boolean` (optional, default: `false`)
+  If `true`, it also renders helper arrows to show the original vector position and the axis of rotation for debugging purposes.
+
+**Usage:**
+Place the component inside a Threlte `<Canvas>` and provide the `path` and `pathColor` props.
+
+```svelte
+<script lang="ts">
+  import { Canvas } from '@threlte/core';
+  import Path from './Path.svelte';
+  import type { GatePath } from '$lib/model/ModelUtility.svelte';
+  import { Color } from 'three';
+
+  // Define a reactive GatePath object
+  let gatePath: GatePath = $state({
+    startingPoint: [1, 0, 0],
+    axis: [0, 0, 1],
+    angle: Math.PI / 2
+  });
+</script>
+
+<Path path={gatePath} pathColor={new Color('cyan')} />
+
+```
+-->
+
 <T is={line}>
 	<T is={material}></T>
 </T>
