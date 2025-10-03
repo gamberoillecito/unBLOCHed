@@ -1,7 +1,6 @@
 import { test, expect, describe, vi, beforeEach } from 'vitest';
 import {
 	MatrixParam,
-	type ComplexMatRxC
 } from '$lib/model/ModelUtility.svelte';
 import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
 import { FancyMatrix } from '$lib/model/FancyMatrix.svelte';

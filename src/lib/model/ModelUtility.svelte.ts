@@ -2,9 +2,7 @@ import {
     type Complex,
     create,
     all,
-    complex,
 } from 'mathjs'
-import { mul } from 'three/tsl';
 
 const config = {
     absTol: 1e-10,
@@ -44,7 +42,7 @@ export function newComplexMat2x2(entries: (string | Complex | number)[]): Comple
     if (!Array.isArray(entries) || entries.length !== 4) {
         return null;
     }
-    let mat: ComplexMatRxC<2, 2> = [
+    const mat: ComplexMatRxC<2, 2> = [
         [math.complex(entries[0]), math.complex(entries[1])],
         [math.complex(entries[2]), math.complex(entries[3])]
     ];

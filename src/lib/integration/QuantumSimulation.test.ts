@@ -6,7 +6,7 @@ import {
 import { DensityMatrix, FakeDensityMatrix } from '$lib/model/DensityMatrix.svelte';
 import { GateMatrix } from '$lib/model/GateMatrix.svelte';
 import { Xgate, Ygate, Zgate, Hgate, RZgate, randomDensityMatrix, RYgate } from '../data/matrices';
-import { BlockNode, complex } from 'mathjs';
+import { complex } from 'mathjs';
 
 // Mock Svelte features
 vi.mock('svelte', () => ({
@@ -217,7 +217,7 @@ describe('Quantum Simulation Integration Tests', () => {
 			const dephasedMat = [
 				[complex(0.5), complex(0.3)], // Reduced off-diagonal terms
 				[complex(0.3), complex(0.5)]
-			] as any;
+			] as ComplexMatRxC<2, 2>;
 
 			state.setMatrixValue(dephasedMat);
 			expect(state.isPureState()).toBe(false);
@@ -242,7 +242,7 @@ describe('Quantum Simulation Integration Tests', () => {
 
 			// Apply sequence of random unitaries to simulate thermalization
 			const thermalGates = [Xgate, Ygate, Zgate, Hgate];
-			const initialPurity = state.isPureState();
+			// const initialPurity = state.isPureState();
 
 			// Apply random sequence
 			for (let i = 0; i < 10; i++) {
@@ -331,7 +331,7 @@ describe('Quantum Simulation Integration Tests', () => {
 			const invalidMat = [
 				[complex(2), complex(0)],
 				[complex(0), complex(0)]
-			] as any;
+			] as ComplexMatRxC<2, 2>;
 			const result = dm.setMatrixValue(invalidMat);
 
 			expect(result.isValid).toBe(false);

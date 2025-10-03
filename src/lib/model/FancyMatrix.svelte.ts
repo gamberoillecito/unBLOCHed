@@ -29,7 +29,7 @@ export class FancyMatrix {
         this._parameter_array = parameters;
         this._nRows = nRows;
         this._nCols = nCols;
-        for (let p of this._parameter_array) {
+        for (const p of this._parameter_array) {
             this.ce.box(p.name).value = p.latexValue;
         }
         // We need to tell the ComputeEngine how to
@@ -39,7 +39,7 @@ export class FancyMatrix {
             ...this.ce.latexDictionary,
             {
                 latexTrigger: '\\placeholder',
-                // @ts-ignore
+                // @ts-expect-error No type available
                 parse: (parser) => {
                     parser.parseOptionalGroup();
                     return parser.parseGroup() ?? ['Error', "'missing'"];
@@ -47,7 +47,7 @@ export class FancyMatrix {
             },
         ];
         let generatedMatrix = this.generateMatrixFromLatex(latexMat, latexMult);
-        let res = this.validateMatrix(generatedMatrix);
+        const res = this.validateMatrix(generatedMatrix);
         if (!res.isValid && !mat) {
             latexMult = this.fallbackLatexMult();
             latexMat = this.fallbackLatexMat();
@@ -66,7 +66,7 @@ export class FancyMatrix {
         this._latexMat = $state(latexMat.map(row => row.map(x => x)));
 
         this._labelWParams = this.label;
-        let editableParams = this.parameterArray.filter(x => x.userEditable);
+        const editableParams = this.parameterArray.filter(x => x.userEditable);
         if (this.parameterArray.length > 0 && editableParams.length > 0) {
             this._labelWParams += '(';
             for (let i = 0; i < editableParams.length; i++) {
@@ -93,7 +93,7 @@ export class FancyMatrix {
 
     // Updates _mat if it is a new valid matrix
     setMatrixValue(newMat: ComplexMat): MatrixValidity {
-        let res = this.validateMatrix(newMat);
+        const res = this.validateMatrix(newMat);
 
         if (res.isValid) {
             // If the value of a matrix element I have to invalidate the
@@ -101,7 +101,7 @@ export class FancyMatrix {
             this._latexMult = '1';
             for (let i = 0; i < this._nRows; i++) {
                 for (let j = 0; j < this._nCols; j++) {
-                    let newElement = newMat[i][j];
+                    const newElement = newMat[i][j];
                     // Do not update if value is unchanged
                     if (math.equal(newElement, this._mat[i][j])) {
                         continue;
@@ -116,7 +116,7 @@ export class FancyMatrix {
 
     // Update element i,j to value and reflect the changes in the latex
     setValue(value: Complex, i: number, j: number): MatrixValidity {
-        let newMat = this._mat.map(row => row.map(el => math.clone(el))) as ComplexMat;
+        const newMat = this._mat.map(row => row.map(el => math.clone(el))) as ComplexMat;
 
         newMat[i][j] = value;
         return this.setMatrixValue(newMat);
@@ -131,8 +131,8 @@ export class FancyMatrix {
         // console.info(complete_expr);
         // First we have to compute the resulting "math" matrix to check if it would be
         // valid
-        let newMat = this.generateMatrixFromLatex(newLatexMat, mult);
-        let res = this.validateMatrix(newMat);
+        const newMat = this.generateMatrixFromLatex(newLatexMat, mult);
+        const res = this.validateMatrix(newMat);
         if (res.isValid) {
             for (let i = 0; i < this._nRows; i++) {
                 for (let j = 0; j < this._nCols; j++) {
@@ -150,20 +150,20 @@ export class FancyMatrix {
     // "math" matrix
     generateMatrixFromLatex(newLatexMat: (string)[][], mult: string): ComplexMat {
 
-        let newMat = newLatexMat.map((row) => row.map((el) => {
+        const newMat = newLatexMat.map((row) => row.map((el) => {
 
-            for (let p of this._parameter_array) {
+            for (const p of this._parameter_array) {
                 this.ce.box(p.name).value = this.ce.parse(p.latexValue).N();
 
             }
-            let converted = this.ce.parse(el).N();
+            const converted = this.ce.parse(el).N();
             // console.log(converted);
             return math.complex(converted.re, converted.im);
         }
         )) as ComplexMat;
 
-        let eval_mult = this.ce.parse(mult).N();
-        let computedMult = math.complex(eval_mult.re, eval_mult.im);
+        const eval_mult = this.ce.parse(mult).N();
+        const computedMult = math.complex(eval_mult.re, eval_mult.im);
         for (let i = 0; i < this._nRows; i++) {
             for (let j = 0; j < this._nCols; j++) {
                 // console.log(`(${i}, ${j}) -> ${newMat[i][j]}`);
@@ -176,7 +176,7 @@ export class FancyMatrix {
     validateMatrix(newMat: ComplexMat): MatrixValidity {
         for (let i = 0; i < this._nRows; i++) {
             for (let j = 0; j < this._nCols; j++) {
-                let el = newMat[i][j];
+                const el = newMat[i][j];
 
                 if (math.typeOf(el) != 'Complex' ||
                     el.valueOf() == 'Infinity') {
@@ -189,14 +189,14 @@ export class FancyMatrix {
     }
 
     setParameterLatex(paramName: string, latexValue: string) {
-        let targetParam = this._parameter_array.find(p => p.name == paramName);
+        const targetParam = this._parameter_array.find(p => p.name == paramName);
         if (targetParam) {
             targetParam.latexValue = latexValue;
         }
         else {
             console.error(`Wrong matrix parameter name ${paramName}`);
         }
-        let res = this.setMatrixFromLatex(this._latexMat, this._latexMult);
+        const res = this.setMatrixFromLatex(this._latexMat, this._latexMult);
         return res;
     }
 
@@ -252,7 +252,7 @@ export class FancyMatrix {
         // I have to reconstruct a latex matrix without any approximation
         // let completeLateMat = this._mat.map(row => row.map( x => x.toString()))
         // constructor(latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[] = []){
-        let cl = new (this.constructor as new (latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[], mat?: ComplexMat) => this)(this._latexMat, this._latexMult, this.label, this._parameter_array, this._mat);
+        const cl = new (this.constructor as new (latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[], mat?: ComplexMat) => this)(this._latexMat, this._latexMult, this.label, this._parameter_array, this._mat);
         cl.isConsistent = this.isConsistent;
         cl.userMessage = this.userMessage;
         return cl;
@@ -284,7 +284,7 @@ export class FancyMatrix {
             return `\\placeholder[${name}]{${v}}`;
         }
         let base = `${this.extendedLabel} = `;
-        let multString = (readOnly && this.latexMult == '1') ? '' : `${valueFormatter(this.latexMult, 'mult')}`;
+        const multString = (readOnly && this.latexMult == '1') ? '' : `${valueFormatter(this.latexMult, 'mult')}`;
         base += multString;
         base += ` \\begin{bmatrix}`;
         for (let i = 0; i < this.nRows; i++) {

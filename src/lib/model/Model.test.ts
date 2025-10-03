@@ -3,14 +3,13 @@ import {
 	MatrixParam,
 	GatePath,
 	print_mat,
-	type ComplexMat,
 	type ComplexMatRxC
 } from '$lib/model/ModelUtility.svelte';
 import { GateMatrix } from './GateMatrix.svelte';
 import { FakeDensityMatrix } from './DensityMatrix.svelte';
 import { DensityMatrix } from './DensityMatrix.svelte';
 import { FancyMatrix } from './FancyMatrix.svelte';
-import { complex, identity, multiply, conj, transpose, equal } from 'mathjs';
+import { complex, equal } from 'mathjs';
 
 // Mock $state and $derived for Svelte testing
 vi.mock('svelte', () => ({

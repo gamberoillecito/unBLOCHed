@@ -24,7 +24,7 @@ export class DensityMatrix extends FancyMatrix {
         this.#c = $derived(this._mat[0][1]);
         this.#d = $derived(this._mat[1][1]);
         // Create new state vector with the truncated latex display
-        let sv = this.getStateVector();
+        const sv = this.getStateVector();
         // //////// //
         // WARNING: //
         // //////// //
@@ -41,16 +41,16 @@ export class DensityMatrix extends FancyMatrix {
     // https://faculty.csbsju.edu/frioux/q-intro/BlochVectorEntropy.pdf
     get blochV(): [number, number, number] {
         // return this.#blochV  as [number, number, number];
-        let pauliX = newComplexMat2x2([0, 1, 1, 0]);
-        let pauliY = newComplexMat2x2([0, '-i', 'i', 0]);
-        let pauliZ = newComplexMat2x2([1, 0, 0, -1]);
+        const pauliX = newComplexMat2x2([0, 1, 1, 0]);
+        const pauliY = newComplexMat2x2([0, '-i', 'i', 0]);
+        const pauliZ = newComplexMat2x2([1, 0, 0, -1]);
         // Note that the values of y and z are swapped to account
         // for the fact that threejs uses a different notation
         // This **should** allow us to forget about the different
         // notation in the rest of the code
-        let paulis: ComplexMatRxC<2, 2>[] = [pauliX!, pauliY!, pauliZ!];
-        let blochV = [];
-        for (let p of paulis) {
+        const paulis: ComplexMatRxC<2, 2>[] = [pauliX!, pauliY!, pauliZ!];
+        const blochV = [];
+        for (const p of paulis) {
             blochV.push(math.trace(math.multiply(this._mat, p)));
         }
         return blochV as [number, number, number];
@@ -64,8 +64,8 @@ export class DensityMatrix extends FancyMatrix {
     // According to Nielsen-Chuang page 100
     isPureState(matrix: ComplexMatRxC<2, 2> | null = null): boolean {
 
-        let mat = math.matrix(matrix ?? this._mat);
-        let TrRhoSquared = math.trace(math.multiply(mat, mat)) as unknown as Complex;
+        const mat = math.matrix(matrix ?? this._mat);
+        const TrRhoSquared = math.trace(math.multiply(mat, mat)) as unknown as Complex;
         if (math.smaller(TrRhoSquared.re, 1)) {
             return false;
         }
@@ -78,11 +78,11 @@ export class DensityMatrix extends FancyMatrix {
     // although without this check the matrix rho =[[1,0], [1,0]] results valid)
     // https://mathworld.wolfram.com/PositiveDefiniteMatrix.html
     validateMatrix(newMat: ComplexMatRxC<2, 2>): MatrixValidity {
-        let preliminary_validation = super.validateMatrix(newMat);
+        const preliminary_validation = super.validateMatrix(newMat);
         if (preliminary_validation.isValid) {
             // Convert the matrix to mathjs object to
             // make operations easier
-            let mat = math.matrix(newMat);
+            const mat = math.matrix(newMat);
 
 
             // Hermitian
@@ -91,7 +91,7 @@ export class DensityMatrix extends FancyMatrix {
             }
 
             // (2) Positive semidefinite
-            let ei = math.eigs(mat).values.valueOf() as Complex[];
+            const ei = math.eigs(mat).values.valueOf() as Complex[];
 
             for (let v of ei) {
                 v = math.complex(v);
@@ -107,7 +107,7 @@ export class DensityMatrix extends FancyMatrix {
             }
 
             // (1) Unitary trace
-            let Tr = math.trace(mat) as unknown as Complex;
+            const Tr = math.trace(mat) as unknown as Complex;
 
             if (!math.isZero(Tr.im)) {
                 // console.log(Tr);
@@ -147,11 +147,11 @@ export class DensityMatrix extends FancyMatrix {
     // Applies the given gate to the DensityMatrix
     apply_gate(GM: GateMatrix) {
         // this._mat = matmul(gate_mat, matmul(this._mat, gate_mat.T())) as ComplexMat2x2<2,2>;
-        let gate_mat = GM.mat;
-        let gate_dag = dagger(gate_mat);
-        let newMat = math.multiply(gate_mat, math.multiply(this._mat, gate_dag)) as ComplexMatRxC<2, 2>;
-        let res = this.setMatrixValue(newMat);
-
+        const gate_mat = GM.mat;
+        const gate_dag = dagger(gate_mat);
+        const newMat = math.multiply(gate_mat, math.multiply(this._mat, gate_dag)) as ComplexMatRxC<2, 2>;
+        const res = this.setMatrixValue(newMat);
+        return res
     }
 
     L() {
@@ -238,13 +238,13 @@ export class FakeDensityMatrix extends DensityMatrix {
     private _theta: number;
     private _length: number;
     constructor(phi: number = 0, theta: number = 0, length: number = 1) {
-        let params = [
+        const params = [
             new MatrixParam(`theta`, `0`, `\\theta`, false),
             new MatrixParam(`phi`, `0`, `\\phi`, false),
         ];
-        let latexMult = '1';
-        let label = '\\rho';
-        let latexMat = [
+        const latexMult = '1';
+        const label = '\\rho';
+        const latexMat = [
             ['\\cos^2(\\frac{\\theta}{2})', '\\frac{1}{2} \\sin(\\theta) e^{-i \\phi}'],
             ['\\frac{1}{2} \\sin(\\theta) e^{i \\phi}', '\\sin^2(\\frac{\\theta}{2})']
         ];

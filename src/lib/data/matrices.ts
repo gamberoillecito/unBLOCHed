@@ -3,8 +3,8 @@ import { GateMatrix } from '$lib/model/GateMatrix.svelte';
 import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
 import { complex, type Complex } from 'mathjs';
 
-export let theta_param = [new MatrixParam('theta', '\\pi/2', '\\theta', true)];
-export let theta_phi_lambdaa_param = [
+export const theta_param = [new MatrixParam('theta', '\\pi/2', '\\theta', true)];
+export const theta_phi_lambdaa_param = [
 	new MatrixParam('theta', '\\pi/2', '\\theta', true),
 	new MatrixParam('phi', '\\pi/2', '\\phi', true),
 	new MatrixParam('lambda', '\\pi/2', '\\lambda', true)
