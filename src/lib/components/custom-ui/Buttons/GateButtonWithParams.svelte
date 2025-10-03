@@ -5,7 +5,7 @@
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
 	import ApplyGateButton from './ApplyGateButton.svelte';
-	import MatrixInfoInput from '$lib/components/MatrixInfoInput.svelte';
+	import MatrixInfoInput from '$lib/components/custom-ui/MatrixInfoInput.svelte';
 
 	const markedKatexOptions = {
 		throwOnError: false

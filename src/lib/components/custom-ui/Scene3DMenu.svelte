@@ -21,7 +21,7 @@
 		SceneMenuDownloadTrigger = $bindable(),
 		transparentBackground = $bindable(),
 		getImage = $bindable()
-	} = $props();
+	}: Props = $props();
 
 	function saveImage(
 		getImage: (withBackground?: boolean) => string,
@@ -49,6 +49,19 @@
 		}
 	}
 </script>
+
+<!--
+@component
+A dropdown menu for controlling the visual settings of the 3D scene. It allows
+toggling elements, picking colors, and exporting the scene as a PNG image.
+
+**Props:**
+- `settings3DScene: sceneSettings` - A bindable object with scene visibility and color settings.
+- `SceneMenuDownloadOpen: boolean` - A bindable flag for the "Export Image" submenu's open state.
+- `SceneMenuDownloadTrigger: HTMLElement` - A bindable reference to the "Export Image" submenu trigger.
+- `transparentBackground: boolean` - A bindable flag for the image export's background transparency.
+- `getImage: (withBackground?: boolean) => string` - A bindable function provided by a parent to capture the scene's image data.
+-->
 
 <DropdownMenu.Root>
 	<DropdownMenu.Trigger

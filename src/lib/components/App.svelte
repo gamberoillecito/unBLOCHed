@@ -24,7 +24,7 @@
 		equal
 	} from 'mathjs';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
-	import MatrixInfoInput from './MatrixInfoInput.svelte';
+	import MatrixInfoInput from './custom-ui/MatrixInfoInput.svelte';
 	import { BlochHistory } from '$lib/model/BlochHistory.svelte';
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import { convertLatexToMarkup } from 'mathlive';

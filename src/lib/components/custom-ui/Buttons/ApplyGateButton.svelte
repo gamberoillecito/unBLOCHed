@@ -34,7 +34,19 @@
 	}: Props = $props();
 </script>
 
-<!-- Button that, when clicked, applies a gate -->
+<!--
+@component
+A button that applies a quantum gate to the density matrix `DM`. It uses a `LatexButton` for its primary action and is wrapped in a tooltip that can display information about the gate's rotation.
+
+**Props:**
+- `DM: DensityMatrix` - The main reactive `DensityMatrix` to which the gate will be applied.
+- `history: BlochHistory` - The history object to log the state change after the gate application.
+- `gate: GateMatrix` - The `GateMatrix` to apply.
+- `disabled: boolean` - If `true`, the button is disabled.
+- `canvasContainer: HTMLDivElement` - A reference to the canvas container element, which is flashed upon click.
+- `secondaryButton?: boolean` (default: `true`) - If `true`, the button is styled to be part of a group (rounded on one side).
+- `size: 'default' | 'small'` - The size of the button.
+-->
 
 <Tooltip.Provider delayDuration={0}>
 	<Tooltip.Root>
