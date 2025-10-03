@@ -9,7 +9,7 @@ import {
 	print_mat,
 	type ComplexMat,
 	type ComplexMatRxC
-} from './Model.svelte';
+} from $lib / model / Model.svelte';
 import { complex, identity, multiply, conj, transpose, equal } from 'mathjs';
 
 // Mock $state and $derived for Svelte testing
@@ -66,7 +66,7 @@ describe('FancyMatrix', () => {
 	});
 
 	test('should validate matrix correctly', () => {
-		const validMat: ComplexMatRxC<2,2> = [
+		const validMat: ComplexMatRxC<2, 2> = [
 			[complex(1), complex(0)],
 			[complex(0), complex(1)]
 		];
@@ -92,7 +92,7 @@ describe('FancyMatrix', () => {
 			'1',
 			'test'
 		);
-		const invalidMat: ComplexMatRxC<2,2>  = [
+		const invalidMat: ComplexMatRxC<2, 2> = [
 			[complex(Infinity), complex(0)],
 			[complex(0), complex(1)]
 		];
@@ -111,7 +111,7 @@ describe('FancyMatrix', () => {
 			'1',
 			'test'
 		);
-		const newMat: ComplexMatRxC<2,2>  = [
+		const newMat: ComplexMatRxC<2, 2> = [
 			[complex(1), complex(2)],
 			[complex(3), complex(4)]
 		];
@@ -223,7 +223,7 @@ describe('DensityMatrix', () => {
 			'1',
 			'ρ'
 		);
-		const invalidMat: ComplexMatRxC<2,2>  = [
+		const invalidMat: ComplexMatRxC<2, 2> = [
 			[complex(2), complex(0)],
 			[complex(0), complex(0)]
 		];
@@ -241,7 +241,7 @@ describe('DensityMatrix', () => {
 			'1',
 			'ρ'
 		);
-		const nonHermitian: ComplexMatRxC<2,2>  = [
+		const nonHermitian: ComplexMatRxC<2, 2> = [
 			[complex(0.5), complex(1)],
 			[complex(0), complex(0.5)]
 		];
@@ -415,7 +415,7 @@ describe('GateMatrix', () => {
 			'1',
 			'test'
 		);
-		const nonUnitary: ComplexMatRxC<2,2>  = [
+		const nonUnitary: ComplexMatRxC<2, 2> = [
 			[complex(2), complex(0)],
 			[complex(0), complex(1)]
 		];
@@ -521,7 +521,7 @@ describe('GatePath', () => {
 
 describe('Utility Functions', () => {
 	test('print_mat should not throw', () => {
-		const mat: ComplexMatRxC<2,2>  = [
+		const mat: ComplexMatRxC<2, 2> = [
 			[complex(1), complex(0)],
 			[complex(0), complex(1)]
 		];

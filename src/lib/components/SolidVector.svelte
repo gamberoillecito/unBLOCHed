@@ -3,7 +3,7 @@
 	import { Group, Color, type HSL } from 'three';
 	import { Outlines } from '@threlte/extras';
 	import { generateGradient } from 'typescript-color-gradient';
-	import type { DensityMatrix } from './Model.svelte';
+	import type { DensityMatrix } from '$lib/model/Model.svelte';
 	import { mode } from "mode-watcher";
 	
 	// let {length= 1, pointToLookAt, phase = 0}: Prop = $props();
@@ -78,7 +78,7 @@
 	</T.Mesh>
 	{#if length >= 0.05}
 		<!-- Body -->
-		<T.Mesh 
+		<T.Mesh
 			position.z={body_length / 2}
 			rotation.x={Math.PI / 2}
 			scale.x={(HEAD_RAD / 2) * length ** 0.5}

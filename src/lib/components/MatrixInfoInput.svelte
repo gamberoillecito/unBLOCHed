@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { DensityMatrix, FancyMatrix } from './Model.svelte';
+	import { DensityMatrix, FancyMatrix, MatrixParam } from '$lib/model/Model.svelte';
 	import { type Attachment } from 'svelte/attachments';
 	import { type MathfieldElement } from 'mathlive';
 	import { getContext } from 'svelte';
-	import { MatrixParam } from './Model.svelte';
 	import * as Popover from '$lib/components/ui/popover/index.js';
 	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';
 	import SquarePen from '@lucide/svelte/icons/square-pen';
@@ -79,10 +78,9 @@
 					<math-field
 						readonly
 						{@attach (mf: MathfieldElement) => {
-							let stateV = ''
+							let stateV = '';
 							if (FM instanceof DensityMatrix) {
 								stateV = '\\quad ' + (FM as DensityMatrix).SV.generateLatexString(true);
-								
 							}
 							mf.value = FM.generateLatexString(true) + stateV;
 						}}

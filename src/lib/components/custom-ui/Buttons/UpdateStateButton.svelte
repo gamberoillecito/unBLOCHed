@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { DensityMatrix, GateMatrix } from '$lib/components/Model.svelte';
+	import type { DensityMatrix, GateMatrix } from '$lib/model/Model.svelte';
 	import { BlochHistory } from '$lib/components/BlochHistory.svelte';
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';

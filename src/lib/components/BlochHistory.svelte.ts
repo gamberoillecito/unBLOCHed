@@ -1,5 +1,5 @@
 import { thickness } from "three/tsl";
-import { DensityMatrix, GateMatrix, GatePath, print_mat } from "./Model.svelte";
+import { DensityMatrix, GateMatrix, GatePath, print_mat } from "../model/Model.svelte";
 
 import {
 type Complex, 

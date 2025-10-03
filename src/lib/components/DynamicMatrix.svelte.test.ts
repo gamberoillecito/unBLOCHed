@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { DensityMatrix, FancyMatrix, type ComplexMatRxC } from "./Model.svelte";
+import { DensityMatrix, FancyMatrix, type ComplexMatRxC } from "../model/Model.svelte";
 import { complex } from "mathjs";
 
 test('FancyMatrix', () => {

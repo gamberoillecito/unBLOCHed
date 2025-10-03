@@ -2,7 +2,7 @@
 	import {
 		DensityMatrix,
 		GateMatrix,
-	} from '$lib/components/Model.svelte';
+	} from '$lib/model/Model.svelte';
 	import LatexButton from '$lib/components//custom-ui/Buttons/LatexButton.svelte';
 	import ApplyGateButton from '$lib/components//custom-ui/Buttons/ApplyGateButton.svelte';
 	import GateButtonWithParams from '$lib/components//custom-ui/Buttons/GateButtonWithParams.svelte';

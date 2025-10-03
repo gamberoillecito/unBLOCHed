@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { DensityMatrix, GateMatrix } from '$lib/components/Model.svelte';
+	import type { DensityMatrix, GateMatrix } from '$lib/model/Model.svelte';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 	import { BlochHistory } from '$lib/components/BlochHistory.svelte';
 	import LatexButton from './LatexButton.svelte';
@@ -53,7 +53,7 @@
 			{size}
 		/>
 		{#if isZero(gate.rotationAngle) || equal(gate.rotationAngle, multiply(2, pi))}
-			<Tooltip.Content  class="bg-muted text-muted-foreground border-1"
+			<Tooltip.Content class="bg-muted text-muted-foreground border-1"
 				>{@html marked.parse('Gate results in a $0$ or $2\\pi$ rotation')}</Tooltip.Content
 			>
 		{/if}

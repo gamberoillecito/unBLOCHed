@@ -2,7 +2,7 @@
 	import {
 		DensityMatrix,
 		GateMatrix,
-	} from '$lib/components/Model.svelte';
+	} from '$lib/model/Model.svelte';
 	import DynamicMatrix from '$lib/components/DynamicMatrix.svelte';
 	import { BlochHistory } from '$lib/components//BlochHistory.svelte';
 	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';

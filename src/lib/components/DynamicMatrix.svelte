@@ -3,7 +3,7 @@
 	import 'mathlive';
 	import type { MathfieldElement } from 'mathlive';
 	import { getContext } from 'svelte';
-	import { FancyMatrix, DensityMatrix, MatrixParam, print_mat } from './Model.svelte';
+	import { FancyMatrix, DensityMatrix, MatrixParam, print_mat } from '$lib/model/Model.svelte';
 	import { deepEqual } from 'mathjs';
 	import MatrixParameterInput from './MatrixInfoInput.svelte';
 	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';

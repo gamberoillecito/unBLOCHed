@@ -12,7 +12,7 @@
 		print_mat,
 		print_vec,
 		StateVector
-	} from '$lib/components/Model.svelte';
+	} from '$lib/model/Model.svelte';
 	import DynamicMatrix from './DynamicMatrix.svelte';
 	import { getContext, onMount, setContext, untrack } from 'svelte';
 	import {
@@ -60,7 +60,6 @@
 	import { copy } from 'svelte-copy';
 	import Copy from '@lucide/svelte/icons/copy';
 	import { marked } from 'marked';
-	import DynamicStateVector from './DynamicStateVector.svelte';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import { MediaQuery } from 'svelte/reactivity';
 	import Scene3DMenu from './custom-ui/Scene3DMenu.svelte';
@@ -231,10 +230,10 @@
 					></Scene>
 				</Canvas>
 			</div>
-			
+
 			<Scene3DMenu
 				{SceneMenuDownloadOpen}
-				bind:settings3DScene = {settings3DScene}
+				bind:settings3DScene
 				{getImage}
 				{SceneMenuDownloadTrigger}
 				{transparentBackground}

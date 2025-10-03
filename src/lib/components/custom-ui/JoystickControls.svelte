@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { FakeDensityMatrix } from '../Model.svelte';
+	import type { FakeDensityMatrix } from '$lib/model/Model.svelte';
 	import { convertLatexToMarkup } from 'mathlive';
 	import Hand from '@lucide/svelte/icons/hand';
 	import MoveUp from '@lucide/svelte/icons/move-up';
@@ -216,7 +216,7 @@
 <div class="flex flex-col items-center gap-2">
 	<button
 		id="joystick-btn"
-		class="grid w-[300px] aspect-square @lg:h-[200px] @lg:w-[200px] grid-cols-3 grid-rows-3 place-content-center place-items-center items-center rounded-[1em] border-2"
+		class="grid aspect-square w-[300px] grid-cols-3 grid-rows-3 place-content-center place-items-center items-center rounded-[1em] border-2 @lg:h-[200px] @lg:w-[200px]"
 		onmousedown={handleMouseDown}
 		ontouchstart={handleTouchStart}
 		onwheel={handleScroll}
@@ -245,7 +245,7 @@
 		<MoveDownRight class="opacity-40" />
 	</button>
 
-	<div class="@lg:flex hidden flex-col">
+	<div class="hidden flex-col @lg:flex">
 		<Label for="joystick-button">
 			<div class="flex flex-col gap-2">
 				<p class="flex flex-row items-center gap-1">

@@ -1,5 +1,5 @@
 import { test, expect, describe, vi, beforeEach } from 'vitest';
-import { FakeDensityMatrix } from './Model.svelte';
+import { FakeDensityMatrix } from $lib / model / Model.svelte';
 
 // Mock Svelte features
 vi.mock('svelte', () => ({

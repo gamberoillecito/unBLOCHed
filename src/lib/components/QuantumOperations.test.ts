@@ -1,5 +1,5 @@
 import { test, expect, describe, vi } from 'vitest';
-import { DensityMatrix, GateMatrix, type ComplexMat, type ComplexMatRxC, MatrixParam } from './Model.svelte';
+import { DensityMatrix, GateMatrix, type ComplexMat, type ComplexMatRxC, MatrixParam } from $lib / model / Model.svelte';
 import {
 	Hgate,
 	Zgate,
@@ -333,7 +333,7 @@ describe('Bloch Vector Operations', () => {
 					['1', '0'],
 					['0', '0']
 				],
-				expectedBloch: [0, 0 ,1]
+				expectedBloch: [0, 0, 1]
 			}, // |0⟩
 			{
 				state: [

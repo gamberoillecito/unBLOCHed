@@ -5,7 +5,7 @@ import {
 	FakeDensityMatrix,
 	MatrixParam,
 	type ComplexMatRxC
-} from '../components/Model.svelte';
+} from $lib / model / Model.svelte';
 import { Xgate, Ygate, Zgate, Hgate, RZgate, randomDensityMatrix, RYgate } from '../data/matrices';
 import { BlockNode, complex } from 'mathjs';
 
@@ -58,7 +58,7 @@ describe('Quantum Simulation Integration Tests', () => {
 			// The state should have evolved through the circuit
 			expect(state.blochV).not.toEqual(initialBloch);
 			// State should still be valid
-			const validation = state.validateMatrix(state.mat as ComplexMatRxC<2,2>);
+			const validation = state.validateMatrix(state.mat as ComplexMatRxC<2, 2>);
 			expect(validation.isValid).toBe(true);
 		});
 
@@ -191,8 +191,8 @@ describe('Quantum Simulation Integration Tests', () => {
 				const currentBloch = state.blochV;
 				const distance = Math.sqrt(
 					(currentBloch[0] - previousBloch[0]) ** 2 +
-						(currentBloch[1] - previousBloch[1]) ** 2 +
-						(currentBloch[2] - previousBloch[2]) ** 2
+					(currentBloch[1] - previousBloch[1]) ** 2 +
+					(currentBloch[2] - previousBloch[2]) ** 2
 				);
 
 				expect(distance).toBeLessThan(1); // Should be continuous

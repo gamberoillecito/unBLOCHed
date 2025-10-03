@@ -1,6 +1,6 @@
-import type { DensityMatrix } from "$lib/components/Model.svelte";
+import type { DensityMatrix } from "$lib/model/Model.svelte";
 import { BlochHistory } from "$lib/components/BlochHistory.svelte";
-import { GateMatrix } from "$lib/components/Model.svelte";
+import { GateMatrix } from "$lib/model/Model.svelte";
 
 export interface TutorialPageProps {
     DM: DensityMatrix;
