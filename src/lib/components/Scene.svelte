@@ -182,6 +182,7 @@ This component contains the entire scene logic and should be placed inside a Thr
 	<OrbitControls enableDamping enablePan={false} dampingFactor={0.2}>
 		<Gizmo animated={true} size={80} resolution={128} edges={{ scale: 20 }} />
 	</OrbitControls>
+	<!-- Add a watermark to the 3D scene. Attachd to the camera to always be in the same position (bottom right) -->
 	{#if settings.displayWatermark}
 		<Text
 			position={[0.62, -0.58, -10]}

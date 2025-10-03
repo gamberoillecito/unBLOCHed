@@ -68,17 +68,22 @@
 		tutorialProps: TutorialPageProps;
 	}
 	let { tutorialProps = $bindable() }: Props = $props();
-
-	let joystickMode = $state(false);
+	
+	let joystickMode = $state(false); //** Whether to use the default view (display DM) or joystick mode (display fakeDM)*/
 
 	let DM = $state(ketPlus.clone());
 	DM.extendedLabel = '\\rho';
+	
 	let fakeDM = $state(new FakeDensityMatrix());
+	//** This variable is shared with all the children of App.svelte and is used to prevent
+	// multiple error popovers opening at the same time for different inputs*/
 	let popoversContext = $state({
 		preventOpening: false
 	});
-	setContext('popoversContext', popoversContext);
 
+	setContext('popoversContext', popoversContext); 
+
+	//**The GateMatrix of the "fully customizable gate"*/
 	let GM = $state(
 		new GateMatrix(
 			[
@@ -103,11 +108,14 @@
 		pathColor: null
 	});
 
+	//**Whether the exported image should have a transparent bg or not*/
 	let transparentBackground = $state(false);
 
 	let canvasContainer = $state() as HTMLDivElement;
 	/**Function to download image from the canvas*/
 	let getImage = $state() as (withBackground?: boolean) => string;
+
+	//**The fully customizable gate is hidden under a toggle on smaller screens*/
 	let customGateVisible = $state(false);
 
 	$effect(() => {
@@ -116,6 +124,7 @@
 		tutorialProps.history = history;
 	});
 
+	//**StateVector binded to the global densityMatrix DM*/
 	let SV = DM.SV;
 	SV.extendedLabel = '|\\psi\\rangle';
 
@@ -129,17 +138,11 @@
 		watermarkDialogOpen = true;
 	});
 
-	//**The element of the scene menu that opens the "Download Image" submenu*/
+	//**The element of the scene menu that opens the "Download Image" submenu, needs extra logic to remain open even after the watermark message*/
 	let SceneMenuDownloadTrigger = $state() as HTMLElement;
 	let SceneMenuDownloadOpen = $state(false);
 
 	let screen2xl = new MediaQuery('min-width: 42rem');
-	$effect(() => {
-		console.log(SV.isConsistent);
-
-		console.log(`[${SV.latexMat[0][0]},\n${SV.latexMat[1][0]}]`);
-		print_vec(SV.mat);
-	});
 </script>
 
 {#snippet StateVectorInput()}
