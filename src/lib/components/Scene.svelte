@@ -13,7 +13,7 @@
 	import type { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
 	import AngleArc from './AngleArc.svelte';
 	import { getContext, onMount } from 'svelte';
-	import type { BlochHistory } from './BlochHistory.svelte';
+	import type { BlochHistory } from '$lib/model/BlochHistory.svelte';
 	import { mode } from 'mode-watcher';
 	import { base } from '$app/paths';
 	import * as culori from 'culori';

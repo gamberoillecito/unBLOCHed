@@ -2,7 +2,7 @@
 	import type { GateMatrix } from '$lib/model/GateMatrix.svelte';
 	import type { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
-	import { BlochHistory } from '$lib/components/BlochHistory.svelte';
+	import { BlochHistory } from '$lib/model/BlochHistory.svelte';
 	import LatexButton from './LatexButton.svelte';
 	import { isZero, equal, multiply, pi } from 'mathjs';
 	import { marked } from 'marked';

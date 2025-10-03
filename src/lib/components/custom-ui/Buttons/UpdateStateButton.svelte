@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { GateMatrix } from '$lib/model/GateMatrix.svelte';
 	import type { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
-	import { BlochHistory } from '$lib/components/BlochHistory.svelte';
+	import { BlochHistory } from '$lib/model/BlochHistory.svelte';
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
 	import MatrixInfoInput from '$lib/components/MatrixInfoInput.svelte';

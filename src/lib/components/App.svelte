@@ -25,7 +25,7 @@
 	} from 'mathjs';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import MatrixInfoInput from './MatrixInfoInput.svelte';
-	import { BlochHistory } from './BlochHistory.svelte';
+	import { BlochHistory } from '$lib/model/BlochHistory.svelte';
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import { convertLatexToMarkup } from 'mathlive';
 	import { Badge } from '$lib/components/ui/badge/index.js';
