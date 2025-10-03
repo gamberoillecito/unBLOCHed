@@ -67,20 +67,6 @@ Renders a popover button that allows viewing and editing the parameters of a `Fa
 
 - `size?: 'default' | 'small'` (default: `'default'`)
   The size of the trigger button.
-
-**Usage:**
-Pass a reactive `FancyMatrix` instance to the `matrix` prop. The component will automatically generate the appropriate UI for viewing or editing its parameters.
-
-```svelte
-<script lang="ts">
-  import MatrixInfoInput from './MatrixInfoInput.svelte';
-  import { GateMatrix } from '$lib/model/GateMatrix.svelte';
-
-  // Create a reactive instance of a matrix with parameters
-  let hadamardGate = $state(new GateMatrix('H'));
-</script>
-
-<MatrixInfoInput matrix={hadamardGate} />
 ```
 -->
 
