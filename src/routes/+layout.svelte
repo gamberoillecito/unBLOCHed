@@ -32,6 +32,10 @@
 		name="description"
 		content="Interactive and intuitive Bloch sphere simulator, fully open source."
 	/>
+
+	<link href="https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400..700&display=swap" rel="preload">
+	<link href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" rel="preload">
+	
 	<meta property="og:title" content="unBLOCHed" />
     <meta property="og:description" content="Interactive and intuitive Bloch sphere simulator, fully open source." />
     <meta property="og:type" content="website" />
@@ -55,9 +59,7 @@
 {@render children()}
 
 <style>
-	@import url('https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400..700&display=swap');
 
-	@import url('https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css');
 	:global(math-field::part(menu-toggle)) {
 		display: none;
 	}
