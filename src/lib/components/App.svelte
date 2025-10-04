@@ -2,33 +2,20 @@
 	import { type sceneSettings } from './Scene.svelte';
 	import Scene from './Scene.svelte';
 
-	import { GatePath, MatrixParam, print_mat, print_vec } from '$lib/model/ModelUtility.svelte';
 	import { StateVector } from '$lib/model/StateVector.svelte';
 	import { GateMatrix } from '$lib/model/GateMatrix.svelte';
 	import { FakeDensityMatrix } from '$lib/model/DensityMatrix.svelte';
 	import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
-	import { FancyMatrix } from '$lib/model/FancyMatrix.svelte';
 	import DynamicMatrix from './DynamicMatrix.svelte';
-	import { getContext, onMount, setContext, untrack } from 'svelte';
+	import { setContext } from 'svelte';
 	import {
-		type Complex,
 		create,
 		all,
-		complex,
-		boolean,
 		mod as modulus,
-		compare,
-		pi,
-		isZero,
-		multiply,
-		equal
 	} from 'mathjs';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
-	import MatrixInfoInput from './custom-ui/MatrixInfoInput.svelte';
 	import { BlochHistory } from '$lib/model/BlochHistory.svelte';
 	import { Separator } from '$lib/components/ui/separator/index.js';
-	import { convertLatexToMarkup } from 'mathlive';
-	import { Badge } from '$lib/components/ui/badge/index.js';
 	import Undo from '@lucide/svelte/icons/undo';
 	import Redo from '@lucide/svelte/icons/redo';
 	import {
@@ -36,33 +23,26 @@
 		predefinedStates,
 		theta_param,
 		ketPlus,
-		ketI
 	} from '$lib/data/matrices';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
-	import { Canvas, type ThrelteContext } from '@threlte/core';
-	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';
-	import { toast } from 'svelte-sonner';
-	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
+	import { Canvas } from '@threlte/core';
+	import { Button } from '$lib/components/ui/button/index.js';
 	import { Switch } from '$lib/components/ui/switch/index';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import JoystickControls from './custom-ui/JoystickControls.svelte';
-	import LatexButton from './custom-ui/Buttons/LatexButton.svelte';
-	import ApplyGateButton from './custom-ui/Buttons/ApplyGateButton.svelte';
 	import GateButtonWithParams from './custom-ui/Buttons/GateButtonWithParams.svelte';
 	import UpdateStateButton from './custom-ui/Buttons/UpdateStateButton.svelte';
 	import { type TutorialPageProps } from '$lib/components/tutorial/tutorialUtils';
-	import DialogDrawer from './custom-ui/DialogDrawer.svelte';
 	import { copy } from 'svelte-copy';
-	import Check from '@lucide/svelte/icons/check';
+	import CopyCheck from '@lucide/svelte/icons/square-check-big';
 	import Copy from '@lucide/svelte/icons/copy';
-	import { marked } from 'marked';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import { MediaQuery } from 'svelte/reactivity';
 	import Scene3DMenu from './custom-ui/Scene3DMenu.svelte';
 
 	const config = {
 		absTol: 1e-10
-	};
+	}
 	const math = create(all, config);
 
 	interface Props {
@@ -338,15 +318,14 @@
 			class="group relative items-top bg-muted text-muted-foreground inline-flex gap-2 rounded-[0.4rem] px-2 font-mono break-all shadow hover:brightness-110 active:scale-[99.5%] transition-all transi"
 		>
 			<Copy class="mt-1 size-3 flex group-active:hidden transition-discrete" />
-			<Check class="mt-1 size-3 hidden group-active:flex transition-discrete " />
+			<CopyCheck class="mt-1 size-3 hidden group-active:flex transition-discrete " />
 			{text}
 
 	</article>
 	</button>
 {/snippet}
 
-<AlertDialog.Root open={true}>
-<!-- <AlertDialog.Root bind:open={watermarkDialogOpen}> -->
+<AlertDialog.Root bind:open={watermarkDialogOpen}>
 	<AlertDialog.Content
 		class="z-99999"
 		onCloseAutoFocus={(e) => {

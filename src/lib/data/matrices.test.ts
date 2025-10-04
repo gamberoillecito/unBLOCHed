@@ -14,19 +14,14 @@ import {
 	equal,
 	multiply,
 	conj,
-	transpose,
-	identity,
-	trace,
-	pow,
-	subtract,
-	type Matrix
-} from 'mathjs';
+	transpose} from 'mathjs';
 
 // Mock Svelte features
 vi.mock('svelte', () => ({
 	$state: vi.fn((value) => value),
 	$derived: vi.fn((fn) => (typeof fn === 'function' ? fn() : fn))
 }));
+import type { ComplexMatRxC } from '$lib/model/ModelUtility.svelte';
 
 describe('Predefined Quantum Gates', () => {
 	describe('Pauli Gates', () => {
@@ -55,7 +50,7 @@ describe('Predefined Quantum Gates', () => {
 			const gates = [Xgate, Ygate, Zgate];
 
 			gates.forEach((gate) => {
-				const result = gate.validateMatrix(gate.mat);
+				const result = gate.validateMatrix(gate.mat as ComplexMatRxC<2, 2>);
 				expect(result.isValid).toBe(true);
 			});
 		});
@@ -65,13 +60,13 @@ describe('Predefined Quantum Gates', () => {
 
 			gates.forEach((gate) => {
 				// For Pauli matrices, they are their own Hermitian conjugate
-				const dagger = conj(transpose(gate.mat));
+				const dagger = conj(transpose(gate.mat as ComplexMatRxC<2, 2>));
 
 				// Check element by element instead of using equal function
 				for (let i = 0; i < 2; i++) {
 					for (let j = 0; j < 2; j++) {
-						expect(gate.mat[i][j].re).toBeCloseTo((dagger as any)[i][j].re, 10);
-						expect(gate.mat[i][j].im).toBeCloseTo((dagger as any)[i][j].im, 10);
+						expect((gate.mat as ComplexMatRxC<2, 2>)[i][j].re).toBeCloseTo((dagger as ComplexMatRxC<2, 2>)[i][j].re, 10);
+						expect((gate.mat as ComplexMatRxC<2, 2>)[i][j].im).toBeCloseTo((dagger as ComplexMatRxC<2, 2>)[i][j].im, 10);
 					}
 				}
 			});
@@ -82,13 +77,13 @@ describe('Predefined Quantum Gates', () => {
 
 			gates.forEach((gate) => {
 				// Each Pauli gate should be unitary
-				const validation = gate.validateMatrix(gate.mat);
+				const validation = gate.validateMatrix(gate.mat as ComplexMatRxC<2, 2>);
 				expect(validation.isValid).toBe(true);
 
 				// Check that each has the correct structure
-				expect(gate.mat).toHaveLength(2);
-				expect(gate.mat[0]).toHaveLength(2);
-				expect(gate.mat[1]).toHaveLength(2);
+				expect(gate.mat as ComplexMatRxC<2, 2>).toHaveLength(2);
+				expect((gate.mat as ComplexMatRxC<2, 2>)[0]).toHaveLength(2);
+				expect((gate.mat as ComplexMatRxC<2, 2>)[1]).toHaveLength(2);
 			});
 		});
 	});
@@ -104,7 +99,7 @@ describe('Predefined Quantum Gates', () => {
 		});
 
 		test('H gate should be unitary', () => {
-			const result = Hgate.validateMatrix(Hgate.mat);
+			const result = Hgate.validateMatrix(Hgate.mat as ComplexMatRxC<2, 2>);
 			expect(result.isValid).toBe(true);
 		});
 
@@ -114,8 +109,8 @@ describe('Predefined Quantum Gates', () => {
 			// Check if H = H†
 			for (let i = 0; i < 2; i++) {
 				for (let j = 0; j < 2; j++) {
-					expect(Hgate.mat[i][j].re).toBeCloseTo((dagger as any)[i][j].re, 10);
-					expect(Hgate.mat[i][j].im).toBeCloseTo((dagger as any)[i][j].im, 10);
+					expect(Hgate.mat[i][j].re).toBeCloseTo((dagger as ComplexMatRxC<2, 2>)[i][j].re, 10);
+					expect(Hgate.mat[i][j].im).toBeCloseTo((dagger as ComplexMatRxC<2, 2>)[i][j].im, 10);
 				}
 			}
 		});
@@ -143,7 +138,7 @@ describe('Predefined Quantum Gates', () => {
 		});
 
 		test('RZ gate should be unitary', () => {
-			const result = RZgate.validateMatrix(RZgate.mat);
+			const result = RZgate.validateMatrix(RZgate.mat as ComplexMatRxC<2, 2>);
 			expect(result.isValid).toBe(true);
 		});
 
@@ -212,15 +207,15 @@ describe('Predefined Quantum Gates', () => {
 			const gates = [Xgate, Ygate, Zgate, Hgate, RZgate];
 
 			gates.forEach((gate) => {
-				expect(gate.mat).toHaveLength(2);
-				expect(gate.mat[0]).toHaveLength(2);
-				expect(gate.mat[1]).toHaveLength(2);
+				expect(gate.mat as ComplexMatRxC<2, 2>).toHaveLength(2);
+				expect((gate.mat as ComplexMatRxC<2, 2>)[0]).toHaveLength(2);
+				expect((gate.mat as ComplexMatRxC<2, 2>)[1]).toHaveLength(2);
 
 				// All matrix elements should be complex numbers
 				for (let i = 0; i < 2; i++) {
 					for (let j = 0; j < 2; j++) {
-						expect(typeof gate.mat[i][j].re).toBe('number');
-						expect(typeof gate.mat[i][j].im).toBe('number');
+						expect(typeof (gate.mat as ComplexMatRxC<2, 2>)[i][j].re).toBe('number');
+						expect(typeof (gate.mat as ComplexMatRxC<2, 2>)[i][j].im).toBe('number');
 					}
 				}
 			});
@@ -261,9 +256,9 @@ describe('Predefined Quantum Gates', () => {
 					const composed = multiply(gates[i].mat, gates[j].mat);
 
 					// Should be 2x2 matrix
-					expect((composed as any).length).toBe(2);
-					expect((composed as any)[0].length).toBe(2);
-					expect((composed as any)[1].length).toBe(2);
+					expect((composed as ComplexMatRxC<2, 2>).length).toBe(2);
+					expect((composed as ComplexMatRxC<2, 2>)[0].length).toBe(2);
+					expect((composed as ComplexMatRxC<2, 2>)[1].length).toBe(2);
 				}
 			}
 		});
@@ -276,12 +271,12 @@ describe('Predefined Quantum Gates', () => {
 			const XYX = multiply(multiply(X, Y), X);
 
 			// Should be a valid 2x2 matrix
-			expect((XYX as any).length).toBe(2);
-			expect((XYX as any)[0].length).toBe(2);
+			expect((XYX as ComplexMatRxC<2, 2>).length).toBe(2);
+			expect((XYX as ComplexMatRxC<2, 2>)[0].length).toBe(2);
 
 			// Should have structure similar to -Y (diagonal elements should be small)
-			expect(Math.abs((XYX as any)[0][0].re)).toBeLessThan(0.01);
-			expect(Math.abs((XYX as any)[1][1].re)).toBeLessThan(0.01);
+			expect(Math.abs((XYX as ComplexMatRxC<2, 2>)[0][0].re)).toBeLessThan(0.01);
+			expect(Math.abs((XYX as ComplexMatRxC<2, 2>)[1][1].re)).toBeLessThan(0.01);
 		});
 
 		test('gate sequences should maintain quantum properties', () => {
@@ -293,8 +288,8 @@ describe('Predefined Quantum Gates', () => {
 			const YZ = multiply(Y, Z);
 
 			// Result should be a valid 2x2 complex matrix
-			expect((YZ as any).length).toBe(2);
-			expect((YZ as any)[0].length).toBe(2);
+			expect((YZ as ComplexMatRxC<2, 2>).length).toBe(2);
+			expect((YZ as ComplexMatRxC<2, 2>)[0].length).toBe(2);
 		});
 	});
 });
@@ -302,13 +297,13 @@ describe('Predefined Quantum Gates', () => {
 describe('randomDensityMatrix', () => {
 	test('should generate a valid pure state', () => {
 		const dm = randomDensityMatrix(true);
-		expect(dm.validateMatrix(dm.mat).isValid).toBe(true);
+		expect(dm.validateMatrix(dm.mat as ComplexMatRxC<2, 2>).isValid).toBe(true);
 		expect(dm.isPureState()).toBe(true);
 	});
 
 	test('should generate a valid mixed state', () => {
 		const dm = randomDensityMatrix(false);
-		expect(dm.validateMatrix(dm.mat).isValid).toBe(true);
+		expect(dm.validateMatrix(dm.mat as ComplexMatRxC<2, 2>).isValid).toBe(true);
 		expect(dm.isPureState()).toBe(false);
 	});
 });
