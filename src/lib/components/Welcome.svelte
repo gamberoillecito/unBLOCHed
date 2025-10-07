@@ -3,14 +3,13 @@
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import * as Drawer from '$lib/components/ui/drawer/index.js';
 	import markedKatex from 'marked-katex-extension';
-	import { Button, buttonVariants } from '$lib/components/ui/button/index.js';
+	import { Button } from '$lib/components/ui/button/index.js';
 	import Title from '$lib/components/Title.svelte';
 	import welcomemd from '$lib/markdown/welcome_en.md?raw';
 	import * as Alert from './ui/alert/index.js';
 	import MonitorSmartphone from '@lucide/svelte/icons/monitor-smartphone';
 	import { preferences } from '$lib/preferences';
 	import { get } from 'svelte/store';
-	import Toggle from './ui/toggle/toggle.svelte';
 	import Checkbox from './ui/checkbox/checkbox.svelte';
 	import Label from './ui/label/label.svelte';
 	import { onMount } from 'svelte';
@@ -78,21 +77,21 @@
 	{/snippet}
 	{#snippet drawerContent()}
 		<Drawer.Header class="text-left">
-			<Drawer.Title class="font-light text-xl">Welcome to <Title subtitle={false} />!</Drawer.Title>
+			<Drawer.Title class="text-xl font-light">Welcome to <Title subtitle={false} />!</Drawer.Title>
 			<Drawer.Description>
 				{DESCRIPTION}
 				<Alert.Root variant="warning" class="mx-auto mt-4 max-w-[95%]">
 					<MonitorSmartphone />
 					<Alert.Description>
-						The tutorial panel is not available on smaller screens.
-            Visit this website on your PC for a better experience
+						The tutorial panel is not available on smaller screens. Visit this website on your PC
+						for a better experience
 					</Alert.Description>
 				</Alert.Root>
 			</Drawer.Description>
 		</Drawer.Header>
 		<Drawer.Footer>
 			{@render githubButton()}
-			<div class="flex flex-row-reverse gap-2 justify-start-safe mt-2">
+			<div class="justify-start-safe mt-2 flex flex-row-reverse gap-2">
 				<Checkbox id="showWelcomeMessage" bind:checked={showWelcomeAtStart} />
 				<Label for="showWelcomeMessage">Show this message next time</Label>
 			</div>

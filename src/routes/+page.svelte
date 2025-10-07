@@ -4,13 +4,13 @@
 	import * as Resizable from '$lib/components/ui/resizable/index.js';
 	import { Toggle } from '$lib/components/ui/toggle/index.js';
 	import Tutorial from '$lib/components/tutorial/Tutorial.svelte';
-	import { createRawSnippet, onMount, setContext } from 'svelte';
+	import {  onMount } from 'svelte';
 	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
 	import 'mathlive/static.css';
 	import SunIcon from '@lucide/svelte/icons/sun';
 	import MoonIcon from '@lucide/svelte/icons/moon';
 	import { toggleMode } from 'mode-watcher';
-	import { Button, buttonVariants } from '$lib/components/ui/button/index.js';
+	import { Button  } from '$lib/components/ui/button/index.js';
 	import Title from '$lib/components/Title.svelte';
 	import { MediaQuery } from 'svelte/reactivity';
 	import Info from '@lucide/svelte/icons/info';
@@ -115,7 +115,6 @@
 
 	let tutorialProps = $state({}) as TutorialPageProps;
 
-	const isDesktop = new MediaQuery('(min-width: 768px)');
 </script>
 
 <svelte:window bind:innerWidth />
@@ -147,7 +146,7 @@
 			<Button
 				variant="ghost"
 				size="default"
-				onclick={(e: Event) => {
+				onclick={() => {
 					welcomeMessageOpen = !welcomeMessageOpen;
 				}}
 				aria-label="info about website"
@@ -183,7 +182,7 @@
 			</p>
 		</div>
 	{:else}
-		<Resizable.PaneGroup direction="horizontal" autoSaveId={'tutorialPane'}>
+		<Resizable.PaneGroup direction="horizontal" autoSaveId='tutorialPane'>
 			<Resizable.Pane minSize={resizablePanelMin}>
 				<div class="bg-background @container h-full min-h-0 w-full flex-1">
 					<App bind:tutorialProps />

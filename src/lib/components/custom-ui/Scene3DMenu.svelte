@@ -2,7 +2,7 @@
 	import { type sceneSettings } from '$lib/components/Scene.svelte';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import Menu from '@lucide/svelte/icons/menu';
-	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';
+	import {buttonVariants } from '$lib/components/ui/button/index.js';
 	import ImageDown from '@lucide/svelte/icons/image-down';
 	import { toast } from 'svelte-sonner';
 	import ColorPickerSubmenu from './ColorPickerSubmenu.svelte';

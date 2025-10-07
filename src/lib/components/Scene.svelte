@@ -1,18 +1,15 @@
 <script lang="ts">
-	import { Canvas, useThrelte, useTask } from '@threlte/core';
+	import { useThrelte } from '@threlte/core';
 	import { T } from '@threlte/core';
 	import { OrbitControls, SVG, Billboard, Gizmo, Text } from '@threlte/extras';
-	// import { ContactShadows, Float, Grid, OrbitControls } from '@threlte/extras'
 	import BlochSphere from './BlochSphere.svelte';
-	import { boolean, complex, number, sign, type Complex } from 'mathjs';
+	import { complex, sign } from 'mathjs';
 	import SolidVector from './SolidVector.svelte';
 	import Path from './Path.svelte';
 	import { PerspectiveCamera, Color, Object3D } from 'three';
 	import { generateGradient } from 'typescript-color-gradient';
-	import type { GatePath } from '$lib/model/ModelUtility.svelte';
 	import type { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
 	import AngleArc from './AngleArc.svelte';
-	import { getContext, onMount } from 'svelte';
 	import type { BlochHistory } from '$lib/model/BlochHistory.svelte';
 	import { mode } from 'mode-watcher';
 	import { base } from '$app/paths';
@@ -63,7 +60,7 @@
 	Object3D.DEFAULT_UP.set(0, 0, 1);
 
 	let pathGradient = generateGradient(colors_hex, MAX_PATH_COLORS);
-	const { renderer, scene, renderStage, autoRenderTask, canvas } = useThrelte();
+	const { renderer, scene } = useThrelte();
 	let camera = $state() as PerspectiveCamera;
 
 	function downloadImage(withBackground = true) {
@@ -84,7 +81,7 @@
 				const c = culori.parse(color); // parses ok/oklch/hsl/rgb
 				if (c) bgColor = culori.formatRgb(c); // returns "rgb(r,g,b)"
 			} catch (e) {
-				console.warn('Failed to parse background color:', color);
+				console.warn(`${e} Failed to parse background color:`, color);
 			}
 
 			// Set background color
@@ -196,7 +193,7 @@ This component contains the entire scene logic and should be placed inside a Thr
 	{/if}
 </T.PerspectiveCamera>
 {#if settings.displayPaths}
-	{#each history.list as historyEl, idx}
+	{#each history.list as historyEl, idx (historyEl)}
 		{#if historyEl.path && historyEl.pathVisible && !joystickMode}
 			<Path
 				path={historyEl.path}
@@ -208,7 +205,7 @@ This component contains the entire scene logic and should be placed inside a Thr
 {/if}
 
 {#if settings.displayStateLabels}
-	{#each POI as dm, index}
+	{#each POI as dm, index (dm.label)}
 		<Billboard
 			follow={true}
 			position={[

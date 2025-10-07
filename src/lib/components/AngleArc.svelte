@@ -9,9 +9,6 @@
 		LineBasicMaterial,
 		LineDashedMaterial,
 		Material,
-
-		AxesHelper
-
 	} from 'three';
 	import { Billboard, SVG } from '@threlte/extras';
 	import { mode } from 'mode-watcher';
@@ -26,7 +23,7 @@
 	// Example usage
 	const origin = new Vector3(0, 0, 0);
 	const Xaxis = new Vector3(1, 0, 0);
-	const Yaxis = new Vector3(0, 1, 0);
+	// const Yaxis = new Vector3(0, 1, 0);
 	const Zaxis = new Vector3(0, 0, 1);
 
 	const ARC_RADIUS = 0.2; // Radius of the arcs

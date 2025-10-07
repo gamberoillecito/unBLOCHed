@@ -8,7 +8,7 @@
 		hexBindColor: string | null;
 		title?: string;
 	}
-	let { hexBindColor = $bindable(), title = undefined } = $props();
+	let { hexBindColor = $bindable(), title = undefined }: Props = $props();
 </script>
 
 <DropdownMenu.SubContent>

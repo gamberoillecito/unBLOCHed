@@ -3,16 +3,8 @@
 	import 'mathlive';
 	import type { MathfieldElement } from 'mathlive';
 	import { getContext } from 'svelte';
-	import { MatrixParam, print_mat } from '$lib/model/ModelUtility.svelte';
-	import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
 	import { FancyMatrix } from '$lib/model/FancyMatrix.svelte';
 	import { deepEqual } from 'mathjs';
-	import MatrixParameterInput from './custom-ui/MatrixInfoInput.svelte';
-	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';
-	import Trash from '@lucide/svelte/icons/trash';
-	import Save from '@lucide/svelte/icons/save';
-	import Eraser from '@lucide/svelte/icons/eraser';
-	import CircleX from '@lucide/svelte/icons/circle-x';
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
 	import ErrorPopover from './custom-ui/ErrorPopover.svelte';
@@ -226,7 +218,8 @@ The component can be configured for manual or instant updates.
 
 // Instant updates
 <DynamicMatrix FM={dm} instantUpdate={true} />
-``` -->
+```
+-->
 
 <div class="flex">
 	<ErrorPopover

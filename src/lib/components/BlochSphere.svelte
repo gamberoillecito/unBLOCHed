@@ -92,7 +92,7 @@ Place the component inside a Threlte `<Canvas>` and customize its appearance by 
 
 <T.Group>
 	<!-- Latitudes -->
-	{#each Array(num_latitudes) as _, iter}
+	{#each Array(num_latitudes) as _, iter (_)}
 		<T.Mesh
 			rotation.x={MathUtils.degToRad(90)}
 			position.y={latitudeOffset(sphere_radius, iter, num_latitudes)}
@@ -112,7 +112,7 @@ Place the component inside a Threlte `<Canvas>` and customize its appearance by 
 	{/each}
 
 	<!-- Longitudes -->
-	{#each Array(num_longitudes) as _, iter}
+	{#each Array(num_longitudes) as _, iter (_)}
 		<T.Mesh rotation.y={MathUtils.degToRad(((360 / num_longitudes) * iter) / 2)}>
 			<T.TorusGeometry args={[sphere_radius, lat_long_thickness]} />
 

@@ -67,7 +67,6 @@ Renders a popover button that allows viewing and editing the parameters of a `Fa
 
 - `size?: 'default' | 'small'` (default: `'default'`)
   The size of the trigger button.
-```
 -->
 
 <Popover.Root bind:open={mainPopoverOpen}>
@@ -106,7 +105,7 @@ Renders a popover button that allows viewing and editing the parameters of a `Fa
 				<Separator />
 			{/if}
 			<div class="flex w-full flex-row place-content-around">
-				{#each FM.parameterArray as param, index}
+				{#each FM.parameterArray as param (param.name)}
 					{#if param.userEditable}
 						<div class="flex flex-row gap-2">
 							<Label for={param.latexLabel}

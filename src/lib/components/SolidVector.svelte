@@ -80,10 +80,6 @@ Place the component inside a Threlte `<Canvas>` and pass the reactive `DM` prop.
 ```
 -->
 
-<!-- The outlines of the vector (applied to the single parts) -->
-{#snippet outline()}
-	<Outlines color="black" thickness={8} screenspace={true} />
-{/snippet}
 
 <!-- The material of the arrow -->
 {#snippet arrowMaterial()}
@@ -96,7 +92,7 @@ Place the component inside a Threlte `<Canvas>` and pass the reactive `DM` prop.
  the viewport-->
 <T.Mesh position.x={DM.blochV[0]} position.y={DM.blochV[1]} position.z={DM.blochV[2]}>
 	<T.SphereGeometry args={[0]} />
-	<T.MeshStandardMaterial color={'red'} />
+	<T.MeshStandardMaterial color='red' />
 </T.Mesh>
 
 <T.Group bind:ref={vector}>

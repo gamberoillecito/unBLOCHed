@@ -11,7 +11,6 @@
 	import {
 		create,
 		all,
-		mod as modulus,
 	} from 'mathjs';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import { BlochHistory } from '$lib/model/BlochHistory.svelte';
@@ -39,11 +38,6 @@
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import { MediaQuery } from 'svelte/reactivity';
 	import Scene3DMenu from './custom-ui/Scene3DMenu.svelte';
-
-	const config = {
-		absTol: 1e-10
-	}
-	const math = create(all, config);
 
 	interface Props {
 		tutorialProps: TutorialPageProps;
@@ -123,7 +117,6 @@
 	let SceneMenuDownloadTrigger = $state() as HTMLElement;
 	let SceneMenuDownloadOpen = $state(false);
 
-	let screen2xl = new MediaQuery('min-width: 42rem');
 </script>
 
 {#snippet StateVectorInput()}
@@ -134,7 +127,6 @@
 				instantUpdate={false}
 				onChangeCallback={(SV, oldSV, args: { history: BlochHistory; DM: DensityMatrix }) => {
 					let newMatrix = (SV as StateVector).getDM();
-					let oldDM = args.DM.clone();
 					args.DM.setMatrixValue(newMatrix);
 					// args.history.addElement(oldDM, args.DM);
 				}}
@@ -257,7 +249,7 @@
 			<h4>States</h4>
 			<!-- Standard states -->
 			<div class="m-3 flex flex-wrap justify-center gap-2">
-				{#each predefinedStates as matrix}
+				{#each predefinedStates as matrix (matrix.label)}
 					<UpdateStateButton {matrix} {DM} disabled={false} {canvasContainer} {history} />
 				{/each}
 			</div>
@@ -265,7 +257,7 @@
 			<h4>Gates</h4>
 			<!-- Standard gates (no parameters) -->
 			<div class="m-3 mx-auto flex flex-wrap justify-center gap-2 @lg:max-w-[400px]">
-				{#each predefinedGates.filter((g) => g.parameterArray.length === 0) as gate}
+				{#each predefinedGates.filter((g) => g.parameterArray.length === 0) as gate (gate.label)}
 					<GateButtonWithParams
 						{DM}
 						{history}
@@ -276,7 +268,7 @@
 					/>
 				{/each}
 				<!-- Standard gates (with parameters) -->
-				{#each predefinedGates.filter((g) => g.parameterArray.length !== 0) as gate}
+				{#each predefinedGates.filter((g) => g.parameterArray.length !== 0) as gate (gate.label)}
 					<GateButtonWithParams
 						{DM}
 						{history}

@@ -1,5 +1,4 @@
 <script lang="ts">
-    import type { GateMatrix } from '$lib/model/GateMatrix.svelte';
     import type { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
     import { BlochHistory } from '$lib/model/BlochHistory.svelte';
     import { marked } from 'marked';

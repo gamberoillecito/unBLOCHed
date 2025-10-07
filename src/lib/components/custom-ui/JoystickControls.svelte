@@ -13,7 +13,6 @@
 	import MoveDownLeft from '@lucide/svelte/icons/move-down-left';
 	import Keyboard from '@lucide/svelte/icons/keyboard';
 	import Label from '../ui/label/label.svelte';
-	import { onMount } from 'svelte';
 	import Separator from '../ui/separator/separator.svelte';
 	interface Props {
 		DM: FakeDensityMatrix;
@@ -92,7 +91,7 @@
 		moveDrag(e.clientX, e.clientY);
 	}
 
-	function onWindowMouseUp(_: MouseEvent) {
+	function onWindowMouseUp() {
 		endDrag();
 	}
 
@@ -113,19 +112,10 @@
 		moveDrag(t.clientX, t.clientY);
 	}
 
-	function onWindowTouchEnd(_: TouchEvent) {
+	function onWindowTouchEnd() {
 		endDrag();
 	}
 
-	function handleMouseMove(e: MouseEvent) {
-		// kept for compatibility (if any local listeners call it)
-		if (!isDragging) return;
-		moveDrag(e.clientX, e.clientY);
-	}
-
-	function handleMouseUp() {
-		endDrag();
-	}
 
 	function handleScroll(e: WheelEvent) {
 		const lengthStep = 0.01;

@@ -1,14 +1,13 @@
 <script lang="ts">
-	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';
+	import { Button } from '$lib/components/ui/button/index.js';
 	import Save from '@lucide/svelte/icons/save';
 	import Eraser from '@lucide/svelte/icons/eraser';
 
 	interface Props {
-		updateBtton: HTMLElement;
+		updateButton: HTMLElement | null;
 		updateButtonEnabled: boolean;
-		undoChangesButton: HTMLElement;
+		undoChangesButton: HTMLElement | null;
 		undoChangesButtonEnabled: boolean;
-		instantUpdate?: boolean;
 	}
 
 	let {
@@ -16,7 +15,7 @@
 		updateButtonEnabled,
 		undoChangesButton = $bindable(),
 		undoChangesButtonEnabled
-	} = $props();
+	}: Props = $props();
 </script>
 
 <!--
@@ -57,7 +56,7 @@ Bind the button elements and their enabled states to variables in a parent compo
 ```
 -->
 
-<div class={`my-1 ml-2 flex flex-col content-center justify-around gap-2 align-middle `}>
+<div class="my-1 ml-2 flex flex-col content-center justify-around gap-2 align-middle">
 	<Button
 		class="size-6 rounded-sm bg-(--approve) hover:bg-(--approve) hover:opacity-75 dark:bg-(--approve)"
 		variant="outline"
