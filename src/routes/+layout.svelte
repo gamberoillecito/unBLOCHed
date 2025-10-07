@@ -3,6 +3,7 @@
 	import { Toaster } from '$lib/components/ui/sonner';
 	import { ModeWatcher } from 'mode-watcher';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
+	import '@fontsource-variable/ar-one-sans';
 	let { children } = $props();
 </script>
 
@@ -33,7 +34,6 @@
 		content="Interactive and intuitive Bloch sphere simulator, fully open source."
 	/>
 
-	<link href="https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400..700&display=swap" rel="preload" as="font">
 	<link href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" rel="preload" as="font">
 	
 	<meta property="og:title" content="unBLOCHed" />
