@@ -34,6 +34,7 @@
 		"@testing-library/jest-dom": "^6.8.0",
 		"@testing-library/svelte": "^5.2.8",
 		"@types/culori": "^4.0.1",
+		"@types/node": "^22",
 		"bits-ui": "^2.11.4",
 		"clsx": "^2.1.1",
 		"eslint": "^9.36.0",
