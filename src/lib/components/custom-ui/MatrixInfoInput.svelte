@@ -6,7 +6,7 @@
 	import { type MathfieldElement } from 'mathlive';
 	import { getContext } from 'svelte';
 	import * as Popover from '$lib/components/ui/popover/index.js';
-	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';
+	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import SquarePen from '@lucide/svelte/icons/square-pen';
 	import Info from '@lucide/svelte/icons/info';
 	import { Separator } from '$lib/components/ui/separator/index.js';

@@ -60,6 +60,7 @@
 
 <style>
 
+	@import url('https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css');
 	:global(math-field::part(menu-toggle)) {
 		display: none;
 	}
