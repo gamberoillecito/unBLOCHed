@@ -1,15 +1,11 @@
-import { thickness } from "three/tsl";
-import { GatePath, print_mat } from "./ModelUtility.svelte";
+import { GatePath  } from "./ModelUtility.svelte";
 import { GateMatrix } from '$lib/model/GateMatrix.svelte';
 import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
 
 import {
-    type Complex,
     create,
     all,
-    complex,
 } from 'mathjs'
-import { ToonShaderHatching } from "three/examples/jsm/Addons.js";
 
 const config = {
     absTol: 1e-10,

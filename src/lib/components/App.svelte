@@ -8,10 +8,6 @@
 	import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
 	import DynamicMatrix from './DynamicMatrix.svelte';
 	import { setContext } from 'svelte';
-	import {
-		create,
-		all,
-	} from 'mathjs';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 	import { BlochHistory } from '$lib/model/BlochHistory.svelte';
 	import { Separator } from '$lib/components/ui/separator/index.js';
@@ -36,7 +32,6 @@
 	import CopyCheck from '@lucide/svelte/icons/square-check-big';
 	import Copy from '@lucide/svelte/icons/copy';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
-	import { MediaQuery } from 'svelte/reactivity';
 	import Scene3DMenu from './custom-ui/Scene3DMenu.svelte';
 
 	interface Props {

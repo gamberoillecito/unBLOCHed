@@ -12,7 +12,6 @@
 	import { toggleMode } from 'mode-watcher';
 	import { Button  } from '$lib/components/ui/button/index.js';
 	import Title from '$lib/components/Title.svelte';
-	import { MediaQuery } from 'svelte/reactivity';
 	import Info from '@lucide/svelte/icons/info';
 	import Welcome from '$lib/components/Welcome.svelte';
 	import { preferences } from '$lib/preferences';
