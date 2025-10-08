@@ -244,7 +244,7 @@
 			<h4>States</h4>
 			<!-- Standard states -->
 			<div class="m-3 flex flex-wrap justify-center gap-2">
-				{#each predefinedStates as matrix (matrix.label)}
+				{#each predefinedStates as matrix}
 					<UpdateStateButton {matrix} {DM} disabled={false} {canvasContainer} {history} />
 				{/each}
 			</div>
@@ -252,7 +252,7 @@
 			<h4>Gates</h4>
 			<!-- Standard gates (no parameters) -->
 			<div class="m-3 mx-auto flex flex-wrap justify-center gap-2 @lg:max-w-[400px]">
-				{#each predefinedGates.filter((g) => g.parameterArray.length === 0) as gate (gate.label)}
+				{#each predefinedGates.filter((g) => g.parameterArray.length === 0) as gate}
 					<GateButtonWithParams
 						{DM}
 						{history}
@@ -263,7 +263,7 @@
 					/>
 				{/each}
 				<!-- Standard gates (with parameters) -->
-				{#each predefinedGates.filter((g) => g.parameterArray.length !== 0) as gate (gate.label)}
+				{#each predefinedGates.filter((g) => g.parameterArray.length !== 0) as gate}
 					<GateButtonWithParams
 						{DM}
 						{history}

@@ -105,7 +105,7 @@ Renders a popover button that allows viewing and editing the parameters of a `Fa
 				<Separator />
 			{/if}
 			<div class="flex w-full flex-row place-content-around">
-				{#each FM.parameterArray as param (param.name)}
+				{#each FM.parameterArray as param}
 					{#if param.userEditable}
 						<div class="flex flex-row gap-2">
 							<Label for={param.latexLabel}

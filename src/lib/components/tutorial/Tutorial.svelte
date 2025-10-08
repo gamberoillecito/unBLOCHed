@@ -132,11 +132,11 @@
 		}}
 	>
 		<Tabs.List>
-			{#each tutorialList as tut (tut)}
+			{#each tutorialList as tut}
 				<Tabs.Trigger value={tut.title}>{tut.title}</Tabs.Trigger>
 			{/each}
 		</Tabs.List>
-		{#each tutorialList as tut (tut)}
+		{#each tutorialList as tut}
 			{@render tabContent(tut.title, tut.content)}
 		{/each}
 	</Tabs.Root>

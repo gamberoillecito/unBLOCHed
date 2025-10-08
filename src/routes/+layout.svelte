@@ -34,7 +34,7 @@
 		content="Interactive and intuitive Bloch sphere simulator, fully open source."
 	/>
 
-	<link href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" rel="preload" as="font">
+	<link href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" rel="preload" as="style">
 	
 	<meta property="og:title" content="unBLOCHed" />
     <meta property="og:description" content="Interactive and intuitive Bloch sphere simulator, fully open source." />

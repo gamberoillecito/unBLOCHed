@@ -193,7 +193,7 @@ This component contains the entire scene logic and should be placed inside a Thr
 	{/if}
 </T.PerspectiveCamera>
 {#if settings.displayPaths}
-	{#each history.list as historyEl, idx (historyEl)}
+	{#each history.list as historyEl, idx}
 		{#if historyEl.path && historyEl.pathVisible && !joystickMode}
 			<Path
 				path={historyEl.path}
@@ -205,7 +205,7 @@ This component contains the entire scene logic and should be placed inside a Thr
 {/if}
 
 {#if settings.displayStateLabels}
-	{#each POI as dm, index (dm.label)}
+	{#each POI as dm, index}
 		<Billboard
 			follow={true}
 			position={[

@@ -46,7 +46,8 @@ export default ts.config(
   {
     rules: {
       // Override or add rule settings here, such as:
-      'svelte/no-at-html-tags': 'warn'
+      'svelte/no-at-html-tags': 'warn',
+      'svelte/require-each-key': 'off'
     }
   }
 );
