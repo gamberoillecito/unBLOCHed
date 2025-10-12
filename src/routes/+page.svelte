@@ -116,7 +116,7 @@
 		if (import.meta.env.MODE === 'beta') {
 			toast('You are in the beta version!', {
 				description: 'Discover the latest features and the latest bugs :)',
-				duration: 999999,
+				duration: 999999, 
 			});
 		}
 	});
