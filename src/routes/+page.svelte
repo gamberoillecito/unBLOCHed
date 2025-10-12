@@ -4,13 +4,13 @@
 	import * as Resizable from '$lib/components/ui/resizable/index.js';
 	import { Toggle } from '$lib/components/ui/toggle/index.js';
 	import Tutorial from '$lib/components/tutorial/Tutorial.svelte';
-	import {  onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
 	import 'mathlive/static.css';
 	import SunIcon from '@lucide/svelte/icons/sun';
 	import MoonIcon from '@lucide/svelte/icons/moon';
 	import { toggleMode } from 'mode-watcher';
-	import { Button  } from '$lib/components/ui/button/index.js';
+	import { Button } from '$lib/components/ui/button/index.js';
 	import Title from '$lib/components/Title.svelte';
 	import Info from '@lucide/svelte/icons/info';
 	import Welcome from '$lib/components/Welcome.svelte';
@@ -19,6 +19,7 @@
 	import { scheduleNotifications } from '$lib/notifications';
 	import type { TutorialPageProps } from '$lib/components/tutorial/tutorialUtils';
 	import Shrimp from '@lucide/svelte/icons/shrimp';
+	import { toast } from 'svelte-sonner';
 
 	let showWelcomeAtStart = get(preferences).showWelcomeAtStart ?? true;
 	// Get user preferences regarding the state of the sidebar with the tutorial and keep them
@@ -110,10 +111,17 @@
 		}
 		// Schedule notifications for later for the user not to bombard user with information at startup
 		scheduleNotifications();
+
+		// Warn the user if they are in beta mode
+		if (import.meta.env.MODE === 'beta') {
+			toast('You are in the beta version!', {
+				description: 'Discover the latest features and the latest bugs :)',
+				duration: 30000
+			});
+		}
 	});
 
 	let tutorialProps = $state({}) as TutorialPageProps;
-
 </script>
 
 <svelte:window bind:innerWidth />
@@ -138,7 +146,9 @@
 		<div>
 			<!-- The line with title is a hacky way to change the title style using CSS, 
 			if using svelte media queries it gets calculated only after part of the content has loaded -->
-			<Title subtitle={false} /> <span class="hidden lg:inline"><Title title={false} /></span>
+			{#if 1}
+				<Title subtitle={false} /> <span class="hidden lg:inline"><Title title={false} /></span>
+			{/if}
 			<!-- <Toggle bind:pressed={welcomeMessageOpen} class={buttonVariants.variants.variant.link}>
 				<Info />
 			</Toggle> -->
@@ -181,7 +191,7 @@
 			</p>
 		</div>
 	{:else}
-		<Resizable.PaneGroup direction="horizontal" autoSaveId='tutorialPane'>
+		<Resizable.PaneGroup direction="horizontal" autoSaveId="tutorialPane">
 			<Resizable.Pane minSize={resizablePanelMin}>
 				<div class="bg-background @container h-full min-h-0 w-full flex-1">
 					<App bind:tutorialProps />

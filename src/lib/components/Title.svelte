@@ -5,6 +5,7 @@
 	}
 
 	let { subtitle = true, title = true }: Props = $props();
+	const bloch = import.meta.env.MODE === 'beta' ? 'βLOCH' : 'BLOCH'; 
 </script>
 
 <!--
@@ -24,7 +25,7 @@ The component can be used with different prop combinations to show or hide parts
 
 <span class="">
 	{#if title}
-		<span class="font-normal">un</span><span class="font-semibold">BLOCH</span><span
+		<span class="font-normal">un</span><span class="font-semibold">{bloch}</span><span
 			class="font-normal">ed</span
 		>
 	{/if}
