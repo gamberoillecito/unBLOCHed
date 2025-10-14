@@ -41,10 +41,13 @@ jobs:
         run: |
           if [ "${GITHUB_REF#refs/heads/}" = "main" ]; then
             echo "BASE_PATH=/${{ github.event.repository.name }}" >> $GITHUB_ENV
+            export BASE_PATH=/${{ github.event.repository.name }}
           else
             # for development deploy target repo path 
             echo "BASE_PATH=/unBLOCHed-beta" >> $GITHUB_ENV
+            export BASE_PATH=/unBLOCHed-beta
           fi
+          echo "BASE_PATH set to: $BASE_PATH"
 
       - name: Build
         env:
