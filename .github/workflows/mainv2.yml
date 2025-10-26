@@ -121,6 +121,12 @@ jobs:
           echo "Show index.html head"
           head -n 40 target-repo/index.html || true
 
+      - name: Ensure .nojekyll in target repo
+        run: |
+          # create marker so GitHub Pages won't filter _* files
+          touch target-repo/.nojekyll
+          ls -la target-repo | sed -n '1,120p'
+
       - name: Sync built files into target repo
         run: |
           rm -rf target-repo/* || true
