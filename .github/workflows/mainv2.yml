@@ -49,6 +49,7 @@ jobs:
       - name: Build
         env:
           BASE_PATH: ${{ env.BASE_PATH }}
+          VITE_BASE: ${{ env.BASE_PATH }}
         run: pnpm run build
 
       - name: Upload build artifact
@@ -98,6 +99,15 @@ jobs:
           token: ${{ secrets.DEPLOY_TOKEN }}
           path: target-repo
           fetch-depth: 0
+
+      - name: Debug target-repo files
+        run: |
+          echo "Listing target-repo top-level"
+          ls -la target-repo
+          echo "List _app"
+          ls -la target-repo/_app || true
+          echo "Show index.html head"
+          head -n 40 target-repo/index.html || true
 
       - name: Sync built files into target repo
         run: |

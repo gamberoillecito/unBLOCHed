@@ -37,4 +37,10 @@ const config = {
 	extensions: ['.svelte', '.svx']
 };
 
-export default config;
+const base = process.env.BASE_PATH || '';
+export default {
+	kit: {
+		paths: { base }
+	},
+	...config
+};
