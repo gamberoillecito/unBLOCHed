@@ -50,7 +50,12 @@ jobs:
         env:
           BASE_PATH: ${{ env.BASE_PATH }}
           VITE_BASE: ${{ env.BASE_PATH }}
-        run: pnpm run build
+        run: |
+          if [[ "${{ github.ref_name }}" == "main" ]]; then
+            pnpm run build
+          else
+            pnpm run build --mode beta
+          fi
 
       - name: Debug build output
         run: |
