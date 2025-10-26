@@ -36,7 +36,7 @@
 			// Prevent menu from opening when user right-clicks
 			mf.menuItems = [];
 
-			mf.addEventListener('input', (ev: Event) => {
+			mf.addEventListener('input', () => {
 				let paramsNames = mf.getPrompts();
 				if (paramsNames.length != 1) {
 					console.error(`Matrix parameter contains more than one prompt: ${paramsNames}`);
@@ -75,7 +75,7 @@ Renders a popover button that allows viewing and editing the parameters of a `Fa
 		aria-label={FM.parameterArray.length === 0 ? 'info' : 'edit'}
 		class={`m-0 ${size === 'small' ? 'h-[2rem]' : 'h-10'} w-6 rounded-none rounded-e-md ${buttonVariants.variants.variant.outline}`}
 	>
-		{#if FM.parameterArray.length === 0}
+		{#if FM.editableParameterArray.length === 0}
 			<Info class="m-auto size-4" />
 		{:else}
 			<SquarePen class="m-auto size-4" />
@@ -109,7 +109,7 @@ Renders a popover button that allows viewing and editing the parameters of a `Fa
 					{#if param.userEditable}
 						<div class="flex flex-row gap-2">
 							<Label for={param.latexLabel}
-								><math-field readonly>{`\\mathbf${param.latexLabel}`}</math-field></Label
+								><math-field readonly>{`\\mathbf{${param.latexLabel}}`}</math-field></Label
 							>
 							<math-field
 								aria-labelledby={param.latexLabel}
