@@ -53,7 +53,24 @@ jobs:
         env:
           BASE_PATH: ${{ env.BASE_PATH }}
           VITE_BASE: ${{ env.BASE_PATH }}
-        run: pnpm run build
+        run: |
+          if [[ "${{ github.ref_name }}" == "main" ]]; then
+            pnpm run build
+          else
+            pnpm run build --mode beta
+          fi
+
+      - name: Debug build output
+        run: |
+          echo "ENV: BASE_PATH='${BASE_PATH}' VITE_BASE='${VITE_BASE}'"
+          echo "Top-level build files:"
+          ls -la build | sed -n '1,200p'
+          echo "Show build/index.html head (first 200 lines):"
+          head -n 200 build/index.html || true
+          echo "List _app contents (if present):"
+          ls -la build/_app || true
+          echo "Search for BASE_PATH occurrences in build:"
+          grep -R --line-number "${BASE_PATH#/}" build || true
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -111,6 +128,12 @@ jobs:
           ls -la target-repo/_app || true
           echo "Show index.html head"
           head -n 40 target-repo/index.html || true
+
+      - name: Ensure .nojekyll in target repo
+        run: |
+          # create marker so GitHub Pages won't filter _* files
+          touch target-repo/.nojekyll
+          ls -la target-repo | sed -n '1,120p'
 
       - name: Sync built files into target repo
         run: |
