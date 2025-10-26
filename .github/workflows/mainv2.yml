@@ -52,6 +52,18 @@ jobs:
           VITE_BASE: ${{ env.BASE_PATH }}
         run: pnpm run build
 
+      - name: Debug build output
+        run: |
+          echo "ENV: BASE_PATH='${BASE_PATH}' VITE_BASE='${VITE_BASE}'"
+          echo "Top-level build files:"
+          ls -la build | sed -n '1,200p'
+          echo "Show build/index.html head (first 200 lines):"
+          head -n 200 build/index.html || true
+          echo "List _app contents (if present):"
+          ls -la build/_app || true
+          echo "Search for BASE_PATH occurrences in build:"
+          grep -R --line-number "${BASE_PATH#/}" build || true
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
