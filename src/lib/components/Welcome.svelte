@@ -5,7 +5,6 @@
 	import markedKatex from 'marked-katex-extension';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import Title from '$lib/components/Title.svelte';
-	import welcomemd from '$lib/markdown/welcome_en.md?raw';
 	import * as Alert from './ui/alert/index.js';
 	import MonitorSmartphone from '@lucide/svelte/icons/monitor-smartphone';
 	import { preferences } from '$lib/preferences';
@@ -26,7 +25,7 @@
 	marked.use(markedKatex(markedKatexOptions));
 
 	const DESCRIPTION =
-		"This website allows you to experiment with a 'real' Bloch sphere and learn more about Quantum";
+		"This website allows you to experiment with a 'real' Bloch sphere and learn more about Quantum.";
 	let showWelcomeAtStart = $state(true);
 
 	onMount(() => {
@@ -39,9 +38,40 @@
 	});
 </script>
 
+{#snippet unresponsiveCheckbox(text: string, checked: boolean = true)}
+	<div class="my-2 flex flex-row items-center gap-2">
+		<Checkbox id="unresp_check_{text}" {checked} class="pointer-events-none " />
+		<Label for="unresp_check_{text}" class="pointer-events-none">{text}</Label>
+	</div>
+{/snippet}
+
+{#snippet linkToBetaPage(parenthesis:boolean=false)}
+	{#if import.meta.env.MODE !== 'beta'}
+		{#if parenthesis}
+			<span>(</span>
+		{/if}
+			<Button variant="link" href="httsp://beta.unbloched.xyz" class="p-0">beta page</Button>
+		{#if parenthesis}
+			<span>)</span>
+		{/if}
+	{/if}
+{/snippet}
+
 {#snippet welcomeContent()}
-	<article class="prose-sm dark:prose-invert m-auto md:columns-2 lg:m-2">
-		{@html marked.parse(welcomemd)}
+	<article class="prose-sm dark:prose-invert m-auto flex flex-row lg:m-2">
+		<div class="w-[50%]">
+			<h3 class="mt-0">New Features</h3>
+			{@render unresponsiveCheckbox('LaTeX input')}
+			{@render unresponsiveCheckbox('Tutorial')}
+			{@render unresponsiveCheckbox('Image export')}
+			{@render unresponsiveCheckbox('Joystick mode')}
+		</div>
+		<div class="w-[50%]">
+			<h3 class="mt-0">Coming Soon {@render linkToBetaPage(true)}</h3>
+			{@render unresponsiveCheckbox('Gif export', false)}
+			{@render unresponsiveCheckbox('Time evolution', false)}
+			{@render unresponsiveCheckbox('Many more...', false)}
+		</div>
 	</article>
 {/snippet}
 
