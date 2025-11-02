@@ -18,6 +18,7 @@
 		predefinedStates,
 		theta_param,
 		ketPlus,
+		BlochRedfield
 	} from '$lib/data/matrices';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import { Canvas } from '@threlte/core';
@@ -38,12 +39,12 @@
 		tutorialProps: TutorialPageProps;
 	}
 	let { tutorialProps = $bindable() }: Props = $props();
-	
+
 	let joystickMode = $state(false); //** Whether to use the default view (display DM) or joystick mode (display fakeDM)*/
 
 	let DM = $state(ketPlus.clone());
 	DM.extendedLabel = '\\rho';
-	
+
 	let fakeDM = $state(new FakeDensityMatrix());
 	//** This variable is shared with all the children of App.svelte and is used to prevent
 	// multiple error popovers opening at the same time for different inputs*/
@@ -51,7 +52,7 @@
 		preventOpening: false
 	});
 
-	setContext('popoversContext', popoversContext); 
+	setContext('popoversContext', popoversContext);
 
 	//**The GateMatrix of the "fully customizable gate"*/
 	let GM = $state(
@@ -111,7 +112,6 @@
 	//**The element of the scene menu that opens the "Download Image" submenu, needs extra logic to remain open even after the watermark message*/
 	let SceneMenuDownloadTrigger = $state() as HTMLElement;
 	let SceneMenuDownloadOpen = $state(false);
-
 </script>
 
 {#snippet StateVectorInput()}
@@ -300,15 +300,14 @@
 </div>
 
 {#snippet copyText(text: string)}
-	<button use:copy={text} >
+	<button use:copy={text}>
 		<article
-			class="group relative items-top bg-muted text-muted-foreground inline-flex gap-2 rounded-[0.4rem] px-2 font-mono break-all shadow hover:brightness-110 active:scale-[99.5%] transition-all transi"
+			class="group items-top bg-muted text-muted-foreground transi relative inline-flex gap-2 rounded-[0.4rem] px-2 font-mono break-all shadow transition-all hover:brightness-110 active:scale-[99.5%]"
 		>
-			<Copy class="mt-1 size-3 flex group-active:hidden transition-discrete" />
-			<CopyCheck class="mt-1 size-3 hidden group-active:flex transition-discrete " />
+			<Copy class="mt-1 flex size-3 transition-discrete group-active:hidden" />
+			<CopyCheck class="mt-1 hidden size-3 transition-discrete group-active:flex " />
 			{text}
-
-	</article>
+		</article>
 	</button>
 {/snippet}
 
