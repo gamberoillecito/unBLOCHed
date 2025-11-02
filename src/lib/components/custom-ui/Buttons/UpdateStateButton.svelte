@@ -50,7 +50,11 @@ A button that updates the main density matrix to a new state described by `matri
     <LatexButton
         onclick={() => {
             history.addElement(DM, matrix);
-            DM.setMatrixFromLatex(matrix.latexMat, matrix.latexMult);
+            const res =DM.setMatrixFromLatex(matrix.latexMat, matrix.latexMult);
+            if (!res.isValid){
+                console.error(res.message);
+                
+            }
             flashCanvas(canvasContainer);
         }}
         label={matrix.label}
