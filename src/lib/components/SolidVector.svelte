@@ -108,6 +108,7 @@ Place the component inside a Threlte `<Canvas>` and pass the reactive `DM` prop.
 			scale.x={(HEAD_RAD / 2) * length ** 0.5}
 			scale.z={(HEAD_RAD / 2) * length ** 0.5}
 			scale.y={body_length}
+			receiveShadow
 		>
 			<T.CylinderGeometry args={[1, 0.4, 1]} />
 			{@render arrowMaterial()}
@@ -119,7 +120,9 @@ Place the component inside a Threlte `<Canvas>` and pass the reactive `DM` prop.
 			scale.x={length ** 0.5 * HEAD_RAD}
 			scale.z={length ** 0.5 * HEAD_RAD}
 			scale.y={scaled_head_length}
+			castShadow	
 		>
+			<T.PointLight intensity={0.05} castShadow color={color}/>
 			<T.ConeGeometry args={[1, 1]} />
 			{@render arrowMaterial()}
 		</T.Mesh>

@@ -14,6 +14,7 @@
 	import { mode } from 'mode-watcher';
 	import { base } from '$app/paths';
 	import * as culori from 'culori';
+	import { page } from '$app/state';
 
 	export type sceneSettings = {
 		displayAngles: boolean;
@@ -165,8 +166,9 @@ This component contains the entire scene logic and should be placed inside a Thr
 ```
 -->
 
-<T.DirectionalLight intensity={3} position.x={5} position.y={10} castgetContext(matrixContext) />
-<T.AmbientLight intensity={0.5} />
+<T.HemisphereLight intensity={1}  getContext(matrixContext) />
+<!-- <T.DirectionalLight intensity={1} position.x={5} position.y={10} castgetContext(matrixContext) /> -->
+<T.AmbientLight intensity={0.8} />
 <T.PerspectiveCamera
 	bind:ref={camera}
 	makeDefault
@@ -215,7 +217,7 @@ This component contains the entire scene logic and should be placed inside a Thr
 			]}
 		>
 			<SVG
-				src={`${base}/${mode.current}/output(${index}).svg`}
+				src={`${page.route.id}${mode.current}/output(${index}).svg`}
 				scale={0.00012}
 				position={[-0.08, -0.02, +0.08]}
 			/>
@@ -223,7 +225,7 @@ This component contains the entire scene logic and should be placed inside a Thr
 	{/each}
 {/if}
 
-<BlochSphere></BlochSphere>
+<BlochSphere sphere_opacity={0.07}></BlochSphere>
 <SolidVector {DM} vectorColor={settings.vectorColor}></SolidVector>
 {#if settings.displayAngles}
 	<AngleArc vector={DM.blochV}></AngleArc>

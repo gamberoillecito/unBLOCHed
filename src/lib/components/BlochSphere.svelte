@@ -132,7 +132,6 @@ Place the component inside a Threlte `<Canvas>` and customize its appearance by 
 		<T.MeshPhongMaterial
 			color={sphere_color}
 			transparent
-			castShadow
 			opacity={sphere_opacity}
 			side={DoubleSide}
 			depthWrite={false}
