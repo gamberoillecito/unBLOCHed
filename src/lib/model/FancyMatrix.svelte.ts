@@ -214,6 +214,10 @@ export class FancyMatrix {
         return this._parameter_array;
     }
 
+    get editableParameterArray() {
+        return this._parameter_array.filter(x => x.userEditable)
+    }
+
     get label(): string {
         return this._label;
     }
