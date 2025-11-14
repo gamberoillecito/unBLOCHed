@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { T } from '@threlte/core';
 	import { Group, Color, type HSL } from 'three';
-	import { Outlines } from '@threlte/extras';
 	import { generateGradient } from 'typescript-color-gradient';
 
 	import type { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
@@ -80,7 +79,6 @@ Place the component inside a Threlte `<Canvas>` and pass the reactive `DM` prop.
 ```
 -->
 
-
 <!-- The material of the arrow -->
 {#snippet arrowMaterial()}
 	<T.MeshToonMaterial {color} castShadow fog={false} />
@@ -92,7 +90,7 @@ Place the component inside a Threlte `<Canvas>` and pass the reactive `DM` prop.
  the viewport-->
 <T.Mesh position.x={DM.blochV[0]} position.y={DM.blochV[1]} position.z={DM.blochV[2]}>
 	<T.SphereGeometry args={[0]} />
-	<T.MeshStandardMaterial color='red' />
+	<T.MeshStandardMaterial color="red" />
 </T.Mesh>
 
 <T.Group bind:ref={vector}>
@@ -120,9 +118,8 @@ Place the component inside a Threlte `<Canvas>` and pass the reactive `DM` prop.
 			scale.x={length ** 0.5 * HEAD_RAD}
 			scale.z={length ** 0.5 * HEAD_RAD}
 			scale.y={scaled_head_length}
-			castShadow	
+			castShadow
 		>
-			<T.PointLight intensity={0.05} castShadow color={color}/>
 			<T.ConeGeometry args={[1, 1]} />
 			{@render arrowMaterial()}
 		</T.Mesh>

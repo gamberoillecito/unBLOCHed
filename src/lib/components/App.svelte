@@ -18,7 +18,6 @@
 		predefinedStates,
 		theta_param,
 		ketPlus,
-		BlochRedfield
 	} from '$lib/data/matrices';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import { Canvas } from '@threlte/core';
