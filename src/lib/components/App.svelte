@@ -14,12 +14,7 @@
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import Undo from '@lucide/svelte/icons/undo';
 	import Redo from '@lucide/svelte/icons/redo';
-	import {
-		predefinedGates,
-		predefinedStates,
-		theta_param,
-		ketPlus,
-	} from '$lib/data/matrices';
+	import { predefinedGates, predefinedStates, theta_param, ketPlus } from '$lib/data/matrices';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 	import { Canvas } from '@threlte/core';
 	import { Button } from '$lib/components/ui/button/index.js';
@@ -355,12 +350,14 @@
 	</AlertDialog.Content>
 </AlertDialog.Root>
 
-<div use:draggable={{axis: 'both'}} class="bg-card border-1 rounded-xs absolute z-9999 top-0 left-0 cursor-move p-1">
-	<Button onclick={
-		()=>{
+<div
+	use:draggable={{ axis: 'both' }}
+	class="absolute top-0 left-0 z-9999 cursor-move rounded-xs border-1 bg-green-500 p-1"
+>
+	<Button
+		onclick={() => {
 			DM.apply_quantum_operation(bitFlip);
 			console.log('flip');
-			
-		}
-	}>Apply bit flip</Button>
+		}}>Apply bit flip</Button
+	>
 </div>
