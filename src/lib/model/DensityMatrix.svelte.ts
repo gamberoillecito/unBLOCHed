@@ -1,8 +1,9 @@
 import type { Complex } from 'mathjs';
 import { FancyMatrix } from './FancyMatrix.svelte';
-import { MatrixParam, type ComplexMatRxC, math, newComplexMat2x2, MatrixValidity, dagger, type ComplexMat } from './ModelUtility.svelte';
+import { MatrixParam, type ComplexMatRxC, math, newComplexMat2x2, MatrixValidity, dagger, type ComplexMat, print_mat } from './ModelUtility.svelte';
 import { StateVector } from './StateVector.svelte';
 import { GateMatrix } from './GateMatrix.svelte';
+import { QuantumOperation } from './QuantumOperation';
 
 
 export class DensityMatrix extends FancyMatrix {
@@ -151,6 +152,23 @@ export class DensityMatrix extends FancyMatrix {
         const gate_dag = dagger(gate_mat);
         const newMat = math.multiply(gate_mat, math.multiply(this._mat, gate_dag)) as ComplexMatRxC<2, 2>;
         const res = this.setMatrixValue(newMat);
+        return res
+    }
+
+    // Applies the given gate to the DensityMatrix
+    apply_quantum_operation(QO: QuantumOperation) {
+        // this._mat = matmul(gate_mat, matmul(this._mat, gate_mat.T())) as ComplexMat2x2<2,2>;
+        let sum = math.zeros(2, 2);
+        for (let ek of QO.operationElements) {
+            const mat = ek.mat
+            const ekDag = dagger(mat);
+            const newMat = math.multiply(mat, math.multiply(this._mat, ekDag)) as ComplexMatRxC<2, 2>;
+            sum = math.add(sum, newMat);
+        }
+        sum = math.matrix(sum)
+        const result = newComplexMat2x2([sum.get([0,0]), sum.get([0,1]), sum.get([1,0]), sum.get([1,1])]) as ComplexMatRxC<2,2>
+        print_mat(result)
+        const res = this.setMatrixValue(result);
         return res
     }
 

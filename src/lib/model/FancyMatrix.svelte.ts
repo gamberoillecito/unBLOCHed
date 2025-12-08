@@ -5,6 +5,17 @@ import { type ComplexMat, MatrixParam, math, MatrixValidity } from './ModelUtili
 // This class manages both the matematical and latex aspects
 // of a 2x2 matrix for bidirectional syncing with DynamicMatrix.svelte
 
+export type FancyMatrixParams = {
+    latexMat: string[][];
+    latexMult: string;
+    label: string;
+    parameters?: MatrixParam[];
+    mat?: ComplexMat;
+    nRows?: number;
+    nCols?: number;
+};
+
+
 export class FancyMatrix {
     protected _latexMult: string; // Latex multiplier in front of the matrix
     protected _mat: ComplexMat; // The "math" matrix for calculations
@@ -212,6 +223,10 @@ export class FancyMatrix {
 
     get parameterArray() {
         return this._parameter_array;
+    }
+
+    set parameterArray(p: MatrixParam[]) {
+        this._parameter_array = p    
     }
 
     get editableParameterArray() {
