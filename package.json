@@ -73,6 +73,7 @@
 		"@cortex-js/compute-engine": "^0.29.1",
 		"@fontsource-variable/ar-one-sans": "^5.2.7",
 		"@lucide/svelte": "^0.544.0",
+		"@neodrag/svelte": "^2.3.3",
 		"@threlte/core": "^8.1.5",
 		"@threlte/extras": "^9.5.4",
 		"@types/three": "^0.174.0",

@@ -17,6 +17,9 @@ importers:
       '@lucide/svelte':
         specifier: ^0.544.0
         version: 0.544.0(svelte@5.39.6)
+      '@neodrag/svelte':
+        specifier: ^2.3.3
+        version: 2.3.3(svelte@5.39.6)
       '@threlte/core':
         specifier: ^8.1.5
         version: 8.1.5(svelte@5.39.6)(three@0.174.0)
@@ -501,6 +504,11 @@ packages:
     resolution: {integrity: sha512-9f9O6uxng2pLB01sxNySHduJN3HTl5p0HDu4H26VR51vhZfiMzyOMe9Mhof3XAk4l813eTtl+/DYRvGyoRR+yw==}
     peerDependencies:
       svelte: ^5
+
+  '@neodrag/svelte@2.3.3':
+    resolution: {integrity: sha512-avXzhrilsBsnMFljhVAQ7h+6hbSIrvRCJ61GCiGbGISkC1QOhjDCNvPZo2+7KVwiYrnUBx4NRH0kTIqrcxv9Lg==}
+    peerDependencies:
+      svelte: ^3.0.0 || ^4.0.0 || ^5.0.0
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -2719,6 +2727,10 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.5
 
   '@lucide/svelte@0.544.0(svelte@5.39.6)':
+    dependencies:
+      svelte: 5.39.6
+
+  '@neodrag/svelte@2.3.3(svelte@5.39.6)':
     dependencies:
       svelte: 5.39.6
 
