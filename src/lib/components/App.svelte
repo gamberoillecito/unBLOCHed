@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { draggable } from '@neodrag/svelte';
 	import { type sceneSettings } from './Scene.svelte';
 	import Scene from './Scene.svelte';
 
@@ -33,6 +34,7 @@
 	import Copy from '@lucide/svelte/icons/copy';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import Scene3DMenu from './custom-ui/Scene3DMenu.svelte';
+	import { bitFlip } from '$lib/data/quantumOperations';
 
 	interface Props {
 		tutorialProps: TutorialPageProps;
@@ -352,3 +354,13 @@
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
 </AlertDialog.Root>
+
+<div use:draggable={{axis: 'both'}} class="bg-card border-1 rounded-xs absolute z-9999 top-0 left-0 cursor-move p-1">
+	<Button onclick={
+		()=>{
+			DM.apply_quantum_operation(bitFlip);
+			console.log('flip');
+			
+		}
+	}>Apply bit flip</Button>
+</div>
