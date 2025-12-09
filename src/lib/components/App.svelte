@@ -29,8 +29,8 @@
 	import Copy from '@lucide/svelte/icons/copy';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import Scene3DMenu from './custom-ui/Scene3DMenu.svelte';
-	import { bitFlip } from '$lib/data/quantumOperations';
-
+	import { noiseChannels } from '$lib/data/quantumOperations';
+	import ReadonlyFancyMatrix from '$lib/components/custom-ui/ReadonlyFancyMatrix.svelte';
 	interface Props {
 		tutorialProps: TutorialPageProps;
 	}
@@ -352,12 +352,22 @@
 
 <div
 	use:draggable={{ axis: 'both' }}
-	class="absolute top-0 left-0 z-9999 cursor-move rounded-xs border-1 bg-green-500 p-1"
+	class="bg-card absolute top-0 left-0 z-9999 cursor-move rounded-xs border-1 p-1"
 >
-	<Button
-		onclick={() => {
-			DM.apply_quantum_operation(bitFlip);
-			console.log('flip');
-		}}>Apply bit flip</Button
-	>
+	<p>Debug:</p>
+	<div class="flex flex-col gap-0.5">
+		{#each noiseChannels as ch}
+			<div>
+				<Button
+					onclick={() => {
+						DM.apply_quantum_operation(ch);
+						console.log('Applied ' + ch.name);
+					}}>{ch.name}</Button
+				>
+			{#each ch.operationElements as FM}
+					<ReadonlyFancyMatrix {FM}/>
+			{/each}
+			</div>
+		{/each}
+	</div>
 </div>

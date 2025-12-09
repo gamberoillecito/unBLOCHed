@@ -169,6 +169,10 @@ export class DensityMatrix extends FancyMatrix {
         const result = newComplexMat2x2([sum.get([0,0]), sum.get([0,1]), sum.get([1,0]), sum.get([1,1])]) as ComplexMatRxC<2,2>
         print_mat(result)
         const res = this.setMatrixValue(result);
+        if (!res.isValid) {
+            console.error(res.message);
+            
+        }
         return res
     }
 

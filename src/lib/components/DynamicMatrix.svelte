@@ -9,6 +9,7 @@
 	import markedKatex from 'marked-katex-extension';
 	import ErrorPopover from './custom-ui/ErrorPopover.svelte';
 	import ApplyUndoButton from './custom-ui/Buttons/ApplyUndoButton.svelte';
+
 	interface Props {
 		FM: FancyMatrix;
 		instantUpdate: boolean;
@@ -99,6 +100,8 @@
 		 * update button accordingly
 		 */
 		mf.addEventListener('input', (ev) => {
+			console.log(mf.value);
+			
 			// Generate a matrix starting from latex and validate it
 			let parsed = parseMatrixField(mf);
 			let res = FM.validateMatrix(FM.generateMatrixFromLatex(...parsed));
@@ -242,3 +245,4 @@ The component can be configured for manual or instant updates.
 	<!-- <MatrixParameterInput matrix={FM} ></MatrixParameterInput> -->
 	<!-- <p> {FM.userMessage} </p> -->
 </div>
+
