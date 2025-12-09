@@ -13,7 +13,9 @@
 	interface Props {
 		FM: FancyMatrix;
 		instantUpdate: boolean;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		onChangeCallback?: (FM: FancyMatrix, oldFM: FancyMatrix, ...args: any[]) => void;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		onChangeArguments?: any;
 	}
 
