@@ -365,7 +365,7 @@
 					}}>{ch.name}</Button
 				>
 			{#each ch.operationElements as FM}
-					<ReadonlyFancyMatrix {FM}/>
+					<ReadonlyFancyMatrix {FM} useExtendedLabel={false}/>
 			{/each}
 			</div>
 		{/each}

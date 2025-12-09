@@ -292,7 +292,7 @@ export class FancyMatrix {
         this.ce = FM.ce;
     }
 
-    generateLatexString(readOnly = false) {
+    generateLatexString(readOnly = false, useExtendedLabel=true) {
         // returns the appropriate value depending on wheter the
         // generated latex should give a readonly field or a field with placeholders
         // v is the value to display and name is the name of the placeholder
@@ -302,7 +302,8 @@ export class FancyMatrix {
             }
             return `\\placeholder[${name}]{${v}}`;
         }
-        let base = `${this.extendedLabel} = `;
+        let desiredLabel = useExtendedLabel ? this.extendedLabel : this.label
+        let base = `${desiredLabel} = `;
         const multString = (readOnly && this.latexMult == '1') ? '' : `${valueFormatter(this.latexMult, 'mult')}`;
         base += multString;
         base += ` \\begin{bmatrix}`;

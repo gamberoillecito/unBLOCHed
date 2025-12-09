@@ -11,7 +11,7 @@
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import ErrorPopover from '$lib/components/custom-ui/ErrorPopover.svelte';
-	import ReadonlyFancyMatrix from '$lib/components/custom-ui/ReadonlyFancyMatrix.svelte';
+	import ReadonlyFancyMatrix from './ReadonlyFancyMatrix.svelte';
 	interface Props {
 		matrix: FancyMatrix;
 		size?: 'default' | 'small';
@@ -89,7 +89,7 @@ Renders a popover button that allows viewing and editing the parameters of a `Fa
 				dismissable={true}
 			>
 				{#snippet trigger()}
-					<ReadonlyFancyMatrix {FM}/>
+					<ReadonlyFancyMatrix {FM} />
 				{/snippet}
 			</ErrorPopover>
 			{#if FM.parameterArray.filter((x) => x.userEditable).length > 0}

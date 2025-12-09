@@ -5,8 +5,9 @@
 
 	interface Props {
 		FM: FancyMatrix;
+        useExtendedLabel?: boolean;
 	}
-	let { FM }: Props = $props();
+	let { FM, useExtendedLabel=true }: Props = $props();
 </script>
 
 <math-field
@@ -14,8 +15,8 @@
 	{@attach (mf: MathfieldElement) => {
 		let stateV = '';
 		if (FM instanceof DensityMatrix) {
-			stateV = '\\quad ' + (FM as DensityMatrix).SV.generateLatexString(true);
+			stateV = '\\quad ' + (FM as DensityMatrix).SV.generateLatexString(true, useExtendedLabel);
 		}
-		mf.value = FM.generateLatexString(true) + stateV;
+		mf.value = FM.generateLatexString(true, useExtendedLabel) + stateV;
 	}}
 ></math-field>
