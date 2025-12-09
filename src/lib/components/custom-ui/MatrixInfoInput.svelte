@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { MatrixParam } from '$lib/model/ModelUtility.svelte';
-	import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
 	import { FancyMatrix } from '$lib/model/FancyMatrix.svelte';
 	import { type Attachment } from 'svelte/attachments';
 	import { type MathfieldElement } from 'mathlive';
@@ -12,6 +11,7 @@
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import ErrorPopover from '$lib/components/custom-ui/ErrorPopover.svelte';
+	import ReadonlyFancyMatrix from '$lib/components/custom-ui/ReadonlyFancyMatrix.svelte';
 	interface Props {
 		matrix: FancyMatrix;
 		size?: 'default' | 'small';
@@ -89,16 +89,7 @@ Renders a popover button that allows viewing and editing the parameters of a `Fa
 				dismissable={true}
 			>
 				{#snippet trigger()}
-					<math-field
-						readonly
-						{@attach (mf: MathfieldElement) => {
-							let stateV = '';
-							if (FM instanceof DensityMatrix) {
-								stateV = '\\quad ' + (FM as DensityMatrix).SV.generateLatexString(true);
-							}
-							mf.value = FM.generateLatexString(true) + stateV;
-						}}
-					></math-field>
+					<ReadonlyFancyMatrix {FM}/>
 				{/snippet}
 			</ErrorPopover>
 			{#if FM.parameterArray.filter((x) => x.userEditable).length > 0}
