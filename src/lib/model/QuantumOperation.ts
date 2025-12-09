@@ -8,22 +8,21 @@ export class QuantumOperation {
     #name: string
     #latexLabel: string
 
-    constructor(name:string, latexLabel: string, FMParams: FancyMatrixParams[], sharedParameters: MatrixParam[] = []) {
+    constructor(name: string, latexLabel: string, FMParams: FancyMatrixParams[], sharedParameters: MatrixParam[] = []) {
         this.#name = name
         this.#latexLabel = latexLabel
         this.#parameters = sharedParameters
-        FMParams.map(constructorParams => constructorParams['parameters'] )
+        FMParams.map(constructorParams => constructorParams['parameters'])
         this.#operationElements = FMParams.map(params => {
             const { latexMat, latexMult, label, mat, nRows, nCols } = params;
             return new FancyMatrix(latexMat, latexMult, label, this.#parameters, mat, nRows, nCols);
         })
-        
+
         for (let ek of this.#operationElements) {
             ek.parameterArray = this.#parameters
         }
         if (!this.isComplete) {
             console.error(`The elements for ${this.name} do not generate a complete operator`);
-            
         }
     }
 
@@ -48,11 +47,11 @@ export class QuantumOperation {
     get operationElements() {
         return this.#operationElements
     }
-    
+
     get name() {
         return this.#name
     }
-    
+
     get latexLabel() {
         return this.#latexLabel
     }
