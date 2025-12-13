@@ -92,6 +92,12 @@ export class QuantumOperation {
         return this.#userMessage;
     }
 
+    //**
+    // Updates a parameter with name `name` and sets it to `newLatexValue`. 
+    // It updates the fields `isConsistent` and `userMessage` in case the operation is not
+    // successful to give a warning to the user.
+    // It returns true is the operation is successful.
+    //  */
     setParameter(name: string, newLatexValue: string): boolean {
 
         const paramOfInterest = this.#sharedParameters.find(x => x.name == name)
@@ -99,16 +105,27 @@ export class QuantumOperation {
             console.error(`Parameter ${name} is not present in ${this.name}`);
             return false;
         }
-
+        const originalLatexValue = paramOfInterest.latexValue;
         paramOfInterest.latexValue = newLatexValue
 
-        for (let ek of this.#operationElements) {
-            const res = ek.setParameterLatex(name, newLatexValue);
+        for (let i = 0; i < this.#operationElements.length; i++) {
+            const ei = this.#operationElements[i];
+            const res = ei.setParameterLatex(name, newLatexValue);
             console.log(res);
 
             if (!res.isValid) {
                 this.#isConsistent = false;
                 this.#userMessage = 'Invalid input';
+                
+                // Go back and undo the previously edited matrices
+                for (let j = i; j >= 0; j--) {
+                    const ej = this.#operationElements[j];
+                    const resj = ej.setParameterLatex(name, originalLatexValue);
+                    
+                    if (!resj.isValid) {
+                        console.error('Cannot restore parameter to original value after previous error');
+                    }
+                }
                 return false;
             }
         }
@@ -116,24 +133,5 @@ export class QuantumOperation {
         this.#userMessage = null;
         return true;
 
-
-        // const updatedParams = this.#sharedParameters.map(x => {
-        //     if (x.name != name) { return x }
-        //     else {
-        //         let newx = x.clone();
-        //         newx.latexValue = newLatexValue;
-        //         return newx
-        //     }
-        // })
-        // const testQO = new QuantumOperation('test', 'test', [], updatedParams);
-
-        // const success = testQO.overwriteOperationElements(this.operationElements);
-        // if (success) {
-        //     this.#sharedParameters = updatedParams
-        //     return true;
-        // }
-        // else {
-        //     return false;
-        // }
     }
 }
