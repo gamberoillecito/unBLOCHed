@@ -3,7 +3,7 @@ import { FancyMatrix } from './FancyMatrix.svelte';
 import { MatrixParam, type ComplexMatRxC, math, newComplexMat2x2, MatrixValidity, dagger, type ComplexMat, print_mat } from './ModelUtility.svelte';
 import { StateVector } from './StateVector.svelte';
 import { GateMatrix } from './GateMatrix.svelte';
-import { QuantumOperation } from './QuantumOperation';
+import { QuantumOperation } from './QuantumOperation.svelte';
 
 
 export class DensityMatrix extends FancyMatrix {
@@ -166,12 +166,12 @@ export class DensityMatrix extends FancyMatrix {
             sum = math.add(sum, newMat);
         }
         sum = math.matrix(sum)
-        const result = newComplexMat2x2([sum.get([0,0]), sum.get([0,1]), sum.get([1,0]), sum.get([1,1])]) as ComplexMatRxC<2,2>
+        const result = newComplexMat2x2([sum.get([0, 0]), sum.get([0, 1]), sum.get([1, 0]), sum.get([1, 1])]) as ComplexMatRxC<2, 2>
         print_mat(result)
         const res = this.setMatrixValue(result);
         if (!res.isValid) {
             console.error(res.message);
-            
+
         }
         return res
     }

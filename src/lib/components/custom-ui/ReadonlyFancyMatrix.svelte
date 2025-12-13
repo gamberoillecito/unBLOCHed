@@ -5,9 +5,10 @@
 
 	interface Props {
 		FM: FancyMatrix;
-        useExtendedLabel?: boolean;
+		useExtendedLabel?: boolean;
+		debug?: boolean;
 	}
-	let { FM, useExtendedLabel=true }: Props = $props();
+	let { FM, useExtendedLabel = true, debug = false }: Props = $props();
 </script>
 
 <math-field
@@ -20,3 +21,6 @@
 		mf.value = FM.generateLatexString(true, useExtendedLabel) + stateV;
 	}}
 ></math-field>
+{#if debug}
+	<pre>{FM.mat.map((row) => '[' + row.map((x) => x.toString()).join(', ') + ']').join('\n')}</pre>
+{/if}

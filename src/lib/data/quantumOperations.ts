@@ -1,6 +1,6 @@
 import { FancyMatrix } from "$lib/model/FancyMatrix.svelte";
 import { MatrixParam, newComplexMat2x2 } from "$lib/model/ModelUtility.svelte";
-import { QuantumOperation } from "$lib/model/QuantumOperation";
+import { QuantumOperation } from "$lib/model/QuantumOperation.svelte";
 
 const pParam = [new MatrixParam('p', '0.5', 'p', false)]
 const gammaParam = [new MatrixParam('gamma', '0.5', '\\gamma', false)]
@@ -141,4 +141,5 @@ export const amplitudeDamping = new QuantumOperation(
     ],
     gammaParam.map((x) => (x.clone()))
 )
-export const noiseChannels = [bitFlipCh, phaseFlipCh, bitPhaseFlipCh, depolarizingCh, amplitudeDamping]
+// export const noiseChannels = [bitFlipCh, phaseFlipCh, bitPhaseFlipCh, depolarizingCh, amplitudeDamping]
+export const noiseChannels = [bitFlipCh, phaseFlipCh]

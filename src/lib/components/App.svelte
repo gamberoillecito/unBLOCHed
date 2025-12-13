@@ -30,7 +30,7 @@
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import Scene3DMenu from './custom-ui/Scene3DMenu.svelte';
 	import { noiseChannels } from '$lib/data/quantumOperations';
-	import ReadonlyFancyMatrix from '$lib/components/custom-ui/ReadonlyFancyMatrix.svelte';
+	import QOInfoInput from './custom-ui/QOInfoInput.svelte';
 	interface Props {
 		tutorialProps: TutorialPageProps;
 	}
@@ -356,18 +356,8 @@
 >
 	<p>Debug:</p>
 	<div class="flex flex-col gap-0.5">
-		{#each noiseChannels as ch}
-			<div>
-				<Button
-					onclick={() => {
-						DM.apply_quantum_operation(ch);
-						console.log('Applied ' + ch.name);
-					}}>{ch.name}</Button
-				>
-			{#each ch.operationElements as FM}
-					<ReadonlyFancyMatrix {FM} useExtendedLabel={false}/>
-			{/each}
-			</div>
+		{#each noiseChannels as QO}
+		<QOInfoInput {DM} {QO}/>
 		{/each}
 	</div>
 </div>

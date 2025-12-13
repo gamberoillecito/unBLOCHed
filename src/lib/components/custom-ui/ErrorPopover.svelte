@@ -63,7 +63,7 @@ Wrap the element that can cause an error in a snippet and pass it to the `trigge
 		{@render trigger()}
 	</Popover.Trigger>
 	<Popover.Content
-		class="bg-destructive w-fit px-2 py-1"
+		class="bg-destructive w-fit px-2 py-1 z-9999999999"
 		interactOutsideBehavior={dismissable === true ? undefined : 'defer-otherwise-ignore'}
 		escapeKeydownBehavior={dismissable === true ? undefined : 'ignore'}
 		side="top"
