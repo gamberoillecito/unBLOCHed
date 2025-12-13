@@ -1,6 +1,6 @@
 import { ComputeEngine } from '@cortex-js/compute-engine';
 import type { Complex } from 'mathjs';
-import { type ComplexMat, MatrixParam, math, MatrixValidity } from './ModelUtility.svelte';
+import { type ComplexMat, MatrixParam, math, MatrixValidity, ce } from './ModelUtility.svelte';
 
 // This class manages both the matematical and latex aspects
 // of a 2x2 matrix for bidirectional syncing with DynamicMatrix.svelte
@@ -33,7 +33,7 @@ export class FancyMatrix {
     ce: ComputeEngine;
 
     constructor(latexMat: string[][], latexMult: string, label: string, parameters: MatrixParam[] = [], mat?: ComplexMat, nRows: number = 2, nCols: number = 2) {
-        this.ce = new ComputeEngine();
+        this.ce = ce;
         this._label = label;
         this.isConsistent = $state(true);
         this.userMessage = $state(null);
@@ -203,10 +203,14 @@ export class FancyMatrix {
         const targetParam = this._parameter_array.find(p => p.name == paramName);
         if (targetParam) {
             targetParam.latexValue = latexValue;
+            if (!targetParam.isConsistent) {
+                return new MatrixValidity(false, targetParam.userMessage ?? undefined)
+            }
         }
         else {
             console.error(`Wrong matrix parameter name ${paramName}`);
         }
+        
         const res = this.setMatrixFromLatex(this._latexMat, this._latexMult);
         return res;
     }

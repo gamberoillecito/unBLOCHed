@@ -115,15 +115,16 @@ export class QuantumOperation {
 
             if (!res.isValid) {
                 this.#isConsistent = false;
-                this.#userMessage = 'Invalid input';
+                this.#userMessage = res.message;
                 
                 // Go back and undo the previously edited matrices
                 for (let j = i; j >= 0; j--) {
+                    
                     const ej = this.#operationElements[j];
                     const resj = ej.setParameterLatex(name, originalLatexValue);
                     
                     if (!resj.isValid) {
-                        console.error('Cannot restore parameter to original value after previous error');
+                        console.error(`Cannot restore parameter to original value after previous error: ${resj.message}`);
                     }
                 }
                 return false;

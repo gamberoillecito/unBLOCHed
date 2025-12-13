@@ -1,8 +1,18 @@
 import { FancyMatrix } from "$lib/model/FancyMatrix.svelte";
-import { MatrixParam, newComplexMat2x2 } from "$lib/model/ModelUtility.svelte";
+import { MatrixParam, newComplexMat2x2, math, ce } from "$lib/model/ModelUtility.svelte";
 import { QuantumOperation } from "$lib/model/QuantumOperation.svelte";
 
-const pParam = [new MatrixParam('p', '0.5', 'p', false)]
+const pParam = [new MatrixParam('p', '0.5', 'p', false, (newLatexValue) => {
+    const parsedVal = ce.parse(newLatexValue).N().value;
+    
+    if (math.typeOf(parsedVal) !== 'number') {
+        return [false, 'Invalid input']
+    }
+    if (math.smallerEq(math.number(newLatexValue) , 1) as boolean && math.smallerEq(0, math.number(newLatexValue)) as boolean) {
+        return [true, null]
+    }
+    return [false, "p must be between 0 and 1"]
+})]
 const gammaParam = [new MatrixParam('gamma', '0.5', '\\gamma', false)]
 
 export const bitFlipCh = new QuantumOperation(
