@@ -2,8 +2,8 @@ import { FancyMatrix } from "$lib/model/FancyMatrix.svelte";
 import { MatrixParam, newComplexMat2x2 } from "$lib/model/ModelUtility.svelte";
 import { QuantumOperation } from "$lib/model/QuantumOperation";
 
-const pParam = [new MatrixParam('p', '0.5', 'p', true)]
-const gammaParam = [new MatrixParam('gamma', '0.5', '\\gamma', true)]
+const pParam = [new MatrixParam('p', '0.5', 'p', false)]
+const gammaParam = [new MatrixParam('gamma', '0.5', '\\gamma', false)]
 
 export const bitFlipCh = new QuantumOperation(
     'Bit Flip Channel',
@@ -112,7 +112,7 @@ export const depolarizingCh = new QuantumOperation(
                 ['1', '0'],
             ],
             latexMult: '\\sqrt{\\frac{p}{3}}',
-            label: 'E_2'
+            label: 'E_3'
         }
     ],
     pParam.map((x) => (x.clone()))
