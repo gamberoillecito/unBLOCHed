@@ -1,3 +1,4 @@
+import { ComputeEngine } from '@cortex-js/compute-engine';
 import {
     type Complex,
     create,
@@ -12,6 +13,8 @@ export const math = create(all, config)
 // export type ComplexMat2x2<2,2> = Array<Array<Complex>>
 export type ComplexMatRxC<R extends number, C extends number> = Complex[][] & { length: R;[index: number]: { length: C; } };
 export type ComplexMat = Complex[][];
+
+export const ce = new ComputeEngine();
 
 export class MatrixValidity {
     isValid: boolean;
@@ -49,21 +52,67 @@ export function newComplexMat2x2(entries: (string | Complex | number)[]): Comple
     return mat;
 }
 
+/**
+ * Represents a parameter for a `FancyMatrix`.
+ * 
+ * @class MatrixParam
+ * @property {string} name - The parameter name.
+ * @property {string} latexLabel - The LaTeX representation of the parameter label (e.g., `p`, `\\theta`).
+ * @property {boolean} userEditable - Whether the parameter can be edited by the user.
+ * @property {(newLatexValue: string) => boolean} [constraint] - Optional validation function that determines if a new value is allowed.
+ * 
+ * @description
+ * When setting `latexValue`, the update is only applied if no constraint is defined, or if the constraint function returns `true`.
+ * If the constraint rejects the value, `latexValue` remains unchanged.
+ * The user must remember to check if constraints are respected.
+ * 
+ * @example
+ * const param = new MatrixParam('p', '0.5', 'p', true, (val) => parseFloat(val) >= 0 && parseFloat(val) <= 1);
+ * param.latexValue = '0.7'; // Accepted
+ * param.latexValue = '1.5'; // Rejected, latexValue stays '0.7'
+ */
 export class MatrixParam {
     name: string;
-    latexValue: string;
+    #latexValue: string;
     latexLabel: string;
     userEditable: boolean;
+    constraint?: (newLatexValue: string) => [boolean, string|null];
+    isConsistent: boolean;
+    userMessage: string | null;
 
-    constructor(name: string, latexValue: string, latexLabel: string, userEditable: boolean) {
+    constructor(name: string, latexValue: string, latexLabel: string, userEditable: boolean, constraint?: (newLatexValue: string) => [boolean, string|null]) {
         this.name = name;
-        this.latexValue = latexValue;
+        this.#latexValue = latexValue;
         this.latexLabel = latexLabel;
         this.userEditable = userEditable;
+        this.constraint = constraint;
+        this.isConsistent = true;
+        this.userMessage = null;
+    }
+
+    get latexValue() {
+        return this.#latexValue;
+    }
+
+    set latexValue(newV: string) {
+        if (this.constraint === undefined) {
+
+            this.#latexValue = newV;
+            this.isConsistent = true;
+            this.userMessage = null;
+        }
+        else {
+            const [valid, message] = this.constraint(newV);
+            this.isConsistent = valid;
+            this.userMessage = message;
+            if (valid) {
+                this.#latexValue = newV;
+            }
+        }
     }
 
     clone(): MatrixParam {
-        return new MatrixParam(this.name, this.latexValue, this.latexLabel, this.userEditable)
+        return new MatrixParam(this.name, this.#latexValue, this.latexLabel, this.userEditable, this.constraint)
     }
 }
 
