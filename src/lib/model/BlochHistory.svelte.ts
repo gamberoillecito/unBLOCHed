@@ -12,6 +12,7 @@ export class BlochHistoryElement {
     protected _GM: GateMatrix | null;
     protected _finalDM: DensityMatrix;
     pathVisible: boolean;
+    isCheckpoint: boolean;
 
     /**
      * @param DM - The density matrix before the edit
@@ -19,10 +20,11 @@ export class BlochHistoryElement {
      * @param GM - The applied gate (optional)
      * @param pathVisible - Whether to show the path relative to this Element on the GUI
      */
-    constructor(DM: DensityMatrix, finalDM: DensityMatrix, GM: GateMatrix | null, pathVisible: boolean = true) {
+    constructor(DM: DensityMatrix, finalDM: DensityMatrix, GM: GateMatrix | null, pathVisible: boolean, isCheckpoint:boolean) {
         this.pathVisible = $state(pathVisible);
         this._finalDM = finalDM.clone();
         this._DM = DM.clone();
+        this.isCheckpoint = isCheckpoint;
 
         // If the matrix is in the history it is not displayed and so
         // it is consistent by definition
@@ -94,14 +96,16 @@ export class BlochHistory {
      * @param finalDM - The density matrix after the edit 
      * @param GM - The applied gate (optional)
      */
-    addElement(DM: DensityMatrix, finalDM: DensityMatrix, GM: GateMatrix | null = null) {
+    addElement(DM: DensityMatrix, finalDM: DensityMatrix, GM: GateMatrix | null = null, preventCheckpoint: boolean = false) {
         // Remove all the elements past the current one
         this._current++;
         this._list.splice(this._current)
-
+        if (GM) {
+            preventCheckpoint = true;
+        }
         // If the state has been set directly I have to hide all the
         // previous GatePaths
-        if (!GM) {
+        if (!preventCheckpoint) {
             for (let el of this._list) {
                 el.pathVisible = false;
             }
@@ -111,7 +115,7 @@ export class BlochHistory {
         if (!finalDM.isConsistent) {
             console.error("finalDM is not consistent");
         }
-        this._list.push(new BlochHistoryElement(DM, finalDM, GM));
+        this._list.push(new BlochHistoryElement(DM, finalDM, GM, true, !preventCheckpoint));
     }
 
     /**
@@ -144,7 +148,7 @@ export class BlochHistory {
     redo(DM: DensityMatrix) {
         this._current = this._current == (this._list.length - 1) ? this._current : this._current + 1;
 
-        if (!this._list[this._current].GM) {
+        if (this._list[this._current].isCheckpoint) {
             for (let el of this._list.slice(0, this._current)) {
                 el.pathVisible = false;
             }
