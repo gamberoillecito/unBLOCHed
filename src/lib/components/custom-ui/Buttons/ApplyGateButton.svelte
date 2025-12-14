@@ -60,7 +60,7 @@ A button that applies a quantum gate to the density matrix `DM`. It uses a `Late
 			}}
 			label={gate.label}
 			disabled={disabled || !gate.isConsistent}
-			variant={'default'}
+			variant='default'
 			tooltip={true}
 			round={secondaryButton ? 'left' : 'full'}
 			{size}
