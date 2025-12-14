@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { draggable } from '@neodrag/svelte';
 	import { type sceneSettings } from './Scene.svelte';
+	import * as Accordion from '$lib/components/ui/accordion/index.js';
 	import Scene from './Scene.svelte';
-
 	import { StateVector } from '$lib/model/StateVector.svelte';
 	import { GateMatrix } from '$lib/model/GateMatrix.svelte';
 	import { FakeDensityMatrix } from '$lib/model/DensityMatrix.svelte';
@@ -358,9 +358,9 @@
 	class="bg-card absolute top-0 left-0 z-9999 cursor-move rounded-xs border-1 p-1"
 >
 	<p>Debug:</p>
-	<div class="flex flex-col gap-0.5">
+	<Accordion.Root type="single">
 		{#each noiseChannels as QO}
-		<QOInfoInput {DM} {QO} {history} {canvasContainer}/>
+			<QOInfoInput {DM} {QO} {history} {canvasContainer} />
 		{/each}
-	</div>
+	</Accordion.Root>
 </div>

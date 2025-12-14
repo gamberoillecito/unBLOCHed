@@ -7,6 +7,8 @@
 	import { BlochHistory } from '$lib/model/BlochHistory.svelte';
 	import type { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
 	import { flashCanvas } from './Buttons/buttonUtility';
+	import * as Accordion from '$lib/components/ui/accordion/index.js';
+
 	interface Props {
 		DM: DensityMatrix;
 		QO: QuantumOperation;
@@ -28,34 +30,41 @@ TODO
   The size of the trigger button.
 -->
 
-<div>
-	<Button
-		disabled={!QO.isConsistent}
-		onclick={() => {
-			console.log('Applied ' + QO.name);
-			let initialDM = DM.clone();
-			DM.apply_quantum_operation(QO);
-			history.addElement(initialDM, DM, null, true);
+<Accordion.Item value={QO.name}>
+	<Accordion.Trigger class="group !no-underline items-center">
+		<Button
+			size="sm"
+			disabled={!QO.isConsistent}
+			onclick={(e: Event) => {
+				console.log('Applied ' + QO.name);
+				let initialDM = DM.clone();
+				DM.apply_quantum_operation(QO);
+				history.addElement(initialDM, DM, null, true);
 
-			flashCanvas(canvasContainer);
-		}}>{QO.name}</Button
-	>
-	{#each QO.operationElements as FM}
-		<ReadonlyFancyMatrix {FM} useExtendedLabel={false} debug={true} />
-	{/each}
-	{#each QO.parameters as param}
-		<ErrorPopover isOpen={!QO.isConsistent} popoverContent={QO.userMessage} dismissable={false}>
-			{#snippet trigger()}
-				<ParameterInput
-					{param}
-					callback={(paramName: string, paramValue: string) => {
-						console.log(paramName);
-						console.log(paramValue);
-						QO.setParameter(paramName, paramValue);
-					}}
-				/>
-			{/snippet}
-		</ErrorPopover>
-		<p>{QO.isConsistent}</p>
-	{/each}
-</div>
+				flashCanvas(canvasContainer);
+				e.stopPropagation();
+			}}>Apply</Button
+		>
+		<span class="group-hover:underline">{QO.name}</span>
+	</Accordion.Trigger>
+	<Accordion.Content>
+		{#each QO.operationElements as FM}
+			<ReadonlyFancyMatrix {FM} useExtendedLabel={false} debug={true} />
+		{/each}
+		{#each QO.parameters as param}
+			<ErrorPopover isOpen={!QO.isConsistent} popoverContent={QO.userMessage} dismissable={false}>
+				{#snippet trigger()}
+					<ParameterInput
+						{param}
+						callback={(paramName: string, paramValue: string) => {
+							console.log(paramName);
+							console.log(paramValue);
+							QO.setParameter(paramName, paramValue);
+						}}
+					/>
+				{/snippet}
+			</ErrorPopover>
+			<p>{QO.isConsistent}</p>
+		{/each}
+	</Accordion.Content>
+</Accordion.Item>

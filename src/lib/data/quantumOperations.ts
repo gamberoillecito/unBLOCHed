@@ -151,5 +151,5 @@ export const amplitudeDamping = new QuantumOperation(
     ],
     gammaParam.map((x) => (x.clone()))
 )
-// export const noiseChannels = [bitFlipCh, phaseFlipCh, bitPhaseFlipCh, depolarizingCh, amplitudeDamping]
-export const noiseChannels = [bitFlipCh, phaseFlipCh]
+export const noiseChannels = [bitFlipCh, phaseFlipCh, bitPhaseFlipCh, depolarizingCh, amplitudeDamping]
+// export const noiseChannels = [bitFlipCh, phaseFlipCh]
