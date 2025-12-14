@@ -1,17 +1,7 @@
-import { GatePath  } from "./ModelUtility.svelte";
+import { GatePath } from "./ModelUtility.svelte";
 import { GateMatrix } from '$lib/model/GateMatrix.svelte';
 import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
-
-import {
-    create,
-    all,
-} from 'mathjs'
-
-const config = {
-    absTol: 1e-10,
-}
-
-const math = create(all, config);
+import { math } from '$lib/model/ModelUtility.svelte';
 
 /**
  * This class stores the necessary fields to save and restore a given state of both
