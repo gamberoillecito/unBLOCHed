@@ -4,13 +4,17 @@
 	import ParameterInput from './ParameterInput.svelte';
 	import type { QuantumOperation } from '$lib/model/QuantumOperation.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import { BlochHistory } from '$lib/model/BlochHistory.svelte';
 	import type { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
+	import { flashCanvas } from './Buttons/buttonUtility';
 	interface Props {
 		DM: DensityMatrix;
 		QO: QuantumOperation;
+		history: BlochHistory;
+		canvasContainer: HTMLDivElement;
 	}
 
-	let { DM, QO }: Props = $props();
+	let { DM, QO, history, canvasContainer }: Props = $props();
 </script>
 
 <!--
@@ -26,9 +30,14 @@ TODO
 
 <div>
 	<Button
+		disabled={!QO.isConsistent}
 		onclick={() => {
-			DM.apply_quantum_operation(QO);
 			console.log('Applied ' + QO.name);
+			let initialDM = DM.clone();
+			DM.apply_quantum_operation(QO);
+			history.addElement(initialDM, DM, null, true);
+
+			flashCanvas(canvasContainer);
 		}}>{QO.name}</Button
 	>
 	{#each QO.operationElements as FM}
