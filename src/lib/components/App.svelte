@@ -31,6 +31,7 @@
 	import Scene3DMenu from './custom-ui/Scene3DMenu.svelte';
 	import { noiseChannels } from '$lib/data/quantumOperations';
 	import QOInfoInput from './custom-ui/QOInfoInput.svelte';
+	import { flashCanvas } from './custom-ui/Buttons/buttonUtility';
 	interface Props {
 		tutorialProps: TutorialPageProps;
 	}
@@ -158,6 +159,7 @@
 			<Button
 				onclick={() => {
 					history.undo(DM);
+					flashCanvas(canvasContainer);
 				}}
 				disabled={history.earliestChange}
 				size="icon"
@@ -169,6 +171,7 @@
 			<Button
 				onclick={() => {
 					history.redo(DM);
+					flashCanvas(canvasContainer);
 				}}
 				disabled={history.latestChange}
 				size="icon"
@@ -357,7 +360,7 @@
 	<p>Debug:</p>
 	<div class="flex flex-col gap-0.5">
 		{#each noiseChannels as QO}
-		<QOInfoInput {DM} {QO}/>
+		<QOInfoInput {DM} {QO} {history} {canvasContainer}/>
 		{/each}
 	</div>
 </div>
