@@ -8,6 +8,7 @@
 	import type { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
 	import { flashCanvas } from './Buttons/buttonUtility';
 	import * as Accordion from '$lib/components/ui/accordion/index.js';
+	import Play from '@lucide/svelte/icons/play';
 
 	interface Props {
 		DM: DensityMatrix;
@@ -46,7 +47,7 @@ TODO
 
 					flashCanvas(canvasContainer);
 					e.stopPropagation();
-				}}>Apply</Button
+				}}><Play/></Button
 			>
 			<span class="group-hover:underline peer-hover:no-underline">{QO.name}</span>
 		</div>
