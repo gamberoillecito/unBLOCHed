@@ -31,26 +31,34 @@ TODO
 -->
 
 <Accordion.Item value={QO.name}>
-	<Accordion.Trigger class="group !no-underline items-center">
-		<Button
-			size="sm"
-			disabled={!QO.isConsistent}
-			onclick={(e: Event) => {
-				console.log('Applied ' + QO.name);
-				let initialDM = DM.clone();
-				DM.apply_quantum_operation(QO);
-				history.addElement(initialDM, DM, null, true);
+	<Accordion.Trigger class="group !no-underline">
+		<div class="flex flex-row !items-center gap-4">
+			<Button
+				size="sm"
+				variant="outline"
+				class="peer"
+				disabled={!QO.isConsistent}
+				onclick={(e: Event) => {
+					console.log('Applied ' + QO.name);
+					let initialDM = DM.clone();
+					DM.apply_quantum_operation(QO);
+					history.addElement(initialDM, DM, null, true);
 
-				flashCanvas(canvasContainer);
-				e.stopPropagation();
-			}}>Apply</Button
-		>
-		<span class="group-hover:underline">{QO.name}</span>
+					flashCanvas(canvasContainer);
+					e.stopPropagation();
+				}}>Apply</Button
+			>
+			<span class="group-hover:underline peer-hover:no-underline">{QO.name}</span>
+		</div>
 	</Accordion.Trigger>
 	<Accordion.Content>
-		{#each QO.operationElements as FM}
-			<ReadonlyFancyMatrix {FM} useExtendedLabel={false} debug={true} />
-		{/each}
+		<div class="flex flex-wrap">
+			{#each QO.operationElements as FM}
+				<div class="flex w-1/2 justify-center">
+					<ReadonlyFancyMatrix {FM} useExtendedLabel={false} debug={false} />
+				</div>
+			{/each}
+		</div>
 		{#each QO.parameters as param}
 			<ErrorPopover isOpen={!QO.isConsistent} popoverContent={QO.userMessage} dismissable={false}>
 				{#snippet trigger()}
@@ -64,7 +72,6 @@ TODO
 					/>
 				{/snippet}
 			</ErrorPopover>
-			<p>{QO.isConsistent}</p>
 		{/each}
 	</Accordion.Content>
 </Accordion.Item>

@@ -247,51 +247,64 @@
 					<UpdateStateButton {matrix} {DM} disabled={false} {canvasContainer} {history} />
 				{/each}
 			</div>
-			<Separator class=""></Separator>
-			<h4>Gates</h4>
-			<!-- Standard gates (no parameters) -->
-			<div class="m-3 mx-auto flex flex-wrap justify-center gap-2 @lg:max-w-[400px]">
-				{#each predefinedGates.filter((g) => g.parameterArray.length === 0) as gate}
-					<GateButtonWithParams
-						{DM}
-						{history}
-						{canvasContainer}
-						{gate}
-						disabled={!(DM.isConsistent && SV.isConsistent)}
-						withParams={true}
-					/>
-				{/each}
-				<!-- Standard gates (with parameters) -->
-				{#each predefinedGates.filter((g) => g.parameterArray.length !== 0) as gate}
-					<GateButtonWithParams
-						{DM}
-						{history}
-						{canvasContainer}
-						{gate}
-						disabled={!(DM.isConsistent && SV.isConsistent)}
-						withParams={true}
-					/>
-				{/each}
-			</div>
-			<div class="m-auto flex min-h-0 w-fit shrink items-center space-x-1 p-2 @lg:hidden">
-				<Switch id="current-mode" bind:checked={customGateVisible} />
-				<Label for="current-mode">Custom gate</Label>
-			</div>
-			<div
-				class="m-3 {customGateVisible
-					? 'flex'
-					: 'hidden'} flex-wrap items-center justify-center gap-2 @lg:flex"
-			>
-				<DynamicMatrix FM={GM} instantUpdate={true}></DynamicMatrix>
-				<GateButtonWithParams
-					{DM}
-					{history}
-					{canvasContainer}
-					gate={GM}
-					disabled={!(DM.isConsistent && GM.isConsistent && SV.isConsistent)}
-					withParams={true}
-				/>
-			</div>
+			<Tabs.Root value="noise" class="w-full items-center">
+				<Tabs.List class="self-center">
+					<Tabs.Trigger value="gates">Gates</Tabs.Trigger>
+					<Tabs.Trigger value="noise">Noise</Tabs.Trigger>
+				</Tabs.List>
+				<Tabs.Content value="gates">
+					<!-- Standard gates (no parameters) -->
+					<div class="m-3 mx-auto flex flex-wrap justify-center gap-2 @lg:max-w-[400px]">
+						{#each predefinedGates.filter((g) => g.parameterArray.length === 0) as gate}
+							<GateButtonWithParams
+								{DM}
+								{history}
+								{canvasContainer}
+								{gate}
+								disabled={!(DM.isConsistent && SV.isConsistent)}
+								withParams={true}
+							/>
+						{/each}
+						<!-- Standard gates (with parameters) -->
+						{#each predefinedGates.filter((g) => g.parameterArray.length !== 0) as gate}
+							<GateButtonWithParams
+								{DM}
+								{history}
+								{canvasContainer}
+								{gate}
+								disabled={!(DM.isConsistent && SV.isConsistent)}
+								withParams={true}
+							/>
+						{/each}
+					</div>
+					<div class="m-auto flex min-h-0 w-fit shrink items-center space-x-1 p-2 @lg:hidden">
+						<Switch id="current-mode" bind:checked={customGateVisible} />
+						<Label for="current-mode">Custom gate</Label>
+					</div>
+					<div
+						class="m-3 {customGateVisible
+							? 'flex'
+							: 'hidden'} flex-wrap items-center justify-center gap-2 @lg:flex"
+					>
+						<DynamicMatrix FM={GM} instantUpdate={true}></DynamicMatrix>
+						<GateButtonWithParams
+							{DM}
+							{history}
+							{canvasContainer}
+							gate={GM}
+							disabled={!(DM.isConsistent && GM.isConsistent && SV.isConsistent)}
+							withParams={true}
+						/>
+					</div>
+				</Tabs.Content>
+				<Tabs.Content value="noise" class="w-[400px]">
+					<Accordion.Root type="single">
+						{#each noiseChannels as QO}
+							<QOInfoInput {DM} {QO} {history} {canvasContainer} />
+						{/each}
+					</Accordion.Root>
+				</Tabs.Content>
+			</Tabs.Root>
 		</ScrollArea>
 	{:else}
 		<JoystickControls DM={fakeDM} bind:joystickMode />
@@ -353,9 +366,9 @@
 	</AlertDialog.Content>
 </AlertDialog.Root>
 
-<div
+<!-- <div
 	use:draggable={{ axis: 'both' }}
-	class="bg-card absolute top-0 left-0 z-9999 cursor-move rounded-xs border-1 p-1"
+	class="bg-card absolute top-0 left-0 z-9999 w-fit cursor-move rounded-xs border-1 p-3"
 >
 	<p>Debug:</p>
 	<Accordion.Root type="single">
@@ -363,4 +376,4 @@
 			<QOInfoInput {DM} {QO} {history} {canvasContainer} />
 		{/each}
 	</Accordion.Root>
-</div>
+</div> -->
