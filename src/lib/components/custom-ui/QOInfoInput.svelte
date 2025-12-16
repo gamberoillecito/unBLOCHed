@@ -15,9 +15,10 @@
 		QO: QuantumOperation;
 		history: BlochHistory;
 		canvasContainer: HTMLDivElement;
+		openItem: string;
 	}
 
-	let { DM, QO, history, canvasContainer }: Props = $props();
+	let { DM, QO, history, canvasContainer, openItem = $bindable() }: Props = $props();
 </script>
 
 <!--
@@ -47,7 +48,7 @@ TODO
 
 					flashCanvas(canvasContainer);
 					e.stopPropagation();
-				}}><Play/></Button
+				}}><Play /></Button
 			>
 			<span class="group-hover:underline peer-hover:no-underline">{QO.name}</span>
 		</div>
@@ -61,7 +62,7 @@ TODO
 			{/each}
 		</div>
 		{#each QO.parameters as param}
-			<ErrorPopover isOpen={!QO.isConsistent} popoverContent={QO.userMessage} dismissable={false}>
+			<ErrorPopover isOpen={!QO.isConsistent  && (openItem === QO.name)} popoverContent={QO.userMessage} dismissable={false}>
 				{#snippet trigger()}
 					<ParameterInput
 						{param}

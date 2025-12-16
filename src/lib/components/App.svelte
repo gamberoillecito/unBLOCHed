@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { draggable } from '@neodrag/svelte';
 	import { type sceneSettings } from './Scene.svelte';
 	import * as Accordion from '$lib/components/ui/accordion/index.js';
 	import Scene from './Scene.svelte';
@@ -109,6 +108,9 @@
 	//**The element of the scene menu that opens the "Download Image" submenu, needs extra logic to remain open even after the watermark message*/
 	let SceneMenuDownloadTrigger = $state() as HTMLElement;
 	let SceneMenuDownloadOpen = $state(false);
+
+
+	let noiseAccordionOpenElement = $state('');
 </script>
 
 {#snippet StateVectorInput()}
@@ -248,7 +250,7 @@
 				{/each}
 			</div>
 			<Separator/>
-			<Tabs.Root value="noise" class="w-full items-center pt-2">
+			<Tabs.Root value="noise" class="w-full items-center pt-2" >
 				<Tabs.List class="self-center">
 					<Tabs.Trigger value="gates">Gates</Tabs.Trigger>
 					<Tabs.Trigger value="noise">Noise</Tabs.Trigger>
@@ -299,9 +301,9 @@
 					</div>
 				</Tabs.Content>
 				<Tabs.Content value="noise" class="w-[400px]">
-					<Accordion.Root type="single">
+					<Accordion.Root type="single" bind:value={noiseAccordionOpenElement}>
 						{#each noiseChannels as QO}
-							<QOInfoInput {DM} {QO} {history} {canvasContainer} />
+							<QOInfoInput {DM} {QO} {history} {canvasContainer} bind:openItem={noiseAccordionOpenElement}/>
 						{/each}
 					</Accordion.Root>
 				</Tabs.Content>
