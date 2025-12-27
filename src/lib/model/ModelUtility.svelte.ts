@@ -15,6 +15,12 @@ export type ComplexMatRxC<R extends number, C extends number> = Complex[][] & { 
 export type ComplexMat = Complex[][];
 
 export const ce = new ComputeEngine();
+ce.latexDictionary = [
+    ...ce.latexDictionary,
+    { parse: 'gamma', latexTrigger: '\\gamma' },
+];
+console.log(ce.latexDictionary);
+
 
 export class MatrixValidity {
     isValid: boolean;
@@ -76,11 +82,11 @@ export class MatrixParam {
     #latexValue: string;
     latexLabel: string;
     userEditable: boolean;
-    constraint?: (newLatexValue: string) => [boolean, string|null];
+    constraint?: (newLatexValue: string) => [boolean, string | null];
     isConsistent: boolean;
     userMessage: string | null;
 
-    constructor(name: string, latexValue: string, latexLabel: string, userEditable: boolean, constraint?: (newLatexValue: string) => [boolean, string|null]) {
+    constructor(name: string, latexValue: string, latexLabel: string, userEditable: boolean, constraint?: (newLatexValue: string) => [boolean, string | null]) {
         this.name = name;
         this.#latexValue = latexValue;
         this.latexLabel = latexLabel;

@@ -2,7 +2,7 @@ import { FancyMatrix } from "$lib/model/FancyMatrix.svelte";
 import { MatrixParam, newComplexMat2x2, math, ce } from "$lib/model/ModelUtility.svelte";
 import { QuantumOperation } from "$lib/model/QuantumOperation.svelte";
 
-const pParam = [new MatrixParam('p', '0.5', 'p', false, (newLatexValue) => {
+const pParam = [new MatrixParam('p', '0.1', 'p', false, (newLatexValue) => {
     const parsedVal = ce.parse(newLatexValue).N().value;
     
     if (math.typeOf(parsedVal) !== 'number') {
