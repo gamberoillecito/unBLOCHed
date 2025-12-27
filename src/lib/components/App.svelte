@@ -109,7 +109,6 @@
 	let SceneMenuDownloadTrigger = $state() as HTMLElement;
 	let SceneMenuDownloadOpen = $state(false);
 
-
 	let noiseAccordionOpenElement = $state('');
 </script>
 
@@ -215,7 +214,7 @@
 	</div>
 	<!-- Buttons and matrices -->
 	{#if !joystickMode}
-		<ScrollArea class="min-h-0 shrink p-2 @lg:min-h-auto" type="scroll">
+		<ScrollArea class="max-h-full overflow-y-auto p-2" type="scroll">
 			<!-- We need both the svelte media query with the if and the tailwind @2xl: because svelte hides the error popover
 			 of the not-visible input and tailwind is more responsive when the website loads -->
 			{#if true}
@@ -249,8 +248,8 @@
 					<UpdateStateButton {matrix} {DM} disabled={false} {canvasContainer} {history} />
 				{/each}
 			</div>
-			<Separator/>
-			<Tabs.Root value="noise" class="w-full items-center pt-2" >
+			<Separator />
+			<Tabs.Root value="noise" class="w-full items-center pt-2">
 				<Tabs.List class="self-center">
 					<Tabs.Trigger value="gates">Gates</Tabs.Trigger>
 					<Tabs.Trigger value="noise">Noise</Tabs.Trigger>
@@ -303,7 +302,13 @@
 				<Tabs.Content value="noise" class="w-[400px]">
 					<Accordion.Root type="single" bind:value={noiseAccordionOpenElement}>
 						{#each noiseChannels as QO}
-							<QOInfoInput {DM} {QO} {history} {canvasContainer} bind:openItem={noiseAccordionOpenElement}/>
+							<QOInfoInput
+								{DM}
+								{QO}
+								{history}
+								{canvasContainer}
+								bind:openItem={noiseAccordionOpenElement}
+							/>
 						{/each}
 					</Accordion.Root>
 				</Tabs.Content>
