@@ -41,7 +41,6 @@ TODO
 				class="peer"
 				disabled={!QO.isConsistent}
 				onclick={(e: Event) => {
-					console.log('Applied ' + QO.name);
 					let initialDM = DM.clone();
 					DM.apply_quantum_operation(QO);
 					history.addElement(initialDM, DM, null, true);
@@ -57,18 +56,22 @@ TODO
 		<div class="flex flex-wrap">
 			{#each QO.operationElements as FM}
 				<div class="flex w-1/2 justify-center">
-					<ReadonlyFancyMatrix {FM} useExtendedLabel={false} debug={false} />
+					<ReadonlyFancyMatrix {FM} useExtendedLabel={false} debug={true} />
 				</div>
 			{/each}
 		</div>
 		{#each QO.parameters as param}
-			<ErrorPopover isOpen={!QO.isConsistent  && (openItem === QO.name)} popoverContent={QO.userMessage} dismissable={false}>
+			<!-- the isOpen condition takes into account also if the current Accordion.Item is open or not because we want
+			 to hide the Popover when the current item is closed -->
+			<ErrorPopover
+				isOpen={!QO.isConsistent && openItem === QO.name}
+				popoverContent={QO.userMessage}
+				dismissable={false}
+			>
 				{#snippet trigger()}
 					<ParameterInput
 						{param}
 						callback={(paramName: string, paramValue: string) => {
-							console.log(paramName);
-							console.log(paramValue);
 							QO.setParameter(paramName, paramValue);
 						}}
 					/>

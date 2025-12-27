@@ -11,6 +11,7 @@
 	let { FM, useExtendedLabel = true, debug = false }: Props = $props();
 </script>
 
+<div>
 <math-field
 	readonly
 	{@attach (mf: MathfieldElement) => {
@@ -24,3 +25,4 @@
 {#if debug}
 	<pre>{FM.mat.map((row) => '[' + row.map((x) => x.toString()).join(', ') + ']').join('\n')}</pre>
 {/if}
+</div>
