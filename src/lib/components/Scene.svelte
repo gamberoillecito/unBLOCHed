@@ -12,7 +12,6 @@
 	import AngleArc from './AngleArc.svelte';
 	import type { BlochHistory } from '$lib/model/BlochHistory.svelte';
 	import { mode } from 'mode-watcher';
-	import { base } from '$app/paths';
 	import * as culori from 'culori';
 	import { page } from '$app/state';
 
@@ -24,6 +23,7 @@
 		vectorColor: string | null;
 		pathColor: string | null;
 	};
+
 	interface Props {
 		DM: DensityMatrix;
 		history: BlochHistory;
@@ -31,6 +31,7 @@
 		settings: sceneSettings;
 		getImage: (withBackground?: boolean) => string;
 		joystickMode: boolean;
+		paper_mode: boolean;
 	}
 
 	let {
@@ -39,7 +40,8 @@
 		POI,
 		settings,
 		getImage = $bindable(),
-		joystickMode = $bindable()
+		joystickMode = $bindable(),
+		paper_mode = true
 	}: Props = $props();
 
 	const SHOW_PATH_HELPERS = false;
@@ -166,7 +168,7 @@ This component contains the entire scene logic and should be placed inside a Thr
 ```
 -->
 
-<T.HemisphereLight intensity={1}  getContext(matrixContext) />
+<T.HemisphereLight intensity={1} getContext(matrixContext) />
 <!-- <T.DirectionalLight intensity={1} position.x={5} position.y={10} castgetContext(matrixContext) /> -->
 <T.AmbientLight intensity={0.8} />
 <T.PerspectiveCamera
@@ -221,11 +223,25 @@ This component contains the entire scene logic and should be placed inside a Thr
 				scale={0.00012}
 				position={[-0.08, -0.02, +0.08]}
 			/>
+			{@const svg_bg_offset = index == 4 || index == 0 || index == 1 ? -0.018 : 0.0}
+			{@const svg_bg_size = index == 4 || index == 0 || index == 1 ? 0.08 : 0.09}
+			{#if paper_mode}
+				<T.Mesh position={[svg_bg_offset, +0.015, +0]}>
+					<T.CircleGeometry args={[svg_bg_size, 40]} />
+					<T.MeshBasicMaterial
+						color={mode.current == 'light'
+							? new Color().setRGB(0, 255, 255)
+							: new Color('rgb(28, 28, 28)')}
+						transparent
+						opacity={0.4}
+					/>
+				</T.Mesh>
+			{/if}
 		</Billboard>
 	{/each}
 {/if}
 
-<BlochSphere sphere_opacity={0.07}></BlochSphere>
+<BlochSphere sphere_opacity={0.07} paper_mode></BlochSphere>
 <SolidVector {DM} vectorColor={settings.vectorColor}></SolidVector>
 {#if settings.displayAngles}
 	<AngleArc vector={DM.blochV}></AngleArc>
