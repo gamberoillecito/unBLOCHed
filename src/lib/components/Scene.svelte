@@ -13,8 +13,9 @@
 	import type { BlochHistory } from '$lib/model/BlochHistory.svelte';
 	import { mode } from 'mode-watcher';
 	import * as culori from 'culori';
-	import { page } from '$app/state';
 	import { tick } from 'svelte';
+	import { asset } from '$app/paths';
+	import SemitransparentCircleBg from './3D-elements/SemitransparentCircleBg.svelte';
 
 	export type sceneSettings = {
 		displayAngles: boolean;
@@ -41,11 +42,12 @@
 		POI,
 		settings,
 		getImage = $bindable(),
-		joystickMode = $bindable(),
+		joystickMode = $bindable()
 	}: Props = $props();
 
 	const SHOW_PATH_HELPERS = false;
-	let hide_labels_background = $state(false); // If true the semitransparent circles behind labels is not shown (used for downloading w/o background)
+	let hideLabelsBackground = $state(false); // If true the semitransparent circles behind labels is not shown (used for downloading w/o background)
+	const lat_long_color = new Color().setHSL(0, 0, 0.2);
 
 	const MAX_PATH_COLORS = 12;
 	const colors_hex = [
@@ -68,7 +70,7 @@
 	let camera = $state() as PerspectiveCamera;
 
 	async function downloadImage(withBackground = true) {
-		hide_labels_background = true;
+		hideLabelsBackground = true;
 
 		const prevClearColor = new Color();
 		renderer.getClearColor(prevClearColor);
@@ -107,13 +109,16 @@
 		renderer.setClearColor(prevClearColor);
 		renderer.setClearAlpha(prevClearAlpha);
 		setTimeout(() => {
-			hide_labels_background = false;
+			hideLabelsBackground = false;
 		}, 3000);
 		return data;
 	}
 
 	const watermark = 'unBLOCHed.xyz';
 	getImage = downloadImage;
+	let backgroundColor = $derived(
+		mode.current == 'light' ? new Color().setRGB(0, 255, 255) : new Color('rgb(28, 28, 28)')
+	);
 </script>
 
 <!--
@@ -216,6 +221,7 @@ This component contains the entire scene logic and should be placed inside a Thr
 
 {#if settings.displayStateLabels}
 	{#each POI as dm, index}
+		<!-- svg labels of the points on the Bloch sphere and additional round semitransparent background for readability -->
 		<Billboard
 			follow={true}
 			position={[
@@ -225,30 +231,32 @@ This component contains the entire scene logic and should be placed inside a Thr
 			]}
 		>
 			<SVG
-				src={`${page.route.id}${mode.current}/output(${index}).svg`}
+				src={asset(`/${mode.current}/output(${index}).svg`)}
 				scale={0.00012}
 				position={[-0.08, -0.02, +0.08]}
 			/>
 			{@const svg_bg_offset = index == 4 || index == 0 || index == 1 ? -0.018 : 0.0}
 			{@const svg_bg_size = index == 4 || index == 0 || index == 1 ? 0.08 : 0.09}
 			{#if settings.paper_mode}
-				<T.Mesh position={[svg_bg_offset, +0.015, +0]}>
-					<T.CircleGeometry args={[svg_bg_size, 40]} />
-					<T.MeshBasicMaterial
-						color={mode.current == 'light'
-							? new Color().setRGB(0, 255, 255)
-							: new Color('rgb(28, 28, 28)')}
-						transparent
-						opacity={hide_labels_background ? 0 : 0.4}
-					/>
-				</T.Mesh>
+				<SemitransparentCircleBg
+					position={[svg_bg_offset, +0.015, -0.1]}
+					size={svg_bg_size}
+					bind:hide={hideLabelsBackground}
+					bind:color={backgroundColor}
+				/>
 			{/if}
 		</Billboard>
 	{/each}
 {/if}
 
-<BlochSphere sphere_opacity={0.07} bind:paper_mode={settings.paper_mode}></BlochSphere>
+<BlochSphere sphere_opacity={0.07} bind:paper_mode={settings.paper_mode} {lat_long_color}
+></BlochSphere>
 <SolidVector {DM} vectorColor={settings.vectorColor}></SolidVector>
 {#if settings.displayAngles}
-	<AngleArc vector={DM.blochV}></AngleArc>
+	<AngleArc
+		vector={DM.blochV}
+		bind:paperMode={settings.paper_mode}
+		bind:hideLabelsBackground
+		bind:backgroundColor
+	></AngleArc>
 {/if}

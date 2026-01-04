@@ -8,17 +8,26 @@
 		Matrix4,
 		LineBasicMaterial,
 		LineDashedMaterial,
-		Material,
+		Material
 	} from 'three';
 	import { Billboard, SVG } from '@threlte/extras';
 	import { mode } from 'mode-watcher';
-	import { base } from '$app/paths';
+	import { asset } from '$app/paths';
+	import SemitransparentCircleBg from './3D-elements/SemitransparentCircleBg.svelte';
 
 	interface Props {
 		vector: [number, number, number];
+		paperMode: boolean;
+		backgroundColor: Color;
+		hideLabelsBackground: boolean;
 	}
 
-	let { vector }: Props = $props();
+	let {
+		vector,
+		paperMode = $bindable(),
+		backgroundColor = $bindable(),
+		hideLabelsBackground = $bindable()
+	}: Props = $props();
 
 	// Example usage
 	const origin = new Vector3(0, 0, 0);
@@ -76,9 +85,9 @@
 	$effect(() => {
 		arcPhi.rotation.x = -Math.PI;
 		arcTheta.rotation.y = +phi;
-		// arcTheta.rotation.z = -Math.PI/2 
+		// arcTheta.rotation.z = -Math.PI/2
 		// arcTheta.rotation.y = -Math.PI/2;
-		arcTheta.rotation.x = Math.PI/2
+		arcTheta.rotation.x = Math.PI / 2;
 	});
 
 	// Coordinates of the point on the equatorial plane that lays below the Bloch vector
@@ -130,7 +139,7 @@ Place inside a Threlte `<Canvas>` and pass the vector.
 -->
 
 <T.Line is={arcPhi}></T.Line>
-<T.Line is={arcTheta}> </T.Line>
+<T.Line is={arcTheta}></T.Line>
 
 <!-- Line from the origin towards the x axis -->
 <T is={XLine}></T>
@@ -153,12 +162,36 @@ Place inside a Threlte `<Canvas>` and pass the vector.
 		position.x={ARC_RADIUS * 1.4 * Math.cos(phi / 2)}
 		position.y={ARC_RADIUS * 1.4 * Math.sin(phi / 2)}
 	>
-		<SVG src={`${base}/${mode.current}/phi.svg`} scale={0.0001} position={[-0.04, 0, 0]} />
+		<SVG
+			src={asset(`/${mode.current ?? 'light'}/phi.svg`)}
+			scale={0.0001}
+			position={[-0.04, 0, 0]}
+		/>
+		{#if paperMode}
+			<SemitransparentCircleBg
+				position={[-0.01, 0.013, -0.1]}
+				size={0.05}
+				bind:hide={hideLabelsBackground}
+				bind:color={backgroundColor}
+			/>
+		{/if}
 	</Billboard>
 {/if}
 
 {#if theta > THRESHOLD_ANGLE}
 	<Billboard follow={true} position.z={midTheta.z} position.x={midTheta.x} position.y={midTheta.y}>
-		<SVG src={`${base}/${mode.current}/theta.svg`} scale={0.0001} position={[-0.02, 0, 0]} />
+		<SVG
+			src={asset(`/${mode.current ?? 'light'}/theta.svg`)}
+			scale={0.0001}
+			position={[-0.02, 0, 0]}
+		/>
+		{#if paperMode}
+			<SemitransparentCircleBg
+				position={[0.005, 0.030, -0.1]}
+				size={0.05}
+				bind:hide={hideLabelsBackground}
+				bind:color={backgroundColor}
+			/>
+		{/if}
 	</Billboard>
 {/if}
