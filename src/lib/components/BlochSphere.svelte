@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { T } from '@threlte/core';
+	import { Billboard } from '@threlte/extras';
 	import { MathUtils, Color, DoubleSide } from 'three';
 
 	interface Props {
@@ -11,6 +12,7 @@
 		num_longitudes?: number;
 		lat_long_thickness?: number;
 		lat_long_opacity?: number;
+		paper_mode:boolean;
 	}
 
 	let {
@@ -21,7 +23,8 @@
 		num_latitudes = 1,
 		num_longitudes = 2,
 		lat_long_thickness = 0.002,
-		lat_long_opacity = 1
+		lat_long_opacity = 1,
+		paper_mode,
 	}: Props = $props();
 
 	function latitudeSpacing(sphereRad: number, numLatitudes: number) {
@@ -127,6 +130,7 @@ Place the component inside a Threlte `<Canvas>` and customize its appearance by 
 	{/each}
 
 	<!-- Transparent mesh -->
+	{#if !paper_mode}
 	<T.Mesh>
 		<T.SphereGeometry args={[1, 50, 50]} />
 		<T.MeshPhongMaterial
@@ -137,4 +141,21 @@ Place the component inside a Threlte `<Canvas>` and customize its appearance by 
 			depthWrite={false}
 		/>
 	</T.Mesh>
+	{/if}
+
+	<Billboard follow={true}>
+
+	<T.Mesh
+			position.y={latitudeOffset(sphere_radius, 0, num_latitudes)}
+	>
+		<T.TorusGeometry args={[sphere_radius, lat_long_thickness*2]}/>
+			<T.LineBasicMaterial
+				castshadow={false}
+				receiveshadow={false}
+				color={lat_long_color}
+				transparent
+				opacity={lat_long_opacity}
+			/>
+	</T.Mesh>
+	</Billboard>
 </T.Group>

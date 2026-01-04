@@ -80,7 +80,7 @@
 
 	let canvasContainer = $state() as HTMLDivElement;
 	/**Function to download image from the canvas*/
-	let getImage = $state() as (withBackground?: boolean) => string;
+	let getImage = $state() as (withBackground?: boolean) => Promise<string>;
 
 	//**The fully customizable gate is hidden under a toggle on smaller screens*/
 	let customGateVisible = $state(false);
@@ -192,6 +192,7 @@
 						{history}
 						POI={predefinedStates}
 						settings={settings3DScene}
+						paper_mode={true}
 						bind:joystickMode
 					></Scene>
 				</Canvas>

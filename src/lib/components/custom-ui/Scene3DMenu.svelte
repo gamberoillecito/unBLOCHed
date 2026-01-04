@@ -12,7 +12,7 @@
 		SceneMenuDownloadOpen: boolean;
 		SceneMenuDownloadTrigger: HTMLElement;
 		transparentBackground: boolean;
-		getImage: (withBackground?: boolean) => string;
+		getImage: (withBackground?: boolean) => Promise<string>;
 	}
 
 	let {
@@ -23,12 +23,12 @@
 		getImage = $bindable()
 	}: Props = $props();
 
-	function saveImage(
-		getImage: (withBackground?: boolean) => string,
+	async function saveImage(
+		getImage: (withBackground?: boolean) => Promise<string>,
 		withBackground: boolean = true
 	) {
 		if (getImage) {
-			let imgData = getImage(withBackground);
+			let imgData = await getImage(withBackground);
 			// Create a temporary link element
 			const link = document.createElement('a');
 			link.href = imgData;

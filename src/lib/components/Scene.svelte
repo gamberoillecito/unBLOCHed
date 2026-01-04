@@ -14,6 +14,7 @@
 	import { mode } from 'mode-watcher';
 	import * as culori from 'culori';
 	import { page } from '$app/state';
+	import { tick } from 'svelte';
 
 	export type sceneSettings = {
 		displayAngles: boolean;
@@ -29,7 +30,7 @@
 		history: BlochHistory;
 		POI: DensityMatrix[];
 		settings: sceneSettings;
-		getImage: (withBackground?: boolean) => string;
+		getImage: (withBackground?: boolean) => Promise<string>;
 		joystickMode: boolean;
 		paper_mode: boolean;
 	}
@@ -45,6 +46,7 @@
 	}: Props = $props();
 
 	const SHOW_PATH_HELPERS = false;
+	let hide_labels_background = $state(false); // If true the semitransparent circles behind labels is not shown (used for downloading w/o background)
 
 	const MAX_PATH_COLORS = 12;
 	const colors_hex = [
@@ -66,7 +68,9 @@
 	const { renderer, scene } = useThrelte();
 	let camera = $state() as PerspectiveCamera;
 
-	function downloadImage(withBackground = true) {
+	async function downloadImage(withBackground = true) {
+		hide_labels_background = true;
+
 		const prevClearColor = new Color();
 		renderer.getClearColor(prevClearColor);
 		const prevClearAlpha = renderer.getClearAlpha();
@@ -96,13 +100,16 @@
 			renderer.setClearAlpha(1); // fully opaque
 		}
 
+		await tick();
 		renderer.render(scene, camera);
 		const data = renderer.domElement.toDataURL('image/png');
 
 		// Restore previous state
 		renderer.setClearColor(prevClearColor);
 		renderer.setClearAlpha(prevClearAlpha);
-
+		setTimeout(() => {
+			hide_labels_background = false;
+		}, 3000);
 		return data;
 	}
 
@@ -233,7 +240,7 @@ This component contains the entire scene logic and should be placed inside a Thr
 							? new Color().setRGB(0, 255, 255)
 							: new Color('rgb(28, 28, 28)')}
 						transparent
-						opacity={0.4}
+						opacity={hide_labels_background ? 0 : 0.4}
 					/>
 				</T.Mesh>
 			{/if}
