@@ -72,7 +72,8 @@
 		displayStateLabels: true,
 		displayWatermark: true,
 		vectorColor: null,
-		pathColor: null
+		pathColor: null,
+		paper_mode: true,
 	});
 
 	//**Whether the exported image should have a transparent bg or not*/
@@ -192,7 +193,6 @@
 						{history}
 						POI={predefinedStates}
 						settings={settings3DScene}
-						paper_mode={true}
 						bind:joystickMode
 					></Scene>
 				</Canvas>

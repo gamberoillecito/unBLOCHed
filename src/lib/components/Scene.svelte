@@ -23,6 +23,7 @@
 		displayWatermark: boolean;
 		vectorColor: string | null;
 		pathColor: string | null;
+		paper_mode: boolean;
 	};
 
 	interface Props {
@@ -32,7 +33,6 @@
 		settings: sceneSettings;
 		getImage: (withBackground?: boolean) => Promise<string>;
 		joystickMode: boolean;
-		paper_mode: boolean;
 	}
 
 	let {
@@ -42,7 +42,6 @@
 		settings,
 		getImage = $bindable(),
 		joystickMode = $bindable(),
-		paper_mode = true
 	}: Props = $props();
 
 	const SHOW_PATH_HELPERS = false;
@@ -232,7 +231,7 @@ This component contains the entire scene logic and should be placed inside a Thr
 			/>
 			{@const svg_bg_offset = index == 4 || index == 0 || index == 1 ? -0.018 : 0.0}
 			{@const svg_bg_size = index == 4 || index == 0 || index == 1 ? 0.08 : 0.09}
-			{#if paper_mode}
+			{#if settings.paper_mode}
 				<T.Mesh position={[svg_bg_offset, +0.015, +0]}>
 					<T.CircleGeometry args={[svg_bg_size, 40]} />
 					<T.MeshBasicMaterial
@@ -248,7 +247,7 @@ This component contains the entire scene logic and should be placed inside a Thr
 	{/each}
 {/if}
 
-<BlochSphere sphere_opacity={0.07} paper_mode></BlochSphere>
+<BlochSphere sphere_opacity={0.07} bind:paper_mode={settings.paper_mode}></BlochSphere>
 <SolidVector {DM} vectorColor={settings.vectorColor}></SolidVector>
 {#if settings.displayAngles}
 	<AngleArc vector={DM.blochV}></AngleArc>

@@ -78,6 +78,9 @@ toggling elements, picking colors, and exporting the scene as a PNG image.
 		<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayPaths} closeOnSelect={false}
 			>Show Paths</DropdownMenu.CheckboxItem
 		>
+		<DropdownMenu.CheckboxItem bind:checked={settings3DScene.paper_mode} closeOnSelect={false}
+			>Paper Mode</DropdownMenu.CheckboxItem
+		>
 		<DropdownMenu.CheckboxItem
 			bind:checked={settings3DScene.displayStateLabels}
 			closeOnSelect={false}>Show Labels</DropdownMenu.CheckboxItem
