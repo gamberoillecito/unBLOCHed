@@ -2,7 +2,7 @@
 	import { type sceneSettings } from '$lib/components/Scene.svelte';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import Menu from '@lucide/svelte/icons/menu';
-	import {buttonVariants } from '$lib/components/ui/button/index.js';
+	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import ImageDown from '@lucide/svelte/icons/image-down';
 	import { toast } from 'svelte-sonner';
 	import ColorPickerSubmenu from './ColorPickerSubmenu.svelte';
@@ -72,20 +72,35 @@ toggling elements, picking colors, and exporting the scene as a PNG image.
 		<Menu />
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content>
+		<DropdownMenu.CheckboxItem bind:checked={settings3DScene.paperMode} closeOnSelect={false}
+			>Paper Mode</DropdownMenu.CheckboxItem
+		>
+		<DropdownMenu.Separator/>
 		<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayAngles} closeOnSelect={false}
 			>Show Angles</DropdownMenu.CheckboxItem
 		>
 		<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayPaths} closeOnSelect={false}
 			>Show Paths</DropdownMenu.CheckboxItem
 		>
-		<DropdownMenu.CheckboxItem bind:checked={settings3DScene.paper_mode} closeOnSelect={false}
-			>Paper Mode</DropdownMenu.CheckboxItem
-		>
 		<DropdownMenu.CheckboxItem
 			bind:checked={settings3DScene.displayStateLabels}
 			closeOnSelect={false}>Show Labels</DropdownMenu.CheckboxItem
 		>
-		<DropdownMenu.Separator></DropdownMenu.Separator>
+		<DropdownMenu.Sub>
+			<DropdownMenu.SubTrigger>Show Axis</DropdownMenu.SubTrigger>
+			<DropdownMenu.SubContent>
+
+			<DropdownMenu.CheckboxItem
+				bind:checked={settings3DScene.displayAxisArrows}
+				closeOnSelect={false}>Arrows</DropdownMenu.CheckboxItem
+			>
+			<DropdownMenu.CheckboxItem
+				bind:checked={settings3DScene.displayAxisLabels}
+				closeOnSelect={false}>Labels</DropdownMenu.CheckboxItem
+			>
+			</DropdownMenu.SubContent>
+		</DropdownMenu.Sub>
+		<DropdownMenu.Separator/>
 		<DropdownMenu.Sub>
 			<DropdownMenu.SubTrigger>Vector Color</DropdownMenu.SubTrigger>
 			<ColorPickerSubmenu bind:hexBindColor={settings3DScene.vectorColor} />

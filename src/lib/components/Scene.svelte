@@ -24,7 +24,9 @@
 		displayWatermark: boolean;
 		vectorColor: string | null;
 		pathColor: string | null;
-		paper_mode: boolean;
+		paperMode: boolean;
+		displayAxisArrows: boolean;
+		displayAxisLabels: boolean;
 	};
 
 	interface Props {
@@ -237,7 +239,7 @@ This component contains the entire scene logic and should be placed inside a Thr
 			/>
 			{@const svg_bg_offset = index == 4 || index == 0 || index == 1 ? -0.018 : 0.0}
 			{@const svg_bg_size = index == 4 || index == 0 || index == 1 ? 0.08 : 0.09}
-			{#if settings.paper_mode}
+			{#if settings.paperMode}
 				<SemitransparentCircleBg
 					position={[svg_bg_offset, +0.015, -0.1]}
 					size={svg_bg_size}
@@ -249,13 +251,13 @@ This component contains the entire scene logic and should be placed inside a Thr
 	{/each}
 {/if}
 
-<BlochSphere sphere_opacity={0.07} bind:paper_mode={settings.paper_mode} {lat_long_color}
+<BlochSphere sphere_opacity={0.07} {settings} {lat_long_color}
 ></BlochSphere>
 <SolidVector {DM} vectorColor={settings.vectorColor}></SolidVector>
 {#if settings.displayAngles}
 	<AngleArc
 		vector={DM.blochV}
-		bind:paperMode={settings.paper_mode}
+		{settings}
 		bind:hideLabelsBackground
 		bind:backgroundColor
 	></AngleArc>

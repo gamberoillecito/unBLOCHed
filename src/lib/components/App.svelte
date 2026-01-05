@@ -73,7 +73,9 @@
 		displayWatermark: true,
 		vectorColor: null,
 		pathColor: null,
-		paper_mode: true,
+		paperMode: true,
+		displayAxisArrows: false,
+		displayAxisLabels: false,
 	});
 
 	//**Whether the exported image should have a transparent bg or not*/
