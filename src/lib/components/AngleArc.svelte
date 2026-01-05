@@ -8,9 +8,10 @@
 		Matrix4,
 		LineBasicMaterial,
 		LineDashedMaterial,
-		Material
+		Material,
+		ArrowHelper
 	} from 'three';
-	import { Billboard, SVG } from '@threlte/extras';
+	import { Billboard, MeshLineGeometry, MeshLineMaterial, SVG } from '@threlte/extras';
 	import { mode } from 'mode-watcher';
 	import { asset } from '$app/paths';
 	import SemitransparentCircleBg from './3D-elements/SemitransparentCircleBg.svelte';
@@ -32,7 +33,7 @@
 	// Example usage
 	const origin = new Vector3(0, 0, 0);
 	const Xaxis = new Vector3(1, 0, 0);
-	// const Yaxis = new Vector3(0, 1, 0);
+	const Yaxis = new Vector3(0, 1, 0);
 	const Zaxis = new Vector3(0, 0, 1);
 
 	const ARC_RADIUS = 0.2; // Radius of the arcs
@@ -116,6 +117,7 @@
 			.applyMatrix4(rotationMatrix)
 			.setLength(ARC_RADIUS * 1.2)
 	);
+	const ah = new ArrowHelper(Xaxis, new Vector3(0, 0, 0), 1, '#555555', 0.05, 0.05);
 </script>
 
 <!--
@@ -147,6 +149,15 @@ Place inside a Threlte `<Canvas>` and pass the vector.
 <!-- Line from the origin towards the z axis     -->
 <T is={ZLine}></T>
 
+{#each [Xaxis, Yaxis, Zaxis] as ax}
+{@const color = new Color().setHSL(0, 0, 0.2)}
+	{@const ah = new ArrowHelper(ax, new Vector3(0, 0, 0), 1, color, 0.05, 0.04)}
+	<T.Mesh>
+		<MeshLineGeometry points={[origin, ax.clone().setLength(0.99)]} />
+		<MeshLineMaterial width={0.06} {color} />
+	</T.Mesh>
+	<T is={ah}/>
+{/each}
 <!-- Line from the origin towards the projection of the Bloch Vector on the equatorial plane     -->
 <T is={HLine}></T>
 
@@ -187,7 +198,7 @@ Place inside a Threlte `<Canvas>` and pass the vector.
 		/>
 		{#if paperMode}
 			<SemitransparentCircleBg
-				position={[0.005, 0.030, -0.1]}
+				position={[0.005, 0.03, -0.01]}
 				size={0.05}
 				bind:hide={hideLabelsBackground}
 				bind:color={backgroundColor}
