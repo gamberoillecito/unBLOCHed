@@ -13,7 +13,7 @@
 	} from 'three';
 	import { Billboard, MeshLineGeometry, MeshLineMaterial, SVG, Text } from '@threlte/extras';
 	import { mode } from 'mode-watcher';
-	import { asset } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import SemitransparentCircleBg from './3D-elements/SemitransparentCircleBg.svelte';
 	import type { sceneSettings } from './Scene.svelte';
 
@@ -195,7 +195,7 @@ Place inside a Threlte `<Canvas>` and pass the vector.
 		position.y={ARC_RADIUS * 1.4 * Math.sin(phi / 2)}
 	>
 		<SVG
-			src={asset(`/${mode.current ?? 'light'}/phi.svg`)}
+			src={resolve(`/${mode.current ?? 'light'}/phi.svg`)}
 			scale={0.0001}
 			position={[-0.04, 0, 0]}
 		/>
@@ -213,7 +213,7 @@ Place inside a Threlte `<Canvas>` and pass the vector.
 {#if theta > THRESHOLD_ANGLE}
 	<Billboard follow={true} position.z={midTheta.z} position.x={midTheta.x} position.y={midTheta.y}>
 		<SVG
-			src={asset(`/${mode.current ?? 'light'}/theta.svg`)}
+			src={resolve(`/${mode.current ?? 'light'}/theta.svg`)}
 			scale={0.0001}
 			position={[-0.02, 0, 0]}
 		/>

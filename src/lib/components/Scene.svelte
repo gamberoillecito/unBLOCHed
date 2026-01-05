@@ -14,7 +14,7 @@
 	import { mode } from 'mode-watcher';
 	import * as culori from 'culori';
 	import { tick } from 'svelte';
-	import { asset } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import SemitransparentCircleBg from './3D-elements/SemitransparentCircleBg.svelte';
 
 	export type sceneSettings = {
@@ -233,7 +233,7 @@ This component contains the entire scene logic and should be placed inside a Thr
 			]}
 		>
 			<SVG
-				src={asset(`/${mode.current}/output(${index}).svg`)}
+				src={resolve(`/${mode.current}/output(${index}).svg`)}
 				scale={0.00012}
 				position={[-0.08, -0.02, +0.08]}
 			/>
