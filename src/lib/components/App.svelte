@@ -252,7 +252,7 @@
 				{/each}
 			</div>
 			<Separator />
-			<Tabs.Root value="noise" class="w-full items-center pt-2">
+			<Tabs.Root value="gates" class="w-full items-center pt-2">
 				<Tabs.List class="self-center">
 					<Tabs.Trigger value="gates">Gates</Tabs.Trigger>
 					<Tabs.Trigger value="noise">Noise</Tabs.Trigger>
