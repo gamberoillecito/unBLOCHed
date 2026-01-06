@@ -16,6 +16,7 @@
 	import { tick } from 'svelte';
 	import { resolve } from '$app/paths';
 	import SemitransparentCircleBg from './3D-elements/SemitransparentCircleBg.svelte';
+	import AxisHelpers from './3D-elements/AxisHelpers.svelte';
 
 	export type sceneSettings = {
 		displayAngles: boolean;
@@ -262,3 +263,5 @@ This component contains the entire scene logic and should be placed inside a Thr
 		bind:backgroundColor
 	></AngleArc>
 {/if}
+
+<AxisHelpers {settings}></AxisHelpers>
