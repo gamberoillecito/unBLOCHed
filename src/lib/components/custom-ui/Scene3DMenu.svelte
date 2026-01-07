@@ -6,6 +6,7 @@
 	import ImageDown from '@lucide/svelte/icons/image-down';
 	import { toast } from 'svelte-sonner';
 	import ColorPickerSubmenu from './ColorPickerSubmenu.svelte';
+	import Move3d  from '@lucide/svelte/icons/move-3-d';
 
 	interface Props {
 		settings3DScene: sceneSettings;
@@ -87,16 +88,16 @@ toggling elements, picking colors, and exporting the scene as a PNG image.
 			closeOnSelect={false}>Show Labels</DropdownMenu.CheckboxItem
 		>
 		<DropdownMenu.Sub>
-			<DropdownMenu.SubTrigger>Show Axis</DropdownMenu.SubTrigger>
+			<DropdownMenu.SubTrigger><Move3d/> Axis</DropdownMenu.SubTrigger>
 			<DropdownMenu.SubContent>
 
 			<DropdownMenu.CheckboxItem
 				bind:checked={settings3DScene.displayAxisArrows}
-				closeOnSelect={false}>Arrows</DropdownMenu.CheckboxItem
+				closeOnSelect={false}>Show Arrows</DropdownMenu.CheckboxItem
 			>
 			<DropdownMenu.CheckboxItem
 				bind:checked={settings3DScene.displayAxisLabels}
-				closeOnSelect={false}>Labels</DropdownMenu.CheckboxItem
+				closeOnSelect={false}>Show Labels</DropdownMenu.CheckboxItem
 			>
 			</DropdownMenu.SubContent>
 		</DropdownMenu.Sub>

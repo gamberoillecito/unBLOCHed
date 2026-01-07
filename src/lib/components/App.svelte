@@ -73,7 +73,7 @@
 		displayWatermark: true,
 		vectorColor: null,
 		pathColor: null,
-		paperMode: true,
+		paperMode: false,
 		displayAxisArrows: false,
 		displayAxisLabels: false,
 	});
