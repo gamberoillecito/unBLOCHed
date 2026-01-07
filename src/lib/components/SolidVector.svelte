@@ -6,13 +6,16 @@
 	import type { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
 	import { mode } from 'mode-watcher';
 
+	import { Outlines } from '@threlte/extras';
+	import type { sceneSettings } from './Scene.svelte';
+
 	// let {length= 1, pointToLookAt, phase = 0}: Prop = $props();
 	interface Props {
 		DM: DensityMatrix;
-		vectorColor: string | null;
+		settings: sceneSettings;
 	}
 
-	let { DM, vectorColor }: Props = $props();
+	let { DM, settings }: Props = $props();
 
 	let length = $derived(Math.sqrt(DM.blochV[0] ** 2 + DM.blochV[1] ** 2 + DM.blochV[2] ** 2));
 
@@ -33,10 +36,10 @@
 		hsl.l = 0.8 - hsl.l;
 		darkCol.setHSL(hsl.h, hsl.s + 0.2, hsl.l);
 
-		if (vectorColor == null) {
+		if (settings.vectorColor == null) {
 			color = mode.current === 'light' ? lightCol : darkCol;
 		} else {
-			color = new Color(vectorColor);
+			color = new Color(settings.vectorColor);
 		}
 	});
 
@@ -106,7 +109,6 @@ Place the component inside a Threlte `<Canvas>` and pass the reactive `DM` prop.
 			scale.x={(HEAD_RAD / 2) * length ** 0.5}
 			scale.z={(HEAD_RAD / 2) * length ** 0.5}
 			scale.y={body_length}
-			receiveShadow
 		>
 			<T.CylinderGeometry args={[1, 0.4, 1]} />
 			{@render arrowMaterial()}
@@ -118,10 +120,12 @@ Place the component inside a Threlte `<Canvas>` and pass the reactive `DM` prop.
 			scale.x={length ** 0.5 * HEAD_RAD}
 			scale.z={length ** 0.5 * HEAD_RAD}
 			scale.y={scaled_head_length}
-			castShadow
 		>
 			<T.ConeGeometry args={[1, 1]} />
 			{@render arrowMaterial()}
+			{#if settings.paperMode}
+				<Outlines thickness={0.1} color="black" screenspace={false} />
+			{/if}
 		</T.Mesh>
 	{/if}
 </T.Group>

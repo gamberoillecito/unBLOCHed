@@ -254,7 +254,7 @@ This component contains the entire scene logic and should be placed inside a Thr
 
 <BlochSphere sphere_opacity={0.07} {settings} {lat_long_color}
 ></BlochSphere>
-<SolidVector {DM} vectorColor={settings.vectorColor}></SolidVector>
+<SolidVector {DM} {settings}></SolidVector>
 {#if settings.displayAngles}
 	<AngleArc
 		vector={DM.blochV}
@@ -264,4 +264,4 @@ This component contains the entire scene logic and should be placed inside a Thr
 	></AngleArc>
 {/if}
 
-<AxisHelpers {settings}></AxisHelpers>
+<AxisHelpers {settings} {backgroundColor} {hideLabelsBackground}></AxisHelpers>
