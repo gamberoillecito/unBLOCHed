@@ -53,9 +53,9 @@ TODO
 		</div>
 	</Accordion.Trigger>
 	<Accordion.Content>
-		<div class="flex flex-wrap">
+		<div class="flex flex-wrap justify-around">
 			{#each QO.operationElements as FM}
-				<div class="flex w-1/2 justify-center">
+				<div class="flex w-fit justify-center  p-1">
 					<ReadonlyFancyMatrix {FM} useExtendedLabel={false} debug={true} />
 				</div>
 			{/each}

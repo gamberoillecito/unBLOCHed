@@ -302,8 +302,9 @@
 						/>
 					</div>
 				</Tabs.Content>
-				<Tabs.Content value="noise" class="w-[400px]">
-					<Accordion.Root type="single" bind:value={noiseAccordionOpenElement}>
+				<Tabs.Content value="noise" class=" w-full px-2">
+
+					<Accordion.Root type="single" class="w-full" bind:value={noiseAccordionOpenElement}>
 						{#each noiseChannels as QO}
 							<QOInfoInput
 								{DM}
