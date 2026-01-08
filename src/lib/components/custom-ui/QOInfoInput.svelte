@@ -56,7 +56,7 @@ TODO
 		<div class="flex flex-wrap justify-around">
 			{#each QO.operationElements as FM}
 				<div class="flex w-fit justify-center  p-1">
-					<ReadonlyFancyMatrix {FM} useExtendedLabel={false} debug={true} />
+					<ReadonlyFancyMatrix {FM} useExtendedLabel={false} debug={false} />
 				</div>
 			{/each}
 		</div>
