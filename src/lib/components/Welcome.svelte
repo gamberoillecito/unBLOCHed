@@ -3,14 +3,12 @@
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import * as Drawer from '$lib/components/ui/drawer/index.js';
 	import markedKatex from 'marked-katex-extension';
-	import { Button, buttonVariants } from '$lib/components/ui/button/index.js';
+	import { Button } from '$lib/components/ui/button/index.js';
 	import Title from '$lib/components/Title.svelte';
-	import welcomemd from '$lib/markdown/welcome_en.md?raw';
 	import * as Alert from './ui/alert/index.js';
 	import MonitorSmartphone from '@lucide/svelte/icons/monitor-smartphone';
 	import { preferences } from '$lib/preferences';
 	import { get } from 'svelte/store';
-	import Toggle from './ui/toggle/toggle.svelte';
 	import Checkbox from './ui/checkbox/checkbox.svelte';
 	import Label from './ui/label/label.svelte';
 	import { onMount } from 'svelte';
@@ -27,7 +25,7 @@
 	marked.use(markedKatex(markedKatexOptions));
 
 	const DESCRIPTION =
-		"This website allows you to experiment with a 'real' Bloch sphere and learn more about Quantum";
+		"This website allows you to experiment with a 'real' Bloch sphere and learn more about Quantum.";
 	let showWelcomeAtStart = $state(true);
 
 	onMount(() => {
@@ -40,9 +38,40 @@
 	});
 </script>
 
+{#snippet unresponsiveCheckbox(text: string, checked: boolean = true)}
+	<div class="my-2 flex flex-row items-center gap-2">
+		<Checkbox id="unresp_check_{text}" {checked} class="pointer-events-none " />
+		<Label for="unresp_check_{text}" class="pointer-events-none">{text}</Label>
+	</div>
+{/snippet}
+
+{#snippet linkToBetaPage(parenthesis:boolean=false)}
+	{#if import.meta.env.MODE !== 'beta'}
+		{#if parenthesis}
+			<span>(</span>
+		{/if}
+			<Button variant="link" href="httsp://beta.unbloched.xyz" class="p-0">beta page</Button>
+		{#if parenthesis}
+			<span>)</span>
+		{/if}
+	{/if}
+{/snippet}
+
 {#snippet welcomeContent()}
-	<article class="prose-sm dark:prose-invert m-auto md:columns-2 lg:m-2">
-		{@html marked.parse(welcomemd)}
+	<article class="prose-sm dark:prose-invert m-auto flex flex-row lg:m-2">
+		<div class="w-[50%]">
+			<h3 class="mt-0">New Features</h3>
+			{@render unresponsiveCheckbox('LaTeX input')}
+			{@render unresponsiveCheckbox('Tutorial')}
+			{@render unresponsiveCheckbox('Image export')}
+			{@render unresponsiveCheckbox('Joystick mode')}
+		</div>
+		<div class="w-[50%]">
+			<h3 class="mt-0">Coming Soon {@render linkToBetaPage(true)}</h3>
+			{@render unresponsiveCheckbox('Gif export', false)}
+			{@render unresponsiveCheckbox('Time evolution', false)}
+			{@render unresponsiveCheckbox('Many more...', false)}
+		</div>
 	</article>
 {/snippet}
 
@@ -78,21 +107,21 @@
 	{/snippet}
 	{#snippet drawerContent()}
 		<Drawer.Header class="text-left">
-			<Drawer.Title class="font-light text-xl">Welcome to <Title subtitle={false} />!</Drawer.Title>
+			<Drawer.Title class="text-xl font-light">Welcome to <Title subtitle={false} />!</Drawer.Title>
 			<Drawer.Description>
 				{DESCRIPTION}
 				<Alert.Root variant="warning" class="mx-auto mt-4 max-w-[95%]">
 					<MonitorSmartphone />
 					<Alert.Description>
-						The tutorial panel is not available on smaller screens.
-            Visit this website on your PC for a better experience
+						The tutorial panel is not available on smaller screens. Visit this website on your PC
+						for a better experience
 					</Alert.Description>
 				</Alert.Root>
 			</Drawer.Description>
 		</Drawer.Header>
 		<Drawer.Footer>
 			{@render githubButton()}
-			<div class="flex flex-row-reverse gap-2 justify-start-safe mt-2">
+			<div class="justify-start-safe mt-2 flex flex-row-reverse gap-2">
 				<Checkbox id="showWelcomeMessage" bind:checked={showWelcomeAtStart} />
 				<Label for="showWelcomeMessage">Show this message next time</Label>
 			</div>

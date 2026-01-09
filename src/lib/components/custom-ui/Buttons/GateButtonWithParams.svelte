@@ -1,10 +1,11 @@
 <script lang="ts">
-	import type { DensityMatrix, GateMatrix } from '$lib/components/Model.svelte';
-	import { BlochHistory } from '$lib/components/BlochHistory.svelte';
+	import type { GateMatrix } from '$lib/model/GateMatrix.svelte';
+	import type { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
+	import { BlochHistory } from '$lib/model/BlochHistory.svelte';
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
 	import ApplyGateButton from './ApplyGateButton.svelte';
-	import MatrixInfoInput from '$lib/components/MatrixInfoInput.svelte';
+	import MatrixInfoInput from '$lib/components/custom-ui/MatrixInfoInput.svelte';
 
 	const markedKatexOptions = {
 		throwOnError: false

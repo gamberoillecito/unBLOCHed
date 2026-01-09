@@ -3,22 +3,19 @@
 	import 'mathlive';
 	import type { MathfieldElement } from 'mathlive';
 	import { getContext } from 'svelte';
-	import { FancyMatrix, DensityMatrix, MatrixParam, print_mat } from './Model.svelte';
+	import { FancyMatrix } from '$lib/model/FancyMatrix.svelte';
 	import { deepEqual } from 'mathjs';
-	import MatrixParameterInput from './MatrixInfoInput.svelte';
-	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';
-	import Trash from '@lucide/svelte/icons/trash';
-	import Save from '@lucide/svelte/icons/save';
-	import Eraser from '@lucide/svelte/icons/eraser';
-	import CircleX from '@lucide/svelte/icons/circle-x';
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
 	import ErrorPopover from './custom-ui/ErrorPopover.svelte';
 	import ApplyUndoButton from './custom-ui/Buttons/ApplyUndoButton.svelte';
+
 	interface Props {
 		FM: FancyMatrix;
 		instantUpdate: boolean;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		onChangeCallback?: (FM: FancyMatrix, oldFM: FancyMatrix, ...args: any[]) => void;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		onChangeArguments?: any;
 	}
 
@@ -105,6 +102,8 @@
 		 * update button accordingly
 		 */
 		mf.addEventListener('input', (ev) => {
+			console.log(mf.value);
+			
 			// Generate a matrix starting from latex and validate it
 			let parsed = parseMatrixField(mf);
 			let res = FM.validateMatrix(FM.generateMatrixFromLatex(...parsed));
@@ -167,7 +166,7 @@
 			for (let i = 0; i < FM.nRows; i++) {
 				for (let j = 0; j < FM.nCols; j++) {
 					let newValue: string = FM.latexMat[i][j];
-					mf.setPromptValue(`m${i}${j}`, newValue, {silenceNotifications: true});
+					mf.setPromptValue(`m${i}${j}`, newValue, { silenceNotifications: true });
 				}
 			}
 			mf.setPromptValue(`mult`, FM.latexMult, { silenceNotifications: true });
@@ -178,6 +177,54 @@
 		return () => {};
 	};
 </script>
+
+<!--
+@component
+A reactive matrix input component using `math-field` for displaying and editing `FancyMatrix` objects. It handles real-time validation, user input, and state updates.
+
+**Props:**
+- `FM: FancyMatrix`
+  The reactive `FancyMatrix` instance to be displayed and edited.
+
+- `instantUpdate: boolean`
+  If `true`, the matrix updates on every valid input. If `false`, an "Apply" button must be clicked to commit changes.
+
+- `onChangeCallback?: (newFM: FancyMatrix, oldFM: FancyMatrix, ...args: any[]) => void`
+  An optional callback function that fires after a successful matrix update. It receives the new matrix, the old matrix, and any additional arguments. Notice that `newFM` and `oldFM` are provided automatically by the component and the the value of the matrix after and before the update, respectively.
+
+- `onChangeArguments?: any`
+  Optional arguments to be passed to the `onChangeCallback` after the `newFM` and `oldFM` parameters.
+
+**Usage:**
+The component can be configured for manual or instant updates.
+
+```svelte
+<script lang="ts">
+  import DynamicMatrix from './DynamicMatrix.svelte';
+  import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
+  import { BlochHistory } from '$lib/model/BlochHistory.svelte';
+
+  let dm = $state(new DensityMatrix());
+  let history = $state(new BlochHistory());
+
+  function handleUpdate(newMatrix, oldMatrix, history) {
+    // Add the change to the history log
+    history.addElement(oldMatrix, newMatrix);
+  }
+</script>
+
+// Manual updates
+<DynamicMatrix
+	FM={dm}
+	instantUpdate={false}
+	onChangeCallback={handleUpdate}
+	onChangeArguments={history}
+/>
+
+// Instant updates
+<DynamicMatrix FM={dm} instantUpdate={true} />
+```
+-->
 
 <div class="flex">
 	<ErrorPopover
@@ -200,3 +247,4 @@
 	<!-- <MatrixParameterInput matrix={FM} ></MatrixParameterInput> -->
 	<!-- <p> {FM.userMessage} </p> -->
 </div>
+

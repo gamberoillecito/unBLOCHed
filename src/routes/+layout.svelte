@@ -2,7 +2,8 @@
 	import '../app.css';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import { ModeWatcher } from 'mode-watcher';
-	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';
+	import { buttonVariants } from '$lib/components/ui/button/index.js';
+	import '@fontsource-variable/ar-one-sans';
 	let { children } = $props();
 </script>
 
@@ -32,6 +33,9 @@
 		name="description"
 		content="Interactive and intuitive Bloch sphere simulator, fully open source."
 	/>
+
+	<link href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" rel="preload" as="style">
+	
 	<meta property="og:title" content="unBLOCHed" />
     <meta property="og:description" content="Interactive and intuitive Bloch sphere simulator, fully open source." />
     <meta property="og:type" content="website" />
@@ -55,7 +59,6 @@
 {@render children()}
 
 <style>
-	@import url('https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400..700&display=swap');
 
 	@import url('https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css');
 	:global(math-field::part(menu-toggle)) {

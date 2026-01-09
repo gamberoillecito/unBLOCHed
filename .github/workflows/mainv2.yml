@@ -41,10 +41,13 @@ jobs:
         run: |
           if [ "${GITHUB_REF#refs/heads/}" = "main" ]; then
             echo "BASE_PATH=/${{ github.event.repository.name }}" >> $GITHUB_ENV
+            export BASE_PATH=/${{ github.event.repository.name }}
           else
-            # for development deploy target repo path
+            # for development deploy target repo path 
             echo "BASE_PATH=/unBLOCHed-beta" >> $GITHUB_ENV
+            export BASE_PATH=/unBLOCHed-beta
           fi
+          echo "BASE_PATH set to: $BASE_PATH"
 
       - name: Build
         env:
@@ -134,15 +137,23 @@ jobs:
 
       - name: Sync built files into target repo
         run: |
-          rm -rf target-repo/* || true
-          cp -a build/. target-repo/
           cd target-repo
+          # Remove only the old build files, keep config and git
+          rm -rf _app *.html *.css *.js *.json || true
+          rm -rf .github || true
+
+          # Copy new build files
+          cp -a ../build/. .
+
+          # Ensure .nojekyll exists
+          touch .nojekyll
+
           git add --all
           git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "Site update from ${GITHUB_SHA} (development)" || echo "No changes to commit"
 
       - name: Push to target repo
         run: |
           cd target-repo
-          git push origin HEAD:main
+          git push --force-with-lease origin HEAD:main
         env:
           GIT_ASKPASS: /bin/true

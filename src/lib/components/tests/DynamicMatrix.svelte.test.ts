@@ -1,11 +1,13 @@
 import { test, expect } from "vitest";
-import { DensityMatrix, FancyMatrix, type ComplexMat2x2<2, 2 > <2, 2 > } from "./Model.svelte";
+import { type ComplexMatRxC } from "$lib/model/ModelUtility.svelte";
+import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
+import { FancyMatrix } from '$lib/model/FancyMatrix.svelte';
 import { complex } from "mathjs";
 
 test('FancyMatrix', () => {
-    let latexMat = [['1', 'i'], ['1', '0']];
-    let latexMult = '1';
-    let FM = new FancyMatrix(latexMat, latexMult, 'test');
+    const latexMat = [['1', 'i'], ['1', '0']];
+    const latexMult = '1';
+    const FM = new FancyMatrix(latexMat, latexMult, 'test');
 
     expect(FM.mat[0][0]).toStrictEqual(complex(1, 0));
     expect(FM.mat[0][1]).toStrictEqual(complex(0, 1));
@@ -19,7 +21,7 @@ test('FancyMatrix', () => {
     expect(res.isValid).toBe(false);
 
     // Check validation and setting of matrix from value
-    let expectedValueMat = [[complex(1), complex('i')], [complex(1), complex(0)]] as ComplexMat2x2<2, 2> < 2, 2 >;
+    const expectedValueMat = [[complex(1), complex('i')], [complex(1), complex(0)]] as ComplexMatRxC<2, 2>;
     res = FM.setMatrixValue(expectedValueMat);
     expect(res.isValid).toBe(true)
 
@@ -32,21 +34,21 @@ test('FancyMatrix', () => {
 })
 
 test('DensityMatrix', () => {
-    let latexMat = [['1', '0'], ['0', '0']];
-    let latexMult = '1';
-    let FM = new DensityMatrix(latexMat, latexMult, 'testDM');
+    const latexMat = [['1', '0'], ['0', '0']];
+    const latexMult = '1';
+    const FM = new DensityMatrix(latexMat, latexMult, 'testDM');
 
     expect(FM.mat[0][0]).toStrictEqual(complex(1, 0));
     expect(FM.mat[0][1]).toStrictEqual(complex(0, 0));
 
     // Check validation and setting of invalid matrix
     latexMat[0][0] = '2'
-    let res = FM.setMatrixFromLatex(latexMat, latexMult);
+    const res = FM.setMatrixFromLatex(latexMat, latexMult);
     expect(res.isValid).toBe(false);
     expect(FM.latexMat[0][0]).toBe('1')
 
     // // Check validation and setting of matrix from value
-    // let expectedValueMat = [[complex(1), complex('i')], [complex(1), complex(0)]] as ComplexMat2x2<2,2><2,2>;
+    // let expectedValueMat = [[complex(1), complex('i')], [complex(1), complex(0)]] as ComplexMatRxC<2,2>;
     // res = FM.setMatrixValue(expectedValueMat);
     // expect(res.isValid).toBe(true)
 

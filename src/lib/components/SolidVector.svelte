@@ -1,19 +1,21 @@
 <script lang="ts">
 	import { T } from '@threlte/core';
 	import { Group, Color, type HSL } from 'three';
-	import { Outlines } from '@threlte/extras';
 	import { generateGradient } from 'typescript-color-gradient';
-	import type { DensityMatrix } from './Model.svelte';
-	import { mode } from "mode-watcher";
-	
+
+	import type { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
+	import { mode } from 'mode-watcher';
+
+	import { Outlines } from '@threlte/extras';
+	import type { sceneSettings } from './Scene.svelte';
+
 	// let {length= 1, pointToLookAt, phase = 0}: Prop = $props();
 	interface Props {
 		DM: DensityMatrix;
-		vectorColor: string | null;
+		settings: sceneSettings;
 	}
 
-	let { DM , vectorColor}: Props = $props();
-
+	let { DM, settings }: Props = $props();
 
 	let length = $derived(Math.sqrt(DM.blochV[0] ** 2 + DM.blochV[1] ** 2 + DM.blochV[2] ** 2));
 
@@ -25,23 +27,21 @@
 		100
 	);
 	let color = $state() as Color;
-	$effect(()=>{
-		let colorIdx = Math.floor(((gradientArray.length) * DM.phi) / (2 * Math.PI));
+	$effect(() => {
+		let colorIdx = Math.floor((gradientArray.length * DM.phi) / (2 * Math.PI));
 		let lightCol = new Color(gradientArray[colorIdx]);
 		let darkCol = lightCol.clone();
 		let hsl = {} as HSL;
-		lightCol.getHSL(hsl)
+		lightCol.getHSL(hsl);
 		hsl.l = 0.8 - hsl.l;
-		darkCol.setHSL(hsl.h, hsl.s+0.2, hsl.l);	
+		darkCol.setHSL(hsl.h, hsl.s + 0.2, hsl.l);
 
-		if (vectorColor == null){
-			color = mode.current === "light" ? lightCol : darkCol;
+		if (settings.vectorColor == null) {
+			color = mode.current === 'light' ? lightCol : darkCol;
+		} else {
+			color = new Color(settings.vectorColor);
 		}
-		else {
-			color = new Color(vectorColor);
-		}
-		
-	})
+	});
 
 	let body_length = $derived(length - HEAD_LEN * length ** 0.5);
 	let scaled_head_length = $derived(HEAD_LEN * length ** 0.5);
@@ -52,10 +52,35 @@
 	});
 </script>
 
-<!-- The outlines of the vector (applied to the single parts) -->
-{#snippet outline()}
-	<Outlines color="black" thickness={8} screenspace={true} />
-{/snippet}
+<!--
+@component
+Renders a 3D arrow representing the Bloch vector from a given `DensityMatrix`. The arrow's length, direction, and color are derived dynamically from the matrix properties.
+
+**Props:**
+- `DM: DensityMatrix`
+  The reactive `DensityMatrix` object. The component uses its `blochV` for direction and length, and `phi` for color calculation.
+
+- `vectorColor: string | null` (optional)
+  Overrides the default dynamic color. If `null`, color is based on the `phi` angle. If a color string (e.g., `'#ff0000'`) is provided, that color is used instead.
+
+**Usage:**
+Place the component inside a Threlte `<Canvas>` and pass the reactive `DM` prop.
+
+```svelte
+<script lang="ts">
+  import { Canvas } from '@threlte/core';
+  import SolidVector from './SolidVector.svelte';
+  import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
+
+  // Create a reactive DensityMatrix instance
+  let dm = $state(new DensityMatrix());
+  // The vector will update automatically when dm.blochV changes.
+</script>
+
+  <SolidVector {DM} vectorColor={null} />
+
+```
+-->
 
 <!-- The material of the arrow -->
 {#snippet arrowMaterial()}
@@ -68,7 +93,7 @@
  the viewport-->
 <T.Mesh position.x={DM.blochV[0]} position.y={DM.blochV[1]} position.z={DM.blochV[2]}>
 	<T.SphereGeometry args={[0]} />
-	<T.MeshStandardMaterial color={'red'} />
+	<T.MeshStandardMaterial color="red" />
 </T.Mesh>
 
 <T.Group bind:ref={vector}>
@@ -78,7 +103,7 @@
 	</T.Mesh>
 	{#if length >= 0.05}
 		<!-- Body -->
-		<T.Mesh 
+		<T.Mesh
 			position.z={body_length / 2}
 			rotation.x={Math.PI / 2}
 			scale.x={(HEAD_RAD / 2) * length ** 0.5}
@@ -98,6 +123,9 @@
 		>
 			<T.ConeGeometry args={[1, 1]} />
 			{@render arrowMaterial()}
+			{#if settings.paperMode}
+				<Outlines thickness={0.1} color="black" screenspace={false} />
+			{/if}
 		</T.Mesh>
 	{/if}
 </T.Group>

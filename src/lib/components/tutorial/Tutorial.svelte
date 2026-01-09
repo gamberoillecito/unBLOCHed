@@ -4,7 +4,6 @@
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index';
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
-	import Section from './tutorials_md/Section.svx';
 	import QubitsTutorial from './tutorials_md/Qubits.svx';
 	import BlochSphereTutorial from './tutorials_md/BlochSphere.svx';
 	import StatesTutorial from './tutorials_md/States.svx';
@@ -15,13 +14,8 @@
 	import { onMount, type Component } from 'svelte';
 	import { preferences } from '$lib/preferences';
 	import { get } from 'svelte/store';
-	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';
-	import Switch from '../ui/switch/switch.svelte';
-	import Label from '../ui/label/label.svelte';
 	import Bookmark from '@lucide/svelte/icons/bookmark';
-	import Toggle from '../ui/toggle/toggle.svelte';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
-	import BlochSphere from '../BlochSphere.svelte';
 
 	const markedKatexOptions = {
 		throwOnError: false
@@ -102,7 +96,7 @@
 				let viewport = el.querySelector('[data-slot="scroll-area-viewport"]');
 				if (title === prefs?.chapter) {
 					/** Wait a couple of seconds and then scroll to the last reading position*/
-					
+
 					if (prefs?.rememberReadingPosition ?? true) {
 						setTimeout(() => {
 							viewport?.scrollTo({
@@ -129,7 +123,7 @@
 		</ScrollArea>
 	</Tabs.Content>
 {/snippet}
-<div class="relative h-full w-full @container">
+<div class="@container relative h-full w-full">
 	<Tabs.Root
 		bind:value={currentChapter}
 		class="flex h-full min-h-0 flex-col items-center"
@@ -153,7 +147,7 @@
 				<Tooltip.Trigger>
 					<button
 						type="button"
-						class="relative h-[2.5rem] w-[3rem] items-center justify-center focus:outline-none flex @max-[600px]:hidden"
+						class="relative flex h-[2.5rem] w-[3rem] items-center justify-center focus:outline-none @max-[600px]:hidden"
 						aria-pressed={rememberReadingPos}
 						onclick={() => (rememberReadingPos = !rememberReadingPos)}
 						aria-label="remember last reading position"

@@ -9,24 +9,31 @@
 		LineBasicMaterial,
 		LineDashedMaterial,
 		Material,
-
-		AxesHelper
-
 	} from 'three';
 	import { Billboard, SVG } from '@threlte/extras';
 	import { mode } from 'mode-watcher';
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
+	import SemitransparentCircleBg from './3D-elements/SemitransparentCircleBg.svelte';
+	import type { sceneSettings } from './Scene.svelte';
 
 	interface Props {
 		vector: [number, number, number];
+		backgroundColor: Color;
+		hideLabelsBackground: boolean;
+		settings: sceneSettings;
 	}
 
-	let { vector }: Props = $props();
+	let {
+		vector,
+		backgroundColor = $bindable(),
+		hideLabelsBackground = $bindable(),
+		settings
+	}: Props = $props();
 
 	// Example usage
 	const origin = new Vector3(0, 0, 0);
 	const Xaxis = new Vector3(1, 0, 0);
-	const Yaxis = new Vector3(0, 1, 0);
+	// const Yaxis = new Vector3(0, 1, 0);
 	const Zaxis = new Vector3(0, 0, 1);
 
 	const ARC_RADIUS = 0.2; // Radius of the arcs
@@ -79,9 +86,9 @@
 	$effect(() => {
 		arcPhi.rotation.x = -Math.PI;
 		arcTheta.rotation.y = +phi;
-		// arcTheta.rotation.z = -Math.PI/2 
+		// arcTheta.rotation.z = -Math.PI/2
 		// arcTheta.rotation.y = -Math.PI/2;
-		arcTheta.rotation.x = Math.PI/2
+		arcTheta.rotation.x = Math.PI / 2;
 	});
 
 	// Coordinates of the point on the equatorial plane that lays below the Bloch vector
@@ -112,8 +119,28 @@
 	);
 </script>
 
+<!--
+@component
+Renders the `θ` (theta) and `φ` (phi) angle arcs for a Bloch vector.
+
+**Props:**
+- `vector: [number, number, number]` - The reactive 3D Bloch vector.
+
+**Usage:**
+Place inside a Threlte `<Canvas>` and pass the vector.
+
+```svelte
+<script lang="ts">
+  import AngleArc from './AngleArc.svelte';
+  let blochVector: [number, number, number] = $state([0.5, 0.5, 0.707]);
+</script>
+
+<AngleArc vector={blochVector} />
+```
+-->
+
 <T.Line is={arcPhi}></T.Line>
-<T.Line is={arcTheta}> </T.Line>
+<T.Line is={arcTheta}></T.Line>
 
 <!-- Line from the origin towards the x axis -->
 <T is={XLine}></T>
@@ -136,12 +163,36 @@
 		position.x={ARC_RADIUS * 1.4 * Math.cos(phi / 2)}
 		position.y={ARC_RADIUS * 1.4 * Math.sin(phi / 2)}
 	>
-		<SVG src={`${base}/${mode.current}/phi.svg`} scale={0.0001} position={[-0.04, 0, 0]} />
+		<SVG
+			src={resolve(`/${mode.current ?? 'light'}/phi.svg`)}
+			scale={0.0001}
+			position={[-0.04, 0, 0]}
+		/>
+		{#if settings.paperMode}
+			<SemitransparentCircleBg
+				position={[-0.01, 0.013, -0.1]}
+				size={0.05}
+				bind:hide={hideLabelsBackground}
+				bind:color={backgroundColor}
+			/>
+		{/if}
 	</Billboard>
 {/if}
 
 {#if theta > THRESHOLD_ANGLE}
 	<Billboard follow={true} position.z={midTheta.z} position.x={midTheta.x} position.y={midTheta.y}>
-		<SVG src={`${base}/${mode.current}/theta.svg`} scale={0.0001} position={[-0.02, 0, 0]} />
+		<SVG
+			src={resolve(`/${mode.current ?? 'light'}/theta.svg`)}
+			scale={0.0001}
+			position={[-0.02, 0, 0]}
+		/>
+		{#if settings.paperMode}
+			<SemitransparentCircleBg
+				position={[0.005, 0.03, -0.01]}
+				size={0.05}
+				bind:hide={hideLabelsBackground}
+				bind:color={backgroundColor}
+			/>
+		{/if}
 	</Billboard>
 {/if}

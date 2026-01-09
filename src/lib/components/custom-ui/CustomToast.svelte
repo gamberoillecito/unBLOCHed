@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { Button, buttonVariants } from '$lib/components/ui/button/index.js';
-	import { createRawSnippet, type Component, type Snippet } from 'svelte';
-	import { toast as originalToast } from 'svelte-sonner';
+	import { Button,  } from '$lib/components/ui/button/index.js';
+	import { type Snippet } from 'svelte';
 	import { marked } from 'marked';
 	import markedKatex from 'marked-katex-extension';
 	const markedKatexOptions = {
@@ -22,6 +21,7 @@
 <div class="prose dark:prose-invert">
 	<h5>
 		{#if typeof title === 'string'}
+			// eslint-disable-next-line svelte/no-at-html-tags
 			{@html marked.parse(title)}
 		{:else if title}
 			{@render title()}
@@ -38,13 +38,13 @@
 		{#if action}
 			<Button
 				onclick={() => {
-					actionCallback ? actionCallback() : '';
+					actionCallback?.() ;
 				}}
 			>
 				{#if typeof action === 'string'}
 					{@html marked.parse(action)}
 				{:else}
-                    {@render action()}
+					{@render action()}
 				{/if}
 			</Button>
 		{/if}

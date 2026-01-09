@@ -4,3 +4,4 @@
 @import "./custom.css";
 @import "./shadcn.css";
 @custom-variant dark (&:where(.dark, .dark *));
+@import '@fontsource-variable/ar-one-sans';

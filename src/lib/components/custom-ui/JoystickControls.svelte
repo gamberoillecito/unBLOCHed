@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { FakeDensityMatrix } from '../Model.svelte';
+	import type { FakeDensityMatrix } from '$lib/model/DensityMatrix.svelte';
 	import { convertLatexToMarkup } from 'mathlive';
 	import Hand from '@lucide/svelte/icons/hand';
 	import MoveUp from '@lucide/svelte/icons/move-up';
@@ -13,7 +13,6 @@
 	import MoveDownLeft from '@lucide/svelte/icons/move-down-left';
 	import Keyboard from '@lucide/svelte/icons/keyboard';
 	import Label from '../ui/label/label.svelte';
-	import { onMount } from 'svelte';
 	import Separator from '../ui/separator/separator.svelte';
 	interface Props {
 		DM: FakeDensityMatrix;
@@ -33,52 +32,52 @@
 	let rafId: number | null = null;
 
 	function scheduleApply() {
-	    if (rafScheduled) return;
-	    rafScheduled = true;
-	    rafId = requestAnimationFrame(() => {
-	        rafScheduled = false;
-	        rafId = null;
-	        // apply accumulated movement once per frame
-	        if (pendingDx !== 0 || pendingDy !== 0) {
-	            applyDelta(pendingDx, pendingDy);
-	            pendingDx = 0;
-	            pendingDy = 0;
-	        }
-	    });
+		if (rafScheduled) return;
+		rafScheduled = true;
+		rafId = requestAnimationFrame(() => {
+			rafScheduled = false;
+			rafId = null;
+			// apply accumulated movement once per frame
+			if (pendingDx !== 0 || pendingDy !== 0) {
+				applyDelta(pendingDx, pendingDy);
+				pendingDx = 0;
+				pendingDy = 0;
+			}
+		});
 	}
 
 	// replace moveDrag with incremental accumulation + RAF scheduling
 	function moveDrag(x: number, y: number) {
-	    if (!isDragging) return;
-	    // accumulate incremental deltas, update last positions for next event
-	    const dx = x - lastX;
-	    const dy = y - lastY;
-	    pendingDx += dx;
-	    pendingDy += dy;
-	    lastX = x;
-	    lastY = y;
-	    scheduleApply();
+		if (!isDragging) return;
+		// accumulate incremental deltas, update last positions for next event
+		const dx = x - lastX;
+		const dy = y - lastY;
+		pendingDx += dx;
+		pendingDy += dy;
+		lastX = x;
+		lastY = y;
+		scheduleApply();
 	}
 
 	function endDrag() {
-	    isDragging = false;
-	    // flush pending and cancel RAF
-	    if (rafId !== null) {
-	        cancelAnimationFrame(rafId);
-	        rafId = null;
-	        rafScheduled = false;
-	    }
-	    // apply any remaining small delta immediately
-	    if (pendingDx !== 0 || pendingDy !== 0) {
-	        applyDelta(pendingDx, pendingDy);
-	        pendingDx = 0;
-	        pendingDy = 0;
-	    }
-	    // remove listeners
-	    window.removeEventListener('mousemove', onWindowMouseMove);
-	    window.removeEventListener('mouseup', onWindowMouseUp);
-	    window.removeEventListener('touchmove', onWindowTouchMove);
-	    window.removeEventListener('touchend', onWindowTouchEnd);
+		isDragging = false;
+		// flush pending and cancel RAF
+		if (rafId !== null) {
+			cancelAnimationFrame(rafId);
+			rafId = null;
+			rafScheduled = false;
+		}
+		// apply any remaining small delta immediately
+		if (pendingDx !== 0 || pendingDy !== 0) {
+			applyDelta(pendingDx, pendingDy);
+			pendingDx = 0;
+			pendingDy = 0;
+		}
+		// remove listeners
+		window.removeEventListener('mousemove', onWindowMouseMove);
+		window.removeEventListener('mouseup', onWindowMouseUp);
+		window.removeEventListener('touchmove', onWindowTouchMove);
+		window.removeEventListener('touchend', onWindowTouchEnd);
 	}
 
 	// mouse handlers (wrap the unified functions)
@@ -92,7 +91,7 @@
 		moveDrag(e.clientX, e.clientY);
 	}
 
-	function onWindowMouseUp(_: MouseEvent) {
+	function onWindowMouseUp() {
 		endDrag();
 	}
 
@@ -113,19 +112,10 @@
 		moveDrag(t.clientX, t.clientY);
 	}
 
-	function onWindowTouchEnd(_: TouchEvent) {
+	function onWindowTouchEnd() {
 		endDrag();
 	}
 
-	function handleMouseMove(e: MouseEvent) {
-		// kept for compatibility (if any local listeners call it)
-		if (!isDragging) return;
-		moveDrag(e.clientX, e.clientY);
-	}
-
-	function handleMouseUp() {
-		endDrag();
-	}
 
 	function handleScroll(e: WheelEvent) {
 		const lengthStep = 0.01;
@@ -184,39 +174,39 @@
 
 	// helper used elsewhere in file (kept, no change)
 	function applyDelta(dx: number, dy: number) {
-	    const thetaStep = 0.01;
-	    const phiStep = 0.01;
-	    DM.theta = DM.theta - dy * thetaStep;
-	    DM.phi = (DM.phi + dx * phiStep) % (2 * Math.PI);
+		const thetaStep = 0.01;
+		const phiStep = 0.01;
+		DM.theta = DM.theta - dy * thetaStep;
+		DM.phi = (DM.phi + dx * phiStep) % (2 * Math.PI);
 	}
 
 	function startDrag(x: number, y: number) {
-    // initialize dragging state and RAF batching
-    isDragging = true;
-    lastX = x;
-    lastY = y;
+		// initialize dragging state and RAF batching
+		isDragging = true;
+		lastX = x;
+		lastY = y;
 
-    // reset any pending accumulated movement so we start fresh
-    pendingDx = 0;
-    pendingDy = 0;
-    if (rafId !== null) {
-        cancelAnimationFrame(rafId);
-        rafId = null;
-        rafScheduled = false;
-    }
+		// reset any pending accumulated movement so we start fresh
+		pendingDx = 0;
+		pendingDy = 0;
+		if (rafId !== null) {
+			cancelAnimationFrame(rafId);
+			rafId = null;
+			rafScheduled = false;
+		}
 
-    // add global listeners (mouse + touch)
-    window.addEventListener('mousemove', onWindowMouseMove);
-    window.addEventListener('mouseup', onWindowMouseUp);
-    window.addEventListener('touchmove', onWindowTouchMove, { passive: false });
-    window.addEventListener('touchend', onWindowTouchEnd);
-}
+		// add global listeners (mouse + touch)
+		window.addEventListener('mousemove', onWindowMouseMove);
+		window.addEventListener('mouseup', onWindowMouseUp);
+		window.addEventListener('touchmove', onWindowTouchMove, { passive: false });
+		window.addEventListener('touchend', onWindowTouchEnd);
+	}
 </script>
 
 <div class="flex flex-col items-center gap-2">
 	<button
 		id="joystick-btn"
-		class="grid w-[300px] aspect-square @lg:h-[200px] @lg:w-[200px] grid-cols-3 grid-rows-3 place-content-center place-items-center items-center rounded-[1em] border-2"
+		class="grid aspect-square w-[300px] grid-cols-3 grid-rows-3 place-content-center place-items-center items-center rounded-[1em] border-2 @lg:h-[200px] @lg:w-[200px]"
 		onmousedown={handleMouseDown}
 		ontouchstart={handleTouchStart}
 		onwheel={handleScroll}
@@ -245,7 +235,7 @@
 		<MoveDownRight class="opacity-40" />
 	</button>
 
-	<div class="@lg:flex hidden flex-col">
+	<div class="hidden flex-col @lg:flex">
 		<Label for="joystick-button">
 			<div class="flex flex-col gap-2">
 				<p class="flex flex-row items-center gap-1">

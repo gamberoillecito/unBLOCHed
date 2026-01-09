@@ -1,90 +1,56 @@
 <script lang="ts">
 	import { type sceneSettings } from './Scene.svelte';
+	import * as Accordion from '$lib/components/ui/accordion/index.js';
 	import Scene from './Scene.svelte';
-
-	import {
-		DensityMatrix,
-		FakeDensityMatrix,
-		FancyMatrix,
-		GateMatrix,
-		GatePath,
-		MatrixParam,
-		print_mat,
-		print_vec,
-		StateVector
-	} from '$lib/components/Model.svelte';
+	import { StateVector } from '$lib/model/StateVector.svelte';
+	import { GateMatrix } from '$lib/model/GateMatrix.svelte';
+	import { FakeDensityMatrix } from '$lib/model/DensityMatrix.svelte';
+	import { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
 	import DynamicMatrix from './DynamicMatrix.svelte';
-	import { getContext, onMount, setContext, untrack } from 'svelte';
-	import {
-		type Complex,
-		create,
-		all,
-		complex,
-		boolean,
-		mod as modulus,
-		compare,
-		pi,
-		isZero,
-		multiply,
-		equal
-	} from 'mathjs';
+	import { setContext } from 'svelte';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
-	import MatrixInfoInput from './MatrixInfoInput.svelte';
-	import { BlochHistory } from './BlochHistory.svelte';
+	import { BlochHistory } from '$lib/model/BlochHistory.svelte';
 	import { Separator } from '$lib/components/ui/separator/index.js';
-	import { convertLatexToMarkup } from 'mathlive';
-	import { Badge } from '$lib/components/ui/badge/index.js';
 	import Undo from '@lucide/svelte/icons/undo';
 	import Redo from '@lucide/svelte/icons/redo';
-	import {
-		predefinedGates,
-		predefinedStates,
-		theta_param,
-		ketPlus,
-		ketI
-	} from '$lib/data/matrices';
+	import { predefinedGates, predefinedStates, theta_param, ketPlus } from '$lib/data/matrices';
 	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
-	import { Canvas, type ThrelteContext } from '@threlte/core';
-	import { Button, buttonVariants, type ButtonVariant } from '$lib/components/ui/button/index.js';
-	import { toast } from 'svelte-sonner';
-	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
+	import { Canvas } from '@threlte/core';
+	import { Button } from '$lib/components/ui/button/index.js';
 	import { Switch } from '$lib/components/ui/switch/index';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import JoystickControls from './custom-ui/JoystickControls.svelte';
-	import LatexButton from './custom-ui/Buttons/LatexButton.svelte';
-	import ApplyGateButton from './custom-ui/Buttons/ApplyGateButton.svelte';
 	import GateButtonWithParams from './custom-ui/Buttons/GateButtonWithParams.svelte';
 	import UpdateStateButton from './custom-ui/Buttons/UpdateStateButton.svelte';
 	import { type TutorialPageProps } from '$lib/components/tutorial/tutorialUtils';
-	import DialogDrawer from './custom-ui/DialogDrawer.svelte';
 	import { copy } from 'svelte-copy';
+	import CopyCheck from '@lucide/svelte/icons/square-check-big';
 	import Copy from '@lucide/svelte/icons/copy';
-	import { marked } from 'marked';
-	import DynamicStateVector from './DynamicStateVector.svelte';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
-	import { MediaQuery } from 'svelte/reactivity';
 	import Scene3DMenu from './custom-ui/Scene3DMenu.svelte';
-
-	const config = {
-		absTol: 1e-10
-	};
-	const math = create(all, config);
-
+	import { noiseChannels } from '$lib/data/quantumOperations';
+	import QOInfoInput from './custom-ui/QOInfoInput.svelte';
+	import { flashCanvas } from './custom-ui/Buttons/buttonUtility';
 	interface Props {
 		tutorialProps: TutorialPageProps;
 	}
 	let { tutorialProps = $bindable() }: Props = $props();
 
-	let joystickMode = $state(false);
+	let joystickMode = $state(false); //** Whether to use the default view (display DM) or joystick mode (display fakeDM)*/
 
 	let DM = $state(ketPlus.clone());
 	DM.extendedLabel = '\\rho';
+
 	let fakeDM = $state(new FakeDensityMatrix());
+	//** This variable is shared with all the children of App.svelte and is used to prevent
+	// multiple error popovers opening at the same time for different inputs*/
 	let popoversContext = $state({
 		preventOpening: false
 	});
+
 	setContext('popoversContext', popoversContext);
 
+	//**The GateMatrix of the "fully customizable gate"*/
 	let GM = $state(
 		new GateMatrix(
 			[
@@ -107,13 +73,19 @@
 		displayWatermark: true,
 		vectorColor: null,
 		pathColor: null,
+		paperMode: false,
+		displayAxisArrows: false,
+		displayAxisLabels: false,
 	});
 
+	//**Whether the exported image should have a transparent bg or not*/
 	let transparentBackground = $state(false);
 
 	let canvasContainer = $state() as HTMLDivElement;
 	/**Function to download image from the canvas*/
-	let getImage = $state() as (withBackground?: boolean) => string;
+	let getImage = $state() as (withBackground?: boolean) => Promise<string>;
+
+	//**The fully customizable gate is hidden under a toggle on smaller screens*/
 	let customGateVisible = $state(false);
 
 	$effect(() => {
@@ -122,6 +94,7 @@
 		tutorialProps.history = history;
 	});
 
+	//**StateVector binded to the global densityMatrix DM*/
 	let SV = DM.SV;
 	SV.extendedLabel = '|\\psi\\rangle';
 
@@ -135,17 +108,11 @@
 		watermarkDialogOpen = true;
 	});
 
-	//**The element of the scene menu that opens the "Download Image" submenu*/
+	//**The element of the scene menu that opens the "Download Image" submenu, needs extra logic to remain open even after the watermark message*/
 	let SceneMenuDownloadTrigger = $state() as HTMLElement;
 	let SceneMenuDownloadOpen = $state(false);
 
-	let screen2xl = new MediaQuery('min-width: 42rem');
-	$effect(()=>{
-		console.log(SV.isConsistent);
-		
-    	console.log(`[${SV.latexMat[0][0]},\n${SV.latexMat[1][0]}]`)
-		print_vec(SV.mat)
-	})
+	let noiseAccordionOpenElement = $state('');
 </script>
 
 {#snippet StateVectorInput()}
@@ -156,7 +123,6 @@
 				instantUpdate={false}
 				onChangeCallback={(SV, oldSV, args: { history: BlochHistory; DM: DensityMatrix }) => {
 					let newMatrix = (SV as StateVector).getDM();
-					let oldDM = args.DM.clone();
 					args.DM.setMatrixValue(newMatrix);
 					// args.history.addElement(oldDM, args.DM);
 				}}
@@ -197,6 +163,7 @@
 			<Button
 				onclick={() => {
 					history.undo(DM);
+					flashCanvas(canvasContainer);
 				}}
 				disabled={history.earliestChange}
 				size="icon"
@@ -208,6 +175,7 @@
 			<Button
 				onclick={() => {
 					history.redo(DM);
+					flashCanvas(canvasContainer);
 				}}
 				disabled={history.latestChange}
 				size="icon"
@@ -231,10 +199,10 @@
 					></Scene>
 				</Canvas>
 			</div>
-			
+
 			<Scene3DMenu
 				{SceneMenuDownloadOpen}
-				bind:settings3DScene = {settings3DScene}
+				bind:settings3DScene
 				{getImage}
 				{SceneMenuDownloadTrigger}
 				{transparentBackground}
@@ -249,7 +217,7 @@
 	</div>
 	<!-- Buttons and matrices -->
 	{#if !joystickMode}
-		<ScrollArea class="min-h-0 shrink p-2 @lg:min-h-auto" type="scroll">
+		<ScrollArea class="max-h-full overflow-y-auto p-2" type="scroll">
 			<!-- We need both the svelte media query with the if and the tailwind @2xl: because svelte hides the error popover
 			 of the not-visible input and tailwind is more responsive when the website loads -->
 			{#if true}
@@ -283,51 +251,72 @@
 					<UpdateStateButton {matrix} {DM} disabled={false} {canvasContainer} {history} />
 				{/each}
 			</div>
-			<Separator class=""></Separator>
-			<h4>Gates</h4>
-			<!-- Standard gates (no parameters) -->
-			<div class="m-3 mx-auto flex flex-wrap justify-center gap-2 @lg:max-w-[400px]">
-				{#each predefinedGates.filter((g) => g.parameterArray.length === 0) as gate}
-					<GateButtonWithParams
-						{DM}
-						{history}
-						{canvasContainer}
-						{gate}
-						disabled={!(DM.isConsistent && SV.isConsistent)}
-						withParams={true}
-					/>
-				{/each}
-				<!-- Standard gates (with parameters) -->
-				{#each predefinedGates.filter((g) => g.parameterArray.length !== 0) as gate}
-					<GateButtonWithParams
-						{DM}
-						{history}
-						{canvasContainer}
-						{gate}
-						disabled={!(DM.isConsistent && SV.isConsistent)}
-						withParams={true}
-					/>
-				{/each}
-			</div>
-			<div class="m-auto flex min-h-0 w-fit shrink items-center space-x-1 p-2 @lg:hidden">
-				<Switch id="current-mode" bind:checked={customGateVisible} />
-				<Label for="current-mode">Custom gate</Label>
-			</div>
-			<div
-				class="m-3 {customGateVisible
-					? 'flex'
-					: 'hidden'} flex-wrap items-center justify-center gap-2 @lg:flex"
-			>
-				<DynamicMatrix FM={GM} instantUpdate={true}></DynamicMatrix>
-				<GateButtonWithParams
-					{DM}
-					{history}
-					{canvasContainer}
-					gate={GM}
-					disabled={!(DM.isConsistent && GM.isConsistent && SV.isConsistent)}
-					withParams={true}
-				/>
-			</div>
+			<Separator />
+			<Tabs.Root value="gates" class="w-full items-center pt-2">
+				<Tabs.List class="self-center">
+					<Tabs.Trigger value="gates">Gates</Tabs.Trigger>
+					<Tabs.Trigger value="noise">Noise</Tabs.Trigger>
+				</Tabs.List>
+				<Tabs.Content value="gates">
+					<!-- Standard gates (no parameters) -->
+					<div class="m-3 mx-auto flex flex-wrap justify-center gap-2 @lg:max-w-[400px]">
+						{#each predefinedGates.filter((g) => g.parameterArray.length === 0) as gate}
+							<GateButtonWithParams
+								{DM}
+								{history}
+								{canvasContainer}
+								{gate}
+								disabled={!(DM.isConsistent && SV.isConsistent)}
+								withParams={true}
+							/>
+						{/each}
+						<!-- Standard gates (with parameters) -->
+						{#each predefinedGates.filter((g) => g.parameterArray.length !== 0) as gate}
+							<GateButtonWithParams
+								{DM}
+								{history}
+								{canvasContainer}
+								{gate}
+								disabled={!(DM.isConsistent && SV.isConsistent)}
+								withParams={true}
+							/>
+						{/each}
+					</div>
+					<div class="m-auto flex min-h-0 w-fit shrink items-center space-x-1 p-2 @lg:hidden">
+						<Switch id="current-mode" bind:checked={customGateVisible} />
+						<Label for="current-mode">Custom gate</Label>
+					</div>
+					<div
+						class="m-3 {customGateVisible
+							? 'flex'
+							: 'hidden'} flex-wrap items-center justify-center gap-2 @lg:flex"
+					>
+						<DynamicMatrix FM={GM} instantUpdate={true}></DynamicMatrix>
+						<GateButtonWithParams
+							{DM}
+							{history}
+							{canvasContainer}
+							gate={GM}
+							disabled={!(DM.isConsistent && GM.isConsistent && SV.isConsistent)}
+							withParams={true}
+						/>
+					</div>
+				</Tabs.Content>
+				<Tabs.Content value="noise" class=" w-full px-2">
+
+					<Accordion.Root type="single" class="w-full" bind:value={noiseAccordionOpenElement}>
+						{#each noiseChannels as QO}
+							<QOInfoInput
+								{DM}
+								{QO}
+								{history}
+								{canvasContainer}
+								bind:openItem={noiseAccordionOpenElement}
+							/>
+						{/each}
+					</Accordion.Root>
+				</Tabs.Content>
+			</Tabs.Root>
 		</ScrollArea>
 	{:else}
 		<JoystickControls DM={fakeDM} bind:joystickMode />
@@ -336,12 +325,13 @@
 
 {#snippet copyText(text: string)}
 	<button use:copy={text}>
-		<p
-			class="items-top bg-muted text-muted-foreground inline-flex gap-2 rounded-[0.4rem] px-2 font-mono break-all shadow hover:brightness-110"
+		<article
+			class="group items-top bg-muted text-muted-foreground transi relative inline-flex gap-2 rounded-[0.4rem] px-2 font-mono break-all shadow transition-all hover:brightness-110 active:scale-[99.5%]"
 		>
+			<Copy class="mt-1 flex size-3 transition-discrete group-active:hidden" />
+			<CopyCheck class="mt-1 hidden size-3 transition-discrete group-active:flex " />
 			{text}
-			<Copy class="mt-1 size-3" />
-		</p>
+		</article>
 	</button>
 {/snippet}
 
@@ -387,3 +377,15 @@
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
 </AlertDialog.Root>
+
+<!-- <div
+	use:draggable={{ axis: 'both' }}
+	class="bg-card absolute top-0 left-0 z-9999 w-fit cursor-move rounded-xs border-1 p-3"
+>
+	<p>Debug:</p>
+	<Accordion.Root type="single">
+		{#each noiseChannels as QO}
+			<QOInfoInput {DM} {QO} {history} {canvasContainer} />
+		{/each}
+	</Accordion.Root>
+</div> -->
