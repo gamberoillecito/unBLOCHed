@@ -156,7 +156,7 @@
 >
 	<!-- Container of undo/redo buttons and canvas -->
 	<div
-		class="max-h-lg flex max-w-lg shrink-1 flex-row-reverse items-center justify-center self-stretch justify-self-auto @lg:basis-full @lg:flex-col @lg:self-auto"
+		class="max-h-lg flex max-w-lg shrink flex-row-reverse items-center justify-center self-stretch justify-self-auto @lg:basis-full @lg:flex-col @lg:self-auto"
 	>
 		<!-- Undo/redo buttons -->
 		<div class="flex flex-col gap-1 @lg:m-2 @lg:flex-row {joystickMode ? 'hidden' : ''}">
@@ -187,7 +187,7 @@
 		</div>
 		<!-- Canvas container -->
 		<div class=" relative m-2 h-fit shrink shadow-sm @lg:h-auto @lg:w-[90%]">
-			<div class="aspect-square h-[85%] rounded-md border-1" bind:this={canvasContainer}>
+			<div class="aspect-square h-[85%] rounded-md border" bind:this={canvasContainer}>
 				<Canvas>
 					<Scene
 						bind:getImage
@@ -222,7 +222,7 @@
 			 of the not-visible input and tailwind is more responsive when the website loads -->
 			{#if true}
 				<!-- <Tabs.Root value="dm" class="max-w-[400px] items-center @2xl:hidden"> -->
-				<Tabs.Root value="dm" class="max-w-[400px] items-center ">
+				<Tabs.Root value="dm" class="max-w-100 items-center ">
 					<Tabs.List>
 						<Tabs.Trigger value="dm">Density Matrix</Tabs.Trigger>
 						<Tabs.Trigger value="dv">State Vector</Tabs.Trigger>
@@ -259,7 +259,7 @@
 				</Tabs.List>
 				<Tabs.Content value="gates">
 					<!-- Standard gates (no parameters) -->
-					<div class="m-3 mx-auto flex flex-wrap justify-center gap-2 @lg:max-w-[400px]">
+					<div class="m-3 mx-auto flex flex-wrap justify-center gap-2 @lg:max-w-100">
 						{#each predefinedGates.filter((g) => g.parameterArray.length === 0) as gate}
 							<GateButtonWithParams
 								{DM}

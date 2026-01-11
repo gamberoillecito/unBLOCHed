@@ -33,8 +33,8 @@ TODO
 -->
 
 <Accordion.Item value={QO.name}>
-	<Accordion.Trigger class="group !no-underline">
-		<div class="flex flex-row !items-center gap-4">
+	<Accordion.Trigger class="group no-underline!">
+		<div class="flex flex-row items-center! gap-4">
 			<Button
 				size="sm"
 				variant="outline"
@@ -53,9 +53,9 @@ TODO
 		</div>
 	</Accordion.Trigger>
 	<Accordion.Content>
-		<div class="flex flex-wrap justify-around">
+		<div class="flex flex-wrap @lg:max-w-100 justify-around">
 			{#each QO.operationElements as FM}
-				<div class="flex w-fit justify-center  p-1">
+				<div class="flex w-fit border justify-center  p-1">
 					<ReadonlyFancyMatrix {FM} useExtendedLabel={false} debug={false} />
 				</div>
 			{/each}
