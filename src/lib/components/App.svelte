@@ -302,7 +302,7 @@
 						/>
 					</div>
 				</Tabs.Content>
-				<Tabs.Content value="noise" class=" w-full px-2">
+				<Tabs.Content value="noise" class=" w-full px-4">
 
 					<Accordion.Root type="single" class="w-full" bind:value={noiseAccordionOpenElement}>
 						{#each noiseChannels as QO}
