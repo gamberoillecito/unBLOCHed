@@ -1,14 +1,20 @@
 import { FancyMatrix } from "$lib/model/FancyMatrix.svelte";
 import { MatrixParam, newComplexMat2x2, math, ce } from "$lib/model/ModelUtility.svelte";
 import { QuantumOperation } from "$lib/model/QuantumOperation.svelte";
+import type { Complex } from "mathjs";
 
-const pParam = [new MatrixParam('p', '0.1', 'p', false, (newLatexValue) => {
-    const parsedVal = ce.parse(newLatexValue).N().value;
-    
-    if (math.typeOf(parsedVal) !== 'number') {
+const pParam = [new MatrixParam('p', '0.1', 'p', false, (newLatexValue: string, newNumericValue: Complex) => {
+    console.warn(`num: ${newNumericValue}, ${math.typeOf(newNumericValue)}`);
+    if (math.typeOf(newNumericValue) != 'Complex' ||
+        newNumericValue.valueOf() == 'Infinity' ||
+        newNumericValue.valueOf() == 'NaN'
+    ) {
         return [false, 'Invalid input']
     }
-    if (math.smallerEq(math.number(newLatexValue) , 1) as boolean && math.smallerEq(0, math.number(newLatexValue)) as boolean) {
+    if (!math.isZero(newNumericValue.im)) {
+        return [false, 'p must be real']
+    }
+    if (math.smallerEq(newNumericValue.re, 1) as boolean && math.smallerEq(0, newNumericValue.re) as boolean) {
         return [true, null]
     }
     return [false, "p must be between 0 and 1"]
