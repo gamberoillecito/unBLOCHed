@@ -55,11 +55,13 @@ TODO
 	<Accordion.Content>
 		<div class="flex flex-wrap @lg:max-w-100 justify-around">
 			{#each QO.operationElements as FM}
-				<div class="flex w-fit border justify-center  p-1">
+				<div class="flex w-fit justify-center">
 					<ReadonlyFancyMatrix {FM} useExtendedLabel={false} debug={false} />
 				</div>
 			{/each}
 		</div>
+		<div class="pl-3">
+
 		{#each QO.parameters as param}
 			<!-- the isOpen condition takes into account also if the current Accordion.Item is open or not because we want
 			 to hide the Popover when the current item is closed -->
@@ -78,5 +80,6 @@ TODO
 				{/snippet}
 			</ErrorPopover>
 		{/each}
+		</div>
 	</Accordion.Content>
 </Accordion.Item>
