@@ -33,8 +33,14 @@
 			// Create a temporary link element
 			const link = document.createElement('a');
 			link.href = imgData;
-			const bgSuffix = withBackground ? 'bg' : 'nobg';
-			link.download = `bloch-sphere-${bgSuffix}-${new Date().toISOString().replace(/:/g, '-')}.png`;
+			const now = new Date();
+			const yy = String(now.getFullYear()).slice(-2);
+			const mm = String(now.getMonth() + 1).padStart(2, '0');
+			const dd = String(now.getDate()).padStart(2, '0');
+			const hh = String(now.getHours()).padStart(2, '0');
+			const mins = String(now.getMinutes()).padStart(2, '0');
+			const ss = String(now.getSeconds()).padStart(2, '0');
+			link.download = `${yy}-${mm}-${dd}_${hh}-${mins}-${ss}_unBLOCHed_${withBackground ? "BG" :"no-BG"}.png`;
 
 			// Trigger download
 			document.body.appendChild(link);
