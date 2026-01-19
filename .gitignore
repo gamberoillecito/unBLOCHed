@@ -2,6 +2,7 @@ node_modules
 .VSCodeCounter
 .zed
 .claude
+changes.md
 
 # Output
 .output
