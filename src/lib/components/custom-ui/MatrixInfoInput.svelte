@@ -62,7 +62,7 @@ Renders a popover button that allows viewing and editing the parameters of a `Fa
 				{/snippet}
 			</ErrorPopover>
 			{#if FM.parameterArray.filter((x) => x.userEditable).length > 0}
-				<Separator />
+				<Separator class="my-1"/>
 			{/if}
 			<div class="flex w-full flex-row place-content-around">
 				{#each FM.parameterArray as param}

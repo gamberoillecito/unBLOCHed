@@ -62,7 +62,7 @@
 		<div class="w-[50%]">
 			<h3 class="mt-0">New Features</h3>
 			{@render unresponsiveCheckbox('LaTeX input')}
-			{@render unresponsiveCheckbox('Tutorial')}
+			{@render unresponsiveCheckbox('Noise simulation')}
 			{@render unresponsiveCheckbox('Image export')}
 			{@render unresponsiveCheckbox('Joystick mode')}
 		</div>

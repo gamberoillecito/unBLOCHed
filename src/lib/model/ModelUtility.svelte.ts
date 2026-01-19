@@ -65,7 +65,7 @@ export function newComplexMat2x2(entries: (string | Complex | number)[]): Comple
  * @property {string} name - The parameter name.
  * @property {string} latexLabel - The LaTeX representation of the parameter label (e.g., `p`, `\\theta`).
  * @property {boolean} userEditable - Whether the parameter can be edited by the user.
- * @property {(newLatexValue: string) => boolean} [constraint] - Optional validation function that determines if a new value is allowed.
+ * @property {(newLatexValue: string, newNumericValue: Complex) => boolean} [constraint] - Optional validation function that determines if a new value is allowed.
  * 
  * @description
  * When setting `latexValue`, the update is only applied if no constraint is defined, or if the constraint function returns `true`.
@@ -82,11 +82,11 @@ export class MatrixParam {
     #latexValue: string;
     latexLabel: string;
     userEditable: boolean;
-    constraint?: (newLatexValue: string) => [boolean, string | null];
+    constraint?: (newLatexValue: string, newNumericValue: Complex) => [boolean, string | null];
     isConsistent: boolean;
     userMessage: string | null;
 
-    constructor(name: string, latexValue: string, latexLabel: string, userEditable: boolean, constraint?: (newLatexValue: string) => [boolean, string | null]) {
+    constructor(name: string, latexValue: string, latexLabel: string, userEditable: boolean, constraint?: (newLatexValue: string, newNumericValue:Complex) => [boolean, string | null]) {
         this.name = name;
         this.#latexValue = latexValue;
         this.latexLabel = latexLabel;
@@ -101,6 +101,8 @@ export class MatrixParam {
     }
 
     set latexValue(newV: string) {
+        let computed = ce.parse(newV).N()
+        console.log(`newV: ${newV} computed: ${computed}`);
         if (this.constraint === undefined) {
 
             this.#latexValue = newV;
@@ -108,7 +110,9 @@ export class MatrixParam {
             this.userMessage = null;
         }
         else {
-            const [valid, message] = this.constraint(newV);
+            const parsedVal = ce.parse(newV).N();
+            const num = math.complex(parsedVal.re, parsedVal.im)
+            const [valid, message] = this.constraint(newV, num);
             this.isConsistent = valid;
             this.userMessage = message;
             if (valid) {

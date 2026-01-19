@@ -6,7 +6,7 @@
 	import { complex, sign } from 'mathjs';
 	import SolidVector from './SolidVector.svelte';
 	import Path from './Path.svelte';
-	import { PerspectiveCamera, Color, Object3D } from 'three';
+	import { PerspectiveCamera, Color, Object3D, Vector2 } from 'three';
 	import { generateGradient } from 'typescript-color-gradient';
 	import type { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
 	import AngleArc from './AngleArc.svelte';
@@ -73,7 +73,9 @@
 	let camera = $state() as PerspectiveCamera;
 
 	async function downloadImage(withBackground = true) {
-		hideLabelsBackground = true;
+		if (!withBackground){
+			hideLabelsBackground = true;
+		}
 
 		const prevClearColor = new Color();
 		renderer.getClearColor(prevClearColor);
@@ -105,8 +107,13 @@
 		}
 
 		await tick();
+		// Update the rosolution of the render just for export, then set it back to the default value
+		let originalSize = new Vector2();
+		renderer.getSize(originalSize)
+		renderer.setSize(2000, 2000);
 		renderer.render(scene, camera);
 		const data = renderer.domElement.toDataURL('image/png');
+		renderer.setSize(originalSize.x, originalSize.y)
 
 		// Restore previous state
 		renderer.setClearColor(prevClearColor);

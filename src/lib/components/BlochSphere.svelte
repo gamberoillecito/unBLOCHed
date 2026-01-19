@@ -28,6 +28,7 @@
 		settings
 	}: Props = $props();
 
+	let lat_long_multiplier = $derived(settings.paperMode ? 1.5: 1);
 	function latitudeSpacing(sphereRad: number, numLatitudes: number) {
 		let spacing = (sphereRad * 2) / (numLatitudes + 1);
 		return spacing;
@@ -102,7 +103,7 @@ Place the component inside a Threlte `<Canvas>` and customize its appearance by 
 			position.y={latitudeOffset(sphere_radius, iter, num_latitudes)}
 		>
 			<T.TorusGeometry
-				args={[latitudeRadius(sphere_radius, iter, num_latitudes), lat_long_thickness]}
+				args={[latitudeRadius(sphere_radius, iter, num_latitudes), lat_long_thickness * lat_long_multiplier]}
 			/>
 
 			<T.LineBasicMaterial
@@ -118,7 +119,7 @@ Place the component inside a Threlte `<Canvas>` and customize its appearance by 
 	<!-- Longitudes -->
 	{#each Array(num_longitudes) as _, iter}
 		<T.Mesh rotation.y={MathUtils.degToRad(((360 / num_longitudes) * iter) / 2)}>
-			<T.TorusGeometry args={[sphere_radius, lat_long_thickness]} />
+			<T.TorusGeometry args={[sphere_radius, lat_long_thickness * lat_long_multiplier]} />
 
 			<T.LineBasicMaterial
 				castshadow={false}
@@ -134,7 +135,7 @@ Place the component inside a Threlte `<Canvas>` and customize its appearance by 
 	{#if settings.paperMode}
 		<Billboard follow={true}>
 			<T.Mesh position.y={latitudeOffset(sphere_radius, 0, num_latitudes)}>
-				<T.TorusGeometry args={[sphere_radius, lat_long_thickness * 2]} />
+				<T.TorusGeometry args={[sphere_radius, lat_long_thickness * 2.4, 20, 100]} />
 				<T.LineBasicMaterial
 					castshadow={false}
 					receiveshadow={false}
