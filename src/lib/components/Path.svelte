@@ -56,9 +56,9 @@
 	);
 	const material = new LineMaterial({
 		color: pathColor,
-		worldUnits: false
+		worldUnits: true
 	});
-	material.linewidth = 3;
+	material.linewidth = 0.015;
 </script>
 
 <!--
