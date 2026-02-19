@@ -21,7 +21,7 @@
 </script>
 {#if isDesktop.current}
   <Dialog.Root bind:open>
-    <Dialog.Content class="sm:max-w-[600px] sm:max-h-[70%] z-10000" {onInteractOutside}>
+    <Dialog.Content class="sm:max-w-150 sm:max-h-[70%] z-10000" {onInteractOutside}>
         {@render dialogContent()}
     </Dialog.Content>
     

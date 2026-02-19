@@ -28,6 +28,7 @@
 		paperMode: boolean;
 		displayAxisArrows: boolean;
 		displayAxisLabels: boolean;
+		labelSizeMultiplier: number;
 	};
 
 	interface Props {
@@ -242,15 +243,15 @@ This component contains the entire scene logic and should be placed inside a Thr
 		>
 			<SVG
 				src={resolve(`/${mode.current}/output(${index}).svg`)}
-				scale={0.00012}
-				position={[-0.08, -0.02, +0.08]}
+				scale={0.00012 * settings.labelSizeMultiplier}
+				position={[-0.08, -0.02*settings.labelSizeMultiplier, +0.08*settings.labelSizeMultiplier]}
 			/>
 			{@const svg_bg_offset = index == 4 || index == 0 || index == 1 ? -0.018 : 0.0}
 			{@const svg_bg_size = index == 4 || index == 0 || index == 1 ? 0.08 : 0.09}
 			{#if settings.paperMode}
 				<SemitransparentCircleBg
-					position={[svg_bg_offset, +0.015, -0.1]}
-					size={svg_bg_size}
+					position={[svg_bg_offset, +0.015*settings.labelSizeMultiplier, -0.1*settings.labelSizeMultiplier]}
+					size={svg_bg_size*settings.labelSizeMultiplier}
 					bind:hide={hideLabelsBackground}
 					bind:color={backgroundColor}
 				/>

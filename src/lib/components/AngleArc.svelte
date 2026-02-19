@@ -165,13 +165,13 @@ Place inside a Threlte `<Canvas>` and pass the vector.
 	>
 		<SVG
 			src={resolve(`/${mode.current ?? 'light'}/phi.svg`)}
-			scale={0.0001}
+			scale={0.0001*settings.labelSizeMultiplier}
 			position={[-0.04, 0, 0]}
 		/>
 		{#if settings.paperMode}
 			<SemitransparentCircleBg
 				position={[-0.01, 0.013, -0.1]}
-				size={0.05}
+				size={0.05*settings.labelSizeMultiplier}
 				bind:hide={hideLabelsBackground}
 				bind:color={backgroundColor}
 			/>
@@ -183,13 +183,13 @@ Place inside a Threlte `<Canvas>` and pass the vector.
 	<Billboard follow={true} position.z={midTheta.z} position.x={midTheta.x} position.y={midTheta.y}>
 		<SVG
 			src={resolve(`/${mode.current ?? 'light'}/theta.svg`)}
-			scale={0.0001}
+			scale={0.0001*settings.labelSizeMultiplier}
 			position={[-0.02, 0, 0]}
 		/>
 		{#if settings.paperMode}
 			<SemitransparentCircleBg
 				position={[0.005, 0.03, -0.01]}
-				size={0.05}
+				size={0.05*settings.labelSizeMultiplier}
 				bind:hide={hideLabelsBackground}
 				bind:color={backgroundColor}
 			/>
