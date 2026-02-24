@@ -7,15 +7,13 @@
 	import { toast } from 'svelte-sonner';
 	import ColorPickerSubmenu from './ColorPickerSubmenu.svelte';
 	import Move3d from '@lucide/svelte/icons/move-3-d';
-	import DialogDrawer from '$lib/components/custom-ui/DialogDrawer.svelte';
-	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import * as Drawer from '$lib/components/ui/drawer/index.js';
 	import Settings2 from '@lucide/svelte/icons/settings-2';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import { Slider } from '$lib/components/ui/slider/index.js';
-	import { Input } from '$lib/components/ui/input/index.js';
 	import Button from '../ui/button/button.svelte';
 	import Undo from '@lucide/svelte/icons/undo';
+	import * as Popover from "$lib/components/ui/popover/index.js";
 	interface Props {
 		settings3DScene: sceneSettings;
 		SceneMenuDownloadOpen: boolean;
@@ -164,7 +162,7 @@ toggling elements, picking colors, and exporting the scene as a PNG image.
 </DropdownMenu.Root>
 
 {#snippet labelSizeMultiplierSlider()}
-	<div class="flex flex-row gap-2 pt-3">
+	<div class="flex flex-row gap-2 p-3 pb-6 max-w-400 justify-center">
 		<Label for="labelSizeMultiplier">Label size multiplier</Label>
 		<Slider
 			type="single"
@@ -187,28 +185,21 @@ toggling elements, picking colors, and exporting the scene as a PNG image.
 	</div>
 {/snippet}
 
-<DialogDrawer bind:open={advancedSettingsOpen}>
-	{#snippet dialogContent()}
-		<Dialog.Header>
-			<Dialog.Title class="font-light">Advanced settings</Dialog.Title>
-		</Dialog.Header>
-		{@render labelSizeMultiplierSlider()}
-		<!-- <Dialog.Footer>
-			<Checkbox id="showWelcomeMessage" bind:checked={showWelcomeAtStart} />
-			<Label for="showWelcomeMessage">Show this popup next time</Label>
-		</Dialog.Footer> -->
-	{/snippet}
-	{#snippet drawerContent()}
+<Drawer.Root bind:open={advancedSettingsOpen}>
+	<Drawer.Content class="">
+	<div class="mx-auto w-full max-w-sm ">
+
 		<Drawer.Header class="text-left">
 			<Drawer.Title class="text-xl font-light">Advanced settings</Drawer.Title>
 		</Drawer.Header>
 		{@render labelSizeMultiplierSlider()}
-		<!-- <Drawer.Footer>
+	</div>	
+	</Drawer.Content>
+	<!-- <Drawer.Footer>
 			{@render githubButton()}
 			<div class="justify-start-safe mt-2 flex flex-row-reverse gap-2">
 				<Checkbox id="showWelcomeMessage" bind:checked={showWelcomeAtStart} />
 				<Label for="showWelcomeMessage">Show this message next time</Label>
 			</div>
 		</Drawer.Footer> -->
-	{/snippet}
-</DialogDrawer>
+</Drawer.Root>
