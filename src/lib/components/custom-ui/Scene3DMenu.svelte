@@ -13,7 +13,7 @@
 	import { Slider } from '$lib/components/ui/slider/index.js';
 	import Button from '../ui/button/button.svelte';
 	import Undo from '@lucide/svelte/icons/undo';
-	import * as Popover from "$lib/components/ui/popover/index.js";
+	import * as Popover from '$lib/components/ui/popover/index.js';
 	interface Props {
 		settings3DScene: sceneSettings;
 		SceneMenuDownloadOpen: boolean;
@@ -30,7 +30,7 @@
 		getImage = $bindable()
 	}: Props = $props();
 
-	let advancedSettingsOpen = $state(true);
+	let advancedSettingsOpen = $state(false);
 	async function saveImage(
 		getImage: (withBackground?: boolean) => Promise<string>,
 		withBackground: boolean = true
@@ -113,14 +113,12 @@ toggling elements, picking colors, and exporting the scene as a PNG image.
 				>
 			</DropdownMenu.SubContent>
 		</DropdownMenu.Sub>
-		<DropdownMenu.Item
-			onclick={() => {
-				advancedSettingsOpen = true;
-			}}
-		>
-			<Settings2 />
-			Advanced
-		</DropdownMenu.Item>
+		<DropdownMenu.Sub>
+			<DropdownMenu.SubTrigger><Settings2 /> Advanced</DropdownMenu.SubTrigger>
+			<DropdownMenu.SubContent>
+				{@render labelSizeMultiplierSlider()}
+			</DropdownMenu.SubContent>
+		</DropdownMenu.Sub>
 
 		<DropdownMenu.Separator />
 		<DropdownMenu.Sub>
@@ -162,7 +160,7 @@ toggling elements, picking colors, and exporting the scene as a PNG image.
 </DropdownMenu.Root>
 
 {#snippet labelSizeMultiplierSlider()}
-	<div class="flex flex-row gap-2 p-3 pb-6 max-w-400 justify-center">
+	<div class="flex max-w-100 @lg:max-w-400 flex-row p-2">
 		<Label for="labelSizeMultiplier">Label size multiplier</Label>
 		<Slider
 			type="single"
@@ -184,22 +182,3 @@ toggling elements, picking colors, and exporting the scene as a PNG image.
 		>
 	</div>
 {/snippet}
-
-<Drawer.Root bind:open={advancedSettingsOpen}>
-	<Drawer.Content class="">
-	<div class="mx-auto w-full max-w-sm ">
-
-		<Drawer.Header class="text-left">
-			<Drawer.Title class="text-xl font-light">Advanced settings</Drawer.Title>
-		</Drawer.Header>
-		{@render labelSizeMultiplierSlider()}
-	</div>	
-	</Drawer.Content>
-	<!-- <Drawer.Footer>
-			{@render githubButton()}
-			<div class="justify-start-safe mt-2 flex flex-row-reverse gap-2">
-				<Checkbox id="showWelcomeMessage" bind:checked={showWelcomeAtStart} />
-				<Label for="showWelcomeMessage">Show this message next time</Label>
-			</div>
-		</Drawer.Footer> -->
-</Drawer.Root>
