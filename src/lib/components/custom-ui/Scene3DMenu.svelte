@@ -115,7 +115,7 @@ toggling elements, picking colors, and exporting the scene as a PNG image.
 		</DropdownMenu.Sub>
 		<DropdownMenu.Sub>
 			<DropdownMenu.SubTrigger><Settings2 /> Advanced</DropdownMenu.SubTrigger>
-			<DropdownMenu.SubContent>
+			<DropdownMenu.SubContent class="">
 				{@render labelSizeMultiplierSlider()}
 			</DropdownMenu.SubContent>
 		</DropdownMenu.Sub>
@@ -160,8 +160,8 @@ toggling elements, picking colors, and exporting the scene as a PNG image.
 </DropdownMenu.Root>
 
 {#snippet labelSizeMultiplierSlider()}
-	<div class="flex max-w-100 @lg:max-w-400 flex-row p-2">
-		<Label for="labelSizeMultiplier">Label size multiplier</Label>
+	<div class="flex lg:w-100 flex-row p-2">
+		<Label for="labelSizeMultiplier">Label scale</Label>
 		<Slider
 			type="single"
 			id="labelSizeMultiplier"
@@ -170,6 +170,7 @@ toggling elements, picking colors, and exporting the scene as a PNG image.
 			max={3}
 			step={0.1}
 			bind:value={settings3DScene.labelSizeMultiplier}
+			class="min-w-20"
 		/>
 		<Button
 			onclick={() => {
