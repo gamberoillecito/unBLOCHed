@@ -46,9 +46,10 @@ get along, so we shut typescript up by casting `value` to `never`.
 				data-slot="slider-thumb"
 				index={thumb}
 				class="border-primary ring-ring/50 block size-4 shrink-0 rounded-full border bg-white shadow-sm transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
-			/>
+			>
 
-			<SliderPrimitive.ThumbLabel index={0} position="top" class="mb-0 bg-card px-1 rounded">{value}</SliderPrimitive.ThumbLabel>
+			<SliderPrimitive.ThumbLabel index={0} position="top" >{value}</SliderPrimitive.ThumbLabel>
+			</SliderPrimitive.Thumb>
 		{/each}
 	{/snippet}
 </SliderPrimitive.Root>
