@@ -234,31 +234,32 @@ This component contains the entire scene logic and should be placed inside a Thr
 {#if settings.displayStateLabels}
 	{#each POI as dm, index}
 		<!-- svg labels of the points on the Bloch sphere and additional round semitransparent background for readability -->
-		{@const newPos = new Vector3().fromArray(dm.blochV).multiplyScalar(1+0.07*settings.labelSizeMultiplier)}
+		{@const newPos = new Vector3()
+			.fromArray(dm.blochV)
+			.multiplyScalar(1 + 0.07 * settings.labelSizeMultiplier)}
 		<!-- position={[complex(dm.blochV[0]).re, complex(dm.blochV[1]).re, complex(dm.blochV[2]).re]} -->
 		<Billboard follow={true} position={newPos.toArray()}>
-			<Align auto>
-				{#key settings.labelSizeMultiplier}
+			{#key settings.labelSizeMultiplier}
+					{@const svg_bg_offset = index == 4 || index == 0 || index == 1 ? -0.018 : 0.0}
+					{@const svg_bg_size = index == 4 || index == 0 || index == 1 ? 0.08 : 0.09}
+				<Align auto z={false}>
 					<SVG
 						src={resolve(`/${mode.current}/output(${index}).svg`)}
 						scale={0.00012 * settings.labelSizeMultiplier}
+						position.z = {0.1}
 					/>
-					{@const svg_bg_offset = index == 4 || index == 0 || index == 1 ? -0.018 : 0.0}
-					{@const svg_bg_size = index == 4 || index == 0 || index == 1 ? 0.08 : 0.09}
+				</Align>
+				<Align auto z={false}>
 					{#if settings.paperMode}
 						<SemitransparentCircleBg
-							position={[
-								svg_bg_offset,
-								+0.015 * settings.labelSizeMultiplier,
-								-0.1 * settings.labelSizeMultiplier
-							]}
+							position={[0, 0, 0]}
 							size={svg_bg_size * settings.labelSizeMultiplier}
 							bind:hide={hideLabelsBackground}
 							bind:color={backgroundColor}
 						/>
 					{/if}
-				{/key}
-			</Align>
+				</Align>
+			{/key}
 		</Billboard>
 	{/each}
 {/if}
