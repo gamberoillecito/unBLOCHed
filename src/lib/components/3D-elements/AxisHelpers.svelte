@@ -22,8 +22,8 @@
 	let lettersOffsets = $derived(
 		settings.displayStateLabels === true
 			? [
-					[-0.05, -0.1, -0.05],
-					[0.1, -0.05, -0.05],
+					[-0.05, -0, -0.1],
+					[0, -0.05, -0.1],
 					[0.05, 0.03, -0.05]
 				]
 			: [
