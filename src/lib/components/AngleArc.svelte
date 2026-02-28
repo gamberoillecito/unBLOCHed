@@ -43,9 +43,12 @@
 	let arcs_color = $derived(
 		mode.current === 'light' ? new Color(0, 0, 0) : new Color().setHSL(0, 0, 0.5)
 	);
+	let segments_color = $derived(
+		mode.current === 'light' ? new Color().setHSL(0, 0, 0.1) : new Color().setHSL(0, 0, 0.2)
+	);
 	// Material for the dashed lines
 	let dash_material = $derived(
-		new LineDashedMaterial({ color: arcs_color, dashSize: 0.02, gapSize: 0.03 })
+		new LineMaterial({ color: segments_color, worldUnits: true, linewidth: 0.006 })
 	);
 	let arc_material = $derived(new LineMaterial({ color: arcs_color, worldUnits: true, linewidth: 0.008 }));
 
@@ -70,9 +73,9 @@
 		return new Line2(geometry, material).computeLineDistances();
 	}
 
-	function createSegment(point1: Vector3, point2: Vector3, material: Material): Line {
-		const geometry = new BufferGeometry().setFromPoints([point1, point2]);
-		return new Line(geometry, material).computeLineDistances();
+	function createSegment(point1: Vector3, point2: Vector3, material: LineMaterial): Line2 {
+		const geometry = new LineGeometry().setFromPoints([point1, point2]);
+		return new Line2(geometry, material).computeLineDistances();
 	}
 
 	let blochVector = $derived(new Vector3(...vector).normalize());
