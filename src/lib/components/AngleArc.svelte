@@ -15,6 +15,7 @@
 	import { resolve } from '$app/paths';
 	import SemitransparentCircleBg from './3D-elements/SemitransparentCircleBg.svelte';
 	import type { sceneSettings } from './Scene.svelte';
+	import { Line2, LineGeometry, LineMaterial }from 'three/examples/jsm/Addons.js';
 
 	interface Props {
 		vector: [number, number, number];
@@ -46,15 +47,15 @@
 	let dash_material = $derived(
 		new LineDashedMaterial({ color: arcs_color, dashSize: 0.02, gapSize: 0.03 })
 	);
-	let arc_material = $derived(new LineBasicMaterial({ color: arcs_color }));
+	let arc_material = $derived(new LineMaterial({ color: arcs_color, worldUnits: true, linewidth: 0.008 }));
 
 	// Function to create an arc, it returns also the midpoint to allow to place a label there
 	function createArc(
 		radius: number,
 		startAngle: number,
 		endAngle: number,
-		material: Material
-	): Line {
+		material: LineMaterial
+	): Line2 {
 		const points: Vector3[] = [];
 		const segments = 100; // Number of segments for the arc
 
@@ -65,8 +66,8 @@
 			points.push(new Vector3(x, y, 0));
 		}
 
-		const geometry = new BufferGeometry().setFromPoints(points);
-		return new Line(geometry, material).computeLineDistances();
+		const geometry = new LineGeometry().setFromPoints(points);
+		return new Line2(geometry, material).computeLineDistances();
 	}
 
 	function createSegment(point1: Vector3, point2: Vector3, material: Material): Line {
@@ -139,8 +140,8 @@ Place inside a Threlte `<Canvas>` and pass the vector.
 ```
 -->
 
-<T.Line is={arcPhi}></T.Line>
-<T.Line is={arcTheta}></T.Line>
+<T is={arcPhi}></T>
+<T is={arcTheta}></T>
 
 <!-- Line from the origin towards the x axis -->
 <T is={XLine}></T>

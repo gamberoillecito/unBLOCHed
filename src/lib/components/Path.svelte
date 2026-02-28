@@ -7,7 +7,7 @@
 		Matrix4,
 	} from 'three';
 	import type { GatePath } from '$lib/model/ModelUtility.svelte';
-	import { Line2, LineGeometry, LineMaterial } from 'three/examples/jsm/Addons.js';
+	import { Line2, LineGeometry, LineMaterial }from 'three/examples/jsm/Addons.js';
 
 	interface Props {
 		path: GatePath;
