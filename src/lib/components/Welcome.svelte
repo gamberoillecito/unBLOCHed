@@ -14,6 +14,8 @@
 	import { onMount } from 'svelte';
 	import GitHubIcon from './custom-ui/GitHubIcon.svelte';
 	import DialogDrawer from './custom-ui/DialogDrawer.svelte';
+	import BetaChanges from '../../../static/beta_changes.md?raw';
+	import ScrollArea from './ui/scroll-area/scroll-area.svelte';
 	const markedKatexOptions = {
 		throwOnError: false
 	};
@@ -36,6 +38,7 @@
 			return { ...x, showWelcomeAtStart: showWelcomeAtStart };
 		});
 	});
+	console.log(BetaChanges);
 </script>
 
 {#snippet unresponsiveCheckbox(text: string, checked: boolean = true)}
@@ -45,33 +48,46 @@
 	</div>
 {/snippet}
 
-{#snippet linkToBetaPage(parenthesis:boolean=false)}
-	{#if import.meta.env.MODE !== 'beta'}
-		{#if parenthesis}
-			<span>(</span>
-		{/if}
-			<Button variant="link" href="httsp://beta.unbloched.xyz" class="p-0">beta page</Button>
-		{#if parenthesis}
-			<span>)</span>
-		{/if}
+{#snippet linkToBetaPage(parenthesis: boolean = false)}
+	{#if parenthesis}
+		<span>(</span>
+	{/if}
+	<Button variant="link" href="httsp://beta.unbloched.xyz" class="p-0">beta page</Button>
+	{#if parenthesis}
+		<span>)</span>
 	{/if}
 {/snippet}
 
 {#snippet welcomeContent()}
 	<article class="prose-sm dark:prose-invert m-auto flex flex-row lg:m-2">
-		<div class="w-[50%]">
-			<h3 class="mt-0">New Features</h3>
-			{@render unresponsiveCheckbox('LaTeX input')}
-			{@render unresponsiveCheckbox('Noise simulation')}
-			{@render unresponsiveCheckbox('Image export')}
-			{@render unresponsiveCheckbox('Joystick mode')}
-		</div>
-		<div class="w-[50%]">
-			<h3 class="mt-0">Coming Soon {@render linkToBetaPage(true)}</h3>
-			{@render unresponsiveCheckbox('Gif export', false)}
-			{@render unresponsiveCheckbox('Time evolution', false)}
-			{@render unresponsiveCheckbox('Many more...', false)}
-		</div>
+		{#if import.meta.env.MODE !== 'beta'}
+			<div class="w-[50%]">
+				<h3 class="mt-0">New Features</h3>
+				{@render unresponsiveCheckbox('LaTeX input')}
+				{@render unresponsiveCheckbox('Noise simulation')}
+				{@render unresponsiveCheckbox('Image export')}
+				{@render unresponsiveCheckbox('Joystick mode')}
+			</div>
+			<div class="w-[50%]">
+				<h3 class="mt-0">Coming Soon {@render linkToBetaPage(true)}</h3>
+				{@render unresponsiveCheckbox('Gif export', false)}
+				{@render unresponsiveCheckbox('Time evolution', false)}
+				{@render unresponsiveCheckbox('Many more...', false)}
+			</div>
+		{:else}
+			<div class="min-h-0 max-h-60">
+				<ScrollArea class="h-full w-full bg-card rounded p-2">
+				<style>
+					h2 {
+						margin: 0;
+					}
+				</style>
+					<article class="prose dark:prose-invert max-h-200 max-h-full min-h-0 w-full">
+						{@html marked.parse(BetaChanges)}
+					</article>
+				</ScrollArea>
+			</div>
+		{/if}
 	</article>
 {/snippet}
 

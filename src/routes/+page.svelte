@@ -115,7 +115,7 @@
 		// Warn the user if they are in beta mode
 		if (import.meta.env.MODE === 'beta') {
 			toast('You are in the beta version!', {
-				description: 'Discover the latest features and the latest bugs :)',
+				description: 'Discover the latest features and the latest bugs :) And yes, this notification is bugged.',
 				duration: 999999, 
 			});
 		}
