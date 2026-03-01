@@ -2,20 +2,16 @@
 	import { T } from '@threlte/core';
 	import {
 		Color,
-		BufferGeometry,
 		Vector3,
-		Line,
 		Matrix4,
-		LineBasicMaterial,
-		LineDashedMaterial,
-		Material,
+		Group
 	} from 'three';
 	import { Billboard, SVG } from '@threlte/extras';
 	import { mode } from 'mode-watcher';
 	import { resolve } from '$app/paths';
 	import SemitransparentCircleBg from './3D-elements/SemitransparentCircleBg.svelte';
 	import type { sceneSettings } from './Scene.svelte';
-	import { Line2, LineGeometry, LineMaterial }from 'three/examples/jsm/Addons.js';
+	import { Line2, LineGeometry, LineMaterial } from 'three/examples/jsm/Addons.js';
 
 	interface Props {
 		vector: [number, number, number];
@@ -50,7 +46,9 @@
 	let dash_material = $derived(
 		new LineMaterial({ color: segments_color, worldUnits: true, linewidth: 0.006 })
 	);
-	let arc_material = $derived(new LineMaterial({ color: arcs_color, worldUnits: true, linewidth: 0.008 }));
+	let arc_material = $derived(
+		new LineMaterial({ color: arcs_color, worldUnits: true, linewidth: 0.008 })
+	);
 
 	// Function to create an arc, it returns also the midpoint to allow to place a label there
 	function createArc(
@@ -73,9 +71,36 @@
 		return new Line2(geometry, material).computeLineDistances();
 	}
 
-	function createSegment(point1: Vector3, point2: Vector3, material: LineMaterial): Line2 {
-		const geometry = new LineGeometry().setFromPoints([point1, point2]);
-		return new Line2(geometry, material).computeLineDistances();
+	function createSegment(point1: Vector3, point2: Vector3, material: LineMaterial): Group {
+		const group = new Group();
+		const direction = point2.clone().sub(point1);
+		const distance = direction.length();
+		direction.normalize();
+
+		const dashLength = 0.03; // Length of each dash
+		const gapLength = 0.04; // Length of each gap
+		const dashCycle = dashLength + gapLength;
+
+		let currentDist = 0;
+
+		while (currentDist < distance) {
+			const dashStart = currentDist;
+			const dashEnd = Math.min(currentDist + dashLength, distance);
+
+			// Create a line segment for this dash
+			const dashPoints = [
+				point1.clone().addScaledVector(direction, dashStart),
+				point1.clone().addScaledVector(direction, dashEnd)
+			];
+
+			const geometry = new LineGeometry().setFromPoints(dashPoints);
+			const line = new Line2(geometry, material).computeLineDistances();
+			group.add(line);
+
+			currentDist += dashCycle;
+		}
+
+		return group;
 	}
 
 	let blochVector = $derived(new Vector3(...vector).normalize());
@@ -169,13 +194,13 @@ Place inside a Threlte `<Canvas>` and pass the vector.
 	>
 		<SVG
 			src={resolve(`/${mode.current ?? 'light'}/phi.svg`)}
-			scale={0.0001*settings.labelSizeMultiplier}
+			scale={0.0001 * settings.labelSizeMultiplier}
 			position={[-0.04, 0, 0]}
 		/>
 		{#if settings.paperMode}
 			<SemitransparentCircleBg
 				position={[-0.01, 0.013, -0.1]}
-				size={0.05*settings.labelSizeMultiplier}
+				size={0.05 * settings.labelSizeMultiplier}
 				bind:hide={hideLabelsBackground}
 				bind:color={backgroundColor}
 			/>
@@ -187,13 +212,13 @@ Place inside a Threlte `<Canvas>` and pass the vector.
 	<Billboard follow={true} position.z={midTheta.z} position.x={midTheta.x} position.y={midTheta.y}>
 		<SVG
 			src={resolve(`/${mode.current ?? 'light'}/theta.svg`)}
-			scale={0.0001*settings.labelSizeMultiplier}
+			scale={0.0001 * settings.labelSizeMultiplier}
 			position={[-0.02, 0, 0]}
 		/>
 		{#if settings.paperMode}
 			<SemitransparentCircleBg
 				position={[0.005, 0.03, -0.01]}
-				size={0.05*settings.labelSizeMultiplier}
+				size={0.05 * settings.labelSizeMultiplier}
 				bind:hide={hideLabelsBackground}
 				bind:color={backgroundColor}
 			/>
