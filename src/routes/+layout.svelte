@@ -28,12 +28,12 @@
 
 <!-- CSS styles for katex to render formulas correctly -->
 <svelte:head>
-	<title>unBLOCHed</title>
+	<title>unBLOCHed | Advanced and customizable Bloch Sphere simulator </title>
 	<meta
 		name="description"
-		content="Interactive and intuitive Bloch sphere simulator, fully open source."
+		content="Interactive and intuitive Bloch sphere simulator with LaTeX input, custom gates and noise simulation. It allows exporting high quality images and it's fully open source!"
 	/>
-
+	<link rel="canonical" href="https://unbloched.xyz">
 	<link href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" rel="preload" as="style">
 	
 	<meta property="og:title" content="unBLOCHed" />
