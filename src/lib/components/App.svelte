@@ -76,6 +76,7 @@
 		paperMode: false,
 		displayAxisArrows: false,
 		displayAxisLabels: false,
+		labelSizeMultiplier: 1,
 	});
 
 	//**Whether the exported image should have a transparent bg or not*/

@@ -6,8 +6,14 @@
 	import ImageDown from '@lucide/svelte/icons/image-down';
 	import { toast } from 'svelte-sonner';
 	import ColorPickerSubmenu from './ColorPickerSubmenu.svelte';
-	import Move3d  from '@lucide/svelte/icons/move-3-d';
-
+	import Move3d from '@lucide/svelte/icons/move-3-d';
+	import * as Drawer from '$lib/components/ui/drawer/index.js';
+	import Settings2 from '@lucide/svelte/icons/settings-2';
+	import { Label } from '$lib/components/ui/label/index.js';
+	import { Slider } from '$lib/components/ui/slider/index.js';
+	import Button from '../ui/button/button.svelte';
+	import Undo from '@lucide/svelte/icons/undo';
+	import * as Popover from '$lib/components/ui/popover/index.js';
 	interface Props {
 		settings3DScene: sceneSettings;
 		SceneMenuDownloadOpen: boolean;
@@ -24,6 +30,7 @@
 		getImage = $bindable()
 	}: Props = $props();
 
+	let advancedSettingsOpen = $state(false);
 	async function saveImage(
 		getImage: (withBackground?: boolean) => Promise<string>,
 		withBackground: boolean = true
@@ -40,7 +47,7 @@
 			const hh = String(now.getHours()).padStart(2, '0');
 			const mins = String(now.getMinutes()).padStart(2, '0');
 			const ss = String(now.getSeconds()).padStart(2, '0');
-			link.download = `${yy}-${mm}-${dd}_${hh}-${mins}-${ss}_unBLOCHed_${withBackground ? "BG" :"no-BG"}.png`;
+			link.download = `${yy}-${mm}-${dd}_${hh}-${mins}-${ss}_unBLOCHed_${withBackground ? 'BG' : 'no-BG'}.png`;
 
 			// Trigger download
 			document.body.appendChild(link);
@@ -82,7 +89,7 @@ toggling elements, picking colors, and exporting the scene as a PNG image.
 		<DropdownMenu.CheckboxItem bind:checked={settings3DScene.paperMode} closeOnSelect={false}
 			>Paper Mode</DropdownMenu.CheckboxItem
 		>
-		<DropdownMenu.Separator/>
+		<DropdownMenu.Separator />
 		<DropdownMenu.CheckboxItem bind:checked={settings3DScene.displayAngles} closeOnSelect={false}
 			>Show Angles</DropdownMenu.CheckboxItem
 		>
@@ -94,20 +101,26 @@ toggling elements, picking colors, and exporting the scene as a PNG image.
 			closeOnSelect={false}>Show Labels</DropdownMenu.CheckboxItem
 		>
 		<DropdownMenu.Sub>
-			<DropdownMenu.SubTrigger><Move3d/> Axis</DropdownMenu.SubTrigger>
+			<DropdownMenu.SubTrigger><Move3d /> Axis</DropdownMenu.SubTrigger>
 			<DropdownMenu.SubContent>
-
-			<DropdownMenu.CheckboxItem
-				bind:checked={settings3DScene.displayAxisArrows}
-				closeOnSelect={false}>Show Arrows</DropdownMenu.CheckboxItem
-			>
-			<DropdownMenu.CheckboxItem
-				bind:checked={settings3DScene.displayAxisLabels}
-				closeOnSelect={false}>Show Labels</DropdownMenu.CheckboxItem
-			>
+				<DropdownMenu.CheckboxItem
+					bind:checked={settings3DScene.displayAxisArrows}
+					closeOnSelect={false}>Show Arrows</DropdownMenu.CheckboxItem
+				>
+				<DropdownMenu.CheckboxItem
+					bind:checked={settings3DScene.displayAxisLabels}
+					closeOnSelect={false}>Show Labels</DropdownMenu.CheckboxItem
+				>
 			</DropdownMenu.SubContent>
 		</DropdownMenu.Sub>
-		<DropdownMenu.Separator/>
+		<DropdownMenu.Sub>
+			<DropdownMenu.SubTrigger><Settings2 /> Advanced</DropdownMenu.SubTrigger>
+			<DropdownMenu.SubContent class="">
+				{@render labelSizeMultiplierSlider()}
+			</DropdownMenu.SubContent>
+		</DropdownMenu.Sub>
+
+		<DropdownMenu.Separator />
 		<DropdownMenu.Sub>
 			<DropdownMenu.SubTrigger>Vector Color</DropdownMenu.SubTrigger>
 			<ColorPickerSubmenu bind:hexBindColor={settings3DScene.vectorColor} />
@@ -145,3 +158,28 @@ toggling elements, picking colors, and exporting the scene as a PNG image.
 		</DropdownMenu.Sub>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>
+
+{#snippet labelSizeMultiplierSlider()}
+	<div class="flex lg:w-100 flex-row p-2">
+		<Label for="labelSizeMultiplier">Label scale</Label>
+		<Slider
+			type="single"
+			id="labelSizeMultiplier"
+			thumbPositioning="contain"
+			min={0}
+			max={3}
+			step={0.1}
+			bind:value={settings3DScene.labelSizeMultiplier}
+			class="min-w-20"
+		/>
+		<Button
+			onclick={() => {
+				settings3DScene.labelSizeMultiplier = 1;
+			}}
+			name="reset"
+			aria-label="reset"
+			variant="ghost"
+			size="icon"><Undo /></Button
+		>
+	</div>
+{/snippet}

@@ -6,7 +6,7 @@
 	import { complex, sign } from 'mathjs';
 	import SolidVector from './SolidVector.svelte';
 	import Path from './Path.svelte';
-	import { PerspectiveCamera, Color, Object3D, Vector2 } from 'three';
+	import { PerspectiveCamera, Color, Object3D, Vector2, Vector3 } from 'three';
 	import { generateGradient } from 'typescript-color-gradient';
 	import type { DensityMatrix } from '$lib/model/DensityMatrix.svelte';
 	import AngleArc from './AngleArc.svelte';
@@ -17,6 +17,7 @@
 	import { resolve } from '$app/paths';
 	import SemitransparentCircleBg from './3D-elements/SemitransparentCircleBg.svelte';
 	import AxisHelpers from './3D-elements/AxisHelpers.svelte';
+	import { Align } from '@threlte/extras';
 
 	export type sceneSettings = {
 		displayAngles: boolean;
@@ -28,6 +29,7 @@
 		paperMode: boolean;
 		displayAxisArrows: boolean;
 		displayAxisLabels: boolean;
+		labelSizeMultiplier: number;
 	};
 
 	interface Props {
@@ -73,7 +75,7 @@
 	let camera = $state() as PerspectiveCamera;
 
 	async function downloadImage(withBackground = true) {
-		if (!withBackground){
+		if (!withBackground) {
 			hideLabelsBackground = true;
 		}
 
@@ -109,11 +111,11 @@
 		await tick();
 		// Update the rosolution of the render just for export, then set it back to the default value
 		let originalSize = new Vector2();
-		renderer.getSize(originalSize)
+		renderer.getSize(originalSize);
 		renderer.setSize(2000, 2000);
 		renderer.render(scene, camera);
 		const data = renderer.domElement.toDataURL('image/png');
-		renderer.setSize(originalSize.x, originalSize.y)
+		renderer.setSize(originalSize.x, originalSize.y);
 
 		// Restore previous state
 		renderer.setClearColor(prevClearColor);
@@ -232,43 +234,40 @@ This component contains the entire scene logic and should be placed inside a Thr
 {#if settings.displayStateLabels}
 	{#each POI as dm, index}
 		<!-- svg labels of the points on the Bloch sphere and additional round semitransparent background for readability -->
-		<Billboard
-			follow={true}
-			position={[
-				complex(dm.blochV[0]).re + sign(dm.blochV[0]) * 0.1,
-				complex(dm.blochV[1]).re + sign(dm.blochV[1]) * 0.08,
-				complex(dm.blochV[2]).re + sign(dm.blochV[2]) * 0.1
-			]}
-		>
-			<SVG
-				src={resolve(`/${mode.current}/output(${index}).svg`)}
-				scale={0.00012}
-				position={[-0.08, -0.02, +0.08]}
-			/>
-			{@const svg_bg_offset = index == 4 || index == 0 || index == 1 ? -0.018 : 0.0}
-			{@const svg_bg_size = index == 4 || index == 0 || index == 1 ? 0.08 : 0.09}
-			{#if settings.paperMode}
-				<SemitransparentCircleBg
-					position={[svg_bg_offset, +0.015, -0.1]}
-					size={svg_bg_size}
-					bind:hide={hideLabelsBackground}
-					bind:color={backgroundColor}
-				/>
-			{/if}
+		{@const newPos = new Vector3()
+			.fromArray(dm.blochV)
+			.multiplyScalar(1 + 0.07 * settings.labelSizeMultiplier)}
+		<!-- position={[complex(dm.blochV[0]).re, complex(dm.blochV[1]).re, complex(dm.blochV[2]).re]} -->
+		<Billboard follow={true} position={newPos.toArray()}>
+			{#key settings.labelSizeMultiplier}
+					{@const svg_bg_offset = index == 4 || index == 0 || index == 1 ? -0.018 : 0.0}
+					{@const svg_bg_size = index == 4 || index == 0 || index == 1 ? 0.08 : 0.09}
+				<Align auto z={false}>
+					<SVG
+						src={resolve(`/${mode.current}/output(${index}).svg`)}
+						scale={0.00012 * settings.labelSizeMultiplier}
+						position.z = {0.1}
+					/>
+				</Align>
+				<Align auto z={false}>
+					{#if settings.paperMode}
+						<SemitransparentCircleBg
+							position={[0, 0, 0]}
+							size={svg_bg_size * settings.labelSizeMultiplier}
+							bind:hide={hideLabelsBackground}
+							bind:color={backgroundColor}
+						/>
+					{/if}
+				</Align>
+			{/key}
 		</Billboard>
 	{/each}
 {/if}
 
-<BlochSphere sphere_opacity={0.07} {settings} {lat_long_color}
-></BlochSphere>
+<BlochSphere sphere_opacity={0.07} {settings} {lat_long_color}></BlochSphere>
 <SolidVector {DM} {settings}></SolidVector>
 {#if settings.displayAngles}
-	<AngleArc
-		vector={DM.blochV}
-		{settings}
-		bind:hideLabelsBackground
-		bind:backgroundColor
-	></AngleArc>
+	<AngleArc vector={DM.blochV} {settings} bind:hideLabelsBackground bind:backgroundColor></AngleArc>
 {/if}
 
 <AxisHelpers {settings} {backgroundColor} {hideLabelsBackground}></AxisHelpers>
