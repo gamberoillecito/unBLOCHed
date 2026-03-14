@@ -111,7 +111,7 @@ export class QuantumOperation {
         for (let i = 0; i < this.#operationElements.length; i++) {
             const ei = this.#operationElements[i];
             const res = ei.setParameterLatex(name, newLatexValue);
-            console.log(res);
+            // console.log(res);
 
             if (!res.isValid) {
                 this.#isConsistent = false;

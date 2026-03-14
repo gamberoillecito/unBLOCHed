@@ -19,7 +19,7 @@ ce.latexDictionary = [
     ...ce.latexDictionary,
     { parse: 'gamma', latexTrigger: '\\gamma' },
 ];
-console.log(ce.latexDictionary);
+// console.log(ce.latexDictionary);
 
 
 export class MatrixValidity {

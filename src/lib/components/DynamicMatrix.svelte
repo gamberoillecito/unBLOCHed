@@ -102,7 +102,7 @@
 		 * update button accordingly
 		 */
 		mf.addEventListener('input', (ev) => {
-			console.log(mf.value);
+			// console.log(mf.value);
 			
 			// Generate a matrix starting from latex and validate it
 			let parsed = parseMatrixField(mf);
