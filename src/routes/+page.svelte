@@ -146,9 +146,9 @@
 		<div>
 			<!-- The line with title is a hacky way to change the title style using CSS, 
 			if using svelte media queries it gets calculated only after part of the content has loaded -->
-			{#if 1}
+			<h1 class="inline">
 				<Title subtitle={false} /> <span class="hidden lg:inline"><Title title={false} /></span>
-			{/if}
+			</h1>
 			<!-- <Toggle bind:pressed={welcomeMessageOpen} class={buttonVariants.variants.variant.link}>
 				<Info />
 			</Toggle> -->

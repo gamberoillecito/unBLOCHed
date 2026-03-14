@@ -23,7 +23,7 @@ Renders the application title "unBLOCHed" and an optional subtitle. The visibili
 The component can be used with different prop combinations to show or hide parts of the title.
 -->
 
-<h1 class="inline">
+<span class="inline">
 	{#if title}
 		<span class="font-normal">un</span><span class="font-semibold">{bloch}</span><span
 			class="font-normal">ed</span
@@ -32,4 +32,4 @@ The component can be used with different prop combinations to show or hide parts
 	{#if subtitle}
 		<span class="font-light">- Bloch sphere simulator</span>
 	{/if}
-</h1>
+</span>
