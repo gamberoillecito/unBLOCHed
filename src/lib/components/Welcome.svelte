@@ -14,7 +14,7 @@
 	import { onMount } from 'svelte';
 	import GitHubIcon from './custom-ui/GitHubIcon.svelte';
 	import DialogDrawer from './custom-ui/DialogDrawer.svelte';
-	import BetaChanges from '../../../static/beta_changes.md?raw';
+	import BetaChanges from '$lib/markdown/beta_changes.md?raw';
 	import ScrollArea from './ui/scroll-area/scroll-area.svelte';
 	const markedKatexOptions = {
 		throwOnError: false
@@ -38,7 +38,6 @@
 			return { ...x, showWelcomeAtStart: showWelcomeAtStart };
 		});
 	});
-	console.log(BetaChanges);
 </script>
 
 {#snippet unresponsiveCheckbox(text: string, checked: boolean = true)}
@@ -82,7 +81,7 @@
 						margin: 0;
 					}
 				</style>
-					<article class="prose dark:prose-invert max-h-200 max-h-full min-h-0 w-full">
+					<article class="prose dark:prose-invert max-h-200 min-h-0 w-full">
 						{@html marked.parse(BetaChanges)}
 					</article>
 				</ScrollArea>
