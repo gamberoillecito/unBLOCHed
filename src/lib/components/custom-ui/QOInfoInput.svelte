@@ -9,6 +9,7 @@
 	import { flashCanvas } from './Buttons/buttonUtility';
 	import * as Accordion from '$lib/components/ui/accordion/index.js';
 	import Play from '@lucide/svelte/icons/play';
+	import { onMount } from 'svelte';
 
 	interface Props {
 		DM: DensityMatrix;
@@ -19,6 +20,10 @@
 	}
 
 	let { DM, QO, history, canvasContainer, openItem = $bindable() }: Props = $props();
+	let loaded = $state(false);
+	onMount(() => {
+		loaded = true;
+	});
 </script>
 
 <!--
@@ -35,25 +40,28 @@ TODO
 <Accordion.Item value={QO.name}>
 	<Accordion.Trigger class="group no-underline!">
 		<div class="flex flex-row items-center! gap-4">
-			<Button
-				size="sm"
-				variant="outline"
-				class="peer"
-				disabled={!QO.isConsistent}
-				onclick={(e: Event) => {
-					let initialDM = DM.clone();
-					DM.apply_quantum_operation(QO);
-					history.addElement(initialDM, DM, null, true);
+			<!-- The if is necessary to prevent duplication of the page for reason that I don't understand -->
+			{#if loaded}
+				<Button
+					size="sm"
+					variant="outline"
+					class="peer"
+					disabled={!QO.isConsistent}
+					onclick={(e: Event) => {
+						let initialDM = DM.clone();
+						DM.apply_quantum_operation(QO);
+						history.addElement(initialDM, DM, null, true);
 
-					flashCanvas(canvasContainer);
-					e.stopPropagation();
-				}}><Play /></Button
-			>
+						flashCanvas(canvasContainer);
+						e.stopPropagation();
+					}}><Play /></Button
+				>
+			{/if}
 			<span class="group-hover:underline peer-hover:no-underline">{QO.name}</span>
 		</div>
 	</Accordion.Trigger>
 	<Accordion.Content>
-		<div class="flex flex-wrap @lg:max-w-100 justify-around">
+		<div class="flex flex-wrap justify-around @lg:max-w-100">
 			{#each QO.operationElements as FM}
 				<div class="flex w-fit justify-center">
 					<ReadonlyFancyMatrix {FM} useExtendedLabel={false} debug={false} />
@@ -61,25 +69,24 @@ TODO
 			{/each}
 		</div>
 		<div class="pl-3">
-
-		{#each QO.parameters as param}
-			<!-- the isOpen condition takes into account also if the current Accordion.Item is open or not because we want
+			{#each QO.parameters as param}
+				<!-- the isOpen condition takes into account also if the current Accordion.Item is open or not because we want
 			 to hide the Popover when the current item is closed -->
-			<ErrorPopover
-				isOpen={!QO.isConsistent && openItem === QO.name}
-				popoverContent={QO.userMessage}
-				dismissable={false}
-			>
-				{#snippet trigger()}
-					<ParameterInput
-						{param}
-						callback={(paramName: string, paramValue: string) => {
-							QO.setParameter(paramName, paramValue);
-						}}
-					/>
-				{/snippet}
-			</ErrorPopover>
-		{/each}
+				<ErrorPopover
+					isOpen={!QO.isConsistent && openItem === QO.name}
+					popoverContent={QO.userMessage}
+					dismissable={false}
+				>
+					{#snippet trigger()}
+						<ParameterInput
+							{param}
+							callback={(paramName: string, paramValue: string) => {
+								QO.setParameter(paramName, paramValue);
+							}}
+						/>
+					{/snippet}
+				</ErrorPopover>
+			{/each}
 		</div>
 	</Accordion.Content>
 </Accordion.Item>
