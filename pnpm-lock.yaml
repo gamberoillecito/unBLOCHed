@@ -20,9 +20,6 @@ importers:
       '@neodrag/svelte':
         specifier: ^2.3.3
         version: 2.3.3(svelte@5.53.12)
-      '@shimmer-from-structure/svelte':
-        specifier: ^2.3.4
-        version: 2.3.4(svelte@5.53.12)
       '@threlte/core':
         specifier: ^8.3.1
         version: 8.3.1(svelte@5.53.12)(three@0.174.0)
@@ -637,14 +634,6 @@ packages:
     resolution: {integrity: sha512-SPEpaL6DX4rmcXtnhdrQYgzQ5W2uW3SCJch88lB2zImhJRhIIK44fkUrgIV/Q8yUNfw5oyZ5vkeQsZLhCb06lw==}
     cpu: [x64]
     os: [win32]
-
-  '@shimmer-from-structure/core@2.3.2':
-    resolution: {integrity: sha512-JygKZ2E0d890M+9NyyQX/1DmTGHHFtrQGiv9mxPpN0Ct4cW9hIPNWXC88lznlGWpzwrlivbPDFGG/ea8QMwEHA==}
-
-  '@shimmer-from-structure/svelte@2.3.4':
-    resolution: {integrity: sha512-WfMhPrrUoNbbKyGXM34x42M3N7ZAMD+KYfRKesOIXb72skiCv/O4LVPsDPnyrcd9n6T3TsWazgwz4obT5rzOsg==}
-    peerDependencies:
-      svelte: ^5.53.5
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
@@ -2845,13 +2834,6 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.55.1':
     optional: true
-
-  '@shimmer-from-structure/core@2.3.2': {}
-
-  '@shimmer-from-structure/svelte@2.3.4(svelte@5.53.12)':
-    dependencies:
-      '@shimmer-from-structure/core': 2.3.2
-      svelte: 5.53.12
 
   '@standard-schema/spec@1.1.0': {}
 
