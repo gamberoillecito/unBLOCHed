@@ -128,11 +128,12 @@
 
 <Welcome bind:open={welcomeMessageOpen} />
 
-<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mathlive/mathlive-static.css" /> -->
+<!-- <link rel="preload" as="font" href="https://cdn.jsdelivr.net/npm/mathlive/mathlive-static.css" /> -->
 <div class="flex h-svh flex-col overflow-hidden">
 	<!-- Header -->
 	<div
 		class="bg-foreground flex w-[100%] flex-row-reverse items-center justify-between p-2 px-6 text-center text-xl text-(--background) md:flex-row md:text-left md:text-2xl"
+		role="banner"
 	>
 		<Button onclick={toggleMode} variant="secondary" size="sm" class="group scale-80 md:scale-100">
 			<MoonIcon
@@ -193,7 +194,7 @@
 	{:else}
 		<Resizable.PaneGroup direction="horizontal" autoSaveId="tutorialPane">
 			<Resizable.Pane minSize={resizablePanelMin}>
-				<div class="bg-background @container h-full min-h-0 w-full flex-1">
+				<div class="bg-background @container h-full min-h-0 w-full flex-1" role="main">
 					<App bind:tutorialProps />
 				</div>
 			</Resizable.Pane>

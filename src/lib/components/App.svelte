@@ -245,7 +245,7 @@
 				</div>
 			{/if}
 			<Separator class=""></Separator>
-			<h4>States</h4>
+			<h2>States</h2>
 			<!-- Standard states -->
 			<div class="m-3 flex flex-wrap justify-center gap-2">
 				{#each predefinedStates as matrix}
