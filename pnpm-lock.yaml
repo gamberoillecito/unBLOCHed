@@ -45,8 +45,8 @@ importers:
         specifier: ^14.9.1
         version: 14.9.1
       mathlive:
-        specifier: file:packages\mathlive
-        version: file:packages/mathlive
+        specifier: ^0.110.0
+        version: 0.110.0
       rehype-katex:
         specifier: ^7.0.1
         version: 7.0.1
@@ -195,6 +195,9 @@ packages:
   '@adobe/css-tools@4.4.4':
     resolution: {integrity: sha512-Elp+iwUx5rN5+Y8xLt5/GRoG20WGoDCQ/1Fb+1LiGtvwbDavuSk0jhD/eZdckHAuzcDzccnkv+rEjyWfRx18gg==}
 
+  '@arnog/colors@0.5.0':
+    resolution: {integrity: sha512-NB7yqrO7qvInsqJdqz6C6mDU+2oiKmbBbk3czMS0E7KkGxLRy538tEHCsB5TKqmaxxXpi6/U120TnGl8NsDePg==}
+
   '@asamuzakjp/css-color@3.2.0':
     resolution: {integrity: sha512-K1A6z8tS3XsmCMM86xoWdn7Fkdn9m6RSVtocUrJYIwZnFVkng/PvkEoWtOWmP+Scc6saYWHWZYbndEEXxl24jw==}
 
@@ -212,6 +215,10 @@ packages:
 
   '@cortex-js/compute-engine@0.29.1':
     resolution: {integrity: sha512-bCpaGW+Th+6lrTEDom3mNInfu3hu2N79FpUuqdVyvhE1Np4O447O/1gsgqLAFqVjg58cGN0FCAxf8gXkQNF4CQ==}
+    engines: {node: '>=21.7.3', npm: '>=10.5.0'}
+
+  '@cortex-js/compute-engine@0.58.0':
+    resolution: {integrity: sha512-N0+vXjVZfKwJS7ZIGvq41mojI55m5TrdDXveAXzNjzjZ9iNiNrdEzXL2EmrcP+9GCWCwTonrEeZWAIG78f3INg==}
     engines: {node: '>=21.7.3', npm: '>=10.5.0'}
 
   '@csstools/color-helpers@5.1.0':
@@ -1718,8 +1725,8 @@ packages:
     engines: {node: '>= 18'}
     hasBin: true
 
-  mathlive@file:packages/mathlive:
-    resolution: {directory: packages/mathlive, type: directory}
+  mathlive@0.110.0:
+    resolution: {integrity: sha512-UOpJsQ6h1eeN0xZULGTl1MwUB/lZLCDuzKeHvKEh7Zra8U/rtgDNrssj5PZdJtBTIV48AfEhtv6rv47AeMOxJA==}
 
   mdsvex@0.12.6:
     resolution: {integrity: sha512-pupx2gzWh3hDtm/iDW4WuCpljmyHbHi34r7ktOqpPGvyiM4MyfNgdJ3qMizXdgCErmvYC9Nn/qyjePy+4ss9Wg==}
@@ -2526,6 +2533,8 @@ snapshots:
 
   '@adobe/css-tools@4.4.4': {}
 
+  '@arnog/colors@0.5.0': {}
+
   '@asamuzakjp/css-color@3.2.0':
     dependencies:
       '@csstools/css-calc': 2.1.4(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)
@@ -2546,6 +2555,12 @@ snapshots:
 
   '@cortex-js/compute-engine@0.29.1':
     dependencies:
+      complex-esm: 2.1.1-esm1
+      decimal.js: 10.6.0
+
+  '@cortex-js/compute-engine@0.58.0':
+    dependencies:
+      '@arnog/colors': 0.5.0
       complex-esm: 2.1.1-esm1
       decimal.js: 10.6.0
 
@@ -3953,9 +3968,9 @@ snapshots:
       tiny-emitter: 2.1.0
       typed-function: 4.2.2
 
-  mathlive@file:packages/mathlive:
+  mathlive@0.110.0:
     dependencies:
-      '@cortex-js/compute-engine': 0.29.1
+      '@cortex-js/compute-engine': 0.58.0
 
   mdsvex@0.12.6(svelte@5.53.12):
     dependencies:

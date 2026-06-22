@@ -82,7 +82,7 @@
 		"marked": "^16.4.2",
 		"marked-katex-extension": "^5.1.6",
 		"mathjs": "^14.9.1",
-		"mathlive": "file:packages\\mathlive",
+		"mathlive": "^0.110.0",
 		"rehype-katex": "^7.0.1",
 		"rehype-katex-svelte": "github:kwshi/rehype-katex-svelte",
 		"svelte-persisted-store": "^0.12.0",
